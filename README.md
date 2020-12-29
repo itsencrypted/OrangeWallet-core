@@ -39,3 +39,8 @@
     - Transak APIs(Not js sdk).
 
     2. Backup seedphrase on gCloud, iCloud.
+    
+    ## Design Reference
+    |![Imgur](https://i.imgur.com/i7PnchD.png)|![Imgur](https://i.imgur.com/gqm7mnx.png)|
+    |![Imgur](https://i.imgur.com/yYuCIQQ.png)| ![Imgur](https://i.imgur.com/jOwYM1o.png)|
+    |![Imgur](https://i.imgur.com/aC8s0Mn.png)| 

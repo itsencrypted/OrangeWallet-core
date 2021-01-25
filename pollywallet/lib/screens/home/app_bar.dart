@@ -2,48 +2,59 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pollywallet/theme_data.dart';
 
-class HomeAppBar extends StatefulWidget implements PreferredSizeWidget{
+class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   _HomeAppBar createState() => _HomeAppBar();
   @override
-  final Size preferredSize = Size.fromHeight(100);
+  final Size preferredSize = Size.fromHeight(150);
 }
-class _HomeAppBar extends State<HomeAppBar>{
+
+class _HomeAppBar extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
-    double leadingWidth = MediaQuery.of(context).size.width *0.6;
+    double leadingWidth = 3033;
     return AppBar(
       elevation: 0,
       backgroundColor: AppTheme.backgroundWhite,
       leadingWidth: leadingWidth,
       leading: Padding(
-        padding: const EdgeInsets.all(9),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppTheme.primaryColor,
-             borderRadius: BorderRadius.circular(100),
-          ),
-          child:  Row(
-            mainAxisSize: MainAxisSize.min,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 1,
+        ),
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+          elevation: 0,
+          color: AppTheme.primaryColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.account_circle_sharp,
-                color: AppTheme.dark_grey,
-                size: leadingWidth * 0.15,
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Icon(
+                  Icons.account_circle_sharp,
+                  color: AppTheme.darkText,
+                  size: 35,
+                ),
               ),
-              Text("0x23..4gH1", style:TextStyle(color: Theme.of(context).primaryColorDark))
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text("0x23..4gH1",
+                    style:
+                        TextStyle(color: Theme.of(context).primaryColorDark)),
+              )
             ],
           ),
         ),
       ),
       actions: [
-        FlatButton(
-          child: Image.asset("assets/icons/qr_icon.png", color: AppTheme.darkerText),
-          onPressed: (){},
+        TextButton(
+          child: Image.asset("assets/icons/qr_icon.png",
+              color: AppTheme.darkerText),
+          onPressed: () {},
         )
       ],
     );
-
   }
-
 }

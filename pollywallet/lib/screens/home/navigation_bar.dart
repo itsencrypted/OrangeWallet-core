@@ -103,7 +103,7 @@ class BottomNavBar extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 height: 70,
-                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
                 child: Row(
                   mainAxisAlignment: mainAxisAlignment,
                   children: items.map((item) {
@@ -164,7 +164,7 @@ class _ItemWidget extends StatelessWidget {
       container: true,
       selected: isSelected,
       child: AnimatedContainer(
-        width: 130,
+        width: 110,
         height: double.maxFinite,
         duration: animationDuration,
         curve: curve,
@@ -177,11 +177,11 @@ class _ItemWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: NeverScrollableScrollPhysics(),
           child: Container(
-            width: 120,
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            width: 100,
+            padding: EdgeInsets.symmetric(horizontal: 0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 IconTheme(
@@ -194,7 +194,7 @@ class _ItemWidget extends StatelessWidget {
                   child: item.icon,
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 0),
                   child: DefaultTextStyle.merge(
                     style: TextStyle(
                       color: isSelected

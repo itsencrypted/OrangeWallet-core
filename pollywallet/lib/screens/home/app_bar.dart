@@ -12,37 +12,37 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _HomeAppBar extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
-    double leadingWidth = double.infinity;
     return AppBar(
       elevation: 0,
+      centerTitle: false,
       backgroundColor: AppTheme.backgroundWhite,
-      leadingWidth: leadingWidth,
-      leading: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 4,
+      leadingWidth: 0,
+      title: Padding(
+        padding: const EdgeInsets.only(
+          left: 4,
         ),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-          elevation: 0,
-          color: AppTheme.somewhatYellow,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Icon(
-                  Icons.account_circle_sharp,
-                  color: AppTheme.darkText,
-                  size: 35,
+        child: SizedBox(
+          width: 130,
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+            elevation: 0,
+            color: AppTheme.somewhatYellow,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Icon(
+                    Icons.account_circle_sharp,
+                    color: AppTheme.darkText,
+                    size: 35,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Text("0x23..4gH1", style: AppTheme.subtitle),
-              )
-            ],
+                Text("0x23..4gH", style: AppTheme.subtitle)
+              ],
+            ),
           ),
         ),
       ),

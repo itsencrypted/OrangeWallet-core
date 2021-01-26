@@ -70,6 +70,15 @@ flutter:
     - assets/icons/staking_icon.png
     - assets/icons/transfer_icon.png
     - assets/icons/token_icon.png
+    - assets/abi/childERC20.json
+    - assets/abi/deposit_manager.json
+    - assets/abi/erc20.json
+    - assets/abi/erc20predicate.json
+    - assets/abi/erc721.json
+    - assets/abi/plasma_registry.json
+    - assets/abi/root_chain_proxy.json
+    - assets/abi/root_chain.json
+    - assets/abi/withdraw_manager.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -25,7 +25,7 @@ class _HomeAppBar extends State<HomeAppBar> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
           elevation: 0,
-          color: AppTheme.primaryColor,
+          color: AppTheme.somewhatYellow,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -40,9 +40,7 @@ class _HomeAppBar extends State<HomeAppBar> {
               ),
               Padding(
                 padding: const EdgeInsets.all(2.0),
-                child: Text("0x23..4gH1",
-                    style:
-                        TextStyle(color: Theme.of(context).primaryColorDark)),
+                child: Text("0x23..4gH1", style: AppTheme.subtitle),
               )
             ],
           ),

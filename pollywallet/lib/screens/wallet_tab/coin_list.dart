@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
+import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
 class CoinListCard extends StatefulWidget {
+  final List<Items> tokens;
+
+  const CoinListCard({Key key, @required this.tokens}) : super(key: key);
   @override
   _CoinListCardState createState() => _CoinListCardState();
 }
 
 class _CoinListCardState extends State<CoinListCard> {
+  int total;
   List<Widget> ls = List<Widget>();
   @override
   void initState() {
+    total = widget.tokens.length;
     ls.add(_divider);
     ls.add(_disclaimer);
-    ls.addAll([_listTile]);
+    ls.addAll(_tiles());
     ls.add(_divider);
+    if (total < 5) {
+      ls.add(_viewAll);
+    }
+
     super.initState();
   }
 
@@ -26,7 +38,7 @@ class _CoinListCardState extends State<CoinListCard> {
           borderRadius: BorderRadius.all(Radius.circular(AppTheme.cardRadius))),
       color: AppTheme.white,
       child: ExpansionTile(
-        title: Text("5 Coins"),
+        title: Text("$total Coins"),
         trailing: Icon(Icons.arrow_forward),
         children: [
           Padding(
@@ -53,28 +65,36 @@ class _CoinListCardState extends State<CoinListCard> {
         "Showing coins with balance only",
         style: AppTheme.subtitle,
       ));
-  Widget _listTile = ListTile(
-    leading: Image.asset(
-      tokenIcon,
-      height: AppTheme.tokenIconHeight,
-      width: AppTheme.tokenIconHeight,
-    ),
-    title: Text("Tether US", style: AppTheme.title),
-    subtitle: Text("USDT", style: AppTheme.subtitle),
-    trailing: Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          "\$1234.2",
-          style: AppTheme.balanceMain,
-        ),
-        Text(
-          "1244312",
-          style: AppTheme.balanceSub,
-        )
-      ],
-    ),
+  List<Widget> _tiles() {
+    var tiles = List<Widget>();
+    var index = 0;
+    for (Items token in widget.tokens) {
+      if (index == 5) {
+        break;
+      }
+      if (token.type == null || token.type != "dust") {
+        index++;
+        var tile = CoinListTile(
+            name: token.contractName,
+            ticker: token.contractTickerSymbol,
+            qoute: token.quote.toString(),
+            amount: EthConversions.weiToEth(BigInt.parse(token.balance))
+                .toString());
+        tiles.add(tile);
+      }
+    }
+    return tiles;
+  }
+
+  Widget _viewAll = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      RaisedButton(
+        onPressed: () {},
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Text("View All Tokens"),
+        color: AppTheme.secondaryColor,
+      )
+    ],
   );
 }

@@ -24,7 +24,7 @@ class Dialogs {
                         ),
                         Text(
                           "Please Wait....",
-                          style: AppTheme.display1,
+                          style: AppTheme.subtitle,
                         )
                       ]),
                     )

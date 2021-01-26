@@ -24,6 +24,7 @@ class TestNetTokenData {
           contractTickerSymbol: keys[i],
           balance: balance.toString(),
           quote: 0,
+          contractName: keys[i],
           quoteRate: 0,
           contractAddress: contracts[keys[i]],
           logoUrl:
@@ -82,6 +83,7 @@ class TestNetTokenData {
           contractTickerSymbol: keys[i],
           balance: balance.toString(),
           quote: 0,
+          contractName: keys[i],
           quoteRate: 0,
           contractAddress: contracts[keys[i]],
           logoUrl:

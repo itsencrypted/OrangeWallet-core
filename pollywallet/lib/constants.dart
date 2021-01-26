@@ -17,6 +17,8 @@ const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
 
 // Routes
 const String pinWidgetRoute = "pinWidgetRoute";
+const String importMnemonicRoute = "importMnemonicRoute";
+const String homeRoute = "homeRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

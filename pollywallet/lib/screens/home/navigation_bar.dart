@@ -26,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
     this.showElevation = true,
     this.iconSize = 24,
     this.backgroundColor,
-    this.itemCornerRadius = 50,
+    this.itemCornerRadius = 40,
     this.containerHeight = 90,
     this.animationDuration = const Duration(milliseconds: 270),
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
@@ -86,7 +86,7 @@ class BottomNavBar extends StatelessWidget {
     return Container(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 11.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Container(
             decoration: BoxDecoration(
                 color: bgColor,

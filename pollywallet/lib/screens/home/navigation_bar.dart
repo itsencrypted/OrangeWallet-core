@@ -93,8 +93,8 @@ class BottomNavBar extends StatelessWidget {
                 boxShadow: [
                   if (showElevation)
                     const BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 2,
+                      color: Colors.white24,
+                      blurRadius: 20,
                     ),
                 ],
                 borderRadius: BorderRadius.circular(itemCornerRadius)),

@@ -23,6 +23,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
+  web3dart: ^2.0.0-dev.9
+  flutter_string_encryption: ^0.3.1
+  http: ^0.12.2
+  hex: ^0.1.2
+  bip39: ^1.0.3
+  bip32: any
+  fluttertoast: ^7.1.6
+  flutter_spinkit: "^4.1.2"
+  qr_flutter: ^3.2.0
+  numeric_keyboard: ^1.0.0
+  pinput: ^0.2.6
+  flutter_bloc: ^6.1.1
+  bloc: ^6.1.1
+  barcode_scan: ^3.0.1
+  build_runner: ^1.10.12
+  hive_generator: ^0.8.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -51,6 +69,7 @@ flutter:
     - assets/icons/settings_icon.png
     - assets/icons/staking_icon.png
     - assets/icons/transfer_icon.png
+    - assets/icons/token_icon.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

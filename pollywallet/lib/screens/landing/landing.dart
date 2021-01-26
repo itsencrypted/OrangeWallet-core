@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/screens/home/home.dart';
+import 'package:pollywallet/screens/login/login.dart';
 
 class ImportMnemonic extends StatefulWidget {
   ImportMnemonicState createState() => ImportMnemonicState();
@@ -91,6 +92,6 @@ class ImportMnemonicState extends State<ImportMnemonic> {
     // }
 
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => Home()));
+        MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
   }
 }

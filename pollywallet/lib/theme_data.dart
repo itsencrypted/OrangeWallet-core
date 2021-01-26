@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  static const Color backgroundWhite = Color(0xFFE9E4E1);
+  static const Color backgroundWhite = Color(0xffE5E5E5);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color primaryColor = Color(0x5ECAC15F);
+  static const Color primaryColor = Color(0xffE3DECF);
+
   static const Color grey = Color(0xFF3A5160);
   static const Color purpleSelected = Color(0x7854C5);
   static const Color darkText = Color(0xFF253840);
@@ -13,7 +14,7 @@ class AppTheme {
   static const Color lightText = Color(0xFF4A6572);
   static const Color deactivatedText = Color(0xFF767676);
   static const Color dismissibleBackground = Color(0xFF364A54);
-  static const Color chipBackground = Color(0xFFEEF1F3);
+  static const Color whiteTextColor = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'WorkSans';
 
@@ -50,7 +51,7 @@ class AppTheme {
     fontWeight: FontWeight.w400,
     fontSize: 14,
     letterSpacing: -0.04,
-    color: darkText,
+    color: lightText,
   );
 
   static const TextStyle body2 = TextStyle(
@@ -71,12 +72,12 @@ class AppTheme {
     color: darkText,
   );
 
-  static const TextStyle caption = TextStyle(
+  static const TextStyle buttonText = TextStyle(
     // Caption -> caption
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
-    fontSize: 12,
-    letterSpacing: 0.2,
-    color: lightText, // was lightText
+    fontSize: 16,
+    letterSpacing: 0.3,
+    color: whiteTextColor, // was lightText
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/home/app_bar.dart';
+import 'package:pollywallet/screens/wallet_tab/home_tab.dart';
 import 'package:pollywallet/theme_data.dart';
 
 import 'navigation_bar.dart';
@@ -9,23 +10,37 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  @override
+  void initState() {
+    _tabController = new TabController(length: 3, vsync: this);
+    super.initState();
+  }
+
   int selectedTab = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundWhite,
       appBar: HomeAppBar(),
-      body: Container(),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          HomeTab(),
+          Text("Tab2"),
+          Text("Tab3"),
+        ],
+      ),
       bottomNavigationBar: Container(
         child: BottomNavBar(
           onItemSelected: (index) {
             setState(() {
-              selectedTab = index;
+              _tabController.animateTo(index);
             });
           },
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          selectedIndex: selectedTab,
+          selectedIndex: _tabController.index,
           showElevation: true,
           items: [
             BottomNavBarItem(

@@ -12,14 +12,14 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _HomeAppBar extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
-    double leadingWidth = 3033;
+    double leadingWidth = double.infinity;
     return AppBar(
       elevation: 0,
       backgroundColor: AppTheme.backgroundWhite,
       leadingWidth: leadingWidth,
       leading: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 1,
+          horizontal: 4,
         ),
         child: Card(
           shape:

@@ -57,6 +57,9 @@ class _HomeTabState extends State<HomeTab>
               CoinListCard(
                 tokens: state.covalentTokenList.data.items,
               ),
+              SizedBox(
+                height: 120,
+              )
             ]),
           );
         } else {

@@ -30,7 +30,9 @@ class _CoinListCardState extends State<CoinListCard> {
         trailing: Icon(Icons.arrow_forward),
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(
+              bottom: 8.0,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,21 +45,36 @@ class _CoinListCardState extends State<CoinListCard> {
   }
 
   Widget _divider = Divider(color: AppTheme.lightText);
-  Widget _disclaimer = Text(
-    "Showing coins with balance only",
-    style: AppTheme.subtitle,
-  );
+  Widget _disclaimer = Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 8,
+      ),
+      child: Text(
+        "Showing coins with balance only",
+        style: AppTheme.subtitle,
+      ));
   Widget _listTile = ListTile(
     leading: Image.asset(
       tokenIcon,
-      scale: 0.1,
+      height: AppTheme.tokenIconHeight,
+      width: AppTheme.tokenIconHeight,
     ),
     title: Text("Tether US", style: AppTheme.title),
     subtitle: Text("USDT", style: AppTheme.subtitle),
     trailing: Column(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
-      children: [Text("\$1234.2"), Text("1244312")],
+      children: [
+        Text(
+          "\$1234.2",
+          style: AppTheme.balanceMain,
+        ),
+        Text(
+          "1244312",
+          style: AppTheme.balanceSub,
+        )
+      ],
     ),
   );
 }

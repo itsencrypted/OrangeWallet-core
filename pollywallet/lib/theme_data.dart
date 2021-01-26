@@ -5,6 +5,7 @@ class AppTheme {
 
   static const Color backgroundWhite = Color(0xffE5E5E5);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
   static const Color primaryColor = Color(0xffE3DECF);
 
   static const Color grey = Color(0xFF3A5160);
@@ -19,6 +20,7 @@ class AppTheme {
   static const double cardRadius = 12;
   static const double cardElevations = 8;
   static const String fontName = 'WorkSans';
+  static const double tokenIconHeight = 34;
 
   static const TextStyle display1 = TextStyle(
     // h4 -> display1
@@ -81,5 +83,19 @@ class AppTheme {
     fontSize: 16,
     letterSpacing: 0.3,
     color: whiteTextColor, // was lightText
+  );
+
+  static const TextStyle balanceMain = TextStyle(
+    fontFamily: fontName,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    letterSpacing: -0.2,
+    color: black,
+  );
+  static const TextStyle balanceSub = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontFamily: fontName,
+    fontSize: 14,
+    color: black, // was lightText
   );
 }

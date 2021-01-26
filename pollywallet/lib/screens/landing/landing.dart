@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/login/login.dart';
+import 'package:pollywallet/theme_data.dart';
 
 class ImportMnemonic extends StatefulWidget {
   ImportMnemonicState createState() => ImportMnemonicState();
@@ -51,11 +53,11 @@ class ImportMnemonicState extends State<ImportMnemonic> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   RaisedButton(
-                      color: Colors.red,
+                      color: receiveButtonColor.withOpacity(0.6),
                       child: Text("New Mnemonic"),
                       onPressed: () {}),
                   RaisedButton(
-                      color: Colors.red,
+                      color: sendButtonColor.withOpacity(0.6),
                       child: Text("Continue"),
                       onPressed: _proceed),
                 ],

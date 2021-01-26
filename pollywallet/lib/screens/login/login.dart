@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/home.dart';
+import 'package:pollywallet/theme_data.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -76,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     RaisedButton(
                       child: Text('Login'),
-                      color: Color(0xffEE7B23),
+                      color: sendButtonColor.withOpacity(0.6),
                       onPressed: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (BuildContext context) => Home()));
@@ -92,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(text: 'Don\'t have an account', children: [
                     TextSpan(
                       text: 'Signup',
-                      style: TextStyle(color: Color(0xffEE7B23)),
+                      style: TextStyle(color: AppTheme.primaryColor),
                     ),
                   ]),
                 ),

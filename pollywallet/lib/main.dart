@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/home/home.dart';
+import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +35,7 @@ class PollyWallet extends StatelessWidget {
           textTheme: Typography.blackCupertino,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Home(),
+        home: ImportMnemonic(),
       ),
     );
   }

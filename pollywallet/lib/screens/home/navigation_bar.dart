@@ -27,7 +27,7 @@ class BottomNavBar extends StatelessWidget {
     this.iconSize = 24,
     this.backgroundColor,
     this.itemCornerRadius = 40,
-    this.containerHeight = 90,
+    this.containerHeight = 70,
     this.animationDuration = const Duration(milliseconds: 270),
     this.mainAxisAlignment = MainAxisAlignment.spaceBetween,
     @required this.items,

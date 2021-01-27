@@ -38,7 +38,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ],
           ),
           Positioned(
-              bottom: -10,
+              bottom: -33,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 170,

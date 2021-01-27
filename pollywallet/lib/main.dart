@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/token_list/token_list.dart';
+import 'package:pollywallet/screens/token_profile/coin_profile.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
@@ -24,9 +26,14 @@ class PollyWallet extends StatefulWidget {
 }
 
 class _PollyWalletState extends State<PollyWallet> {
+  SendTransactionCubit data;
   Widget current = ImportMnemonic();
+
   @override
   void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      data = context.read<SendTransactionCubit>();
+    });
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
         if (status) {
@@ -88,6 +95,7 @@ class _PollyWalletState extends State<PollyWallet> {
               pinWidgetRoute: (context) => PinWidget(),
               homeRoute: (context) => Home(),
               coinListRoute: (context) => TokenList(),
+              coinProfileRoute: (context) => CoinProfile(),
             },
             home: current),
       ),

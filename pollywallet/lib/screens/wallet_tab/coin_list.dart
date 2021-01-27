@@ -74,12 +74,8 @@ class _CoinListCardState extends State<CoinListCard> {
       if (token.type == null || token.type != "dust") {
         index++;
         var tile = CoinListTile(
-            name: token.contractName,
-            ticker: token.contractTickerSymbol,
-            qoute: token.quote.toString(),
-            iconUrl: token.logoUrl,
-            amount: EthConversions.weiToEth(BigInt.parse(token.balance))
-                .toString());
+          tokenData: token,
+        );
         tiles.add(tile);
       }
     }

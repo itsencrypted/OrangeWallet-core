@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:pollywallet/api_key.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
+import 'package:pollywallet/models/covalent_models/token_history.dart';
 import 'package:pollywallet/utils/api_wrapper/testnet_token_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +26,21 @@ class CovalentApiWrapper {
       var json = jsonDecode(resp.body);
       ctl = CovalentTokenList.fromJson(json);
     }
+    return ctl;
+  }
+
+  static Future<TokenHistory> maticTokenTransfers(
+      String contractAddress) async {
+    int id = await BoxUtils.getNetworkConfig();
+    print(id);
+    TokenHistory ctl;
+    //String address = await CredentialManager.getAddress();
+    String url =
+        "https://api.covalenthq.com/v1/137/address/0x67DDBc63918c7FFfec530b8C1259C8Be590C883f/transfers_v2/?contract-address=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&key=ckey_780ed3c9aba3496e8e9948bada0";
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
+    ctl = TokenHistory.fromJson(json);
+
     return ctl;
   }
 

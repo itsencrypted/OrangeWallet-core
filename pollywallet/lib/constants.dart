@@ -22,6 +22,7 @@ const String pinWidgetRoute = "pinWidgetRoute";
 const String importMnemonicRoute = "importMnemonicRoute";
 const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";
+const String coinProfileRoute = "coinProfileRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

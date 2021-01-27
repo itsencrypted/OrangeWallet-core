@@ -48,12 +48,7 @@ class _TokenListState extends State<TokenList> {
               itemBuilder: (context, index) {
                 var token = state.covalentTokenList.data.items[index];
                 return CoinListTileWithCard(
-                  ticker: token.contractTickerSymbol,
-                  name: token.contractName,
-                  amount: EthConversions.weiToEth(BigInt.parse(token.balance))
-                      .toString(),
-                  qoute: token.quote.toString(),
-                  iconUrl: token.logoUrl,
+                  tokenData: token,
                 );
               },
             );

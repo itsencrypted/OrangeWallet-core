@@ -6,6 +6,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
+import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
@@ -71,6 +72,13 @@ class _PollyWalletState extends State<PollyWallet> {
             debugShowCheckedModeBanner: false,
             title: 'PollyWallet',
             theme: ThemeData(
+              scaffoldBackgroundColor: AppTheme.backgroundWhite,
+              primaryTextTheme: AppTheme.textTheme,
+              appBarTheme: AppBarTheme(
+                  iconTheme: IconThemeData(color: AppTheme.black),
+                  brightness: Brightness.light,
+                  elevation: 0,
+                  backgroundColor: AppTheme.backgroundWhite),
               platform: TargetPlatform.iOS,
               backgroundColor: AppTheme.backgroundWhite,
               textTheme: Typography.blackCupertino,
@@ -78,7 +86,8 @@ class _PollyWalletState extends State<PollyWallet> {
             ),
             routes: {
               pinWidgetRoute: (context) => PinWidget(),
-              homeRoute: (context) => Home()
+              homeRoute: (context) => Home(),
+              coinListRoute: (context) => TokenList(),
             },
             home: current),
       ),

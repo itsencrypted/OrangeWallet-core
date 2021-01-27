@@ -23,7 +23,13 @@ class AppTheme {
   static const double cardElevations = 8;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
-
+  static const textTheme = TextTheme(
+    body1: body1,
+    body2: body2,
+    headline: headline,
+    title: title,
+    subtitle: subtitle,
+  );
   static const TextStyle display1 = TextStyle(
     // h4 -> display1
     fontWeight: FontWeight.bold,
@@ -100,4 +106,6 @@ class AppTheme {
     fontSize: 14,
     color: black, // was lightText
   );
+  static const cardShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(cardRadius)));
 }

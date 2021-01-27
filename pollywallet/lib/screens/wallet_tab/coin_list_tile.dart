@@ -7,14 +7,16 @@ class CoinListTile extends StatelessWidget {
   final String ticker;
   final String qoute;
   final String amount;
-
-  const CoinListTile({Key key, this.name, this.ticker, this.qoute, this.amount})
+  final String iconUrl;
+  const CoinListTile(
+      {Key key, this.name, this.ticker, this.qoute, this.amount, this.iconUrl})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.asset(
-        tokenIcon,
+      leading: FadeInImage.assetNetwork(
+        image: iconUrl,
+        placeholder: tokenIcon,
         height: AppTheme.tokenIconHeight,
         width: AppTheme.tokenIconHeight,
       ),

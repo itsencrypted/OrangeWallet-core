@@ -24,7 +24,7 @@ class _CoinListCardState extends State<CoinListCard> {
     ls.addAll(_tiles());
     ls.add(_divider);
     if (total < 5) {
-      ls.add(_viewAll);
+      ls.add(_raisedButton());
     }
 
     super.initState();
@@ -34,8 +34,7 @@ class _CoinListCardState extends State<CoinListCard> {
   Widget build(BuildContext context) {
     return Card(
       elevation: AppTheme.cardElevations,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppTheme.cardRadius))),
+      shape: AppTheme.cardShape,
       color: AppTheme.white,
       child: ExpansionTile(
         title: Text("$total Coins"),
@@ -78,6 +77,7 @@ class _CoinListCardState extends State<CoinListCard> {
             name: token.contractName,
             ticker: token.contractTickerSymbol,
             qoute: token.quote.toString(),
+            iconUrl: token.logoUrl,
             amount: EthConversions.weiToEth(BigInt.parse(token.balance))
                 .toString());
         tiles.add(tile);
@@ -86,15 +86,22 @@ class _CoinListCardState extends State<CoinListCard> {
     return tiles;
   }
 
-  Widget _viewAll = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      RaisedButton(
-        onPressed: () {},
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Text("View All Tokens"),
-        color: AppTheme.secondaryColor,
-      )
-    ],
-  );
+  _raisedButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RaisedButton(
+          onPressed: _allCoins,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Text("View All Tokens"),
+          color: AppTheme.secondaryColor,
+        )
+      ],
+    );
+  }
+
+  _allCoins() {
+    Navigator.pushNamed(context, coinListRoute);
+  }
 }

@@ -14,11 +14,14 @@ const plasmaRegistryAbi = "assets/abi/plasma_registry.json";
 const rootChainProxyAbi = "assets/abi/root_chain_proxy.json";
 const rootChainAbi = "assets/abi/root_chain.json";
 const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
-
+// urls
+const tokenIconUrl =
+    "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
 // Routes
 const String pinWidgetRoute = "pinWidgetRoute";
 const String importMnemonicRoute = "importMnemonicRoute";
 const String homeRoute = "homeRoute";
+const String coinListRoute = "coinListRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

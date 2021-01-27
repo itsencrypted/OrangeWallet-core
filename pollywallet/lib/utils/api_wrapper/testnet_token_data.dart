@@ -1,3 +1,4 @@
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
@@ -27,23 +28,10 @@ class TestNetTokenData {
           contractName: keys[i],
           quoteRate: 0,
           contractAddress: contracts[keys[i]],
-          logoUrl:
-              "https://image.freepik.com/free-vector/dollar_53876-25498.jpg",
+          logoUrl: tokenIconUrl,
           contractDecimals: 18);
       ls.add(item);
     }
-
-    //BigInt balance = await MaticTransactions.balanceOf(contracts[key]);
-    // Items item = new Items(
-    //     contractTickerSymbol: key,
-    //     balance: balance.toString(),
-    //     quote: 0,
-    //     quoteRate: 0,
-    //     contractAddress: contracts[key],
-    //     logoUrl:
-    //         "https://image.freepik.com/free-vector/dollar_53876-25498.jpg",
-    //     contractDecimals: 18);
-    // ls.add(item);
     Data data = new Data(items: ls);
     CovalentTokenList ctl = new CovalentTokenList(data: data);
     return ctl;
@@ -59,21 +47,9 @@ class TestNetTokenData {
     List<Items> ls = new List();
     List<Future> futureList = new List<Future>();
     List<String> keys = new List<String>();
-    // for (var key in contracts.keys) {
-    //   BigInt balance = await EthereumTransactions.balanceOf(contracts[key]);
-    //   Items item = new Items(
-    //       contractTickerSymbol: key,
-    //       balance: balance.toString(),
-    //       quote: 0,
-    //       quoteRate: 0,
-    //       contractAddress: contracts[key],
-    //       logoUrl:
-    //           "https://image.freepik.com/free-vector/dollar_53876-25498.jpg",
-    //       contractDecimals: 18);
-    //   ls.add(item);
-    // }
+
     for (var key in contracts.keys) {
-      Future future = MaticTransactions.balanceOf(contracts[key]);
+      Future future = EthereumTransactions.balanceOf(contracts[key]);
       futureList.add(future);
       keys.add(key);
     }
@@ -86,8 +62,7 @@ class TestNetTokenData {
           contractName: keys[i],
           quoteRate: 0,
           contractAddress: contracts[keys[i]],
-          logoUrl:
-              "https://image.freepik.com/free-vector/dollar_53876-25498.jpg",
+          logoUrl: tokenIconUrl,
           contractDecimals: 18);
       ls.add(item);
     }

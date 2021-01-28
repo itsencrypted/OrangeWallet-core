@@ -34,7 +34,8 @@ class _CoinProfileState extends State<CoinProfile> {
         builder: (BuildContext context, state) {
           if (state is SendTransactionFinal) {
             var balance = EthConversions.weiToEth(
-                BigInt.parse(state.data.token.balance.toString()));
+                BigInt.parse(state.data.token.balance.toString()),
+                state.data.token.contractDecimals);
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Column(

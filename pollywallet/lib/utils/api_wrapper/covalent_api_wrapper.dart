@@ -6,26 +6,33 @@ import 'package:pollywallet/models/covalent_models/token_history.dart';
 import 'package:pollywallet/utils/api_wrapper/testnet_token_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:http/http.dart' as http;
+import 'package:pollywallet/utils/misc/credential_manager.dart';
 
 class CovalentApiWrapper {
   static const baseUrl = "https://api.covalenthq.com/v1";
   static Future<CovalentTokenList> tokensMaticList() async {
     int id = await BoxUtils.getNetworkConfig();
     print(id);
+    String address = await CredentialManager.getAddress();
+    String url;
     CovalentTokenList ctl;
     if (id == 0) {
-      ctl = await TestNetTokenData.maticTokenList();
+      url = baseUrl +
+          "/80001/address/" +
+          address +
+          "/balances_v2/?key=" +
+          CovalentKey;
     } else {
       //String address = await CredentialManager.getAddress();
-      String url = baseUrl +
+      url = baseUrl +
           "/137/address/" +
           "0x3E7eb0a1ABeCF97591073970DbcED2d4924C3de0" +
           "/balances_v2/?key=" +
           CovalentKey;
-      var resp = await http.get(url);
-      var json = jsonDecode(resp.body);
-      ctl = CovalentTokenList.fromJson(json);
     }
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
+    ctl = CovalentTokenList.fromJson(json);
     return ctl;
   }
 

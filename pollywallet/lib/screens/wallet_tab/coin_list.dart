@@ -66,12 +66,13 @@ class _CoinListCardState extends State<CoinListCard> {
       ));
   List<Widget> _tiles() {
     var tiles = List<Widget>();
+    var ls = widget.tokens.reversed.toList();
     var index = 0;
-    for (Items token in widget.tokens) {
+    for (Items token in ls) {
       if (index == 5) {
         break;
       }
-      if (token.type == null || token.type != "dust") {
+      if (token.type == null || token.balance != 0) {
         index++;
         var tile = CoinListTile(
           tokenData: token,

@@ -10,8 +10,8 @@ class TransactionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool sent = data.transfers[0].fromAddress == address;
-    var value =
-        EthConversions.weiToEth(BigInt.parse(data.value)).toStringAsFixed(2);
+    var value = EthConversions.weiToEth(BigInt.parse(data.value), null)
+        .toStringAsFixed(2);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Padding(

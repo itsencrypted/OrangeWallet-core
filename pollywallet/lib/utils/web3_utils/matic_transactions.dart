@@ -36,7 +36,7 @@ class MaticTransactions {
         contract: contract,
         function: transfer,
         maxGas: 210000,
-        parameters: [EthereumAddress.fromHex(recipient), _amt]);
+        parameters: [EthereumAddress.fromHex(recipient.trim()), _amt]);
     return trx;
   }
 

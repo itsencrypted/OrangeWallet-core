@@ -2,6 +2,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/send_token_model/send_token_data.dart';
@@ -11,6 +12,7 @@ import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
@@ -43,8 +45,9 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
             if (state is SendTransactionFinal) {
-              var balance = int.parse(state.data.token.balance) /
-                  state.data.token.contractDecimals;
+              var balance = EthConversions.weiToEth(
+                  BigInt.parse(state.data.token.balance),
+                  state.data.token.contractDecimals);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,23 +130,27 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                           validator: (val) =>
                               reg.hasMatch(val) ? null : "Invalid addresss",
                           textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: AppTheme.bigLabel,
                           decoration: InputDecoration(
                               prefix: FlatButton(
                                 child: Icon(Icons.paste),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  ClipboardData data =
+                                      await Clipboard.getData('text/plain');
+                                  _address.text = data.text;
+                                },
                               ),
                               suffix: FlatButton(
                                 child: Icon(Icons.qr_code),
                                 onPressed: () async {
-                                  String qrResult =
-                                      (await BarcodeScanner.scan()).toString();
-                                  RegExp reg = RegExp(r'^0x[a-fA-F0-9]{40}$');
-                                  print(qrResult);
-                                  if (reg.hasMatch(qrResult)) {
-                                    if (qrResult.length == 47) {
-                                      _address.text = qrResult;
+                                  var qrResult = await BarcodeScanner.scan();
+                                  RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
+                                  print(qrResult.rawContent);
+                                  if (reg.hasMatch(qrResult.rawContent)) {
+                                    print("Regex");
+                                    if (qrResult.rawContent.length == 42) {
+                                      _address.text = qrResult.rawContent;
                                     } else {
                                       Fluttertoast.showToast(
                                         msg: "Invalid QR",
@@ -175,7 +182,8 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                                   double.parse(val) > balance)
                               ? "Invalid Amount"
                               : null,
-                          keyboardType: TextInputType.number,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
                           style: AppTheme.bigLabel,
                           decoration: InputDecoration(
                             hintText: "Amount",
@@ -245,7 +253,7 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                         style: AppTheme.subtitle,
                       ),
                       subtitle: Text(
-                        balance.toString() +
+                        balance.toStringAsFixed(2) +
                             " " +
                             state.data.token.contractName,
                         style: AppTheme.title,
@@ -279,13 +287,11 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                           if (state.data.token.contractAddress ==
                               "0x0000000000000000000000000000000000001010")
                             trx = await MaticTransactions.transferMatic(
-                                state.data.amount,
-                                state.data.receiver,
-                                context);
+                                _address.text, _address.text, context);
                           else
                             trx = await MaticTransactions.transferERC20(
-                                state.data.amount,
-                                state.data.receiver,
+                                _amount.text,
+                                _address.text,
                                 state.data.token.contractAddress,
                                 context);
                           TransactionData args = TransactionData(

@@ -14,12 +14,18 @@ class MaticTransactionConfirm extends StatefulWidget {
 
 class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
   TransactionData args;
+  bool _loading = true;
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    Future.delayed(Duration.zero, () {
       args = ModalRoute.of(context).settings.arguments;
+      print(args.to);
+      print(args.amount);
+      print(args.type);
+      setState(() {
+        _loading = false;
+      });
     });
-
     super.initState();
   }
 
@@ -33,41 +39,58 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Network:",
-                style: AppTheme.title,
-              ),
-              Text("Matic", style: AppTheme.subtitle),
-              Text(
-                "To:",
-                style: AppTheme.title,
-              ),
-              Text(
-                args.to,
-                style: AppTheme.subtitle,
-              ),
-              Text(
-                "Amount:",
-                style: AppTheme.title,
-              ),
-              Text(
-                args.amount,
-                style: AppTheme.subtitle,
-              ),
-              Text(
-                "Type:",
-                style: AppTheme.title,
-              ),
-              Text(
-                TransactionData.txTypeString[args.type],
-                style: AppTheme.subtitle,
-              ),
-            ],
-          ),
+          _loading
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Network:",
+                        style: AppTheme.title,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Matic", style: AppTheme.subtitle),
+                      ),
+                      Text(
+                        "To:",
+                        style: AppTheme.title,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          args.to,
+                          style: AppTheme.subtitle,
+                        ),
+                      ),
+                      Text(
+                        "Amount:",
+                        style: AppTheme.title,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          args.amount,
+                          style: AppTheme.subtitle,
+                        ),
+                      ),
+                      Text(
+                        "Type:",
+                        style: AppTheme.title,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          TransactionData.txTypeString[args.type.index],
+                          style: AppTheme.subtitle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
           SafeArea(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

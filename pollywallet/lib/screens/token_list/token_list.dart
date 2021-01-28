@@ -6,8 +6,6 @@ import 'package:pollywallet/screens/token_list/coin_list_tile_with_card.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
-import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
-import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
 
 class TokenList extends StatefulWidget {
   @override
@@ -43,10 +41,11 @@ class _TokenListState extends State<TokenList> {
                 ),
               );
             }
+            var ls = state.covalentTokenList.data.items.reversed.toList();
             return ListView.builder(
-              itemCount: state.covalentTokenList.data.items.length,
+              itemCount: ls.length,
               itemBuilder: (context, index) {
-                var token = state.covalentTokenList.data.items[index];
+                var token = ls[index];
                 return CoinListTileWithCard(
                   tokenData: token,
                 );

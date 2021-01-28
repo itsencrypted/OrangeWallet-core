@@ -13,8 +13,9 @@ class CoinListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var amount =
-        EthConversions.weiToEth(BigInt.parse(tokenData.balance)).toString();
+    var amount = EthConversions.weiToEth(
+            BigInt.parse(tokenData.balance), tokenData.contractDecimals)
+        .toString();
     SendTransactionCubit data = context.read<SendTransactionCubit>();
 
     return Padding(

@@ -26,7 +26,8 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
   SendTransactionCubit data;
   int index = 0;
   TextEditingController _amount = TextEditingController();
-  TextEditingController _address = TextEditingController();
+  TextEditingController _address =
+      TextEditingController(text: "0x2Ee331840018465bD7Fe74aA4E442b9EA407fBBE");
   RegExp reg = RegExp(r'^0x[a-fA-F0-9]{40}$');
   @override
   void initState() {
@@ -277,7 +278,6 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                             );
                             return;
                           }
-                          Dialogs.showLoadingDialog(context, _key);
 
                           data.setData(SendTokenData(
                               token: state.data.token,
@@ -286,7 +286,7 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                           Transaction trx;
                           if (state.data.token.contractAddress == maticAddress)
                             trx = await MaticTransactions.transferMatic(
-                                _address.text, _address.text, context);
+                                _amount.text, _address.text, context);
                           else
                             trx = await MaticTransactions.transferERC20(
                                 _amount.text,
@@ -298,10 +298,9 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                               amount: _amount.text,
                               to: _address.text,
                               type: TransactionType.SEND);
-                          Navigator.of(_key.currentContext, rootNavigator: true)
-                              .pop();
 
-                          Navigator.pushNamed(context, confirmMaticTransaction,
+                          Navigator.pushNamed(
+                              context, confirmMaticTransactionRoute,
                               arguments: args);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

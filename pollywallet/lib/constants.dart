@@ -24,7 +24,8 @@ const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";
 const String coinProfileRoute = "coinProfileRoute";
 const String payAmountRoute = "payAmountRoute";
-const String confirmMaticTransaction = "confirmMaticTransaction";
+const String confirmMaticTransactionRoute = "confirmMaticTransactionRoute";
+const String transactionStatusMaticRoute = "transactionStatusMaticRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

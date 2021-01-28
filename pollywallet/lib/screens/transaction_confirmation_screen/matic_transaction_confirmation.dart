@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
@@ -109,6 +110,7 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
     Dialogs.showLoadingDialog(context, _keyLoader);
     String hash = await MaticTransactions.sendTransaction(args.trx, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    // push tx status
+    Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
+        arguments: hash);
   }
 }

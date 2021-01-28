@@ -45,6 +45,11 @@ class MaticTransactions {
     final client = Web3Client(config.endpoint, http.Client());
     String abi = await rootBundle.loadString(erc20Abi);
     var address = await CredentialManager.getAddress();
+    if (erc20Address.toString().toLowerCase() == maticAddress.toLowerCase()) {
+      EtherAmount balance =
+          await client.getBalance(EthereumAddress.fromHex(address));
+      return balance.getValueInUnitBI(EtherUnit.wei);
+    }
     final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
         EthereumAddress.fromHex(erc20Address));
     var func = contract.function('balanceOf');

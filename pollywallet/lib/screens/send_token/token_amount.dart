@@ -284,8 +284,7 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                               receiver: _address.text,
                               amount: amount.toString()));
                           Transaction trx;
-                          if (state.data.token.contractAddress ==
-                              "0x0000000000000000000000000000000000001010")
+                          if (state.data.token.contractAddress == maticAddress)
                             trx = await MaticTransactions.transferMatic(
                                 _address.text, _address.text, context);
                           else
@@ -299,6 +298,9 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                               amount: _amount.text,
                               to: _address.text,
                               type: TransactionType.SEND);
+                          Navigator.of(_key.currentContext, rootNavigator: true)
+                              .pop();
+
                           Navigator.pushNamed(context, confirmMaticTransaction,
                               arguments: args);
                         },

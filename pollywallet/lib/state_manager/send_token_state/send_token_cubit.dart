@@ -13,3 +13,12 @@ class SendTransactionCubit extends Cubit<SendTransactionState> {
     }
   }
 }
+// BlocBuilder<SendTransactionCubit, SendTransactionState>(
+//            builder: (BuildContext context, state) {
+//           if (state is SendTransactionFinal) {
+//             return
+//           } else {
+//             return Center(child: Text("Something went Wrong"));
+//           }
+//         },
+//       )

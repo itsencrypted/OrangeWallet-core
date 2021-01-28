@@ -7,6 +7,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
+import 'package:pollywallet/screens/send_token/token_amount.dart';
 import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
@@ -96,6 +97,7 @@ class _PollyWalletState extends State<PollyWallet> {
               homeRoute: (context) => Home(),
               coinListRoute: (context) => TokenList(),
               coinProfileRoute: (context) => CoinProfile(),
+              payAmountRoute: (context) => SendTokenAmount(),
             },
             home: current),
       ),

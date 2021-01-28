@@ -47,6 +47,14 @@ class AppTheme {
     letterSpacing: 0.27,
     color: darkerText,
   );
+  static const TextStyle bigLabel = TextStyle(
+    // h5 -> headline
+    fontFamily: fontName,
+    fontWeight: FontWeight.w200,
+    fontSize: 25,
+    letterSpacing: 0.27,
+    color: darkerText,
+  );
 
   static const TextStyle title = TextStyle(
     // h6 -> title

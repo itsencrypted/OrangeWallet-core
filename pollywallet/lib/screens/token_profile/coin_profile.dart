@@ -104,7 +104,9 @@ class _CoinProfileState extends State<CoinProfile> {
                             ; // Use the component's default.
                           },
                         )),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, payAmountRoute);
+                        },
                         child: Container(
                             child: Center(
                                 child: Text(

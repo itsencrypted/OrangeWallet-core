@@ -36,12 +36,12 @@ class Data {
 
   Data(
       {this.address,
-        this.updatedAt,
-        this.nextUpdateAt,
-        this.quoteCurrency,
-        this.chainId,
-        this.items,
-        this.pagination});
+      this.updatedAt,
+      this.nextUpdateAt,
+      this.quoteCurrency,
+      this.chainId,
+      this.items,
+      this.pagination});
 
   Data.fromJson(Map<String, dynamic> json) {
     address = json['address'];
@@ -87,15 +87,15 @@ class Items {
 
   Items(
       {this.contractDecimals,
-        this.contractName,
-        this.contractTickerSymbol,
-        this.contractAddress,
-        this.logoUrl,
-        this.type,
-        this.balance,
-        this.quoteRate,
-        this.quote,
-        this.nftData});
+      this.contractName,
+      this.contractTickerSymbol,
+      this.contractAddress,
+      this.logoUrl,
+      this.type,
+      this.balance,
+      this.quoteRate,
+      this.quote,
+      this.nftData});
 
   Items.fromJson(Map<String, dynamic> json) {
     contractDecimals = json['contract_decimals'];

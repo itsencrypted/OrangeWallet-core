@@ -23,6 +23,7 @@ const String importMnemonicRoute = "importMnemonicRoute";
 const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";
 const String coinProfileRoute = "coinProfileRoute";
+const String payAmountRoute = "payAmountRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

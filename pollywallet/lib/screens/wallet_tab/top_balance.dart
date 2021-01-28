@@ -55,7 +55,7 @@ class TopBalance extends StatelessWidget {
                                 width: double.infinity,
                                 child: Center(
                                     child: Text(
-                                  "Send",
+                                  "Buy",
                                   style: AppTheme.buttonText,
                                 ))),
                           ),

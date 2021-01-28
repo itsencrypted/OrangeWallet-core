@@ -76,43 +76,21 @@ class _CoinProfileState extends State<CoinProfile> {
                               MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.pressed))
-                                return receiveButtonColor.withOpacity(0.5);
-                              return receiveButtonColor.withOpacity(0.7);
+                                return sendButtonColor.withOpacity(0.5);
+                              return sendButtonColor.withOpacity(0.7);
                               ; // Use the component's default.
                             },
                           )),
-                          onPressed: () {},
-                          child: Container(
-                              width: double.infinity,
-                              child: Center(
-                                  child: Text("Deposit",
-                                      style: AppTheme.buttonText))),
-                        ),
-                      ),
-                      TextButton(
-                        style: ButtonStyle(shape:
-                            MaterialStateProperty.resolveWith<OutlinedBorder>(
-                                (_) {
-                          return RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100));
-                        }), backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.pressed))
-                              return sendButtonColor.withOpacity(0.5);
-                            return sendButtonColor.withOpacity(0.7);
-                            ; // Use the component's default.
+                          onPressed: () {
+                            Navigator.pushNamed(context, payAmountRoute);
                           },
-                        )),
-                        onPressed: () {
-                          Navigator.pushNamed(context, payAmountRoute);
-                        },
-                        child: Container(
-                            child: Center(
-                                child: Text(
-                          "Send",
-                          style: AppTheme.buttonText,
-                        ))),
+                          child: Container(
+                              child: Center(
+                                  child: Text(
+                            "Send",
+                            style: AppTheme.buttonText,
+                          ))),
+                        ),
                       ),
                       SizedBox(
                         width: 100,
@@ -135,7 +113,7 @@ class _CoinProfileState extends State<CoinProfile> {
                           child: Container(
                               width: double.infinity,
                               child: Center(
-                                  child: Text("Withdraw",
+                                  child: Text("Bridge",
                                       style: AppTheme.buttonText))),
                         ),
                       ),

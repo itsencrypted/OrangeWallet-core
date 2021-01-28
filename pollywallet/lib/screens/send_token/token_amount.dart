@@ -3,11 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/send_token_model/send_token_data.dart';
+import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
+import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:web3dart/web3dart.dart';
 
 class SendTokenAmount extends StatefulWidget {
   @override
@@ -245,7 +251,8 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                         style: AppTheme.title,
                       ),
                       trailing: FlatButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          GlobalKey<State> _key = GlobalKey<State>();
                           double amount;
                           if (index == 0) {
                             amount = double.parse(_amount.text);
@@ -262,11 +269,32 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                             );
                             return;
                           }
+                          Dialogs.showLoadingDialog(context, _key);
+
                           data.setData(SendTokenData(
                               token: state.data.token,
                               receiver: _address.text,
                               amount: amount.toString()));
-                          Navigator.pushNamed(context, "");
+                          Transaction trx;
+                          if (state.data.token.contractAddress ==
+                              "0x0000000000000000000000000000000000001010")
+                            trx = await MaticTransactions.transferMatic(
+                                state.data.amount,
+                                state.data.receiver,
+                                context);
+                          else
+                            trx = await MaticTransactions.transferERC20(
+                                state.data.amount,
+                                state.data.receiver,
+                                state.data.token.contractAddress,
+                                context);
+                          TransactionData args = TransactionData(
+                              trx: trx,
+                              amount: _amount.text,
+                              to: _address.text,
+                              type: TransactionType.SEND);
+                          Navigator.pushNamed(context, confirmMaticTransaction,
+                              arguments: args);
                         },
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         child: ClipOval(

@@ -12,54 +12,32 @@ import 'eth_conversions.dart';
 import 'package:web_socket_channel/io.dart';
 
 class MaticTransactions {
-  static Future<String> transferMatic(
+  static Future<Transaction> transferMatic(
       String amount, String recipient, BuildContext context) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     print(_amt);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.endpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction(
-              to: EthereumAddress.fromHex(recipient),
-              maxGas: 21000,
-              value: EtherAmount.fromUnitAndValue(EtherUnit.wei, _amt)),
-          chainId: config.chainId);
-      return txHash;
-    }
+    var trx = Transaction(
+        to: EthereumAddress.fromHex(recipient),
+        maxGas: 21000,
+        value: EtherAmount.fromUnitAndValue(EtherUnit.wei, _amt));
+    return trx;
   }
 
-  static Future<String> transferERC20(String amount, String recipient,
+  static Future<Transaction> transferERC20(String amount, String recipient,
       String erc20Address, BuildContext context) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     print(_amt);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.endpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(erc20Abi);
-      final contract = DeployedContract(ContractAbi.fromJson(abi, "ERC20"),
-          EthereumAddress.fromHex(erc20Address));
-      var transfer = contract.function('transfer');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: transfer,
-              maxGas: 210000,
-              parameters: [EthereumAddress.fromHex(recipient), _amt]),
-          chainId: config.chainId);
-      print(txHash);
-      return txHash;
-    }
+
+    String abi = await rootBundle.loadString(erc20Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "ERC20"),
+        EthereumAddress.fromHex(erc20Address));
+    var transfer = contract.function('transfer');
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: transfer,
+        maxGas: 210000,
+        parameters: [EthereumAddress.fromHex(recipient), _amt]);
+    return trx;
   }
 
   static Future<BigInt> balanceOf(String erc20Address) async {
@@ -97,8 +75,8 @@ class MaticTransactions {
     return transactionReceipt;
   }
 
-  static Future<String> sendTransaction(Transaction trx, String recipient,
-      String erc20Address, BuildContext context) async {
+  static Future<String> sendTransaction(
+      Transaction trx, BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.endpoint, http.Client());
     String privateKey = await CredentialManager.getPrivateKey(context);

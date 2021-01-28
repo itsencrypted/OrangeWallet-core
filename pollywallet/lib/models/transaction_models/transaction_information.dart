@@ -20,4 +20,5 @@ enum TransactionType {
   DEPOSITPLASMA,
   WITHDRAW,
   STAKE,
+  SEND
 }

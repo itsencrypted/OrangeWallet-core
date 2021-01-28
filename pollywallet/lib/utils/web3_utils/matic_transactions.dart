@@ -96,4 +96,20 @@ class MaticTransactions {
     await streamSubscription.asFuture();
     return transactionReceipt;
   }
+
+  static Future<String> sendTransaction(Transaction trx, String recipient,
+      String erc20Address, BuildContext context) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.endpoint, http.Client());
+    String privateKey = await CredentialManager.getPrivateKey(context);
+    if (privateKey == null)
+      return "failed";
+    else {
+      var credentials = await client.credentialsFromPrivateKey(privateKey);
+      var txHash = await client.sendTransaction(credentials, trx,
+          chainId: config.chainId);
+      print(txHash);
+      return txHash;
+    }
+  }
 }

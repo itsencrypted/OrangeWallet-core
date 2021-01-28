@@ -149,6 +149,7 @@ class EthereumTransactions {
           ),
           chainId: config.ethChainId);
       await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPLASMA);
+
       return txHash;
     }
   }
@@ -369,5 +370,22 @@ class EthereumTransactions {
     final client = Web3Client(config.ethEndpoint, http.Client());
     var price = await client.getGasPrice();
     return price.getInWei;
+  }
+
+  static Future<String> sendTransaction(
+      Transaction trx, BigInt gasPrice, BuildContext context) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String privateKey = await CredentialManager.getPrivateKey(context);
+    if (privateKey == null)
+      return "failed";
+    else {
+      var credentials = await client.credentialsFromPrivateKey(privateKey);
+      var txHash = await client.sendTransaction(credentials, trx,
+          chainId: config.ethChainId);
+      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPLASMA);
+
+      return txHash;
+    }
   }
 }

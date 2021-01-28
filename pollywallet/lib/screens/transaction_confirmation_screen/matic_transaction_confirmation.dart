@@ -70,7 +70,11 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
           ),
           SafeArea(
               child: Row(
-            children: [ConfirmationSlider(onConfirmation: () => _sendTx())],
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SafeArea(
+                  child: ConfirmationSlider(onConfirmation: () => _sendTx()))
+            ],
           ))
         ],
       ),

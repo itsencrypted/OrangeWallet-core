@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class TransferAssetCard extends StatelessWidget {
@@ -15,12 +16,18 @@ class TransferAssetCard extends StatelessWidget {
         child: SizedBox(
           height: 91,
           child: Center(
-            child: ListTile(
-              leading: Image.asset("assets/icons/transfer_icon.png"),
-              title: Text("Transfer Bridge", style: AppTheme.title),
-              subtitle: Text(
-                "Transfer your assets from Ethereum to Matic.",
-                style: AppTheme.subtitle,
+            child: FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () {
+                Navigator.pushNamed(context, bridgeActionRoute);
+              },
+              child: ListTile(
+                leading: Image.asset("assets/icons/transfer_icon.png"),
+                title: Text("Transfer Bridge", style: AppTheme.title),
+                subtitle: Text(
+                  "Transfer your assets from Ethereum to Matic.",
+                  style: AppTheme.subtitle,
+                ),
               ),
             ),
           ),

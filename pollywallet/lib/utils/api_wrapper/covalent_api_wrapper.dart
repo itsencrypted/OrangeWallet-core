@@ -82,8 +82,21 @@ class CovalentApiWrapper {
           "0x3E7eb0a1ABeCF97591073970DbcED2d4924C3de0" +
           "/balances_v2/?key=" +
           CovalentKey;
+      Future future = MaticTransactions.balanceOf(maticAddress);
       var resp = await http.get(url);
+      BigInt native = await future;
+
+      var data = Items(
+          balance: native.toString(),
+          contractAddress: maticAddress,
+          contractDecimals: 18,
+          contractTickerSymbol: "Eth",
+          contractName: "Ethereum",
+          logoUrl: tokenIconUrl,
+          quote: 0,
+          quoteRate: 0);
       var json = jsonDecode(resp.body);
+      ctl.data.items.add(data);
       ctl = CovalentTokenList.fromJson(json);
     }
     return ctl;

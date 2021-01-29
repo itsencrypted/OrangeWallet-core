@@ -4,14 +4,12 @@ import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/send_token_model/send_token_data.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
-class TokenListTileBridge extends StatelessWidget {
+class CoinListTileWithCard extends StatelessWidget {
   final Items tokenData;
-  final int action; //0 deposit, 1 withdraw
-  const TokenListTileBridge({Key key, this.tokenData, this.action})
-      : super(key: key);
+  const CoinListTileWithCard({Key key, this.tokenData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,10 @@ class TokenListTileBridge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       child: Center(
         child: FlatButton(
-          onPressed: () {},
+          onPressed: () {
+            data.setData(SendTokenData(token: tokenData));
+            Navigator.pushNamed(context, coinProfileRoute);
+          },
           child: Column(
             children: [
               ListTile(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/bridge/deposit_list.dart';
 import 'package:pollywallet/screens/bridge/withdraw_list.dart';
 import 'package:pollywallet/theme_data.dart';
 
@@ -81,7 +82,14 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                     }),
               ],
             ),
-            WithdrawTokenList()
+            Expanded(
+              child: Card(
+                  color: AppTheme.white,
+                  shape: AppTheme.cardShape,
+                  elevation: AppTheme.cardElevations,
+                  child:
+                      tabIndex == 0 ? DepositTokenList() : WithdrawTokenList()),
+            )
           ],
         ));
   }

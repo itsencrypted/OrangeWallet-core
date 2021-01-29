@@ -6,10 +6,9 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/wallet_tab/coin_list.dart';
 import 'package:pollywallet/screens/wallet_tab/top_balance.dart';
 import 'package:pollywallet/screens/wallet_tab/transfer_asset_card.dart';
-import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/misc/box.dart';
-import 'package:pollywallet/utils/network/network_manager.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -21,27 +20,30 @@ class _HomeTabState extends State<HomeTab>
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final tokenListCubit = context.read<CovalentTokensListCubit>();
-      tokenListCubit.getTokensList(0);
+      final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      tokenListCubit.getTokensList();
+      final ethCubit = context.read<CovalentTokensListEthCubit>();
+      ethCubit.getTokensList();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CovalentTokensListCubit, CovalentTokensListState>(
+    return BlocBuilder<CovalentTokensListMaticCubit,
+        CovalentTokensListMaticState>(
       builder: (context, state) {
-        if (state is CovalentTokensListInitial) {
+        if (state is CovalentTokensListMaticInitial) {
           return SpinKitFadingFour(
             size: 40,
             color: AppTheme.primaryColor,
           );
-        } else if (state is CovalentTokensListLoading) {
+        } else if (state is CovalentTokensListMaticLoading) {
           return SpinKitFadingFour(
             size: 40,
             color: AppTheme.primaryColor,
           );
-        } else if (state is CovalentTokensListLoaded) {
+        } else if (state is CovalentTokensListMaticLoaded) {
           var amt = 0.0;
           if (state.covalentTokenList.data.items.length > 0) {
             amt = state.covalentTokenList.data.items[0].quote;
@@ -83,22 +85,12 @@ class _HomeTabState extends State<HomeTab>
   }
 
   _refresh() async {
-    final tokenListCubit = context.read<CovalentTokensListCubit>();
-    int id = await BoxUtils.getNetworkConfig();
-    tokenListCubit.getTokensList(0);
+    final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    tokenListCubit.getTokensList();
+    final ethCubit = context.read<CovalentTokensListEthCubit>();
+    ethCubit.getTokensList();
   }
 
   @override
   bool get wantKeepAlive => true;
 }
-// Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//         child: ListView(children: [
-//           Padding(
-//             padding: const EdgeInsets.only(top: 30, bottom: 50),
-//             child: TopBalance("256.53"),
-//           ),
-//           TransferAssetCard(),
-//           CoinListCard(),
-//         ]),
-//       )

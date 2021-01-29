@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/token_list_tile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class WithdrawTokenList extends StatefulWidget {
@@ -14,19 +14,20 @@ class WithdrawTokenList extends StatefulWidget {
 class _WithdrawTokenListState extends State<WithdrawTokenList> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CovalentTokensListCubit, CovalentTokensListState>(
+    return BlocBuilder<CovalentTokensListMaticCubit,
+        CovalentTokensListMaticState>(
       builder: (context, state) {
-        if (state is CovalentTokensListInitial) {
+        if (state is CovalentTokensListMaticInitial) {
           return SpinKitFadingFour(
             size: 40,
             color: AppTheme.primaryColor,
           );
-        } else if (state is CovalentTokensListLoading) {
+        } else if (state is CovalentTokensListMaticLoading) {
           return SpinKitFadingFour(
             size: 40,
             color: AppTheme.primaryColor,
           );
-        } else if (state is CovalentTokensListLoaded) {
+        } else if (state is CovalentTokensListMaticLoaded) {
           if (state.covalentTokenList.data.items.length == 0) {
             return Center(
               child: Text(
@@ -36,16 +37,14 @@ class _WithdrawTokenListState extends State<WithdrawTokenList> {
             );
           }
           var ls = state.covalentTokenList.data.items.reversed.toList();
-          return Expanded(
-            child: ListView.builder(
-              itemCount: ls.length,
-              itemBuilder: (context, index) {
-                return TokenListTileBridge(
-                  tokenData: ls[index],
-                  action: 1,
-                );
-              },
-            ),
+          return ListView.builder(
+            itemCount: ls.length,
+            itemBuilder: (context, index) {
+              return TokenListTileBridge(
+                tokenData: ls[index],
+                action: 1,
+              );
+            },
           );
         } else {
           return Column(

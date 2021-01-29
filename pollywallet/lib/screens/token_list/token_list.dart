@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
-import 'package:pollywallet/screens/token_list/coin_list_tile_with_card.dart';
-import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
+import 'package:pollywallet/screens/token_list/coin_list_tile.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 
@@ -20,19 +20,20 @@ class _TokenListState extends State<TokenList> {
         title: Text("All Coins"),
         actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
       ),
-      body: BlocBuilder<CovalentTokensListCubit, CovalentTokensListState>(
+      body: BlocBuilder<CovalentTokensListMaticCubit,
+          CovalentTokensListMaticState>(
         builder: (context, state) {
-          if (state is CovalentTokensListInitial) {
+          if (state is CovalentTokensListMaticInitial) {
             return SpinKitFadingFour(
               size: 40,
               color: AppTheme.primaryColor,
             );
-          } else if (state is CovalentTokensListLoading) {
+          } else if (state is CovalentTokensListMaticLoading) {
             return SpinKitFadingFour(
               size: 40,
               color: AppTheme.primaryColor,
             );
-          } else if (state is CovalentTokensListLoaded) {
+          } else if (state is CovalentTokensListMaticLoaded) {
             if (state.covalentTokenList.data.items.length == 0) {
               return Center(
                 child: Text(
@@ -42,14 +43,19 @@ class _TokenListState extends State<TokenList> {
               );
             }
             var ls = state.covalentTokenList.data.items.reversed.toList();
-            return ListView.builder(
-              itemCount: ls.length,
-              itemBuilder: (context, index) {
-                var token = ls[index];
-                return CoinListTileWithCard(
-                  tokenData: token,
-                );
-              },
+            return Card(
+              color: AppTheme.white,
+              shape: AppTheme.cardShape,
+              elevation: AppTheme.cardElevations,
+              child: ListView.builder(
+                itemCount: ls.length,
+                itemBuilder: (context, index) {
+                  var token = ls[index];
+                  return CoinListTileWithCard(
+                    tokenData: token,
+                  );
+                },
+              ),
             );
           } else {
             return Column(
@@ -72,8 +78,7 @@ class _TokenListState extends State<TokenList> {
   }
 
   _refresh() async {
-    final tokenListCubit = context.read<CovalentTokensListCubit>();
-    int id = await BoxUtils.getNetworkConfig();
-    tokenListCubit.getTokensList(0);
+    final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    tokenListCubit.getTokensList();
   }
 }

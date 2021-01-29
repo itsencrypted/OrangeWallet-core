@@ -13,7 +13,8 @@ import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
 import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
-import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -35,9 +36,6 @@ class _PollyWalletState extends State<PollyWallet> {
 
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      data = context.read<SendTransactionCubit>();
-    });
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
         if (status) {
@@ -71,13 +69,15 @@ class _PollyWalletState extends State<PollyWallet> {
       },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<CovalentTokensListCubit>(
-            create: (BuildContext context) => CovalentTokensListCubit(),
+          BlocProvider<CovalentTokensListMaticCubit>(
+            create: (BuildContext context) => CovalentTokensListMaticCubit(),
           ),
           BlocProvider<SendTransactionCubit>(
               create: (BuildContext context) => SendTransactionCubit()),
           BlocProvider<DepositDataCubit>(
               create: (BuildContext context) => DepositDataCubit()),
+          BlocProvider<CovalentTokensListEthCubit>(
+              create: (BuildContext context) => CovalentTokensListEthCubit()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

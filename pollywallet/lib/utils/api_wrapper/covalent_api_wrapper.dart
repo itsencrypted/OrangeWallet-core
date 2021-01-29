@@ -88,7 +88,7 @@ class CovalentApiWrapper {
 
       var data = Items(
           balance: native.toString(),
-          contractAddress: maticAddress,
+          contractAddress: ethAddress,
           contractDecimals: 18,
           contractTickerSymbol: "Eth",
           contractName: "Ethereum",

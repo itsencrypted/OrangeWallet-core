@@ -41,7 +41,7 @@ class TestNetTokenData {
     Map<String, String> contracts = {
       "erc20Test": "0x655f2166b0709cd575202630952d71e2bb0d61af",
       "plasmaWeth": "0x60D4dB9b534EF9260a88b0BED6c486fe13E604Fc",
-      "ETH": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      "ETH": ethAddress,
       "mrc20": "0x499d11E0b6eAC7c0593d8Fb292DCBbF815Fb29Ae",
     };
     List<Items> ls = new List();

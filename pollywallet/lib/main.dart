@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/bridge_actions.dart';
+import 'package:pollywallet/screens/deposit/deposit_screen.dart';
 import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
@@ -106,6 +107,7 @@ class _PollyWalletState extends State<PollyWallet> {
               transactionStatusMaticRoute: (context) =>
                   MaticTransactionStatus(),
               bridgeActionRoute: (context) => BridgeTransfers(),
+              depositAmountRoute: (context) => DepositScreen(),
             },
             home: current),
       ),

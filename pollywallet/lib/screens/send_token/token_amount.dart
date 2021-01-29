@@ -14,7 +14,6 @@ import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
-import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 
 class SendTokenAmount extends StatefulWidget {
@@ -179,8 +178,9 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                           keyboardAppearance: Brightness.dark,
                           textAlign: TextAlign.center,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (val) => (double.parse(val) < 0 ||
-                                  double.parse(val) > balance)
+                          validator: (val) => (val == "" || val == null) ||
+                                  ((double.parse(val) < 0 ||
+                                      double.parse(val) > balance))
                               ? "Invalid Amount"
                               : null,
                           keyboardType:

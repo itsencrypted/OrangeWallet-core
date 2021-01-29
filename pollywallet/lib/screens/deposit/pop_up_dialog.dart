@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PopUpDialogAproval {
-  showAlertDialog(BuildContext context) {
+  static showAlertDialog(BuildContext context) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),

@@ -12,7 +12,9 @@ import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/send_token/token_amount.dart';
 import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
+import 'package:pollywallet/screens/transaction_confirmation_screen/ethereum_transaction_confirmation.dart';
 import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
+import 'package:pollywallet/screens/transaction_status/transaction_status_eth.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -108,6 +110,9 @@ class _PollyWalletState extends State<PollyWallet> {
                   MaticTransactionStatus(),
               bridgeActionRoute: (context) => BridgeTransfers(),
               depositAmountRoute: (context) => DepositScreen(),
+              ethereumTransactionConfirmRoute: (context) =>
+                  EthTransactionConfirmation(),
+              ethereumTransactionStatus: (context) => EthTransactionStatus(),
             },
             home: current),
       ),

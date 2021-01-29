@@ -16,172 +16,111 @@ import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 
 class EthereumTransactions {
-  static Future<String> depositErc20Pos(String amount, String erc20Address,
-      BigInt gasPrice, BuildContext context) async {
+  static Future<Transaction> depositErc20Pos(
+      String amount, String erc20Address, BuildContext context) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     var amt = RlpEncode.encode(_amt);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(rootChainProxyAbi);
-      final contract = DeployedContract(
-          ContractAbi.fromJson(abi, "rootchainproxy"),
-          EthereumAddress.fromHex(config.rootChainProxy));
-      var depositEther = contract.function('depositFor');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var address = await credentials.extractAddress();
 
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: depositEther,
-              maxGas: 125000,
-              parameters: [
-                address,
-                EthereumAddress.fromHex(erc20Address),
-                amt
-              ]),
-          chainId: config.ethChainId);
-      var data = Transaction.callContract(
-              contract: contract,
-              function: depositEther,
-              maxGas: 125000,
-              parameters: [address, EthereumAddress.fromHex(erc20Address), amt])
-          .data;
-      print(data);
-      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPOS);
-      return txHash;
-    }
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "rootchainproxy"),
+        EthereumAddress.fromHex(config.rootChainProxy));
+    var depositEther = contract.function('depositFor');
+    var address = await BoxUtils.getAddress();
+
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: depositEther,
+        maxGas: 125000,
+        parameters: [
+          EthereumAddress.fromHex(address),
+          EthereumAddress.fromHex(erc20Address),
+          amt
+        ]);
+
+    return trx;
   }
 
-  static Future<String> depositEthPos(
-      String amount, BigInt gasPrice, BuildContext context) async {
+  static Future<Transaction> depositEthPos(
+      String amount, BuildContext context) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(rootChainProxyAbi);
-      final contract = DeployedContract(
-          ContractAbi.fromJson(abi, "rootchainproxy"),
-          EthereumAddress.fromHex(config.rootChainProxy));
-      var depositEther = contract.function('depositEtherFor');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var address = await credentials.extractAddress();
-      var amt = RlpEncode.encode(_amt);
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: depositEther,
-              from: address,
-              maxGas: 125000,
-              value: EtherAmount.inWei(_amt),
-              parameters: [address]),
-          chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPOS);
-      return txHash;
-    }
+
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "rootchainproxy"),
+        EthereumAddress.fromHex(config.rootChainProxy));
+    var depositEther = contract.function('depositEtherFor');
+    var address = await BoxUtils.getAddress();
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: depositEther,
+        from: EthereumAddress.fromHex(address),
+        maxGas: 125000,
+        value: EtherAmount.inWei(_amt),
+        parameters: [EthereumAddress.fromHex(address)]);
+    return trx;
   }
 
-  static Future<String> depositErc20Plasma(String amount, String erc20Address,
-      BigInt gasPrice, BuildContext context) async {
+  static Future<Transaction> depositErc20Plasma(
+      String amount, String erc20Address, BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(depositManagerAbi);
-      final contract = DeployedContract(
-          ContractAbi.fromJson(abi, "depositManger"),
-          EthereumAddress.fromHex(config.depositManager));
-      var depositEther = contract.function('depositERC20');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var address = await credentials.extractAddress();
-      var _amt = EthConversions.ethToWei(amount);
-      //var amt = RlpEncode.encode(_amt);
 
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: depositEther,
-              maxGas: 225000,
-              from: address,
-              parameters: [EthereumAddress.fromHex(erc20Address), _amt]),
-          chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPLASMA);
-      return txHash;
-    }
+    String abi = await rootBundle.loadString(depositManagerAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "depositManger"),
+        EthereumAddress.fromHex(config.depositManager));
+    var depositEther = contract.function('depositERC20');
+    var address = await BoxUtils.getAddress();
+    var _amt = EthConversions.ethToWei(amount);
+    //var amt = RlpEncode.encode(_amt);
+
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: depositEther,
+        maxGas: 225000,
+        from: EthereumAddress.fromHex(address),
+        parameters: [EthereumAddress.fromHex(erc20Address), _amt]);
+    return trx;
   }
 
-  static Future<String> depositEthPlasma(
-      String amount, BigInt gasPrice, BuildContext context) async {
+  static Future<Transaction> depositEthPlasma(
+      String amount, BuildContext context) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(rootChainAbi);
-      final contract = DeployedContract(
-          ContractAbi.fromJson(abi, "depositManger"),
-          EthereumAddress.fromHex(config.depositManager));
-      var depositEther = contract.function('depositEther');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var address = await credentials.extractAddress();
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-            contract: contract,
-            function: depositEther,
-            maxGas: 125000,
-            from: address,
-            value: EtherAmount.inWei(_amt),
-          ),
-          chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPLASMA);
 
-      return txHash;
-    }
+    String abi = await rootBundle.loadString(rootChainAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "depositManger"),
+        EthereumAddress.fromHex(config.depositManager));
+    var depositEther = contract.function('depositEther');
+    var address = await BoxUtils.getAddress();
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: depositEther,
+        maxGas: 125000,
+        from: EthereumAddress.fromHex(address),
+        value: EtherAmount.inWei(_amt),
+        parameters: []);
+
+    return trx;
   }
 
-  static Future<String> approveErc20(String erc20Address, String spender,
-      BigInt gasPrice, BuildContext context) async {
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(erc20Abi);
-      print(erc20Address);
-      final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
-          EthereumAddress.fromHex(erc20Address));
-      var approve = contract.function('approve');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: approve,
-              maxGas: 210000,
-              parameters: [
-                EthereumAddress.fromHex(spender),
-                BigInt.parse(uintMax)
-              ]),
-          chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.APPROVE);
-      return txHash;
-    }
+  static Future<Transaction> approveErc20(
+      String erc20Address, String spender, BuildContext context) async {
+    String abi = await rootBundle.loadString(erc20Abi);
+    print(erc20Address);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
+        EthereumAddress.fromHex(erc20Address));
+    var approve = contract.function('approve');
+
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: approve,
+        maxGas: 210000,
+        parameters: [EthereumAddress.fromHex(spender), BigInt.parse(uintMax)]);
+    return trx;
   }
 
   static Future<String> increaseERC20Allowance(String amount,
@@ -383,8 +322,6 @@ class EthereumTransactions {
       var credentials = await client.credentialsFromPrivateKey(privateKey);
       var txHash = await client.sendTransaction(credentials, trx,
           chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.DEPOSITPLASMA);
-
       return txHash;
     }
   }

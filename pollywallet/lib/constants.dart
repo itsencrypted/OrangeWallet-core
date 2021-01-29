@@ -28,6 +28,9 @@ const String confirmMaticTransactionRoute = "confirmMaticTransactionRoute";
 const String transactionStatusMaticRoute = "transactionStatusMaticRoute";
 const String bridgeActionRoute = "bridgeActionRoute";
 const String depositAmountRoute = "depositAmountRoute";
+const String ethereumTransactionConfirmRoute =
+    "ethereumTransactionConfirmRoute";
+const String ethereumTransactionStatus = "ethereumTransactionStatus";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";

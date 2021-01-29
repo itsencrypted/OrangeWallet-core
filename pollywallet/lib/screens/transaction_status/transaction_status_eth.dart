@@ -10,12 +10,12 @@ import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 
-class MaticTransactionStatus extends StatefulWidget {
+class EthTransactionStatus extends StatefulWidget {
   @override
-  _MaticTransactionStatusState createState() => _MaticTransactionStatusState();
+  _EthTransactionStatusState createState() => _EthTransactionStatusState();
 }
 
-class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
+class _EthTransactionStatusState extends State<EthTransactionStatus> {
   TransactionReceipt receipt;
   String txHash;
   StreamSubscription streamSubscription;
@@ -140,11 +140,11 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
     print(config.ethEndpoint);
     print(config.ethWebsocket);
     final client =
-        Web3Client(config.endpoint, http.Client(), socketConnector: () {
-      return IOWebSocketChannel.connect(config.maticWebsocket).cast<String>();
+        Web3Client(config.ethEndpoint, http.Client(), socketConnector: () {
+      return IOWebSocketChannel.connect(config.ethWebsocket).cast<String>();
     });
     print(txHash);
-    final client2 = Web3Client(config.endpoint, http.Client());
+    final client2 = Web3Client(config.ethEndpoint, http.Client());
     streamSubscription = client.addedBlocks().listen(null);
     streamSubscription.onData((data) async {
       var tx = await client2.getTransactionReceipt(txHash);

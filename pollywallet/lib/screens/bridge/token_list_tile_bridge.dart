@@ -41,10 +41,18 @@ class TokenListTileBridge extends StatelessWidget {
               Navigator.of(_key.currentContext, rootNavigator: true).pop();
               int status = 0;
               if (pos) {
-                status++;
+                status = 1;
               }
               if (plasma) {
-                status++;
+                status == 1 ? status = 3 : status = 2;
+              }
+              print(tokenData.contractAddress.toLowerCase());
+              print(ethAddress);
+              if (tokenData.contractAddress.toLowerCase() ==
+                  ethAddress.toLowerCase()) {
+                print(tokenData.contractAddress.toLowerCase());
+                print(ethAddress);
+                status = 3;
               }
               if (status == 0) {
                 Fluttertoast.showToast(msg: "No bridge available");

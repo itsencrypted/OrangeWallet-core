@@ -11,10 +11,9 @@ class EthConversions {
     }
   }
 
-  static BigInt weiToGwei(BigInt amount) {
+  static String weiToGwei(BigInt amount) {
     var db = amount / BigInt.from(10).pow(9);
-    var bi = BigInt.from(db.toInt());
-    return bi;
+    return db.toStringAsPrecision(2);
   }
 
   static BigInt ethToWei(String amount) {

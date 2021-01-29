@@ -36,13 +36,13 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
       appBar: AppBar(
         title: Text("Confirm transaction"),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _loading
-              ? Container()
-              : Padding(
+      body: _loading
+          ? Container()
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -92,16 +92,17 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                     ],
                   ),
                 ),
-          SafeArea(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SafeArea(
-                  child: ConfirmationSlider(onConfirmation: () => _sendTx()))
-            ],
-          ))
-        ],
-      ),
+                SafeArea(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SafeArea(
+                        child:
+                            ConfirmationSlider(onConfirmation: () => _sendTx()))
+                  ],
+                ))
+              ],
+            ),
     );
   }
 

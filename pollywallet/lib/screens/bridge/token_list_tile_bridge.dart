@@ -3,12 +3,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
+import 'package:pollywallet/models/withdraw_models/withdraw_burn_data.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 
 class TokenListTileBridge extends StatelessWidget {
   final Items tokenData;
@@ -21,7 +23,9 @@ class TokenListTileBridge extends StatelessWidget {
     var amount = EthConversions.weiToEth(
             BigInt.parse(tokenData.balance), tokenData.contractDecimals)
         .toString();
-    DepositDataCubit data = context.read<DepositDataCubit>();
+    DepositDataCubit depositData = context.read<DepositDataCubit>();
+    WithdrawBurnDataCubit withdrawBurnData =
+        context.read<WithdrawBurnDataCubit>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -59,8 +63,43 @@ class TokenListTileBridge extends StatelessWidget {
                 return;
               }
               DepositModel model = DepositModel(token: tokenData);
-              data.setData(model);
+              depositData.setData(model);
               Navigator.pushNamed(context, depositAmountRoute,
+                  arguments: status);
+            } else {
+              GlobalKey<State> _key = GlobalKey<State>();
+              Dialogs.showLoadingDialog(context, _key);
+              Future posFuture = EthereumTransactions.childToRootPos(
+                  tokenData.contractAddress);
+              Future plasmaFuture = EthereumTransactions.childToRootPlasma(
+                  tokenData.contractAddress);
+
+              bool pos = await posFuture;
+              bool plasma = await plasmaFuture;
+              Navigator.of(_key.currentContext, rootNavigator: true).pop();
+              int status = 0;
+              if (pos) {
+                status = 1;
+              }
+              if (plasma) {
+                status == 1 ? status = 3 : status = 2;
+              }
+              print(tokenData.contractAddress.toLowerCase());
+              print(ethAddress);
+              if (tokenData.contractAddress.toLowerCase() ==
+                  ethAddress.toLowerCase()) {
+                print(tokenData.contractAddress.toLowerCase());
+                print(ethAddress);
+                status = 3;
+              }
+              if (status == 0) {
+                Fluttertoast.showToast(msg: "No bridge available");
+                return;
+              }
+              WithdrawBurnDataModel model =
+                  WithdrawBurnDataModel(token: tokenData);
+              withdrawBurnData.setData(model);
+              Navigator.pushNamed(context, withdrawAmountRoute,
                   arguments: status);
             }
           },

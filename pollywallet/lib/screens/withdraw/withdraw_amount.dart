@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -8,9 +6,9 @@ import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/screens/deposit/pop_up_dialog.dart';
-import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
@@ -19,14 +17,14 @@ import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 
-class DepositScreen extends StatefulWidget {
+class WithdrawScreen extends StatefulWidget {
   @override
-  _DepositScreenState createState() => _DepositScreenState();
+  _WithdrawScreenState createState() => _WithdrawScreenState();
 }
 
-class _DepositScreenState extends State<DepositScreen> {
+class _WithdrawScreenState extends State<WithdrawScreen> {
   TextEditingController _amount = TextEditingController();
-  DepositDataCubit data;
+  WithdrawBurnDataCubit data;
   BuildContext context;
   int bridge = 0;
   bool _isInitialized;
@@ -41,7 +39,7 @@ class _DepositScreenState extends State<DepositScreen> {
 
   @override
   Widget build(BuildContext context) {
-    this.data = context.read<DepositDataCubit>();
+    this.data = context.read<WithdrawBurnDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print(args);
 
@@ -53,11 +51,11 @@ class _DepositScreenState extends State<DepositScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Deposit to Matic"),
+          title: Text("Withdraw from Matic"),
         ),
-        body: BlocBuilder<DepositDataCubit, DepositDataState>(
+        body: BlocBuilder<WithdrawBurnDataCubit, WithdrawBurnDataState>(
           builder: (BuildContext context, state) {
-            if (state is DepositDataFinal) {
+            if (state is WithdrawBurnDataFinal) {
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);
@@ -281,7 +279,8 @@ class _DepositScreenState extends State<DepositScreen> {
         ));
   }
 
-  _sendDepositTransaction(DepositDataFinal state, BuildContext context) async {
+  _sendDepositTransaction(
+      WithdrawBurnDataFinal state, BuildContext context) async {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
@@ -289,8 +288,8 @@ class _DepositScreenState extends State<DepositScreen> {
     TransactionData transactionData;
     if (state.data.token.contractAddress.toLowerCase() ==
         ethAddress.toLowerCase()) {
-      data.setData(DepositModel(
-          token: state.data.token, amount: _amount.toString(), isEth: true));
+      // data.setData(DepositModel(
+      //     token: state.data.token, amount: _amount.toString(), isEth: true));
       if (bridge == 1) {
         trx = await EthereumTransactions.depositEthPos(_amount.text, context);
         transactionData = TransactionData(

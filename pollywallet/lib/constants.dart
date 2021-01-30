@@ -30,6 +30,7 @@ const String bridgeActionRoute = "bridgeActionRoute";
 const String depositAmountRoute = "depositAmountRoute";
 const String ethereumTransactionConfirmRoute =
     "ethereumTransactionConfirmRoute";
+const String withdrawAmountRoute = "withdrawAmountRoute";
 const String ethereumTransactionStatus = "ethereumTransactionStatus";
 //strings
 const endpoint = "endpoint";

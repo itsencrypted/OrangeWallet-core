@@ -13,7 +13,8 @@ class Dialogs {
               onWillPop: () async => false,
               child: SimpleDialog(
                   key: key,
-                  backgroundColor: AppTheme.backgroundWhite,
+                  shape: AppTheme.cardShape,
+                  backgroundColor: AppTheme.white,
                   children: <Widget>[
                     Center(
                       child: Column(children: [

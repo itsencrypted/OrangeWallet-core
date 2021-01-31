@@ -32,7 +32,7 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                     Tab(
                       child: Align(
                         child: Text(
-                          'Withdraw',
+                          'Deposit',
                           style: AppTheme.tabbarTextStyle,
                         ),
                       ),
@@ -40,7 +40,7 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                     Tab(
                       child: Align(
                         child: Text(
-                          'Deposit',
+                          'Withdraw',
                           style: AppTheme.tabbarTextStyle,
                         ),
                       ),
@@ -66,7 +66,10 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TabBarView(
-                        children: [WithdrawTokenList(), DepositTokenList()],
+                        children: [
+                          DepositTokenList(),
+                          WithdrawTokenList(),
+                        ],
                       ),
                     ),
                   ),

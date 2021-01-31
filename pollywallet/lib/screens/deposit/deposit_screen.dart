@@ -16,6 +16,7 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -24,7 +25,8 @@ class DepositScreen extends StatefulWidget {
   _DepositScreenState createState() => _DepositScreenState();
 }
 
-class _DepositScreenState extends State<DepositScreen> {
+class _DepositScreenState extends State<DepositScreen>
+    with SingleTickerProviderStateMixin {
   TextEditingController _amount = TextEditingController();
   DepositDataCubit data;
   BuildContext context;
@@ -32,15 +34,22 @@ class _DepositScreenState extends State<DepositScreen> {
   bool _isInitialized;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
-
+  TabController _controller;
   @override
   initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {});
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      if (_controller.index == 0) {
+        bridge = 1;
+      } else {
+        bridge = 2;
+      }
+    });
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print(args);
@@ -53,8 +62,40 @@ class _DepositScreenState extends State<DepositScreen> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Deposit to Matic"),
-        ),
+            title: Text("Deposit to Matic"),
+            bottom: ColoredTabBar(
+              tabBar: TabBar(
+                controller: _controller,
+                labelStyle: AppTheme.tabbarTextStyle,
+                unselectedLabelStyle: AppTheme.tabbarTextStyle,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppTheme.white),
+                tabs: [
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'POS',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'Plasma',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              borderRadius: AppTheme.cardRadius,
+              color: AppTheme.tabbarBGColor,
+              tabbarMargin: AppTheme.cardRadius,
+              tabbarPadding: AppTheme.paddingHeight / 4,
+            )),
         body: BlocBuilder<DepositDataCubit, DepositDataState>(
           builder: (BuildContext context, state) {
             if (state is DepositDataFinal) {
@@ -65,87 +106,7 @@ class _DepositScreenState extends State<DepositScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      args == 3
-                          ? CupertinoSegmentedControl<int>(
-                              pressedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              groupValue: index,
-                              selectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              borderColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.01),
-                              unselectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              padding: EdgeInsets.all(10),
-                              children: {
-                                0: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 0 ? 1 : 0,
-                                    color: index == 0
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      child: Text(
-                                        "POS",
-                                        style: AppTheme.body1,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                1: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 1 ? 1 : 0,
-                                    color: index == 1
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10),
-                                      child: Text(
-                                        "PLASMA",
-                                        style: AppTheme.body1,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              },
-                              onValueChanged: (val) {
-                                setState(() {
-                                  index = val;
-                                  if (val == 0) {
-                                    bridge = 1;
-                                  } else {
-                                    bridge = 2;
-                                  }
-                                });
-                              })
-                          : args == 1
-                              ? Text("POS Bridge", style: AppTheme.headline)
-                              : args == 2
-                                  ? Text(
-                                      "Plasma Bridge",
-                                      style: AppTheme.headline,
-                                    )
-                                  : Container(),
-                    ],
-                  ),
+                  SizedBox(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

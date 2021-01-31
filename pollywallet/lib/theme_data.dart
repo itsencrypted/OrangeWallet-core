@@ -9,6 +9,7 @@ class AppTheme {
   static const Color primaryColor = Color(0xFFD287FD);
   static const Color secondaryColor = Color(0xffEABC78);
   static const Color black = Color(0xFF000000);
+  static const Color warningCardColor = Color(0xFFD3AA6B);
 
   static const Color grey = Color(0xFF3A5160);
   static const Color stackingGrey = Color(0xFFF3F2EF);
@@ -21,7 +22,8 @@ class AppTheme {
   static const Color whiteTextColor = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const double cardRadius = 12;
-  static const double bigCardRadius = 16;
+  static const double cardRadiusMedium = 14;
+  static const double cardRadiusBig = 16;
   static const double cardElevations = 8;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
@@ -86,6 +88,14 @@ class AppTheme {
     color: darkText,
   );
 
+  static const TextStyle body2White = TextStyle(
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    letterSpacing: 0.2,
+    color: white,
+  );
+
   static const TextStyle body1 = TextStyle(
     // body2 -> body1
     fontFamily: fontName,
@@ -122,6 +132,13 @@ class AppTheme {
     fontFamily: fontName,
     fontSize: 16,
     color: black, // was lightText
+  );
+
+  static const TextStyle titleWhite = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontFamily: fontName,
+    fontSize: 16,
+    color: white, // was lightText
   );
   static const cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(cardRadius)));

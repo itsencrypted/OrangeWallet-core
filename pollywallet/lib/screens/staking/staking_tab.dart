@@ -8,11 +8,20 @@ class StakingTab extends StatefulWidget {
 
 class _StakingTabState extends State<StakingTab>
     with AutomaticKeepAliveClientMixin<StakingTab> {
+  bool showWarning;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    showWarning = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(children: [
+        if (showWarning) warningCard(),
         stakingTile(
             iconURL:
                 'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
@@ -83,7 +92,7 @@ class _StakingTabState extends State<StakingTab>
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
             borderRadius:
-                BorderRadius.all(Radius.circular(AppTheme.bigCardRadius))),
+                BorderRadius.all(Radius.circular(AppTheme.cardRadiusBig))),
         color: AppTheme.white,
         elevation: AppTheme.cardElevations,
         child: Container(
@@ -151,6 +160,51 @@ class _StakingTabState extends State<StakingTab>
             ],
           ),
         ));
+  }
+
+  Widget warningCard() {
+    return Card(
+      color: AppTheme.warningCardColor,
+      elevation: AppTheme.cardElevations,
+      shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.all(Radius.circular(AppTheme.cardRadiusMedium))),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              left: AppTheme.paddingHeight,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Warning',
+                  style: AppTheme.titleWhite,
+                ),
+                IconButton(
+                    icon: Icon(Icons.close),
+                    color: Colors.white,
+                    onPressed: () {
+                      setState(() {
+                        showWarning = false;
+                      });
+                    })
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: AppTheme.paddingHeight, bottom: AppTheme.paddingHeight),
+            child: Text(
+              'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
+              style: AppTheme.body2White,
+              maxLines: 100,
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget listTile(

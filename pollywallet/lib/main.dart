@@ -10,6 +10,7 @@ import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/send_token/token_amount.dart';
+import 'package:pollywallet/screens/staking/delegation_screen/delegation_screen.dart';
 import 'package:pollywallet/screens/staking/validators_screen/all_validators.dart';
 import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
@@ -112,6 +113,7 @@ class _PollyWalletState extends State<PollyWallet> {
               bridgeActionRoute: (context) => BridgeTransfers(),
               allValidatorsRoute: (context) => AllValidators(),
               depositAmountRoute: (context) => DepositScreen(),
+              delegationRoute: (context) => DelegationScreen(),
               ethereumTransactionConfirmRoute: (context) =>
                   EthTransactionConfirmation(),
               ethereumTransactionStatus: (context) => EthTransactionStatus(),

@@ -22,9 +22,12 @@ class AppTheme {
   static const Color whiteTextColor = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const Color tabbarBGColor = Color(0xFFE7E3D8);
+  static const Color borderColorGreyish = Color(0xFFDCDFE6);
+  static const Color buttonColorBlue = Color(0xFF003CB2);
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
+  static const double cardRadiusSmall = 10;
   static const double cardElevations = 8;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
@@ -142,6 +145,14 @@ class AppTheme {
     fontSize: 14,
     letterSpacing: -0.2,
     color: black, // was lightText
+  );
+
+  static const TextStyle textW600White14 = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontFamily: fontName,
+    fontSize: 14,
+    letterSpacing: -0.2,
+    color: white, // was lightText
   );
 
   static const TextStyle titleWhite = TextStyle(

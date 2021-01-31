@@ -14,6 +14,7 @@ import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
+import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:web3dart/web3dart.dart';
 
 class SendTokenAmount extends StatefulWidget {
@@ -21,9 +22,11 @@ class SendTokenAmount extends StatefulWidget {
   _SendTokenAmountState createState() => _SendTokenAmountState();
 }
 
-class _SendTokenAmountState extends State<SendTokenAmount> {
+class _SendTokenAmountState extends State<SendTokenAmount>
+    with SingleTickerProviderStateMixin {
   SendTransactionCubit data;
   int index = 0;
+  TabController _controller;
   TextEditingController _amount = TextEditingController();
   TextEditingController _address =
       TextEditingController(text: "0x2Ee331840018465bD7Fe74aA4E442b9EA407fBBE");
@@ -33,6 +36,12 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       data = context.read<SendTransactionCubit>();
     });
+    _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        index = _controller.index;
+      });
+    });
     super.initState();
   }
 
@@ -40,8 +49,41 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Paying"),
-        ),
+            title: Text("Paying"),
+            bottom: ColoredTabBar(
+              tabBar: TabBar(
+                controller: _controller,
+                labelStyle: AppTheme.tabbarTextStyle,
+                unselectedLabelStyle: AppTheme.tabbarTextStyle,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                    //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppTheme.white),
+                tabs: [
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'Token',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'USD',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              borderRadius: AppTheme.cardRadius,
+              color: AppTheme.tabbarBGColor,
+              tabbarMargin: AppTheme.cardRadius,
+              tabbarPadding: AppTheme.paddingHeight / 4,
+            )),
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
             if (state is SendTransactionFinal) {
@@ -52,71 +94,7 @@ class _SendTokenAmountState extends State<SendTokenAmount> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CupertinoSegmentedControl<int>(
-                          pressedColor:
-                              AppTheme.somewhatYellow.withOpacity(0.9),
-                          groupValue: index,
-                          selectedColor:
-                              AppTheme.somewhatYellow.withOpacity(0.9),
-                          borderColor:
-                              AppTheme.somewhatYellow.withOpacity(0.01),
-                          unselectedColor:
-                              AppTheme.somewhatYellow.withOpacity(0.9),
-                          padding: EdgeInsets.all(10),
-                          children: {
-                            0: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 5),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3))),
-                                elevation: index == 0 ? 1 : 0,
-                                color: index == 0
-                                    ? AppTheme.backgroundWhite
-                                    : AppTheme.somewhatYellow.withOpacity(0.01),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: Text(
-                                    "Token",
-                                    style: AppTheme.body1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            1: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 3, horizontal: 5),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3))),
-                                elevation: index == 1 ? 1 : 0,
-                                color: index == 1
-                                    ? AppTheme.backgroundWhite
-                                    : AppTheme.somewhatYellow.withOpacity(0.01),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10),
-                                  child: Text(
-                                    "USD",
-                                    style: AppTheme.body1,
-                                  ),
-                                ),
-                              ),
-                            )
-                          },
-                          onValueChanged: (val) {
-                            setState(() {
-                              index = val;
-                            });
-                          }),
-                    ],
-                  ),
+                  SizedBox(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

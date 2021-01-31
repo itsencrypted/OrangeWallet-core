@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/bridge/deposit_list.dart';
 import 'package:pollywallet/screens/bridge/withdraw_list.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/widgets/colored_tabbar.dart';
 
 class BridgeTransfers extends StatefulWidget {
   @override
@@ -13,93 +14,66 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
   int tabIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("Move Tokens"),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CupertinoSegmentedControl<int>(
-                    pressedColor: AppTheme.somewhatYellow.withOpacity(0.9),
-                    groupValue: tabIndex,
-                    selectedColor: AppTheme.somewhatYellow.withOpacity(0.9),
-                    borderColor: AppTheme.somewhatYellow.withOpacity(0.01),
-                    unselectedColor: AppTheme.somewhatYellow.withOpacity(0.9),
-                    padding: EdgeInsets.all(10),
-                    children: {
-                      0: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(3))),
-                          elevation: tabIndex == 0 ? 1 : 0,
-                          color: tabIndex == 0
-                              ? AppTheme.white
-                              : AppTheme.somewhatYellow.withOpacity(0.01),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Text(
-                              "Deposit",
-                              style: AppTheme.body1,
-                            ),
-                          ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+              title: Text("Move Tokens"),
+              bottom: ColoredTabBar(
+                tabBar: TabBar(
+                  labelStyle: AppTheme.tabbarTextStyle,
+                  unselectedLabelStyle: AppTheme.tabbarTextStyle,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                      //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.white),
+                  tabs: [
+                    Tab(
+                      child: Align(
+                        child: Text(
+                          'Withdraw',
+                          style: AppTheme.tabbarTextStyle,
                         ),
                       ),
-                      1: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 3, horizontal: 5),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(3))),
-                          elevation: tabIndex == 1 ? 1 : 0,
-                          color: tabIndex == 1
-                              ? AppTheme.white
-                              : AppTheme.somewhatYellow.withOpacity(0.01),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10),
-                            child: Text(
-                              "Withdraw",
-                              style: AppTheme.body1,
-                            ),
-                          ),
+                    ),
+                    Tab(
+                      child: Align(
+                        child: Text(
+                          'Deposit',
+                          style: AppTheme.tabbarTextStyle,
                         ),
-                      )
-                    },
-                    onValueChanged: (val) {
-                      setState(() {
-                        tabIndex = val;
-                      });
-                    }),
-              ],
+                      ),
+                    ),
+                  ],
+                ),
+                borderRadius: AppTheme.cardRadius,
+                color: AppTheme.tabbarBGColor,
+                tabbarMargin: AppTheme.cardRadius,
+                tabbarPadding: AppTheme.paddingHeight / 4,
+              )),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Card(
+              shape: AppTheme.cardShape,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("All Tokens", style: AppTheme.subtitle),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TabBarView(
+                        children: [WithdrawTokenList(), DepositTokenList()],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Text(
-              "Tokens with Balance",
-              style: AppTheme.subtitle,
-            ),
-            Expanded(
-              child: Card(
-                  color: AppTheme.white,
-                  shape: AppTheme.cardShape,
-                  elevation: AppTheme.cardElevations,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 20, horizontal: 2),
-                    child: tabIndex == 0
-                        ? DepositTokenList()
-                        : WithdrawTokenList(),
-                  )),
-            )
-          ],
-        ));
+          )),
+    );
   }
 }

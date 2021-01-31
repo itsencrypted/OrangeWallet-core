@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/screens/staking/ui_elements/staking_card.dart';
+import 'package:pollywallet/screens/staking/ui_elements/warning_card.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class StakingTab extends StatefulWidget {
@@ -22,8 +24,15 @@ class _StakingTabState extends State<StakingTab>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(children: [
-        if (showWarning) warningCard(),
-        stakingTile(
+        if (showWarning)
+          WarningCard(
+            onClose: () {
+              setState(() {
+                showWarning = false;
+              });
+            },
+          ),
+        StackingCard(
             iconURL:
                 'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
             maticWalletBalance: '12434124',
@@ -44,168 +53,6 @@ class _StakingTabState extends State<StakingTab>
               Navigator.of(context).pushNamed(allValidatorsRoute);
             }),
       ]),
-    );
-  }
-
-  Widget stakingTile(
-      {String iconURL,
-      String maticWalletBalance,
-      String etcWalletBalance,
-      String maticStake,
-      String stakeInETH,
-      String maticRewards,
-      String rewardInETH}) {
-    Widget rewardWidget(
-        {String title, String maticBalance, String ethBalance}) {
-      return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$title',
-                  style: AppTheme.balanceSub.copyWith(
-                      color: AppTheme.balanceSub.color.withOpacity(0.4)),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '$maticBalance',
-                  style: AppTheme.balanceMain,
-                ),
-                Text(
-                  '\$$ethBalance',
-                  style: AppTheme.balanceSub.copyWith(
-                      color: AppTheme.balanceSub.color.withOpacity(0.6)),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
-    }
-
-    return Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppTheme.cardRadiusBig))),
-        color: AppTheme.white,
-        elevation: AppTheme.cardElevations,
-        child: Container(
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(AppTheme.paddingHeight),
-                child: Text(
-                  'Your Staking Profile',
-                  style: AppTheme.listTileTitle,
-                ),
-              ),
-              Container(
-                height: 1,
-                color: AppTheme.black.withOpacity(0.05),
-              ),
-              ListTile(
-                leading: FadeInImage.assetNetwork(
-                  placeholder: 'assets/icons/wallet_icon.png',
-                  image: iconURL,
-                  width: AppTheme.tokenIconHeight,
-                ),
-                title: Text('Wallet', style: AppTheme.title),
-                subtitle: Text('Ethereum Network', style: AppTheme.subtitle),
-                trailing: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "$maticWalletBalance Matic",
-                      style: AppTheme.balanceMain,
-                    ),
-                    Text(
-                      '\$$etcWalletBalance',
-                      style: AppTheme.balanceSub,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                  color: AppTheme.stackingGrey,
-                ),
-                margin: EdgeInsets.only(
-                    bottom: AppTheme.paddingHeight,
-                    left: AppTheme.paddingHeight,
-                    right: AppTheme.paddingHeight),
-                height: 110,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    rewardWidget(
-                        title: "Matic Staking",
-                        maticBalance: maticStake,
-                        ethBalance: stakeInETH),
-                    rewardWidget(
-                        title: "Matic Reward",
-                        maticBalance: maticRewards,
-                        ethBalance: rewardInETH)
-                  ],
-                ),
-              )
-            ],
-          ),
-        ));
-  }
-
-  Widget warningCard() {
-    return Card(
-      color: AppTheme.warningCardColor,
-      elevation: AppTheme.cardElevations,
-      shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppTheme.cardRadiusMedium))),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: AppTheme.paddingHeight,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Warning',
-                  style: AppTheme.titleWhite,
-                ),
-                IconButton(
-                    icon: Icon(Icons.close),
-                    color: Colors.white,
-                    onPressed: () {
-                      setState(() {
-                        showWarning = false;
-                      });
-                    })
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: AppTheme.paddingHeight, bottom: AppTheme.paddingHeight),
-            child: Text(
-              'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
-              style: AppTheme.body2White,
-              maxLines: 100,
-            ),
-          )
-        ],
-      ),
     );
   }
 

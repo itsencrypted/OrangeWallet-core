@@ -63,39 +63,41 @@ class _DepositScreenState extends State<DepositScreen>
     return Scaffold(
         appBar: AppBar(
             title: Text("Deposit to Matic"),
-            bottom: ColoredTabBar(
-              tabBar: TabBar(
-                controller: _controller,
-                labelStyle: AppTheme.tabbarTextStyle,
-                unselectedLabelStyle: AppTheme.tabbarTextStyle,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppTheme.white),
-                tabs: [
-                  Tab(
-                    child: Align(
-                      child: Text(
-                        'POS',
-                        style: AppTheme.tabbarTextStyle,
-                      ),
+            bottom: args == 3
+                ? ColoredTabBar(
+                    tabBar: TabBar(
+                      controller: _controller,
+                      labelStyle: AppTheme.tabbarTextStyle,
+                      unselectedLabelStyle: AppTheme.tabbarTextStyle,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: AppTheme.white),
+                      tabs: [
+                        Tab(
+                          child: Align(
+                            child: Text(
+                              'POS',
+                              style: AppTheme.tabbarTextStyle,
+                            ),
+                          ),
+                        ),
+                        Tab(
+                          child: Align(
+                            child: Text(
+                              'Plasma',
+                              style: AppTheme.tabbarTextStyle,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Tab(
-                    child: Align(
-                      child: Text(
-                        'Plasma',
-                        style: AppTheme.tabbarTextStyle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              borderRadius: AppTheme.cardRadius,
-              color: AppTheme.tabbarBGColor,
-              tabbarMargin: AppTheme.cardRadius,
-              tabbarPadding: AppTheme.paddingHeight / 4,
-            )),
+                    borderRadius: AppTheme.cardRadius,
+                    color: AppTheme.tabbarBGColor,
+                    tabbarMargin: AppTheme.cardRadius,
+                    tabbarPadding: AppTheme.paddingHeight / 4,
+                  )
+                : null),
         body: BlocBuilder<DepositDataCubit, DepositDataState>(
           builder: (BuildContext context, state) {
             if (state is DepositDataFinal) {

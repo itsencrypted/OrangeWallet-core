@@ -82,13 +82,22 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                     }),
               ],
             ),
+            Text(
+              "Tokens with Balance",
+              style: AppTheme.subtitle,
+            ),
             Expanded(
               child: Card(
                   color: AppTheme.white,
                   shape: AppTheme.cardShape,
                   elevation: AppTheme.cardElevations,
-                  child:
-                      tabIndex == 0 ? DepositTokenList() : WithdrawTokenList()),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 2),
+                    child: tabIndex == 0
+                        ? DepositTokenList()
+                        : WithdrawTokenList(),
+                  )),
             )
           ],
         ));

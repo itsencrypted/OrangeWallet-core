@@ -7,6 +7,7 @@ import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/screens/deposit/pop_up_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
@@ -14,6 +15,7 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/utils/withdraw_manager/withdraw_manager.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -250,7 +252,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              _sendDepositTransaction(state, context);
+                              _sendWithDrawTransaction(state, context);
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -279,90 +281,21 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         ));
   }
 
-  _sendDepositTransaction(
+  _sendWithDrawTransaction(
       WithdrawBurnDataFinal state, BuildContext context) async {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    Transaction trx;
     TransactionData transactionData;
-    if (state.data.token.contractAddress.toLowerCase() ==
-        ethAddress.toLowerCase()) {
-      // data.setData(DepositModel(
-      //     token: state.data.token, amount: _amount.toString(), isEth: true));
-      if (bridge == 1) {
-        trx = await EthereumTransactions.depositEthPos(_amount.text, context);
-        transactionData = TransactionData(
-            to: config.erc20Predicate,
-            trx: trx,
-            amount: "0",
-            type: TransactionType.DEPOSITPOS);
-      } else {
-        trx =
-            await EthereumTransactions.depositEthPlasma(_amount.text, context);
-        transactionData = TransactionData(
-            to: config.depositManager,
-            trx: trx,
-            amount: "0",
-            type: TransactionType.DEPOSITPLASMA);
-      }
-    }
-    //Todo: Deposit Eth
-    else {
-      Bridge brd;
-      if (bridge == 1)
-        brd = Bridge.POS;
-      else
-        brd = Bridge.PLASMA;
-      BigInt approval = await EthereumTransactions.allowanceERC20(
-          state.data.token.contractAddress, brd);
-      var wei = EthConversions.ethToWei(_amount.text);
-      if (approval < wei) {
-        bool appr = PopUpDialogAproval.showAlertDialog(context);
-        if (appr) {
-          if (bridge == 1) {
-            trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.erc20Predicate,
-                context);
-          } else {
-            trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.depositManager,
-                context);
-          }
-          transactionData = TransactionData(
-              to: state.data.token.contractAddress,
-              amount: "0",
-              trx: trx,
-              type: TransactionType.APPROVE);
-        } else {
-          Navigator.of(_key.currentContext, rootNavigator: true).pop();
-          return;
-        }
-      } else {
-        if (bridge == 1) {
-          trx = await EthereumTransactions.depositErc20Pos(
-              _amount.text, state.data.token.contractAddress, context);
-          transactionData = TransactionData(
-              to: config.erc20Predicate,
-              amount: _amount.text,
-              trx: trx,
-              type: TransactionType.DEPOSITPOS);
-        } else {
-          trx = await EthereumTransactions.depositErc20Plasma(
-              _amount.text, state.data.token.contractAddress, context);
-          transactionData = TransactionData(
-              to: config.depositManager,
-              amount: _amount.text,
-              trx: trx,
-              type: TransactionType.DEPOSITPLASMA);
-        }
-      }
-    }
-    Navigator.of(_key.currentContext, rootNavigator: true).pop();
+    var trx = await WithdrawManager.burnTx(
+        _amount.text, state.data.token.contractAddress);
+    transactionData = TransactionData(
+        amount: _amount.text,
+        to: state.data.token.contractAddress,
+        trx: trx,
+        type: TransactionType.WITHDRAW);
+    Navigator.of(context, rootNavigator: true).pop();
 
-    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+    Navigator.pushNamed(context, confirmMaticTransactionRoute,
         arguments: transactionData);
   }
 }

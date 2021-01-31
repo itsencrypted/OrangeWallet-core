@@ -21,6 +21,7 @@ class AppTheme {
   static const Color dismissibleBackground = Color(0xFF364A54);
   static const Color whiteTextColor = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
+  static const Color tabbarBGColor = Color(0xFFE7E3D8);
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
@@ -129,9 +130,17 @@ class AppTheme {
     color: black, // was lightText
   );
   static const TextStyle listTileTitle = TextStyle(
+      fontWeight: FontWeight.w600,
+      fontFamily: fontName,
+      fontSize: 16,
+      color: black,
+      letterSpacing: -0.2 // was lightText
+      );
+  static const TextStyle tabbarTextStyle = TextStyle(
     fontWeight: FontWeight.w600,
     fontFamily: fontName,
-    fontSize: 16,
+    fontSize: 14,
+    letterSpacing: -0.2,
     color: black, // was lightText
   );
 

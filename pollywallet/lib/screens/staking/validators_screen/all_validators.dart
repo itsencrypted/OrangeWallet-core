@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/staking/validators_screen/ui_elements/validator_staked_card.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/widgets/colored_tabbar.dart';
 
 class AllValidators extends StatefulWidget {
   @override
@@ -12,13 +14,55 @@ class _AllValidatorsState extends State<AllValidators> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: AppTheme.backgroundWhite,
         appBar: AppBar(
-          title: Text('All Validators'),
-          actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
-          bottom: TabBar(
-            tabs: [Text('Staked'), Text('Performance'), Text('Commission')],
-          ),
-        ),
+            backgroundColor: AppTheme.stackingGrey,
+            title: Text(
+              'All Validators',
+              style: AppTheme.listTileTitle,
+            ),
+            actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
+            bottom: ColoredTabBar(
+              tabBar: TabBar(
+                labelStyle: AppTheme.tabbarTextStyle,
+                unselectedLabelStyle: AppTheme.tabbarTextStyle,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: BoxDecoration(
+                    //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppTheme.white),
+                tabs: [
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'Staked',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'Performance',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  ),
+                  Tab(
+                    child: Align(
+                      child: Text(
+                        'Commission',
+                        style: AppTheme.tabbarTextStyle,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              borderRadius: AppTheme.cardRadius,
+              color: AppTheme.tabbarBGColor,
+              tabbarMargin: AppTheme.cardRadius,
+              tabbarPadding: AppTheme.paddingHeight / 4,
+            )),
         body: TabBarView(children: [
           ListView.builder(
             itemBuilder: (context, index) {
@@ -36,99 +80,6 @@ class _AllValidatorsState extends State<AllValidators> {
           Text('Performance'),
           Text('Commission')
         ]),
-      ),
-    );
-  }
-}
-
-class ValidatorsStakedCard extends StatelessWidget {
-  final String iconURL;
-  final String name;
-  final String stakedMatic;
-  final String performance;
-  final String commission;
-  ValidatorsStakedCard(
-      {this.commission,
-      this.iconURL,
-      this.name,
-      this.performance,
-      this.stakedMatic});
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(
-          horizontal: AppTheme.cardRadius, vertical: AppTheme.cardRadius / 2),
-      elevation: AppTheme.cardElevations,
-      shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppTheme.cardRadiusBig))),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: AppTheme.paddingHeight20,
-            vertical: AppTheme.paddingHeight20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: AppTheme.paddingHeight),
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/icons/wallet_icon.png',
-                    image: iconURL,
-                    width: AppTheme.tokenIconHeight,
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "$name",
-                      style: AppTheme.listTileTitle,
-                    ),
-                    Text(
-                      '$stakedMatic MATIC Staked',
-                      style: AppTheme.balanceSub,
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  top: AppTheme.paddingHeight20,
-                  bottom: AppTheme.paddingHeight / 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Performance',
-                    style: AppTheme.bodyW40016.copyWith(
-                        color: AppTheme.bodyW40016.color.withOpacity(0.6)),
-                  ),
-                  Text(
-                    '$performance%',
-                    style:
-                        AppTheme.bodyW40016.copyWith(color: Color(0xFF2F9671)),
-                  )
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Commission',
-                  style: AppTheme.bodyW40016.copyWith(
-                      color: AppTheme.bodyW40016.color.withOpacity(0.6)),
-                ),
-                Text(
-                  '$commission%',
-                  style: AppTheme.bodyW40016,
-                )
-              ],
-            )
-          ],
-        ),
       ),
     );
   }

@@ -83,7 +83,9 @@ class StackingCard extends StatelessWidget {
                   width: AppTheme.tokenIconHeight,
                 ),
                 title: Text('Wallet', style: AppTheme.title),
-                subtitle: Text('Ethereum Network', style: AppTheme.subtitle),
+                subtitle: Text('Ethereum Network',
+                    style: AppTheme.balanceSub.copyWith(
+                        color: AppTheme.balanceSub.color.withOpacity(0.4))),
                 trailing: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,10 +95,9 @@ class StackingCard extends StatelessWidget {
                       "$maticWalletBalance Matic",
                       style: AppTheme.balanceMain,
                     ),
-                    Text(
-                      '\$$etcWalletBalance',
-                      style: AppTheme.balanceSub,
-                    )
+                    Text('\$$etcWalletBalance',
+                        style: AppTheme.balanceSub.copyWith(
+                            color: AppTheme.balanceSub.color.withOpacity(0.4)))
                   ],
                 ),
               ),

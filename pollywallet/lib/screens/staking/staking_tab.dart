@@ -45,6 +45,7 @@ class _StakingTabState extends State<StakingTab>
             title: '0 Delegation',
             onTap: () {
               print('Delegation');
+              Navigator.of(context).pushNamed(delegationRoute);
             }),
         listTile(
             title: '122 Validators',

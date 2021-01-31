@@ -15,7 +15,7 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
-import 'package:pollywallet/utils/withdraw_manager/withdraw_manager.dart';
+import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 

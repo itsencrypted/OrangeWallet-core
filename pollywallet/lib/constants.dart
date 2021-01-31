@@ -27,6 +27,8 @@ const String payAmountRoute = "payAmountRoute";
 const String confirmMaticTransactionRoute = "confirmMaticTransactionRoute";
 const String transactionStatusMaticRoute = "transactionStatusMaticRoute";
 const String bridgeActionRoute = "bridgeActionRoute";
+const String allValidatorsRoute = "allValidatorsRoute";
+const String delegationRoute = "delegationRoute";
 const String depositAmountRoute = "depositAmountRoute";
 const String ethereumTransactionConfirmRoute =
     "ethereumTransactionConfirmRoute";

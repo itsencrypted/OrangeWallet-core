@@ -28,72 +28,74 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   int selectedTab = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundWhite,
-      appBar: HomeAppBar(),
-      body: Stack(
-        children: [
-          TabBarView(
-            controller: _tabController,
-            children: [
-              HomeTab(),
-              StakingTab(),
-              SettingsTab(),
-            ],
-          ),
-          Positioned(
-              bottom: -33,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 170,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                      AppTheme.backgroundWhite.withOpacity(0.1),
-                      AppTheme.backgroundWhite.withOpacity(0.5),
-                      AppTheme.backgroundWhite.withOpacity(0.5),
-                      AppTheme.backgroundWhite.withOpacity(0.8),
-                      AppTheme.backgroundWhite.withOpacity(1),
-                      AppTheme.backgroundWhite.withOpacity(1),
-                      AppTheme.backgroundWhite.withOpacity(1)
-                    ])),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    BottomNavBar(
-                      onItemSelected: (index) {
-                        setState(() {
-                          _tabController.animateTo(index);
-                        });
-                      },
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      selectedIndex: _tabController.index,
-                      showElevation: true,
-                      items: [
-                        BottomNavBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/icons/wallet_icon.png"),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppTheme.backgroundWhite,
+        appBar: HomeAppBar(),
+        body: Stack(
+          children: [
+            TabBarView(
+              controller: _tabController,
+              children: [
+                HomeTab(),
+                StakingTab(),
+                SettingsTab(),
+              ],
+            ),
+            Positioned(
+                bottom: -33,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 170,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                        AppTheme.backgroundWhite.withOpacity(0.1),
+                        AppTheme.backgroundWhite.withOpacity(0.5),
+                        AppTheme.backgroundWhite.withOpacity(0.5),
+                        AppTheme.backgroundWhite.withOpacity(0.8),
+                        AppTheme.backgroundWhite.withOpacity(1),
+                        AppTheme.backgroundWhite.withOpacity(1),
+                        AppTheme.backgroundWhite.withOpacity(1)
+                      ])),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BottomNavBar(
+                        onItemSelected: (index) {
+                          setState(() {
+                            _tabController.animateTo(index);
+                          });
+                        },
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        selectedIndex: _tabController.index,
+                        showElevation: true,
+                        items: [
+                          BottomNavBarItem(
+                            icon: ImageIcon(
+                              AssetImage("assets/icons/wallet_icon.png"),
+                            ),
+                            title: Text("Wallet"),
                           ),
-                          title: Text("Wallet"),
-                        ),
-                        BottomNavBarItem(
-                            icon: ImageIcon(
-                              AssetImage("assets/icons/staking_icon.png"),
-                            ),
-                            title: Text("Staking")),
-                        BottomNavBarItem(
-                            icon: ImageIcon(
-                              AssetImage("assets/icons/settings_icon.png"),
-                            ),
-                            title: Text("Settings")),
-                      ],
-                    ),
-                  ],
-                ),
-              ))
-        ],
+                          BottomNavBarItem(
+                              icon: ImageIcon(
+                                AssetImage("assets/icons/staking_icon.png"),
+                              ),
+                              title: Text("Staking")),
+                          BottomNavBarItem(
+                              icon: ImageIcon(
+                                AssetImage("assets/icons/settings_icon.png"),
+                              ),
+                              title: Text("Settings")),
+                        ],
+                      ),
+                    ],
+                  ),
+                ))
+          ],
+        ),
       ),
     );
   }

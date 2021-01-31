@@ -13,7 +13,15 @@ class _StakingTabState extends State<StakingTab>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(children: [
-        stakingTile(),
+        stakingTile(
+            iconURL:
+                'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+            maticWalletBalance: '12434124',
+            etcWalletBalance: '123',
+            maticStake: '12431242',
+            stakeInETH: '421',
+            maticRewards: '21412',
+            rewardInETH: '31'),
         listTile(
             title: '0 Delegation',
             onTap: () {
@@ -28,7 +36,49 @@ class _StakingTabState extends State<StakingTab>
     );
   }
 
-  Widget stakingTile() {
+  Widget stakingTile(
+      {String iconURL,
+      String maticWalletBalance,
+      String etcWalletBalance,
+      String maticStake,
+      String stakeInETH,
+      String maticRewards,
+      String rewardInETH}) {
+    Widget rewardWidget(
+        {String title, String maticBalance, String ethBalance}) {
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '$title',
+                  style: AppTheme.balanceSub.copyWith(
+                      color: AppTheme.balanceSub.color.withOpacity(0.4)),
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '$maticBalance',
+                  style: AppTheme.balanceMain,
+                ),
+                Text(
+                  '\$$ethBalance',
+                  style: AppTheme.balanceSub.copyWith(
+                      color: AppTheme.balanceSub.color.withOpacity(0.6)),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+
     return Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         shape: RoundedRectangleBorder(
@@ -52,10 +102,8 @@ class _StakingTabState extends State<StakingTab>
               ),
               ListTile(
                 leading: FadeInImage.assetNetwork(
-                  placeholder:
-                      'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                  image:
-                      'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+                  placeholder: 'assets/icons/wallet_icon.png',
+                  image: iconURL,
                   width: AppTheme.tokenIconHeight,
                 ),
                 title: Text('Wallet', style: AppTheme.title),
@@ -66,11 +114,11 @@ class _StakingTabState extends State<StakingTab>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "1221231 Matic",
+                      "$maticWalletBalance Matic",
                       style: AppTheme.balanceMain,
                     ),
                     Text(
-                      '\$${2314}',
+                      '\$$etcWalletBalance',
                       style: AppTheme.balanceSub,
                     )
                   ],
@@ -89,72 +137,14 @@ class _StakingTabState extends State<StakingTab>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Matic Stake',
-                                style: AppTheme.balanceSub.copyWith(
-                                    color: AppTheme.balanceSub.color
-                                        .withOpacity(0.4)),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '1221231 Matic',
-                                style: AppTheme.balanceMain,
-                              ),
-                              Text(
-                                '\$${1212}',
-                                style: AppTheme.balanceSub.copyWith(
-                                    color: AppTheme.balanceSub.color
-                                        .withOpacity(0.6)),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Matic Reward',
-                                style: AppTheme.balanceSub.copyWith(
-                                    color: AppTheme.balanceSub.color
-                                        .withOpacity(0.4)),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '553443',
-                                style: AppTheme.balanceMain,
-                              ),
-                              Text(
-                                '\$${12.3}',
-                                style: AppTheme.balanceSub.copyWith(
-                                    color: AppTheme.balanceSub.color
-                                        .withOpacity(0.6)),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                    rewardWidget(
+                        title: "Matic Staking",
+                        maticBalance: maticStake,
+                        ethBalance: stakeInETH),
+                    rewardWidget(
+                        title: "Matic Reward",
+                        maticBalance: maticRewards,
+                        ethBalance: rewardInETH)
                   ],
                 ),
               )

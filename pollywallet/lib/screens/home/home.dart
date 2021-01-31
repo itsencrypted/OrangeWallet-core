@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/home/app_bar.dart';
 import 'package:pollywallet/screens/settings_screen/settings_tab.dart';
+import 'package:pollywallet/screens/staking/staking_tab.dart';
 import 'package:pollywallet/screens/wallet_tab/home_tab.dart';
 import 'package:pollywallet/theme_data.dart';
 
@@ -36,7 +37,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             controller: _tabController,
             children: [
               HomeTab(),
-              Text("Tab2"),
+              StakingTab(),
               SettingsTab(),
             ],
           ),

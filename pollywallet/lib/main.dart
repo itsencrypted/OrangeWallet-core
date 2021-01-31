@@ -8,6 +8,8 @@ import 'package:pollywallet/screens/home/home.dart';
 import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/send_token/token_amount.dart';
+import 'package:pollywallet/screens/staking/delegation_screen/delegation_screen.dart';
+import 'package:pollywallet/screens/staking/validators_screen/all_validators.dart';
 import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
 import 'package:pollywallet/screens/transaction_confirmation_screen/ethereum_transaction_confirmation.dart';
@@ -56,15 +58,15 @@ class _PollyWalletState extends State<PollyWallet> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor:
-            AppTheme.backgroundWhite, // navigation bar color
-        statusBarColor: AppTheme.backgroundWhite,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light,
-        systemNavigationBarDividerColor: AppTheme.backgroundWhite,
-        systemNavigationBarIconBrightness: Brightness.light // status bar color
-        ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     systemNavigationBarColor:
+    //         AppTheme.backgroundWhite, // navigation bar color
+    //     statusBarColor: AppTheme.backgroundWhite,
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarBrightness: Brightness.light,
+    //     systemNavigationBarDividerColor: AppTheme.backgroundWhite,
+    //     systemNavigationBarIconBrightness: Brightness.light // status bar color
+    //     ));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -93,7 +95,7 @@ class _PollyWalletState extends State<PollyWallet> {
                   iconTheme: IconThemeData(color: AppTheme.black),
                   brightness: Brightness.light,
                   elevation: 0,
-                  backgroundColor: AppTheme.backgroundWhite),
+                  color: AppTheme.backgroundWhite),
               platform: TargetPlatform.iOS,
               backgroundColor: AppTheme.backgroundWhite,
               textTheme: Typography.blackCupertino,
@@ -110,7 +112,9 @@ class _PollyWalletState extends State<PollyWallet> {
               transactionStatusMaticRoute: (context) =>
                   MaticTransactionStatus(),
               bridgeActionRoute: (context) => BridgeTransfers(),
+              allValidatorsRoute: (context) => AllValidators(),
               depositAmountRoute: (context) => DepositScreen(),
+              delegationRoute: (context) => DelegationScreen(),
               ethereumTransactionConfirmRoute: (context) =>
                   EthTransactionConfirmation(),
               ethereumTransactionStatus: (context) => EthTransactionStatus(),

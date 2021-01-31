@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class StakingTab extends StatefulWidget {
@@ -40,6 +41,7 @@ class _StakingTabState extends State<StakingTab>
             title: '122 Validators',
             onTap: () {
               print('Validators');
+              Navigator.of(context).pushNamed(allValidatorsRoute);
             }),
       ]),
     );

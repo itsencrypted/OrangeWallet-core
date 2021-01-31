@@ -28,6 +28,7 @@ class AppTheme {
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
   static const double paddingHeight = 16;
+  static const double paddingHeight20 = 20;
   static const textTheme = TextTheme(
     body1: body1,
     body2: body2,
@@ -139,6 +140,14 @@ class AppTheme {
     fontFamily: fontName,
     fontSize: 16,
     color: white, // was lightText
+  );
+  static const TextStyle bodyW40016 = TextStyle(
+    // Caption -> caption
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+    letterSpacing: 0.2,
+    color: black, // was lightText
   );
   static const cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(cardRadius)));

@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/bridge_actions.dart';
@@ -18,6 +16,7 @@ import 'package:pollywallet/screens/transaction_confirmation_screen/ethereum_tra
 import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_eth.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
+import 'package:pollywallet/screens/withdraw/withdraw_amount.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
@@ -83,6 +82,8 @@ class _PollyWalletState extends State<PollyWallet> {
               create: (BuildContext context) => DepositDataCubit()),
           BlocProvider<CovalentTokensListEthCubit>(
               create: (BuildContext context) => CovalentTokensListEthCubit()),
+          BlocProvider<WithdrawBurnDataCubit>(
+              create: (BuildContext context) => WithdrawBurnDataCubit()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -117,6 +118,7 @@ class _PollyWalletState extends State<PollyWallet> {
               ethereumTransactionConfirmRoute: (context) =>
                   EthTransactionConfirmation(),
               ethereumTransactionStatus: (context) => EthTransactionStatus(),
+              withdrawAmountRoute: (context) => WithdrawScreen(),
             },
             home: current),
       ),

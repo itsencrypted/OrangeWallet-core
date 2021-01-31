@@ -92,7 +92,7 @@ class _PollyWalletState extends State<PollyWallet> {
                   iconTheme: IconThemeData(color: AppTheme.black),
                   brightness: Brightness.light,
                   elevation: 0,
-                  backgroundColor: AppTheme.backgroundWhite),
+                  color: AppTheme.backgroundWhite),
               platform: TargetPlatform.iOS,
               backgroundColor: AppTheme.backgroundWhite,
               textTheme: Typography.blackCupertino,

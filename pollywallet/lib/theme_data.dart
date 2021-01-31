@@ -11,7 +11,8 @@ class AppTheme {
   static const Color black = Color(0xFF000000);
 
   static const Color grey = Color(0xFF3A5160);
-  static const Color purpleSelected = Color(0x7854C5);
+  static const Color stackingGrey = Color(0xFFF3F2EF);
+  static const Color purpleSelected = Color(0xFF7854C5);
   static const Color darkText = Color(0xFF253840);
   static const Color darkerText = Color(0xFF17262A);
   static const Color lightText = Color(0xFF4A6572);
@@ -20,9 +21,11 @@ class AppTheme {
   static const Color whiteTextColor = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const double cardRadius = 12;
+  static const double bigCardRadius = 16;
   static const double cardElevations = 8;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
+  static const double paddingHeight = 16;
   static const textTheme = TextTheme(
     body1: body1,
     body2: body2,
@@ -112,6 +115,12 @@ class AppTheme {
     fontWeight: FontWeight.w400,
     fontFamily: fontName,
     fontSize: 14,
+    color: black, // was lightText
+  );
+  static const TextStyle listTileTitle = TextStyle(
+    fontWeight: FontWeight.w600,
+    fontFamily: fontName,
+    fontSize: 16,
     color: black, // was lightText
   );
   static const cardShape = RoundedRectangleBorder(

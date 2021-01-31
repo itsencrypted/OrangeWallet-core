@@ -3,7 +3,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:web3dart/web3dart.dart';
 
-class WithdrawManager {
+class WithdrawManagerWeb3 {
   static Future<Transaction> burnTx(String amount, String address) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     String abi = await rootBundle.loadString(childERC20Abi);

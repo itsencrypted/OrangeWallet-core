@@ -286,7 +286,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
-    var trx = await WithdrawManager.burnTx(
+    var trx = await WithdrawManagerWeb3.burnTx(
         _amount.text, state.data.token.contractAddress);
     transactionData = TransactionData(
         amount: _amount.text,

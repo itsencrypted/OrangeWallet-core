@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pollywallet/models/bridge_api_models/bridge_api_data.dart';
 import 'package:pollywallet/models/bridge_api_models/bridge_api_message.dart';
+import 'package:pollywallet/models/exit_payload/exit_payload.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 
 enum PlasmaState {
   BURNPENDING,
@@ -38,8 +41,8 @@ class WithdrawManagerApi {
     var body = {
       "txHashes": [txHash],
     };
-    Future burnFuture = http.post(burnUrl, body: body);
-    Future exitFuture = http.post(exitUrl, body: body);
+    Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
+    Future exitFuture = http.post(exitUrl, body: jsonEncode(body));
     var burnStatus = await burnFuture;
     Map json = jsonDecode(burnStatus.body);
     BridgeApiData obj;
@@ -51,7 +54,8 @@ class WithdrawManagerApi {
     BridgeApiData exitStatus;
     if (obj.message.code == -4) {
       var resp2 = await exitFuture;
-      Map json2 = jsonDecode(resp2);
+      print(resp2.body);
+      Map json2 = jsonDecode(resp2.body);
       json2.forEach((key, value) {
         exitStatus = new BridgeApiData(
             txHash: key, message: BridgeApiMessage.fromJson(value));
@@ -152,5 +156,19 @@ class WithdrawManagerApi {
       return str;
     } else
       return null;
+  }
+
+  static Future<String> getPayloadForExit(String burnTxHash) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.exitPayload + burnTxHash;
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
+    print(resp.body);
+    var payload = Payload.fromJson(json);
+    if (payload.error == null) {
+      return payload.result;
+    } else {
+      return null;
+    }
   }
 }

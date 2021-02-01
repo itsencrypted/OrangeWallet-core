@@ -34,6 +34,7 @@ const String ethereumTransactionConfirmRoute =
     "ethereumTransactionConfirmRoute";
 const String withdrawAmountRoute = "withdrawAmountRoute";
 const String ethereumTransactionStatus = "ethereumTransactionStatus";
+const String withdrawsListRoute = "withdrawsListRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorer = "blockExplorer";
@@ -55,8 +56,11 @@ const maticBridgeApi = "maticBridgeApi";
 const pendingTxBox = "pendingTxBox";
 const plasmaRegistry = "plasmaRegistry";
 const depositManager = "depositManager";
-
+const exitPayload = "exitPayLoad";
 const uintMax =
     "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 const ethAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 const maticAddress = "0x0000000000000000000000000000000000001010";
+
+//ENUMS
+enum BridgeType { PLASMA, POS, NONE, BOTH }

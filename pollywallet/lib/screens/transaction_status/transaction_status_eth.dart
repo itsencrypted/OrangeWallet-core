@@ -157,7 +157,7 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
             receipt = tx;
           } else {
             status = 2;
-            tx = receipt;
+            receipt = tx;
           }
         });
         streamSubscription.cancel();

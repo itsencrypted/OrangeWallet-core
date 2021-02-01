@@ -239,7 +239,6 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                       ),
                       trailing: FlatButton(
                         onPressed: () async {
-                          GlobalKey<State> _key = GlobalKey<State>();
                           double amount;
                           if (index == 0) {
                             amount = double.parse(_amount.text);

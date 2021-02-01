@@ -12,8 +12,11 @@ class TransactionData {
     0: "Approve",
     1: "Deposit POS",
     2: "Deposit Plasma",
-    3: "Withdraw",
+    3: "Burn Token",
     4: "Stake",
-    5: "Send"
+    5: "Send",
+    6: "Exit-POS",
+    7: "Confirm-Plasma",
+    8: "Exit-Plasma"
   };
 }

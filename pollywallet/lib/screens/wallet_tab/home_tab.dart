@@ -59,13 +59,41 @@ class _HomeTabState extends State<HomeTab>
               CoinListCard(
                 tokens: state.covalentTokenList.data.items,
               ),
+              Card(
+                shape: AppTheme.cardShape,
+                elevation: AppTheme.cardElevations,
+                child: SizedBox(
+                  height: 55,
+                  child: FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(context, withdrawsListRoute);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Withdraws in Progress",
+                            style: AppTheme.body1,
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: AppTheme.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 120,
               )
             ]),
           );
         } else {
-          // (state is CovalentTokensListError)
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

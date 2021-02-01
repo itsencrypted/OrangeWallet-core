@@ -27,7 +27,8 @@ class NetworkManager {
         etherscanEndpoint: config[etherscanEndpoint],
         withdrawManagerProxy: config[withdrawManagerProxy],
         plasmaRegistry: config[plasmaRegistry],
-        depositManager: config[depositManager]);
+        depositManager: config[depositManager],
+        exitPayload: config[exitPayload]);
     return obj;
   }
 }

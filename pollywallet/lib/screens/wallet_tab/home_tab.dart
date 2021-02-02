@@ -88,6 +88,35 @@ class _HomeTabState extends State<HomeTab>
                   ),
                 ),
               ),
+              Card(
+                shape: AppTheme.cardShape,
+                elevation: AppTheme.cardElevations,
+                child: SizedBox(
+                  height: 55,
+                  child: FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(context, transactionListRoute);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Transactions List",
+                            style: AppTheme.body1,
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: AppTheme.grey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 120,
               )

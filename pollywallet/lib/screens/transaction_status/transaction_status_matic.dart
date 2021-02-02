@@ -9,6 +9,7 @@ import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MaticTransactionStatus extends StatefulWidget {
   @override
@@ -21,8 +22,12 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
   StreamSubscription streamSubscription;
   int status = 0; //0= unmerged, 1= merged, 2 = error
   String error = "";
+  String blockExplorer = "";
   @override
   void initState() {
+    NetworkManager.getNetworkObject().then((config) {
+      blockExplorer = config.blockExplorerMatic;
+    });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final String txHash = ModalRoute.of(context).settings.arguments;
       print(txHash);
@@ -72,14 +77,23 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
                   ],
                 ),
                 status == 0
-                    ? Text("Transaction will be added to block soon")
+                    ? Text("Please wait...")
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Transaction Hash",
-                            style: AppTheme.title,
+                          Row(
+                            children: [
+                              Text(
+                                "Transaction Hash",
+                                style: AppTheme.title,
+                              ),
+                              FlatButton(
+                                padding: EdgeInsets.all(0),
+                                child: Icon(Icons.open_in_browser),
+                                onPressed: _launchURL,
+                              ),
+                            ],
                           ),
                           Padding(
                             padding: EdgeInsets.all(8),
@@ -145,6 +159,19 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
     });
     print(txHash);
     final client2 = Web3Client(config.endpoint, http.Client());
+    var tx = await client2.getTransactionReceipt(txHash);
+    if (tx != null) {
+      setState(() {
+        if (tx.status) {
+          status = 1;
+          receipt = tx;
+        } else {
+          status = 2;
+          receipt = tx;
+        }
+      });
+      return;
+    }
     streamSubscription = client.addedBlocks().listen(null);
     streamSubscription.onData((data) async {
       var tx = await client2.getTransactionReceipt(txHash);
@@ -157,11 +184,20 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
             receipt = tx;
           } else {
             status = 2;
-            tx = receipt;
+            receipt = tx;
           }
         });
         streamSubscription.cancel();
       }
     });
+  }
+
+  _launchURL() async {
+    var url = blockExplorer + "/tx/" + txHash;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

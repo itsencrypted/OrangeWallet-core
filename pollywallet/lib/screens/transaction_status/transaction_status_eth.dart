@@ -72,7 +72,7 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
                   ],
                 ),
                 status == 0
-                    ? Text("Transaction will be added to block soon")
+                    ? Text("Please wait ....")
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,6 +145,19 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
     });
     print(txHash);
     final client2 = Web3Client(config.ethEndpoint, http.Client());
+    var tx = await client2.getTransactionReceipt(txHash);
+    if (tx != null) {
+      setState(() {
+        if (tx.status) {
+          status = 1;
+          receipt = tx;
+        } else {
+          status = 2;
+          receipt = tx;
+        }
+      });
+      return;
+    }
     streamSubscription = client.addedBlocks().listen(null);
     streamSubscription.onData((data) async {
       var tx = await client2.getTransactionReceipt(txHash);

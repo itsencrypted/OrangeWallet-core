@@ -3,7 +3,8 @@ import '../../constants.dart';
 class NetworkConfig {
   static const TestnetConfig = {
     endpoint: "https://rpc-mumbai.matic.today",
-    blockExplorer: "https://explorer-mumbai.maticvigil.com",
+    blockExplorerMatic: "https://explorer-mumbai.maticvigil.com",
+    blockExplorerEth: "https://goerli.etherscan.io",
     chainId: 80001,
     ethEndpoint: "https://goerli.infura.io/v3/311ef590f7e5472a90edfa1316248cff",
     ethChainId: 5,
@@ -24,7 +25,8 @@ class NetworkConfig {
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
-    blockExplorer: "https://explorer-mainnet.maticvigil.com/",
+    blockExplorerMatic: "https://explorer-mainnet.maticvigil.com/",
+    blockExplorerEth: "https://etherscan.io",
     chainId: 137,
     ethEndpoint:
         "https://mainnet.infura.io/v3/311ef590f7e5472a90edfa1316248cff",
@@ -42,13 +44,13 @@ class NetworkConfig {
     plasmaRegistry: "0x33a02E6cC863D393d6Bf231B697b82F6e499cA71",
     depositManager: "0xd505C3822C787D51d5C2B1ae9aDB943B2304eB23",
     exitPayload:
-        "https://apis.matic.network/api/v1/mumbai/pos-exit-payload/" //todo: change it to main net
+        "http://apis.matic.network/api/v1/matic/pos-exit-payload/" //todo: change it to main net
   };
 }
 
 class NetworkConfigObject {
   final String endpoint;
-  final String blockExplorer;
+  final String blockExplorerMatic;
   final int chainId;
   final String ethEndpoint;
   final int ethChainId;
@@ -64,11 +66,12 @@ class NetworkConfigObject {
   final String plasmaRegistry;
   final String depositManager;
   final String exitPayload;
+  final String blockExplorerEth;
   NetworkConfigObject(
       {this.endpoint,
       this.etherscanEndpoint,
       this.maticBridgeApi,
-      this.blockExplorer,
+      this.blockExplorerMatic,
       this.chainId,
       this.ethChainId,
       this.ethEndpoint,
@@ -81,5 +84,6 @@ class NetworkConfigObject {
       this.withdrawManagerProxy,
       this.plasmaRegistry,
       this.depositManager,
-      this.exitPayload});
+      this.exitPayload,
+      this.blockExplorerEth});
 }

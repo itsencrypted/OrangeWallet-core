@@ -21,5 +21,7 @@ enum TransactionType {
   WITHDRAW,
   STAKE,
   SEND,
-  EXITPOS
+  EXITPOS,
+  CONFIRMPLASMA,
+  EXITPLASMA
 }

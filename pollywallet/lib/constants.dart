@@ -35,9 +35,11 @@ const String ethereumTransactionConfirmRoute =
 const String withdrawAmountRoute = "withdrawAmountRoute";
 const String ethereumTransactionStatus = "ethereumTransactionStatus";
 const String withdrawsListRoute = "withdrawsListRoute";
+const String transactionListRoute = "transactionListRoute";
 //strings
 const endpoint = "endpoint";
-const blockExplorer = "blockExplorer";
+const blockExplorerMatic = "blockExplorerMatic";
+const blockExplorerEth = "blockExplorerEth";
 const chainId = "chainId";
 const credentialBox = "credentialBox";
 const networkBox = "networkBox";

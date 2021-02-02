@@ -14,7 +14,7 @@ class NetworkManager {
     }
     NetworkConfigObject obj = new NetworkConfigObject(
         endpoint: config[endpoint],
-        blockExplorer: config[blockExplorer],
+        blockExplorerMatic: config[blockExplorerMatic],
         chainId: config[chainId],
         ethChainId: config[ethChainId],
         ethEndpoint: config[ethEndpoint],
@@ -28,7 +28,9 @@ class NetworkManager {
         withdrawManagerProxy: config[withdrawManagerProxy],
         plasmaRegistry: config[plasmaRegistry],
         depositManager: config[depositManager],
-        exitPayload: config[exitPayload]);
+        exitPayload: config[exitPayload],
+        blockExplorerEth: config[blockExplorerEth]);
+
     return obj;
   }
 }

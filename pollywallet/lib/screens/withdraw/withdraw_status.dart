@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/screens/withdraw/plasma_withdraw_widget.dart';
 import 'package:pollywallet/screens/withdraw/pos_withdraw_widget.dart';
 
 class WithdrawStatus extends StatefulWidget {
@@ -22,6 +23,10 @@ class _WithdrawStatus extends State<WithdrawStatus> {
           PosWithdrawWidget(
             txHash: txHash,
           ),
+          PlasmaWithdrawWidget(
+              txHash:
+                  "0xf358fbd43783cff530be3d2d041c21e7c0ab3a1c2508b56c388fe109ecdf9a0a",
+              tokenAddress: "0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e")
         ],
       ),
     );

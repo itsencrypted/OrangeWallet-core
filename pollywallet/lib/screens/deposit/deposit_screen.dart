@@ -108,7 +108,14 @@ class _DepositScreenState extends State<DepositScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(),
+                  bridge == 1
+                      ? Text(
+                          "POS bridge",
+                          style: AppTheme.title,
+                        )
+                      : bridge == 2
+                          ? Text("Plasma Bridge", style: AppTheme.title)
+                          : SizedBox(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

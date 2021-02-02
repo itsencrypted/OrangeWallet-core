@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:pollywallet/api_key.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
+import 'package:pollywallet/models/covalent_models/matic_transactions_list.dart';
 import 'package:pollywallet/models/covalent_models/token_history.dart';
 import 'package:pollywallet/utils/api_wrapper/testnet_token_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:http/http.dart' as http;
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 
@@ -58,10 +61,15 @@ class CovalentApiWrapper {
       String contractAddress) async {
     int id = await BoxUtils.getNetworkConfig();
     print(id);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
     TokenHistory ctl;
-    //String address = await CredentialManager.getAddress();
-    String url =
-        "https://api.covalenthq.com/v1/137/address/0x67DDBc63918c7FFfec530b8C1259C8Be590C883f/transfers_v2/?contract-address=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&key=ckey_780ed3c9aba3496e8e9948bada0";
+    String address = await CredentialManager.getAddress();
+    String url = "https://api.covalenthq.com/v1/" +
+        config.chainId.toString() +
+        "/address/" +
+        address +
+        "/transfers_v2/?contract-address=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&key=ckey_780ed3c9aba3496e8e9948bada0";
+    print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = TokenHistory.fromJson(json);
@@ -99,6 +107,27 @@ class CovalentApiWrapper {
       ctl.data.items.add(data);
       ctl = CovalentTokenList.fromJson(json);
     }
+    return ctl;
+  }
+
+  static Future<MaticTransactionListModel> maticTransactionList() async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    MaticTransactionListModel ctl;
+
+    String address = await CredentialManager.getAddress();
+    String url = baseUrl +
+        "/" +
+        config.chainId.toString() +
+        "/address/" +
+        address +
+        "/transactions_v2/?key=" +
+        CovalentKey;
+    print(url);
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
+    print(resp.body);
+    ctl = MaticTransactionListModel.fromJson(json);
+
     return ctl;
   }
 }

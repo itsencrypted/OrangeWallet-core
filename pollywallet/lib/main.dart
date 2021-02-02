@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -120,7 +121,8 @@ class _PollyWalletState extends State<PollyWallet> {
                   EthTransactionConfirmation(),
               ethereumTransactionStatus: (context) => EthTransactionStatus(),
               withdrawAmountRoute: (context) => WithdrawScreen(),
-              withdrawsListRoute: (context) => WithdrawStatus()
+              withdrawsListRoute: (context) => WithdrawStatus(),
+              transactionListRoute: (context) => TransactionList()
             },
             home: current),
       ),

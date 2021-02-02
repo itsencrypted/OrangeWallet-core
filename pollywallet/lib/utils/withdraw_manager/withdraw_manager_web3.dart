@@ -19,7 +19,7 @@ class WithdrawManagerWeb3 {
     var tx = Transaction.callContract(
         contract: contract,
         function: withdraw,
-        maxGas: 125000,
+        maxGas: 925000,
         parameters: [_amt]);
     return tx;
   }
@@ -42,6 +42,43 @@ class WithdrawManagerWeb3 {
         function: exit,
         maxGas: 925000,
         parameters: [uint8List]);
+    return tx;
+  }
+
+  static Future<Transaction> initiateExitPlasma(String burnTxHash) async {
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String exitPayload = await WithdrawManagerApi.getPayloadForExit(burnTxHash);
+
+    var uint8List = RlpEncode.encodeHex(exitPayload);
+    if (exitPayload == null) {
+      return null;
+    }
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "erc20predicate"),
+        EthereumAddress.fromHex(config.erc20Predicate));
+    var exit = contract.function('startExitWithBurntTokens');
+    var tx = Transaction.callContract(
+        contract: contract,
+        function: exit,
+        maxGas: 925000,
+        parameters: [uint8List]);
+    return tx;
+  }
+
+  static Future<Transaction> exitPlasma(String token) async {
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "withdrawmanager"),
+        EthereumAddress.fromHex(config.withdrawManagerProxy));
+    var exit = contract.function('processExits');
+    var tx = Transaction.callContract(
+        contract: contract,
+        function: exit,
+        maxGas: 925000,
+        parameters: [EthereumAddress.fromHex(token)]);
     return tx;
   }
 }

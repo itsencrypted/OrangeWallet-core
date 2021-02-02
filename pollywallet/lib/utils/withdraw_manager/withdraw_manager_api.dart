@@ -87,11 +87,13 @@ class WithdrawManagerApi {
     var body = {
       "txHashes": [txHash],
     };
-    Future burnFuture = http.post(burnUrl, body: body);
-    Future confirmFuture = http.post(confirmUrl, body: body);
-    Future exitFuture = http.post(exitUrl, body: body);
+    Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
+    Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
+    Future exitFuture = http.post(exitUrl, body: jsonEncode(body));
     var burnResp = await burnFuture;
     Map burnJson = jsonDecode(burnResp.body);
+    print(burnJson);
+    print(burnResp.body);
     BridgeApiData burnObj;
     burnJson.forEach((key, value) {
       burnObj = new BridgeApiData(
@@ -103,7 +105,7 @@ class WithdrawManagerApi {
       return PlasmaState.BURNFAILED;
     } else if (burnObj.message.code == -3) {
       return PlasmaState.BURNED;
-    } else {
+    } else if (burnObj.message.code == -4) {
       var confirmResp = await confirmFuture;
       Map confirmJson = jsonDecode(confirmResp);
       BridgeApiData confirmObj;
@@ -134,7 +136,11 @@ class WithdrawManagerApi {
         }
       } else if (confirmObj.message.code == -10) {
         return PlasmaState.EXITED;
+      } else {
+        return PlasmaState.CHECKPOINTED;
       }
+    } else {
+      return PlasmaState.BURNFAILED;
     }
   }
 
@@ -143,7 +149,7 @@ class WithdrawManagerApi {
     var body = {
       "txHashes": [txHash],
     };
-    Future confirmFuture = http.post(confirmUrl, body: body);
+    Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
     var confirmResp = await confirmFuture;
     Map confirmJson = jsonDecode(confirmResp);
     BridgeApiData confirmObj;

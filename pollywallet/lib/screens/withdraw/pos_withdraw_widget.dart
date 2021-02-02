@@ -121,26 +121,6 @@ class _PosWithdrawWidget extends State<PosWithdrawWidget> {
     );
   }
 
-  Widget _notCheckpointedWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SpinKitCubeGrid(size: 50, color: AppTheme.primaryColor),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              "Your transaction is not checkpointed yet, please wait...",
-              style: AppTheme.subtitle,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _burnFailed() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -273,7 +253,20 @@ class _PosWithdrawWidget extends State<PosWithdrawWidget> {
         to: config.rootChainProxy,
         trx: trx);
     Navigator.of(_key.currentContext, rootNavigator: true).pop();
-    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+    await Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: data);
+    _refresh();
+  }
+
+  _refresh() {
+    setState(() {
+      _loading = true;
+    });
+    WithdrawManagerApi.checkPosStatus(widget.txHash).then((value) {
+      setState(() {
+        status = value;
+        _loading = false;
+      });
+    });
   }
 }

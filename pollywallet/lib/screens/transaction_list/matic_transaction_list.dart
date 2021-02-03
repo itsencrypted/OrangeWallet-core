@@ -13,102 +13,146 @@ class MaticTransactionList extends StatefulWidget {
 }
 
 class _MaticTransactionListState extends State<MaticTransactionList> {
+  bool _loading = true;
+  bool _error = false;
+  MaticTransactionListModel list;
+  @override
+  void initState() {
+    try {
+      CovalentApiWrapper.maticTransactionList().then((value) {
+        setState(() {
+          list = value;
+          _loading = false;
+        });
+      });
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        _error = true;
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: AppTheme.cardShape,
-      elevation: AppTheme.cardElevations,
-      color: AppTheme.white,
-      child: FutureBuilder(
-        future: CovalentApiWrapper.maticTransactionList(),
-        builder: (BuildContext context, response) {
-          if (response.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: SpinKitFadingFour(
-                color: AppTheme.primaryColor,
-                size: 50,
-              ),
-            );
-          } else if (response.connectionState == ConnectionState.done) {
-            return RefreshIndicator(
-                onRefresh: _refresh,
-                child: ListView.builder(
-                  itemCount: response.data.data.items.length,
-                  itemBuilder: (context, index) {
-                    TransactionItem item = response.data.data.items[index];
-
-                    return FlatButton(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ListTile(
-                            isThreeLine: true,
-                            leading: Icon(
-                              Icons.check_circle_outline,
-                              color: Colors.green,
-                              size: 30,
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                    EthConversions.weiToEth(
-                                            BigInt.parse(item.value), 18)
-                                        .toString(),
-                                    style: AppTheme.title),
-                                Text(
-                                  item.valueQuote == null
-                                      ? "\$0.0"
-                                      : "\$" + item.valueQuote.toString(),
-                                  style: AppTheme.subtitle,
-                                ),
-                              ],
-                            ),
-                            title: Text(
-                              item.txHash,
-                              style: AppTheme.title,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: item.toAddress == null
-                                ? Container()
-                                : Wrap(
-                                    alignment: WrapAlignment.start,
+        shape: AppTheme.cardShape,
+        elevation: AppTheme.cardElevations,
+        color: AppTheme.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _loading || _error
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Transaction List",
+                      style: AppTheme.subtitle,
+                    ),
+                  ),
+            Expanded(
+              child: RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: _loading
+                      ? Center(
+                          child: SpinKitFadingFour(
+                            size: 50,
+                            color: AppTheme.primaryColor,
+                          ),
+                        )
+                      : _error
+                          ? Center(
+                              child: Text(
+                                "Something went wrong..",
+                                style: AppTheme.body1,
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: list.data.items.length,
+                              itemBuilder: (context, index) {
+                                TransactionItem item = list.data.items[index];
+                                return FlatButton(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.arrow_forward),
-                                      Text(
-                                        item.toAddress,
-                                        style: AppTheme.subtitle,
-                                        overflow: TextOverflow.ellipsis,
+                                      ListTile(
+                                        isThreeLine: true,
+                                        leading: Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.green,
+                                          size: 30,
+                                        ),
+                                        trailing: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                EthConversions.weiToEth(
+                                                        BigInt.parse(
+                                                            item.value),
+                                                        18)
+                                                    .toString(),
+                                                style: AppTheme.title),
+                                            Text(
+                                              item.valueQuote == null
+                                                  ? "\$0.0"
+                                                  : "\$" +
+                                                      item.valueQuote
+                                                          .toString(),
+                                              style: AppTheme.subtitle,
+                                            ),
+                                          ],
+                                        ),
+                                        title: Text(
+                                          item.txHash,
+                                          style: AppTheme.title,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        subtitle: item.toAddress == null
+                                            ? Container()
+                                            : Wrap(
+                                                alignment: WrapAlignment.start,
+                                                children: [
+                                                  Icon(Icons.arrow_forward),
+                                                  Text(
+                                                    item.toAddress,
+                                                    style: AppTheme.subtitle,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
                                       ),
+                                      Divider(
+                                        color: AppTheme.grey,
+                                      )
                                     ],
                                   ),
-                          ),
-                          Divider(
-                            color: AppTheme.grey,
-                          )
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, transactionStatusMaticRoute,
-                            arguments: item.txHash);
-                      },
-                    );
-                  },
-                ));
-          } else {
-            return Center(
-                child: Text(
-              "Something Went Wrong",
-              style: AppTheme.subtitle,
-            ));
-          }
-        },
-      ),
-    );
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, transactionStatusMaticRoute,
+                                        arguments: item.txHash);
+                                  },
+                                );
+                              },
+                            )),
+            ),
+          ],
+        ));
   }
 
   Future<void> _refresh() async {
-    setState(() {});
+    try {
+      list = await CovalentApiWrapper.maticTransactionList();
+      setState(() {});
+    } catch (e) {
+      print(e.toString());
+      setState(() {
+        _error = true;
+      });
+    }
   }
 }

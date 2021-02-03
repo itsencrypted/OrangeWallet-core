@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
@@ -88,11 +89,17 @@ class MaticTransactions {
     if (privateKey == null)
       return "failed";
     else {
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var txHash = await client.sendTransaction(credentials, trx,
-          chainId: config.chainId);
-      print(txHash);
-      return txHash;
+      try {
+        var credentials = await client.credentialsFromPrivateKey(privateKey);
+        var txHash = await client.sendTransaction(credentials, trx,
+            chainId: config.chainId);
+        print(txHash);
+        return txHash;
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        return null;
+      }
     }
   }
 }

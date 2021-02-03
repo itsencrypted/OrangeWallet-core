@@ -224,9 +224,11 @@ class _EthTransactionConfirmationState
     final GlobalKey<State> _keyLoader = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _keyLoader);
     String hash = await EthereumTransactions.sendTransaction(
-        args.trx, selectedGas, context);
+        args.trx, selectedGas, args.type, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    print(hash);
+    if (hash == null) {
+      return;
+    }
     Navigator.popAndPushNamed(context, ethereumTransactionStatus,
         arguments: hash);
   }

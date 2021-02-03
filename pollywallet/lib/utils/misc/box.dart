@@ -12,6 +12,7 @@ class BoxUtils {
     await Hive.initFlutter("PollyWalletHive");
     Hive.registerAdapter(CredentialsObjectAdapter());
     Hive.registerAdapter(CredentialsListAdapter());
+    Hive.registerAdapter(TransactionDetailsAdapter());
   }
 
   static Future<bool> checkLogin() async {
@@ -78,30 +79,45 @@ class BoxUtils {
     return;
   }
 
-  static Future<void> addPendingTx(String tx, TransactionType type) async {
+  static Future<void> addPendingTx(
+      String tx, TransactionType type, String to) async {
     var network = await getNetworkConfig();
     var boxName = pendingTxBox + network.toString();
     Box<TransactionDetails> box =
         await Hive.openBox<TransactionDetails>(boxName);
     TransactionDetails txObj = TransactionDetails()
       ..txHash = tx
-      ..txType = type
-      ..network = network;
+      ..txType = type.index
+      ..network = network
+      ..to = to;
     box.put(tx, txObj);
+    await box.close();
     return;
   }
 
-  static Future<List<String>> getPendingTx(EtherScanTxList merged) async {
+  static Future<List<TransactionDetails>> getPendingTx(
+      EtherScanTxList merged) async {
     var network = await getNetworkConfig();
     var boxName = pendingTxBox + network.toString();
-    Box<List> box = await Hive.openBox<List>(boxName);
-    var pendingLs = box.get(boxName);
-    var mergedLs = new List<String>();
-    merged.result.forEach((element) => mergedLs.add(element.hash));
-    var set1 = Set.from(pendingLs);
-    var set2 = Set.from(mergedLs);
-    var ls = List.from(set1.difference(set2));
-    //TODO: Remove merged tx
-    return ls;
+    Box<TransactionDetails> box =
+        await Hive.openBox<TransactionDetails>(boxName);
+    var currentPending = List<TransactionDetails>();
+    Map<String, TransactionDetails> map = {};
+    box.values.forEach((element) {
+      bool flag = false;
+      for (int i = 0; i < merged.result.length; i++) {
+        if (merged.result[i].hash == element.txHash) {
+          flag = true;
+          break;
+        }
+      }
+      if (!flag) {
+        map.putIfAbsent(element.txHash, () => element);
+        currentPending.add(element);
+      }
+    });
+    await box.clear();
+    box.putAll(map);
+    return currentPending;
   }
 }

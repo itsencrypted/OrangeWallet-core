@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
@@ -30,6 +31,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   BuildContext context;
   int bridge = 0;
   bool _isInitialized;
+  double balance;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
 
@@ -61,6 +63,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);
+              this.balance = balance;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,8 +161,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                           textAlign: TextAlign.center,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (val) => (val == "" || val == null) ||
-                                  ((double.parse(val) < 0 ||
-                                      double.parse(val) > balance))
+                                  (double.tryParse(val) == null ||
+                                      (double.tryParse(val) < 0 ||
+                                          double.tryParse(val) > balance))
                               ? "Invalid Amount"
                               : null,
                           keyboardType:
@@ -283,6 +287,13 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
 
   _sendWithDrawTransaction(
       WithdrawBurnDataFinal state, BuildContext context) async {
+    if (double.tryParse(_amount.text) == null ||
+        double.tryParse(_amount.text) < 0 ||
+        double.tryParse(_amount.text) > balance) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;

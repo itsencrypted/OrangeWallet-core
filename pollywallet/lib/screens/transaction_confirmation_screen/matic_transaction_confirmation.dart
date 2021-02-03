@@ -111,6 +111,9 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
     Dialogs.showLoadingDialog(context, _keyLoader);
     String hash = await MaticTransactions.sendTransaction(args.trx, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    if (hash == null) {
+      return;
+    }
     Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
         arguments: hash);
   }

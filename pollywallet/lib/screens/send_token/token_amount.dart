@@ -157,8 +157,9 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                           textAlign: TextAlign.center,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (val) => (val == "" || val == null) ||
-                                  ((double.parse(val) < 0 ||
-                                      double.parse(val) > balance))
+                                  (double.tryParse(val) == null ||
+                                      (double.tryParse(val) < 0 ||
+                                          double.tryParse(val) > balance))
                               ? "Invalid Amount"
                               : null,
                           keyboardType:
@@ -240,6 +241,12 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                       trailing: FlatButton(
                         onPressed: () async {
                           double amount;
+                          if (double.tryParse(_amount.text) == null) {
+                            Fluttertoast.showToast(
+                                msg: "Invalid amount",
+                                toastLength: Toast.LENGTH_LONG);
+                            return;
+                          }
                           if (index == 0) {
                             amount = double.parse(_amount.text);
                           } else {

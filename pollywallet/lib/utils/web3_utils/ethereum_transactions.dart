@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
@@ -123,37 +124,6 @@ class EthereumTransactions {
     return trx;
   }
 
-  static Future<String> increaseERC20Allowance(String amount,
-      String erc20Address, BigInt gasPrice, BuildContext context) async {
-    BigInt _amt = EthConversions.ethToWei(amount);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    final client = Web3Client(config.ethEndpoint, http.Client());
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      String abi = await rootBundle.loadString(erc20Abi);
-      final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
-          EthereumAddress.fromHex(erc20Address));
-      var allow = contract.function('increaseAllowance');
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-
-      var txHash = await client.sendTransaction(
-          credentials,
-          Transaction.callContract(
-              contract: contract,
-              function: allow,
-              maxGas: 21000,
-              parameters: [
-                EthereumAddress.fromHex(config.erc20Predicate),
-                _amt
-              ]),
-          chainId: config.ethChainId);
-      await BoxUtils.addPendingTx(txHash, TransactionType.APPROVE);
-      return txHash;
-    }
-  }
-
   static Future<BigInt> balanceOf(String erc20Address) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
@@ -230,7 +200,6 @@ class EthereumTransactions {
       );
 
       var transaction = await client.sendTransaction(credentials, tx);
-      await BoxUtils.addPendingTx(transaction, type);
       return transaction;
     }
   }
@@ -354,18 +323,25 @@ class EthereumTransactions {
     return price.getInWei;
   }
 
-  static Future<String> sendTransaction(
-      Transaction trx, BigInt gasPrice, BuildContext context) async {
+  static Future<String> sendTransaction(Transaction trx, BigInt gasPrice,
+      TransactionType type, BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
     String privateKey = await CredentialManager.getPrivateKey(context);
     if (privateKey == null)
       return "failed";
     else {
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      var txHash = await client.sendTransaction(credentials, trx,
-          chainId: config.ethChainId);
-      return txHash;
+      try {
+        var credentials = await client.credentialsFromPrivateKey(privateKey);
+        var txHash = await client.sendTransaction(credentials, trx,
+            chainId: config.ethChainId);
+        BoxUtils.addPendingTx(txHash, type, trx.to.hex);
+        return txHash;
+      } catch (e) {
+        Fluttertoast.showToast(
+            msg: e.toString(), toastLength: Toast.LENGTH_LONG);
+        return null;
+      }
     }
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
@@ -32,6 +33,7 @@ class _DepositScreenState extends State<DepositScreen>
   BuildContext context;
   int bridge = 0;
   bool _isInitialized;
+  double balance;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
@@ -104,6 +106,7 @@ class _DepositScreenState extends State<DepositScreen>
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);
+              this.balance = balance;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,8 +131,9 @@ class _DepositScreenState extends State<DepositScreen>
                           textAlign: TextAlign.center,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (val) => (val == "" || val == null) ||
-                                  ((double.parse(val) < 0 ||
-                                      double.parse(val) > balance))
+                                  (double.tryParse(val) == null ||
+                                      (double.tryParse(val) < 0 ||
+                                          double.tryParse(val) > balance))
                               ? "Invalid Amount"
                               : null,
                           keyboardType:
@@ -252,7 +256,14 @@ class _DepositScreenState extends State<DepositScreen>
   }
 
   _sendDepositTransaction(DepositDataFinal state, BuildContext context) async {
-    GlobalKey<State> _key = GlobalKey<State>();
+    if (double.tryParse(_amount.text) == null ||
+        double.tryParse(_amount.text) < 0 ||
+        double.tryParse(_amount.text) > balance) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     Transaction trx;
@@ -331,7 +342,7 @@ class _DepositScreenState extends State<DepositScreen>
         }
       }
     }
-    Navigator.of(_key.currentContext, rootNavigator: true).pop();
+    Navigator.of(context, rootNavigator: true).pop();
 
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: transactionData);

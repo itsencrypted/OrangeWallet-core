@@ -7,10 +7,12 @@ class TransactionDetails extends HiveObject {
   String txHash;
 
   @HiveField(1)
-  TransactionType txType;
+  int txType;
 
   @HiveField(2)
-  int network; //0 testnet 1 mainnet
+  int network;
+  @HiveField(3)
+  String to; //0 testnet 1 mainnet
 
 }
 

@@ -88,6 +88,8 @@ class _MaticTransactionListState extends State<MaticTransactionList> {
                                         trailing: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Text(
                                                 EthConversions.weiToEth(

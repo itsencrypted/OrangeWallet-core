@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
@@ -19,10 +20,13 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
   TransactionReceipt receipt;
   String txHash;
   StreamSubscription streamSubscription;
-  int status = 0; //0= unmerged, 1= merged, 2 = error
-  String error = "";
+  int status = 0; //0=
+  String blockExplorer = "";
   @override
   void initState() {
+    NetworkManager.getNetworkObject().then((config) {
+      blockExplorer = config.blockExplorerEth;
+    });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final String txHash = ModalRoute.of(context).settings.arguments;
       print(txHash);
@@ -77,9 +81,18 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Transaction Hash",
-                            style: AppTheme.title,
+                          Row(
+                            children: [
+                              Text(
+                                "Transaction Hash",
+                                style: AppTheme.title,
+                              ),
+                              FlatButton(
+                                padding: EdgeInsets.all(0),
+                                child: Icon(Icons.open_in_browser),
+                                onPressed: _launchURL,
+                              ),
+                            ],
                           ),
                           Padding(
                             padding: EdgeInsets.all(8),
@@ -176,5 +189,14 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
         streamSubscription.cancel();
       }
     });
+  }
+
+  _launchURL() async {
+    var url = blockExplorer + "/tx/" + txHash;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

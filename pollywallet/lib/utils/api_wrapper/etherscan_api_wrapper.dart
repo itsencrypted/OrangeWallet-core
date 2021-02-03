@@ -8,7 +8,7 @@ import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:http/http.dart' as http;
 
 class EtherscanApiWrapper {
-  Future<EtherScanTxList> transactionList() async {
+  static Future<EtherScanTxList> transactionList() async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String address = await BoxUtils.getAddress();
     var url = config.etherscanEndpoint +

@@ -33,7 +33,7 @@ const String depositAmountRoute = "depositAmountRoute";
 const String ethereumTransactionConfirmRoute =
     "ethereumTransactionConfirmRoute";
 const String withdrawAmountRoute = "withdrawAmountRoute";
-const String ethereumTransactionStatus = "ethereumTransactionStatus";
+const String ethereumTransactionStatusRoute = "ethereumTransactionStatus";
 const String withdrawsListRoute = "withdrawsListRoute";
 const String transactionListRoute = "transactionListRoute";
 //strings

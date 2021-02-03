@@ -229,7 +229,7 @@ class _EthTransactionConfirmationState
     if (hash == null) {
       return;
     }
-    Navigator.popAndPushNamed(context, ethereumTransactionStatus,
+    Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
         arguments: hash);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
 import 'package:pollywallet/screens/transaction_list/matic_transaction_list.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/widgets/colored_tabbar.dart';
@@ -49,7 +50,7 @@ class _TransactionListState extends State<TransactionList> {
                 tabbarPadding: AppTheme.paddingHeight / 4,
               )),
           body: TabBarView(
-            children: [MaticTransactionList(), Text("ASda")],
+            children: [MaticTransactionList(), EthereumTransactionList()],
           ),
         ));
   }

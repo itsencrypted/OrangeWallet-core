@@ -12,7 +12,8 @@ class MaticTransactionList extends StatefulWidget {
   _MaticTransactionListState createState() => _MaticTransactionListState();
 }
 
-class _MaticTransactionListState extends State<MaticTransactionList> {
+class _MaticTransactionListState extends State<MaticTransactionList>
+    with AutomaticKeepAliveClientMixin<MaticTransactionList> {
   bool _loading = true;
   bool _error = false;
   MaticTransactionListModel list;
@@ -157,4 +158,7 @@ class _MaticTransactionListState extends State<MaticTransactionList> {
       });
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

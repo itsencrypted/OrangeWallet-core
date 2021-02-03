@@ -77,7 +77,10 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
                   ],
                 ),
                 status == 0
-                    ? Text("Please wait...")
+                    ? Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Please wait..."),
+                      )
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,

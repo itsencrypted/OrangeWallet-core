@@ -119,7 +119,8 @@ class _PollyWalletState extends State<PollyWallet> {
               delegationRoute: (context) => DelegationScreen(),
               ethereumTransactionConfirmRoute: (context) =>
                   EthTransactionConfirmation(),
-              ethereumTransactionStatus: (context) => EthTransactionStatus(),
+              ethereumTransactionStatusRoute: (context) =>
+                  EthTransactionStatus(),
               withdrawAmountRoute: (context) => WithdrawScreen(),
               withdrawsListRoute: (context) => WithdrawStatus(),
               transactionListRoute: (context) => TransactionList()

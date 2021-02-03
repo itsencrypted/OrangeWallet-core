@@ -244,7 +244,7 @@ class _EthTransactionConfirmationState
                             ),
                             title: Text("Note"),
                             subtitle: Text(
-                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                "If your previous transaction goes throug it will keep on waiting feel free to navigate away on confirmation screen."),
                             isThreeLine: true,
                           )
                         : Container(),

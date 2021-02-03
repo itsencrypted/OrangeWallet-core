@@ -16,7 +16,7 @@ class _TransactionListState extends State<TransactionList> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-              title: Text("Move Tokens"),
+              title: Text("Transactions List"),
               bottom: ColoredTabBar(
                 tabBar: TabBar(
                   labelStyle: AppTheme.tabbarTextStyle,

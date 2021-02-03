@@ -3,9 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +25,8 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
   TransactionReceipt receipt;
   String txHash;
   StreamSubscription streamSubscription;
-  int status = 0; //0=
+  int status = 0; //0=no status, 1= merged, 2= failed
+  bool unmerged = false;
   String blockExplorer = "";
   @override
   void initState() {
@@ -76,7 +82,25 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
                   ],
                 ),
                 status == 0
-                    ? Text("Please wait ....")
+                    ? Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: unmerged
+                                ? Text(
+                                    "Your transaction will be added to block soon..")
+                                : Text("Please wait ...."),
+                          ),
+                          unmerged
+                              ? RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  color: sendButtonColor.withOpacity(0.6),
+                                  child: Text("Speedup Transaction"),
+                                  onPressed: _speedUp)
+                              : Container()
+                        ],
+                      )
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,6 +195,9 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
       });
       return;
     }
+    setState(() {
+      unmerged = true;
+    });
     streamSubscription = client.addedBlocks().listen(null);
     streamSubscription.onData((data) async {
       var tx = await client2.getTransactionReceipt(txHash);
@@ -181,9 +208,11 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
           if (tx.status) {
             status = 1;
             receipt = tx;
+            unmerged = false;
           } else {
             status = 2;
             receipt = tx;
+            unmerged = false;
           }
         });
         streamSubscription.cancel();
@@ -198,5 +227,20 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  _speedUp() async {
+    GlobalKey<State> key = GlobalKey();
+    Dialogs.showLoadingDialog(context, key);
+    Transaction trx = await EthereumTransactions.speedUpTransaction(txHash);
+    TransactionData data = TransactionData(
+        trx: trx,
+        type: TransactionType.SPEEDUP,
+        to: trx.to.hex,
+        gas: trx.gasPrice.getInWei,
+        amount: trx.value.getInEther.toString());
+    Navigator.of(key.currentContext, rootNavigator: true).pop();
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: data);
   }
 }

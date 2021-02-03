@@ -175,33 +175,24 @@ class EthereumTransactions {
     return balance[0];
   }
 
-  static Future<String> speedUpTransaction(String txHash, int gasPercent,
-      TransactionType type, BuildContext context) async {
+  static Future<Transaction> speedUpTransaction(String txHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
     TransactionInformation details = await client.getTransactionByHash(txHash);
-    String privateKey = await CredentialManager.getPrivateKey(context);
-    if (privateKey == null)
-      return "failed";
-    else {
-      double updatedGas =
-          (details.gasPrice.getInWei * BigInt.from(gasPercent + 100)) /
-              BigInt.from(100);
-      var credentials = await client.credentialsFromPrivateKey(privateKey);
-      Transaction tx = Transaction(
-        to: details.to,
-        from: details.from,
-        data: details.input,
-        value: details.value,
-        nonce: details.nonce,
-        gasPrice:
-            EtherAmount.fromUnitAndValue(EtherUnit.wei, updatedGas.toInt()),
-        maxGas: 2100,
-      );
 
-      var transaction = await client.sendTransaction(credentials, tx);
-      return transaction;
-    }
+    double updatedGas =
+        (details.gasPrice.getInWei * BigInt.from(10 + 100)) / BigInt.from(100);
+    Transaction tx = Transaction(
+      to: details.to,
+      from: details.from,
+      data: details.input,
+      value: details.value,
+      nonce: details.nonce,
+      gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.wei, updatedGas.toInt()),
+      maxGas: details.gas,
+    );
+
+    return tx;
   }
 
   static Future<TransactionReceipt> txStatus(String txHash) async {
@@ -335,7 +326,9 @@ class EthereumTransactions {
         var credentials = await client.credentialsFromPrivateKey(privateKey);
         var txHash = await client.sendTransaction(credentials, trx,
             chainId: config.ethChainId);
-        BoxUtils.addPendingTx(txHash, type, trx.to.hex);
+        if (type == TransactionType.SPEEDUP) {
+          BoxUtils.addPendingTx(txHash, type, trx.to.hex);
+        }
         return txHash;
       } catch (e) {
         Fluttertoast.showToast(

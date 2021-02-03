@@ -121,6 +121,9 @@ class PinWidgetState extends State<PinWidget> {
   }
 
   _onKeyboardTap(String value) {
+    if (pin.length >= 4) {
+      return;
+    }
     setState(() {
       pin = pin + value;
       _pinPutController.text = pin;

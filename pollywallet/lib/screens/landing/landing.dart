@@ -33,8 +33,9 @@ class ImportMnemonicState extends State<ImportMnemonic> {
                 maxLines: null,
                 controller: seed,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (val) =>
-                    val.split(" ").length == 12 ? null : 'Invalid Mnemonic',
+                validator: (val) => val.trim().split(" ").length == 12
+                    ? null
+                    : 'Invalid Mnemonic',
                 decoration: InputDecoration(
                   labelText: "Mnemonic",
                   hintText: "Enter your Mnemonic",
@@ -78,7 +79,7 @@ class ImportMnemonicState extends State<ImportMnemonic> {
   }
 
   _proceed() async {
-    if (seed.text.split(" ").length != 12) {
+    if (seed.text.trim().split(" ").length != 12) {
       Fluttertoast.showToast(
           msg: "Invalid Mnemonic",
           toastLength: Toast.LENGTH_SHORT,
@@ -103,8 +104,9 @@ class ImportMnemonicState extends State<ImportMnemonic> {
     }
     Dialogs.showLoadingDialog(context, _keyLoader);
     await Future.delayed(Duration(seconds: 1)).then((val) async {
-      var pkAddr = await HDKey.generateKey(seed.text);
-      var encrypted = await Encryptions.encrypt(seed.text, pkAddr[0], pin.text);
+      var pkAddr = await HDKey.generateKey(seed.text.trim());
+      var encrypted =
+          await Encryptions.encrypt(seed.text.trim(), pkAddr[0], pin.text);
       BoxUtils.setFirstAccount(
           encrypted[0], encrypted[1], pkAddr[1], encrypted[2]);
       BoxUtils.setNetworkConfig(0);

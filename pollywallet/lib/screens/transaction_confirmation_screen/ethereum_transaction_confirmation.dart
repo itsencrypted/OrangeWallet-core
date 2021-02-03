@@ -30,15 +30,27 @@ class _EthTransactionConfirmationState
   void initState() {
     Future.delayed(Duration.zero, () {
       args = ModalRoute.of(context).settings.arguments;
-      EthereumTransactions.getGasPrice().then((value) {
-        setState(() {
-          gasPrice = value;
-          fast = gasPrice + BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
-          slow = gasPrice - BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
-          normal = gasPrice;
-          _loading = false;
+      if (args.gas != null) {
+        gasPrice = args.gas +
+            BigInt.two * BigInt.from((args.gas ~/ BigInt.from(10)).toInt());
+        fast = gasPrice + BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
+        slow = gasPrice - BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
+        normal = gasPrice;
+        _loading = false;
+        setState(() {});
+      } else {
+        EthereumTransactions.getGasPrice().then((value) {
+          setState(() {
+            gasPrice = value;
+            fast =
+                gasPrice + BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
+            slow =
+                gasPrice - BigInt.from((gasPrice ~/ BigInt.from(10)).toInt());
+            normal = gasPrice;
+            _loading = false;
+          });
         });
-      });
+      }
     });
     super.initState();
   }
@@ -113,7 +125,9 @@ class _EthTransactionConfirmationState
                         ),
                       ),
                       Text(
-                        "Select speed:",
+                        args.gas != null
+                            ? "Select higher gas"
+                            : "Select speed:",
                         style: AppTheme.title,
                       ),
                       Padding(
@@ -141,7 +155,9 @@ class _EthTransactionConfirmationState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          "Slow\n${EthConversions.weiToGwei(slow)} Gwei",
+                                          args.gas != null
+                                              ? "fast\n${EthConversions.weiToGwei(slow)} Gwei"
+                                              : "Slow\n${EthConversions.weiToGwei(slow)} Gwei",
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -167,7 +183,9 @@ class _EthTransactionConfirmationState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          "Normal\n${EthConversions.weiToGwei(normal)} Gwei",
+                                          args.gas != null
+                                              ? "Faster\n${EthConversions.weiToGwei(normal)} Gwei"
+                                              : "Normal\n${EthConversions.weiToGwei(normal)} Gwei",
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -193,7 +211,9 @@ class _EthTransactionConfirmationState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          "Fast\n${EthConversions.weiToGwei(fast)} Gwei",
+                                          args.gas != null
+                                              ? "Fastest\n${EthConversions.weiToGwei(fast)} Gwei"
+                                              : "Fast\n${EthConversions.weiToGwei(fast)} Gwei",
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -207,12 +227,35 @@ class _EthTransactionConfirmationState
                   ),
                 ),
                 SafeArea(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SafeArea(
-                        child:
-                            ConfirmationSlider(onConfirmation: () => _sendTx()))
+                    args.gas != null
+                        ? ListTile(
+                            leading: ClipOval(
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                child: Text("!",
+                                    style: TextStyle(
+                                        fontSize: 50,
+                                        color: AppTheme.black,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            title: Text("Note"),
+                            subtitle: Text(
+                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                            isThreeLine: true,
+                          )
+                        : Container(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SafeArea(
+                            child: ConfirmationSlider(
+                                onConfirmation: () => _sendTx()))
+                      ],
+                    ),
                   ],
                 ))
               ],
@@ -226,9 +269,10 @@ class _EthTransactionConfirmationState
     String hash = await EthereumTransactions.sendTransaction(
         args.trx, selectedGas, args.type, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    if (hash == null) {
+    if (hash == null || hash == "failed") {
       return;
     }
+
     Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
         arguments: hash);
   }

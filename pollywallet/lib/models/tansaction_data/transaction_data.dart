@@ -6,8 +6,9 @@ class TransactionData {
   final String to;
   final String amount;
   final TransactionType type;
+  final BigInt gas;
 
-  TransactionData({this.trx, this.to, this.amount, this.type});
+  TransactionData({this.trx, this.to, this.amount, this.type, this.gas});
   static Map txTypeString = {
     0: "Approve",
     1: "Deposit POS",
@@ -17,6 +18,7 @@ class TransactionData {
     5: "Send",
     6: "Exit-POS",
     7: "Confirm-Plasma",
-    8: "Exit-Plasma"
+    8: "Exit-Plasma",
+    9: "Speed Up"
   };
 }

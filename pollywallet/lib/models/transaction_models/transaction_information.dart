@@ -25,5 +25,6 @@ enum TransactionType {
   SEND,
   EXITPOS,
   CONFIRMPLASMA,
-  EXITPLASMA
+  EXITPLASMA,
+  SPEEDUP
 }

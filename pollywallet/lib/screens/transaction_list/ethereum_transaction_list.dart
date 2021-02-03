@@ -60,7 +60,11 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                   children: [
                     _loading || _error || pendingTx.isEmpty
                         ? Container()
-                        : Text("Pending Transaction", style: AppTheme.subtitle),
+                        : Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text("Pending Transaction",
+                                style: AppTheme.subtitle),
+                          ),
                     _loading || _error || pendingTx.isEmpty
                         ? Container()
                         : ListView.builder(

@@ -337,4 +337,11 @@ class EthereumTransactions {
       }
     }
   }
+
+  static Future<TransactionInformation> getTrx(String txHash) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    var trx = client.getTransactionByHash(txHash);
+    return trx;
+  }
 }

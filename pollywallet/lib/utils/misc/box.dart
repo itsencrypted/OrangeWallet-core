@@ -4,6 +4,8 @@ import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
+import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
 
@@ -116,6 +118,15 @@ class BoxUtils {
         currentPending.add(element);
       }
     });
+    var keys = map.keys.toList();
+    for (int i = 0; i < keys.length; i++) {
+      try {
+        await EthereumTransactions.getTrx(keys[i]);
+      } catch (e) {
+        print(e.toString());
+        map.remove(keys[i]);
+      }
+    }
     await box.clear();
     box.putAll(map);
     return currentPending;

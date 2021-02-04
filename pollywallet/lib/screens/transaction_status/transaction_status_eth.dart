@@ -27,12 +27,14 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
   StreamSubscription streamSubscription;
   int status = 0; //0=no status, 1= merged, 2= failed
   bool unmerged = false;
+  bool speedupStuck = false;
   String blockExplorer = "";
   @override
   void initState() {
     NetworkManager.getNetworkObject().then((config) {
       blockExplorer = config.blockExplorerEth;
     });
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final String txHash = ModalRoute.of(context).settings.arguments;
       print(txHash);
@@ -52,116 +54,137 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
         body: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Center(
-            child: Column(
-              mainAxisAlignment: status == 0
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
-              crossAxisAlignment: status == 0
-                  ? CrossAxisAlignment.center
-                  : CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    status == 0
-                        ? SpinKitCubeGrid(
-                            size: 50,
-                            color: AppTheme.primaryColor,
-                          )
-                        : status == 1
-                            ? Icon(
-                                Icons.check,
-                                color: Colors.green,
-                                size: 50,
-                              )
-                            : Icon(
-                                Icons.cancel,
-                                size: 50,
-                                color: Colors.red,
-                              ),
-                  ],
-                ),
-                status == 0
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: unmerged
-                                ? Text(
-                                    "Your transaction will be added to block soon..")
-                                : Text("Please wait ...."),
-                          ),
-                          unmerged
-                              ? RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  color: sendButtonColor.withOpacity(0.6),
-                                  child: Text("Speedup Transaction"),
-                                  onPressed: _speedUp)
-                              : Container()
-                        ],
+            child: speedupStuck
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.cancel_schedule_send_outlined,
+                          color: Colors.blue,
+                          size: 50,
+                        ),
+                      ),
+                      Text(
+                        "Transaction with same nonce has already been merged",
+                        style: AppTheme.subtitle,
+                        textAlign: TextAlign.center,
                       )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  )
+                : Column(
+                    mainAxisAlignment: status == 0
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.start,
+                    crossAxisAlignment: status == 0
+                        ? CrossAxisAlignment.center
+                        : CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Transaction Hash",
-                                style: AppTheme.title,
-                              ),
-                              FlatButton(
-                                padding: EdgeInsets.all(0),
-                                child: Icon(Icons.open_in_browser),
-                                onPressed: _launchURL,
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              txHash,
-                              style: AppTheme.subtitle,
-                            ),
-                          ),
-                          Text(
-                            "From",
-                            style: AppTheme.title,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              receipt.from.toString(),
-                              style: AppTheme.subtitle,
-                            ),
-                          ),
-                          Text(
-                            "To",
-                            style: AppTheme.title,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              receipt.to.toString(),
-                              style: AppTheme.subtitle,
-                            ),
-                          ),
-                          Text(
-                            "Status",
-                            style: AppTheme.title,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text(
-                              receipt.status ? "Successful" : "Failed",
-                              style: AppTheme.subtitle,
-                            ),
-                          ),
+                          status == 0
+                              ? SpinKitCubeGrid(
+                                  size: 50,
+                                  color: AppTheme.primaryColor,
+                                )
+                              : status == 1
+                                  ? Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                      size: 50,
+                                    )
+                                  : Icon(
+                                      Icons.cancel,
+                                      size: 50,
+                                      color: Colors.red,
+                                    ),
                         ],
-                      )
-              ],
-            ),
+                      ),
+                      status == 0
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: unmerged
+                                      ? Text(
+                                          "Your transaction will be added to block soon..")
+                                      : Text("Please wait ...."),
+                                ),
+                                unmerged
+                                    ? RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16)),
+                                        color: sendButtonColor.withOpacity(0.6),
+                                        child: Text("Speedup Transaction"),
+                                        onPressed: _speedUp)
+                                    : Container()
+                              ],
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Transaction Hash",
+                                      style: AppTheme.title,
+                                    ),
+                                    FlatButton(
+                                      padding: EdgeInsets.all(0),
+                                      child: Icon(Icons.open_in_browser),
+                                      onPressed: _launchURL,
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    txHash,
+                                    style: AppTheme.subtitle,
+                                  ),
+                                ),
+                                Text(
+                                  "From",
+                                  style: AppTheme.title,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    receipt.from.toString(),
+                                    style: AppTheme.subtitle,
+                                  ),
+                                ),
+                                Text(
+                                  "To",
+                                  style: AppTheme.title,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    receipt.to.toString(),
+                                    style: AppTheme.subtitle,
+                                  ),
+                                ),
+                                Text(
+                                  "Status",
+                                  style: AppTheme.title,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    receipt.status ? "Successful" : "Failed",
+                                    style: AppTheme.subtitle,
+                                  ),
+                                ),
+                              ],
+                            )
+                    ],
+                  ),
           ),
         ));
   }
@@ -183,6 +206,15 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
     print(txHash);
     final client2 = Web3Client(config.ethEndpoint, http.Client());
     var tx = await client2.getTransactionReceipt(txHash);
+    try {
+      await client2.getTransactionByHash(txHash);
+    } catch (e) {
+      setState(() {
+        speedupStuck = true;
+      });
+      return;
+    }
+
     if (tx != null) {
       setState(() {
         if (tx.status) {
@@ -202,7 +234,13 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
     streamSubscription.onData((data) async {
       var tx = await client2.getTransactionReceipt(txHash);
       print(tx);
-
+      try {
+        await client2.getTransactionByHash(txHash);
+      } catch (e) {
+        setState(() {
+          speedupStuck = true;
+        });
+      }
       if (tx != null) {
         setState(() {
           if (tx.status) {

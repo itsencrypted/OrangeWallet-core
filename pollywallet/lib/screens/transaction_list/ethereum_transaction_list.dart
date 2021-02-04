@@ -20,16 +20,18 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
   bool _loading = true;
   bool _error = false;
   List<Result> result;
-  List<TransactionDetails> pendingTx;
+  List<TransactionDetails> pendingTx = List();
   @override
   void initState() {
     try {
       EtherscanApiWrapper.transactionList().then((value) {
+        setState(() {
+          result = value.result.reversed.toList();
+          _loading = false;
+        });
         BoxUtils.getPendingTx(value).then((pending) {
           setState(() {
-            result = value.result.reversed.toList();
             pendingTx = pending;
-            _loading = false;
           });
         });
       });

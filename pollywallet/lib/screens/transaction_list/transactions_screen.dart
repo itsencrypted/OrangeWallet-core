@@ -49,8 +49,11 @@ class _TransactionListState extends State<TransactionList> {
                 tabbarMargin: AppTheme.cardRadius,
                 tabbarPadding: AppTheme.paddingHeight / 4,
               )),
-          body: TabBarView(
-            children: [MaticTransactionList(), EthereumTransactionList()],
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TabBarView(
+              children: [MaticTransactionList(), EthereumTransactionList()],
+            ),
           ),
         ));
   }

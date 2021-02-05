@@ -1,6 +1,6 @@
 class Validators {
   Summary summary;
-  List<Result> result;
+  List<ValidatorInfo> result;
   String status;
 
   Validators({this.summary, this.result, this.status});
@@ -9,9 +9,9 @@ class Validators {
     summary =
         json['summary'] != null ? new Summary.fromJson(json['summary']) : null;
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = new List<ValidatorInfo>();
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result.add(new ValidatorInfo.fromJson(v));
       });
     }
     status = json['status'];
@@ -71,7 +71,7 @@ class Summary {
   }
 }
 
-class Result {
+class ValidatorInfo {
   int id;
   String name;
   String description;
@@ -98,7 +98,7 @@ class Result {
   String signerPublicKey;
   bool delegationEnabled;
 
-  Result(
+  ValidatorInfo(
       {this.id,
       this.name,
       this.description,
@@ -125,7 +125,7 @@ class Result {
       this.signerPublicKey,
       this.delegationEnabled});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  ValidatorInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];

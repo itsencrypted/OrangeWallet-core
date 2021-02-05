@@ -1,13 +1,14 @@
 class ValidatorDetail {
   String status;
-  Result result;
+  ValidatorData result;
 
   ValidatorDetail({this.status, this.result});
 
   ValidatorDetail.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    result = json['result'] != null
+        ? new ValidatorData.fromJson(json['result'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -20,7 +21,7 @@ class ValidatorDetail {
   }
 }
 
-class Result {
+class ValidatorData {
   int id;
   String name;
   String description;
@@ -47,7 +48,7 @@ class Result {
   String signerPublicKey;
   bool delegationEnabled;
 
-  Result(
+  ValidatorData(
       {this.id,
       this.name,
       this.description,
@@ -74,7 +75,7 @@ class Result {
       this.signerPublicKey,
       this.delegationEnabled});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  ValidatorData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];

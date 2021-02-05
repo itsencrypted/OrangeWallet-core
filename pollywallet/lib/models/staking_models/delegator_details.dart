@@ -1,6 +1,6 @@
 class DelegatorDetail {
   Summary summary;
-  List<Result> result;
+  List<DelegatorInfo> result;
   String status;
 
   DelegatorDetail({this.summary, this.result, this.status});
@@ -9,9 +9,9 @@ class DelegatorDetail {
     summary =
         json['summary'] != null ? new Summary.fromJson(json['summary']) : null;
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = new List<DelegatorInfo>();
       json['result'].forEach((v) {
-        result.add(new Result.fromJson(v));
+        result.add(new DelegatorInfo.fromJson(v));
       });
     }
     status = json['status'];
@@ -67,7 +67,7 @@ class Summary {
   }
 }
 
-class Result {
+class DelegatorInfo {
   String address;
   int stake;
   int shares;
@@ -77,7 +77,7 @@ class Result {
   String createdAt;
   String updatedAt;
 
-  Result(
+  DelegatorInfo(
       {this.address,
       this.stake,
       this.shares,
@@ -87,7 +87,7 @@ class Result {
       this.createdAt,
       this.updatedAt});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  DelegatorInfo.fromJson(Map<String, dynamic> json) {
     address = json['address'];
     stake = json['stake'];
     shares = json['shares'];

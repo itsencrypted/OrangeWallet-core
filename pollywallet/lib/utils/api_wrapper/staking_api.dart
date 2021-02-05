@@ -9,14 +9,17 @@ import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validator_rewards.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:http/http.dart' as http;
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:transak_swagger_client/api.dart';
 
-class CovalentApiWrapper {
+class StakingApiWrapper {
   static const baseUrl = "https://staking.api.matic.network/";
 
   static Future<Validators> validatorsList() async {
     Validators ctl;
-    String url = baseUrl + '/api/v1/validators';
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/validators';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = Validators.fromJson(json);
@@ -25,7 +28,8 @@ class CovalentApiWrapper {
 
   static Future<StakedCount> getStakedCount() async {
     StakedCount ctl;
-    String url = baseUrl + '/api/v1/validators/metadata/stakedCount';
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/validators/metadata/stakedCount';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = StakedCount.fromJson(json);
@@ -34,7 +38,8 @@ class CovalentApiWrapper {
 
   static Future<ValidatorDetail> validatorsDetail(int id) async {
     ValidatorDetail ctl;
-    String url = baseUrl + '/api/v1/validators/' + id.toString();
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/validators/' + id.toString();
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = ValidatorDetail.fromJson(json);
@@ -43,34 +48,39 @@ class CovalentApiWrapper {
 
   static Future<ValidatorReward> getValidatorsReward(int id) async {
     ValidatorReward ctl;
-    String url = baseUrl + '/api/v1/validators/' + id.toString() + 'rewards';
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url =
+        config.stakingEndpoint + '/validators/' + id.toString() + 'rewards';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = ValidatorReward.fromJson(json);
     return ctl;
   }
 
-  static Future<Delegators> delegatorsList() async {
-    Delegators ctl;
-    String url = baseUrl + '/api/v1/delegators';
+  static Future<DelegationsList> delegationsList() async {
+    DelegationsList ctl;
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/delegators';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
-    ctl = Delegators.fromJson(json);
+    ctl = DelegationsList.fromJson(json);
     return ctl;
   }
 
-  static Future<DelegatorDetail> delegatorDetails(String address) async {
-    DelegatorDetail ctl;
-    String url = baseUrl + '/api/v1/delegators' + address;
+  static Future<DelegationsPerAddress> delegationDetails(String address) async {
+    DelegationsPerAddress ctl;
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/delegators' + address;
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
-    ctl = DelegatorDetail.fromJson(json);
+    ctl = DelegationsPerAddress.fromJson(json);
     return ctl;
   }
 
   static Future<RewardsSummary> getRewardsSummary() async {
     RewardsSummary ctl;
-    String url = baseUrl + '/api/v1/rewards/summary';
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/rewards/summary';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = RewardsSummary.fromJson(json);
@@ -79,7 +89,8 @@ class CovalentApiWrapper {
 
   static Future<MaticStakingRatio> getMaticStakingRatio() async {
     MaticStakingRatio ctl;
-    String url = baseUrl + '/api/v1/monitor/matic-staking-ratio';
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.stakingEndpoint + '/monitor/matic-staking-ratio';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = MaticStakingRatio.fromJson(json);

@@ -1,11 +1,11 @@
-class Delegators {
+class DelegationsList {
   Summary summary;
   List<Delegations> result;
   String status;
 
-  Delegators({this.summary, this.result, this.status});
+  DelegationsList({this.summary, this.result, this.status});
 
-  Delegators.fromJson(Map<String, dynamic> json) {
+  DelegationsList.fromJson(Map<String, dynamic> json) {
     summary =
         json['summary'] != null ? new Summary.fromJson(json['summary']) : null;
     if (json['result'] != null) {
@@ -35,8 +35,8 @@ class Summary {
   int offset;
   String sortBy;
   String direction;
-  int total;
-  int size;
+  BigInt total;
+  BigInt size;
 
   Summary(
       {this.limit,
@@ -69,11 +69,11 @@ class Summary {
 
 class Delegations {
   String address;
-  int stake;
-  int shares;
+  BigInt stake;
+  BigInt shares;
   int bondedValidator;
   Null deactivationEpoch;
-  int claimedReward;
+  BigInt claimedReward;
   String createdAt;
   String updatedAt;
 
@@ -89,11 +89,11 @@ class Delegations {
 
   Delegations.fromJson(Map<String, dynamic> json) {
     address = json['address'];
-    stake = json['stake'];
-    shares = json['shares'];
+    stake = BigInt.parse(json['stake'].toString());
+    shares = BigInt.parse(json['shares'].toString());
     bondedValidator = json['bondedValidator'];
     deactivationEpoch = json['deactivationEpoch'];
-    claimedReward = json['claimedReward'];
+    claimedReward = BigInt.parse(json['claimedReward'].toString());
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }

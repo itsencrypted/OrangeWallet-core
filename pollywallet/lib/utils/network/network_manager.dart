@@ -29,7 +29,8 @@ class NetworkManager {
         plasmaRegistry: config[plasmaRegistry],
         depositManager: config[depositManager],
         exitPayload: config[exitPayload],
-        blockExplorerEth: config[blockExplorerEth]);
+        blockExplorerEth: config[blockExplorerEth],
+        stakingEndpoint: config[stakingEndpoint]);
 
     return obj;
   }

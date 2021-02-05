@@ -1,11 +1,11 @@
-class DelegatorDetail {
+class DelegationsPerAddress {
   Summary summary;
   List<DelegatorInfo> result;
   String status;
 
-  DelegatorDetail({this.summary, this.result, this.status});
+  DelegationsPerAddress({this.summary, this.result, this.status});
 
-  DelegatorDetail.fromJson(Map<String, dynamic> json) {
+  DelegationsPerAddress.fromJson(Map<String, dynamic> json) {
     summary =
         json['summary'] != null ? new Summary.fromJson(json['summary']) : null;
     if (json['result'] != null) {
@@ -69,11 +69,11 @@ class Summary {
 
 class DelegatorInfo {
   String address;
-  int stake;
-  int shares;
+  BigInt stake;
+  BigInt shares;
   int bondedValidator;
   Null deactivationEpoch;
-  int claimedReward;
+  BigInt claimedReward;
   String createdAt;
   String updatedAt;
 
@@ -89,11 +89,11 @@ class DelegatorInfo {
 
   DelegatorInfo.fromJson(Map<String, dynamic> json) {
     address = json['address'];
-    stake = json['stake'];
-    shares = json['shares'];
+    stake = BigInt.parse(json['stake'].toString());
+    shares = BigInt.parse(json['shares'].toString());
     bondedValidator = json['bondedValidator'];
     deactivationEpoch = json['deactivationEpoch'];
-    claimedReward = json['claimedReward'];
+    claimedReward = BigInt.parse(json['claimedReward'].toString());
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }

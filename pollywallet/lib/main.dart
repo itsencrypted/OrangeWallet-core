@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
+import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/constants.dart';
@@ -60,15 +62,6 @@ class _PollyWalletState extends State<PollyWallet> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //     systemNavigationBarColor:
-    //         AppTheme.backgroundWhite, // navigation bar color
-    //     statusBarColor: AppTheme.backgroundWhite,
-    //     statusBarIconBrightness: Brightness.light,
-    //     statusBarBrightness: Brightness.light,
-    //     systemNavigationBarDividerColor: AppTheme.backgroundWhite,
-    //     systemNavigationBarIconBrightness: Brightness.light // status bar color
-    //     ));
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -86,6 +79,8 @@ class _PollyWalletState extends State<PollyWallet> {
               create: (BuildContext context) => CovalentTokensListEthCubit()),
           BlocProvider<WithdrawBurnDataCubit>(
               create: (BuildContext context) => WithdrawBurnDataCubit()),
+          BlocProvider<ValidatorsdataCubit>(
+              create: (BuildContext context) => ValidatorsdataCubit()),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

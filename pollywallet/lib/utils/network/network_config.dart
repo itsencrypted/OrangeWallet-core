@@ -22,7 +22,7 @@ class NetworkConfig {
     plasmaRegistry: "0xeE11713Fe713b2BfF2942452517483654078154D",
     depositManager: "0x7850ec290A2e2F40B82Ed962eaf30591bb5f5C96",
     exitPayload: "https://apis.matic.network/api/v1/mumbai/pos-exit-payload/",
-    stakingEndpoint: "https://staking.api.matic.network/api/v2",
+    stakingEndpoint: "https://staking.api.subgraph.matic.today/api/v2",
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",

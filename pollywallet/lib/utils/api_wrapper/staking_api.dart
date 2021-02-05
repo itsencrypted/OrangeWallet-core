@@ -22,6 +22,7 @@ class StakingApiWrapper {
     String url = config.stakingEndpoint + '/validators';
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
+    print(resp.body);
     ctl = Validators.fromJson(json);
     return ctl;
   }
@@ -61,6 +62,7 @@ class StakingApiWrapper {
     DelegationsList ctl;
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.stakingEndpoint + '/delegators';
+
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = DelegationsList.fromJson(json);
@@ -70,8 +72,10 @@ class StakingApiWrapper {
   static Future<DelegationsPerAddress> delegationDetails(String address) async {
     DelegationsPerAddress ctl;
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.stakingEndpoint + '/delegators' + address;
+    String url = config.stakingEndpoint + '/delegators/' + address;
+    print(url);
     var resp = await http.get(url);
+    print(resp.body);
     var json = jsonDecode(resp.body);
     ctl = DelegationsPerAddress.fromJson(json);
     return ctl;

@@ -1,12 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pollywallet/screens/home/app_bar.dart';
 import 'package:pollywallet/screens/settings_screen/settings_tab.dart';
 import 'package:pollywallet/screens/staking/staking_tab.dart';
 import 'package:pollywallet/screens/wallet_tab/home_tab.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
+import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'navigation_bar.dart';
 
 class Home extends StatefulWidget {
@@ -18,6 +23,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
   @override
   void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      tokenListCubit.getTokensList();
+      final ethCubit = context.read<CovalentTokensListEthCubit>();
+      context.read<DelegationsDataCubit>().setData();
+      context.read<ValidatorsdataCubit>().setData();
+      ethCubit.getTokensList();
+    });
     _tabController = new TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {});

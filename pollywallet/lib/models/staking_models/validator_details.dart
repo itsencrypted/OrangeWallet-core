@@ -32,7 +32,7 @@ class ValidatorData {
   Null jailEndEpoch;
   Null url;
   Null logoUrl;
-  int commissionPercent;
+  String commissionPercent;
   String status;
   String uptimePercent;
   BigInt selfStake;
@@ -86,13 +86,13 @@ class ValidatorData {
     jailEndEpoch = json['jailEndEpoch'];
     url = json['url'];
     logoUrl = json['logoUrl'];
-    commissionPercent = json['commissionPercent'];
+    commissionPercent = json['commissionPercent'].toString();
     status = json['status'];
     uptimePercent = json['uptimePercent'];
-    selfStake = BigInt.parse(json['selfStake'].toString());
-    delegatedStake = BigInt.parse(json['delegatedStake'].toString());
-    totalReward = BigInt.parse(json['totalReward'].toString());
-    claimedReward = BigInt.parse(json['claimedReward'].toString());
+    selfStake = BigInt.from(json['selfStake']);
+    delegatedStake = BigInt.from(json['delegatedStake']);
+    totalReward = BigInt.from(json['totalReward']);
+    claimedReward = BigInt.from(json['claimedReward']);
     signatureMissCount = json['signatureMissCount'];
     isInAuction = json['isInAuction'];
     auctionAmount = json['auctionAmount'];

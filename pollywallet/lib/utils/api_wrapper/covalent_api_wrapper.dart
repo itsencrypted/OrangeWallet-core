@@ -23,6 +23,7 @@ class CovalentApiWrapper {
     String url;
     CovalentTokenList ctl;
     Future future;
+    var data;
     if (id == 0) {
       url = baseUrl +
           "/80001/address/" +
@@ -30,30 +31,30 @@ class CovalentApiWrapper {
           "/balances_v2/?key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
+      BigInt native = await future;
+      data = Items(
+          balance: native.toString(),
+          contractAddress: maticAddress,
+          contractDecimals: 18,
+          contractTickerSymbol: "MATIC",
+          contractName: "Matic",
+          logoUrl: tokenIconUrl,
+          quote: 0,
+          quoteRate: 0);
     } else {
-      //String address = await CredentialManager.getAddress();
+      String address = await CredentialManager.getAddress();
       url = baseUrl +
           "/137/address/" +
-          "0x3E7eb0a1ABeCF97591073970DbcED2d4924C3de0" +
+          address +
           "/balances_v2/?key=" +
           CovalentKey;
-      future = MaticTransactions.balanceOf(maticAddress);
     }
 
     var resp = await http.get(url);
-    BigInt native = await future;
-    var data = Items(
-        balance: native.toString(),
-        contractAddress: maticAddress,
-        contractDecimals: 18,
-        contractTickerSymbol: "MATIC",
-        contractName: "Matic",
-        logoUrl: tokenIconUrl,
-        quote: 0,
-        quoteRate: 0);
+
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
-    ctl.data.items.add(data);
+    if (data != null) ctl.data.items.add(data);
     return ctl;
   }
 
@@ -84,27 +85,16 @@ class CovalentApiWrapper {
     if (id == 0) {
       ctl = await TestNetTokenData.goerliTokenList();
     } else {
-      //String address = await CredentialManager.getAddress();
+      String address = await CredentialManager.getAddress();
       String url = baseUrl +
           "/1/address/" +
-          "0x3E7eb0a1ABeCF97591073970DbcED2d4924C3de0" +
+          address +
           "/balances_v2/?key=" +
           CovalentKey;
-      Future future = MaticTransactions.balanceOf(maticAddress);
+      Future future = EthereumTransactions.balanceOf(ethAddress);
       var resp = await http.get(url);
-      BigInt native = await future;
 
-      var data = Items(
-          balance: native.toString(),
-          contractAddress: ethAddress,
-          contractDecimals: 18,
-          contractTickerSymbol: "Eth",
-          contractName: "Ethereum",
-          logoUrl: tokenIconUrl,
-          quote: 0,
-          quoteRate: 0);
       var json = jsonDecode(resp.body);
-      ctl.data.items.add(data);
       ctl = CovalentTokenList.fromJson(json);
     }
     return ctl;

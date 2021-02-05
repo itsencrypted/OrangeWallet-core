@@ -45,7 +45,7 @@ class _MaticTransactionListState extends State<MaticTransactionList>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _loading || _error
+            _loading || _error || list.data.items.isEmpty
                 ? Container()
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -71,77 +71,90 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                 style: AppTheme.body1,
                               ),
                             )
-                          : ListView.builder(
-                              itemCount: list.data.items.length,
-                              itemBuilder: (context, index) {
-                                TransactionItem item = list.data.items[index];
-                                return FlatButton(
+                          : list.data.items.isEmpty
+                              ? Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ListTile(
-                                        isThreeLine: true,
-                                        leading: Icon(
-                                          Icons.check_circle_outline,
-                                          color: Colors.green,
-                                          size: 30,
-                                        ),
-                                        trailing: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                                EthConversions.weiToEth(
-                                                        BigInt.parse(
-                                                            item.value),
-                                                        18)
-                                                    .toString(),
-                                                style: AppTheme.title),
-                                            Text(
-                                              item.valueQuote == null
-                                                  ? "\$0.0"
-                                                  : "\$" +
-                                                      item.valueQuote
-                                                          .toString(),
-                                              style: AppTheme.subtitle,
-                                            ),
-                                          ],
-                                        ),
-                                        title: Text(
-                                          item.txHash,
-                                          style: AppTheme.title,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        subtitle: item.toAddress == null
-                                            ? Container()
-                                            : Wrap(
-                                                alignment: WrapAlignment.start,
-                                                children: [
-                                                  Icon(Icons.arrow_forward),
-                                                  Text(
-                                                    item.toAddress,
-                                                    style: AppTheme.subtitle,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
-                                      ),
-                                      Divider(
-                                        color: AppTheme.grey,
-                                      )
-                                    ],
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [Text("No transactions")],
                                   ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, transactionStatusMaticRoute,
-                                        arguments: item.txHash);
+                                )
+                              : ListView.builder(
+                                  itemCount: list.data.items.length,
+                                  itemBuilder: (context, index) {
+                                    TransactionItem item =
+                                        list.data.items[index];
+                                    return FlatButton(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ListTile(
+                                            isThreeLine: true,
+                                            leading: Icon(
+                                              Icons.check_circle_outline,
+                                              color: Colors.green,
+                                              size: 30,
+                                            ),
+                                            trailing: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                    EthConversions.weiToEth(
+                                                            BigInt.parse(
+                                                                item.value),
+                                                            18)
+                                                        .toString(),
+                                                    style: AppTheme.title),
+                                                Text(
+                                                  item.valueQuote == null
+                                                      ? "\$0.0"
+                                                      : "\$" +
+                                                          item.valueQuote
+                                                              .toString(),
+                                                  style: AppTheme.subtitle,
+                                                ),
+                                              ],
+                                            ),
+                                            title: Text(
+                                              item.txHash,
+                                              style: AppTheme.title,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            subtitle: item.toAddress == null
+                                                ? Container()
+                                                : Wrap(
+                                                    alignment:
+                                                        WrapAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.arrow_forward),
+                                                      Text(
+                                                        item.toAddress,
+                                                        style:
+                                                            AppTheme.subtitle,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                          ),
+                                          Divider(
+                                            color: AppTheme.grey,
+                                          )
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(context,
+                                            transactionStatusMaticRoute,
+                                            arguments: item.txHash);
+                                      },
+                                    );
                                   },
-                                );
-                              },
-                            )),
+                                )),
             ),
           ],
         ));

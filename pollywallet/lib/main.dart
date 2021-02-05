@@ -46,6 +46,7 @@ class _PollyWalletState extends State<PollyWallet> {
   void initState() {
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
+        BoxUtils.setNetworkConfig(0);
         if (status) {
           setState(() {
             current = Home();
@@ -57,6 +58,7 @@ class _PollyWalletState extends State<PollyWallet> {
         }
       });
     });
+
     super.initState();
   }
 
@@ -81,6 +83,8 @@ class _PollyWalletState extends State<PollyWallet> {
               create: (BuildContext context) => WithdrawBurnDataCubit()),
           BlocProvider<ValidatorsdataCubit>(
               create: (BuildContext context) => ValidatorsdataCubit()),
+          BlocProvider<DelegationsDataCubit>(
+              create: (BuildContext context) => DelegationsDataCubit())
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,

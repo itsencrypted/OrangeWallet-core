@@ -698,7 +698,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "1665b1d03933ee19d5620121346ef38a57436e6f"
+      resolved-ref: "1125885dcbc179e31c967d5e2ac709b9dac41e65"
       url: "https://github.com/Abhimanyu121/transak_swagger_client.git"
     source: git
     version: "1.0.0"

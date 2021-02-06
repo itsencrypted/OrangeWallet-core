@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
+import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
@@ -122,7 +124,8 @@ class _PollyWalletState extends State<PollyWallet> {
                   EthTransactionStatus(),
               withdrawAmountRoute: (context) => WithdrawScreen(),
               withdrawsListRoute: (context) => WithdrawStatus(),
-              transactionListRoute: (context) => TransactionList()
+              transactionListRoute: (context) => TransactionList(),
+              transakRoute: (context) => TransakWebView(),
             },
             home: current),
       ),

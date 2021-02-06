@@ -1,7 +1,10 @@
+import 'package:pollywallet/theme_data.dart';
+
 import '../../constants.dart';
 
 class NetworkConfig {
-  static const TestnetConfig = {
+  static final primary = AppTheme.primaryColor.toString();
+  static final TestnetConfig = {
     endpoint: "https://rpc-mumbai.matic.today",
     blockExplorerMatic: "https://explorer-mumbai.maticvigil.com",
     blockExplorerEth: "https://goerli.etherscan.io",
@@ -23,6 +26,8 @@ class NetworkConfig {
     depositManager: "0x7850ec290A2e2F40B82Ed962eaf30591bb5f5C96",
     exitPayload: "https://apis.matic.network/api/v1/mumbai/pos-exit-payload/",
     stakingEndpoint: "https://staking.api.subgraph.matic.today/api/v2",
+    transakLink:
+        "https://staging-global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&defaultNetwork=matic&hideMenu=true&walletAddress="
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
@@ -46,6 +51,8 @@ class NetworkConfig {
     depositManager: "0xd505C3822C787D51d5C2B1ae9aDB943B2304eB23",
     exitPayload: "http://apis.matic.network/api/v1/matic/pos-exit-payload/",
     stakingEndpoint: "https://staking.api.matic.network/api/v1",
+    transakLink:
+        "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&defaultNetwork=matic&hideMenu=true&walletAddress="
   };
 }
 
@@ -69,6 +76,7 @@ class NetworkConfigObject {
   final String exitPayload;
   final String blockExplorerEth;
   final String stakingEndpoint;
+  final String transakLink;
   NetworkConfigObject({
     this.endpoint,
     this.etherscanEndpoint,
@@ -89,5 +97,6 @@ class NetworkConfigObject {
     this.exitPayload,
     this.blockExplorerEth,
     this.stakingEndpoint,
+    this.transakLink,
   });
 }

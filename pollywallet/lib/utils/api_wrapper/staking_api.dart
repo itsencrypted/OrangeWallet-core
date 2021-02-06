@@ -11,7 +11,6 @@ import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:http/http.dart' as http;
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
-import 'package:transak_swagger_client/api.dart';
 
 class StakingApiWrapper {
   static const baseUrl = "https://staking.api.matic.network/";
@@ -72,7 +71,9 @@ class StakingApiWrapper {
   static Future<DelegationsPerAddress> delegationDetails(String address) async {
     DelegationsPerAddress ctl;
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.stakingEndpoint + '/delegators/' + address;
+    String url = config.stakingEndpoint +
+        '/delegators/' +
+        "0x3e8cb4bd04d81498ab4b94a392c334f5328b237b";
     print(url);
     var resp = await http.get(url);
     print(resp.body);

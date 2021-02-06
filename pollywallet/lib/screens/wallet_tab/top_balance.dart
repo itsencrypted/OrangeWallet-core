@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 
 import '../../constants.dart';
 import '../../theme_data.dart';
@@ -50,7 +53,15 @@ class TopBalance extends StatelessWidget {
                                 ; // Use the component's default.
                               },
                             )),
-                            onPressed: () {},
+                            onPressed: () async {
+                              var address =
+                                  await CredentialManager.getAddress();
+                              NetworkConfigObject config =
+                                  await NetworkManager.getNetworkObject();
+                              String url = config.transakLink + address;
+                              Navigator.pushNamed(context, transakRoute,
+                                  arguments: url);
+                            },
                             child: Container(
                                 width: double.infinity,
                                 child: Center(

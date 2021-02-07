@@ -28,7 +28,6 @@ class _ReceiveState extends State<Receive> {
 
   @override
   Widget build(BuildContext context) {
-    var top = MediaQuery.of(context).size.height * 0.16;
     return Scaffold(
       backgroundColor: AppTheme.backgroundWhite,
       appBar: AppBar(
@@ -45,94 +44,93 @@ class _ReceiveState extends State<Receive> {
               ),
             )
           : Center(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(8, top, 8, 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Scan QR to send ETH, ERC-20 pr ERC-721",
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Scan QR to send ETH, ERC-20 pr ERC-721",
+                    style: AppTheme.title,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+                    child: QrImage(
+                      data: address,
+                      version: QrVersions.auto,
+                      size: 200.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(AppTheme.paddingHeight20),
+                    child: Text(
+                      address,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
                       style: AppTheme.title,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: QrImage(
-                        data: address,
-                        version: QrVersions.auto,
-                        size: 200.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text(
-                        address,
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: AppTheme.title,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RawMaterialButton(
-                                fillColor: AppTheme.primaryColor,
-                                elevation: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Icon(Icons.file_copy_outlined),
-                                ),
-                                onPressed: () {
-                                  Clipboard.setData(
-                                      new ClipboardData(text: "your text"));
-                                  Fluttertoast.showToast(
-                                    msg: "Address copied",
-                                  );
-                                },
-                                shape: CircleBorder(),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+                            child: RawMaterialButton(
+                              fillColor: AppTheme.primaryColor,
+                              elevation: 1,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(AppTheme.paddingHeight20),
+                                child: Icon(Icons.file_copy_outlined),
                               ),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    new ClipboardData(text: "your text"));
+                                Fluttertoast.showToast(
+                                  msg: "Address copied",
+                                );
+                              },
+                              shape: CircleBorder(),
                             ),
-                            Text(
-                              "Copy",
-                              style: AppTheme.body1,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: RawMaterialButton(
-                                fillColor: AppTheme.primaryColor,
-                                elevation: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Icon(Icons.share),
-                                ),
-                                onPressed: () async {
-                                  //TODO change the sharing data here
+                          ),
+                          Text(
+                            "Copy",
+                            style: AppTheme.body1,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(AppTheme.paddingHeight),
+                            child: RawMaterialButton(
+                              fillColor: AppTheme.primaryColor,
+                              elevation: 1,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(AppTheme.paddingHeight20),
+                                child: Icon(Icons.share),
+                              ),
+                              onPressed: () async {
+                                //TODO change the sharing data here
 
-                                  Share.share(
-                                      'Hey my wallet address is : $address',
-                                      subject: 'THis is my wallet address');
-                                },
-                                shape: CircleBorder(),
-                              ),
+                                Share.share(
+                                    'Hey my wallet address is : $address',
+                                    subject: 'THis is my wallet address');
+                              },
+                              shape: CircleBorder(),
                             ),
-                            Text(
-                              "Share",
-                              style: AppTheme.body1,
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                          ),
+                          Text(
+                            "Share",
+                            style: AppTheme.body1,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
     );

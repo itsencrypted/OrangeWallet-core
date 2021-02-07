@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
+import 'package:pollywallet/screens/settings_screen/network.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
@@ -125,6 +126,7 @@ class _PollyWalletState extends State<PollyWallet> {
               withdrawsListRoute: (context) => WithdrawStatus(),
               transactionListRoute: (context) => TransactionList(),
               receivePageRoute: (context) => Receive(),
+              networkSettingRoute: (context) => NetworkSetting(),
             },
             home: current),
       ),

@@ -113,8 +113,9 @@ class _ReceiveState extends State<Receive> {
                                   padding: const EdgeInsets.all(20.0),
                                   child: Icon(Icons.share),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
                                   //TODO change the sharing data here
+
                                   Share.share(
                                       'Hey my wallet address is : $address',
                                       subject: 'THis is my wallet address');

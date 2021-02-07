@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class SettingsTab extends StatefulWidget {
@@ -35,6 +36,12 @@ class _SettingsTabState extends State<SettingsTab>
             title: 'Notification',
             onTap: () {
               print('Notification');
+            }),
+        listTile(
+            title: 'Network',
+            showTrailingIcon: false,
+            onTap: () {
+              Navigator.of(context).pushNamed(networkSettingRoute);
             }),
         listTile(
             title: 'Privacy',

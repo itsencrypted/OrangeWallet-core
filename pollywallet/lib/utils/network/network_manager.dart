@@ -30,7 +30,8 @@ class NetworkManager {
         depositManager: config[depositManager],
         exitPayload: config[exitPayload],
         blockExplorerEth: config[blockExplorerEth],
-        stakingEndpoint: config[stakingEndpoint]);
+        stakingEndpoint: config[stakingEndpoint],
+        transakLink: config[transakLink]);
 
     return obj;
   }

@@ -38,6 +38,7 @@ const String withdrawsListRoute = "withdrawsListRoute";
 const String transactionListRoute = "transactionListRoute";
 const String receivePageRoute = "receivePageRoute";
 const String networkSettingRoute = "networkSettingRoute";
+const String transakRoute = "transakRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";
@@ -62,6 +63,7 @@ const plasmaRegistry = "plasmaRegistry";
 const depositManager = "depositManager";
 const stakingEndpoint = "stakingEndpoint";
 const exitPayload = "exitPayLoad";
+const transakLink = "transakLink";
 const uintMax =
     "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 const ethAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";

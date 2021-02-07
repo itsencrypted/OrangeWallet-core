@@ -36,6 +36,7 @@ const String withdrawAmountRoute = "withdrawAmountRoute";
 const String ethereumTransactionStatusRoute = "ethereumTransactionStatus";
 const String withdrawsListRoute = "withdrawsListRoute";
 const String transactionListRoute = "transactionListRoute";
+const String receivePageRoute = "receivePageRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

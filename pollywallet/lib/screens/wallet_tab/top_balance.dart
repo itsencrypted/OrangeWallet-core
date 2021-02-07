@@ -76,7 +76,9 @@ class TopBalance extends StatelessWidget {
                                 ; // Use the component's default.
                               },
                             )),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(receivePageRoute);
+                            },
                             child: Container(
                                 width: double.infinity,
                                 child: Center(

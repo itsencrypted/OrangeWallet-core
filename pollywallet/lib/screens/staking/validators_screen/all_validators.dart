@@ -38,6 +38,8 @@ class _AllValidatorsState extends State<AllValidators> {
           ),
         );
       } else if (state is ValidatorsDataStateFinal) {
+        var stakedAmount = state.data.result;
+        stakedAmount.sort((a, b) => a.selfStake > b.selfStake ? 1 : 0);
         var sorted = state.data.result;
         sorted.sort((a, b) =>
             double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
@@ -73,7 +75,7 @@ class _AllValidatorsState extends State<AllValidators> {
                       Tab(
                         child: Align(
                           child: Text(
-                            'Staked',
+                            'Stake',
                             style: AppTheme.tabbarTextStyle,
                           ),
                         ),
@@ -105,22 +107,21 @@ class _AllValidatorsState extends State<AllValidators> {
               ListView.builder(
                 itemBuilder: (context, index) {
                   var stake = EthConversions.weiToEth(
-                      state.data.result[index].delegatedStake, 18);
+                      stakedAmount[index].delegatedStake, 18);
                   var name;
-                  if (state.data.result[index].name != null) {
+                  if (stakedAmount[index].name != null) {
                     name = state.data.result[index].name;
                   } else {
-                    name =
-                        "Validator " + state.data.result[index].id.toString();
+                    name = "Validator " + stakedAmount[index].id.toString();
                   }
                   return ValidatorsStakedCard(
-                    commission: state.data.result[index].commissionPercent,
+                    commission: stakedAmount[index].commissionPercent,
                     name: name,
-                    performance: state.data.result[index].uptimePercent,
+                    performance: stakedAmount[index].uptimePercent,
                     stakedMatic: stake.toString(),
                   );
                 },
-                itemCount: state.data.result.length,
+                itemCount: stakedAmount.length,
               ),
               ListView.builder(
                 itemBuilder: (context, index) {

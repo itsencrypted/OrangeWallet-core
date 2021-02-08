@@ -94,43 +94,98 @@ class _StakingTabState extends State<StakingTab>
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: RefreshIndicator(
                     onRefresh: _refresh,
-                    child: ListView(children: [
-                      if (showWarning)
-                        WarningCard(
-                          onClose: () {
-                            setState(() {
-                              showWarning = false;
-                            });
-                          },
-                        ),
-                      StackingCard(
-                          iconURL:
-                              'https://cdn.iconscout.com/icon/free/png-256/matic-2709185-2249231.png',
-                          maticWalletBalance: matic.toString(),
-                          etcWalletBalance: eth.toString(),
-                          maticStake:
-                              EthConversions.weiToEth(delegationState.stake, 18)
-                                  .toString(),
-                          stakeUSD: stakeQoute.toStringAsFixed(2),
-                          maticRewards: EthConversions.weiToEth(
-                                  delegationState.rewards, 18)
-                              .toString(),
-                          rewardUSD: rateQoute.toStringAsFixed(2)),
-                      listTile(
-                          title:
-                              '${delegationState.data.result.length} Delegation',
-                          onTap: () {
-                            print('Delegation');
-                            Navigator.of(context).pushNamed(delegationRoute);
-                          }),
-                      listTile(
-                          title:
-                              '${validatorsState.data.result.length} Validators',
-                          onTap: () {
-                            print('Validators');
-                            Navigator.of(context).pushNamed(allValidatorsRoute);
-                          }),
-                    ]),
+                    child: delegationState.data.result.length == 0
+                        ? ListView(
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                              ),
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Center(
+                                              child: Image.asset(profitIcon)),
+                                        ),
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppTheme.secondaryColor),
+                                      ),
+                                    ),
+                                    Text(
+                                      "Stake and Start Earning",
+                                      style: AppTheme.bigLabel,
+                                    ),
+                                    Text(
+                                      "You havent delegated to any validator",
+                                      style: AppTheme.subtitle,
+                                    ),
+                                    RaisedButton(
+                                      color: AppTheme.primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(50))),
+                                      child: Text("Stake now"),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamed(allValidatorsRoute);
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView(children: [
+                            if (showWarning)
+                              WarningCard(
+                                onClose: () {
+                                  setState(() {
+                                    showWarning = false;
+                                  });
+                                },
+                              ),
+                            StackingCard(
+                                iconURL:
+                                    'https://cdn.iconscout.com/icon/free/png-256/matic-2709185-2249231.png',
+                                maticWalletBalance: matic.toString(),
+                                etcWalletBalance: eth.toString(),
+                                maticStake: EthConversions.weiToEth(
+                                        delegationState.stake, 18)
+                                    .toString(),
+                                stakeUSD: stakeQoute.toStringAsFixed(2),
+                                maticRewards: EthConversions.weiToEth(
+                                        delegationState.rewards, 18)
+                                    .toString(),
+                                rewardUSD: rateQoute.toStringAsFixed(2)),
+                            listTile(
+                                title:
+                                    '${delegationState.data.result.length} Delegation',
+                                onTap: () {
+                                  print('Delegation');
+                                  Navigator.of(context)
+                                      .pushNamed(delegationRoute);
+                                }),
+                            listTile(
+                                title:
+                                    '${validatorsState.data.result.length} Validators',
+                                onTap: () {
+                                  print('Validators');
+                                  Navigator.of(context)
+                                      .pushNamed(allValidatorsRoute);
+                                }),
+                          ]),
                   ),
                 );
               } else {

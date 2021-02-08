@@ -9,6 +9,7 @@ import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validator_rewards.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:http/http.dart' as http;
+import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 
@@ -71,9 +72,9 @@ class StakingApiWrapper {
   static Future<DelegationsPerAddress> delegationDetails(String address) async {
     DelegationsPerAddress ctl;
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.stakingEndpoint +
-        '/delegators/' +
-        "0x00211353E5e21C21BC5C75ea3547110db47A8a91";
+    var address = await CredentialManager.getAddress();
+    String url = config.stakingEndpoint + '/delegators/' + address;
+    // "0x00211353E5e21C21BC5C75ea3547110db47A8a91";
     print(url);
     var resp = await http.get(url);
     print(resp.body);

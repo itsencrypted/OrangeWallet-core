@@ -73,7 +73,7 @@ class StakingApiWrapper {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.stakingEndpoint +
         '/delegators/' +
-        "0x3e8cb4bd04d81498ab4b94a392c334f5328b237b";
+        "0x00211353E5e21C21BC5C75ea3547110db47A8a91";
     print(url);
     var resp = await http.get(url);
     print(resp.body);

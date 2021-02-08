@@ -53,7 +53,6 @@ class _AllValidatorsState extends State<AllValidators> {
           child: Scaffold(
             backgroundColor: AppTheme.backgroundWhite,
             appBar: AppBar(
-                backgroundColor: AppTheme.stackingGrey,
                 title: Text(
                   'All Validators',
                   style: AppTheme.listTileTitle,
@@ -116,8 +115,6 @@ class _AllValidatorsState extends State<AllValidators> {
                   }
                   return ValidatorsStakedCard(
                     commission: state.data.result[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
                     name: name,
                     performance: state.data.result[index].uptimePercent,
                     stakedMatic: stake.toString(),
@@ -137,8 +134,6 @@ class _AllValidatorsState extends State<AllValidators> {
                   }
                   return ValidatorsStakedCard(
                     commission: sorted[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
                     name: name,
                     performance: sorted[index].uptimePercent,
                     stakedMatic: stake.toString(),
@@ -158,8 +153,6 @@ class _AllValidatorsState extends State<AllValidators> {
                   }
                   return ValidatorsStakedCard(
                     commission: commission[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
                     name: name,
                     performance: commission[index].uptimePercent,
                     stakedMatic: stake.toString(),

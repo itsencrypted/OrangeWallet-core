@@ -6,26 +6,22 @@ class DelegationCard extends StatelessWidget {
   final String commission;
   final String subtitle;
   final String iconURL;
-  final String maticWalletBalance;
-  final String etcWalletBalance;
   final String maticStake;
-  final String stakeInETH;
+  final String stakeInUsd;
   final String maticRewards;
-  final String rewardInETH;
+  final String rewardInUsd;
   DelegationCard({
     this.title,
     this.subtitle,
     this.commission,
     this.iconURL,
-    this.maticWalletBalance,
-    this.etcWalletBalance,
     this.maticStake,
-    this.stakeInETH,
+    this.stakeInUsd,
     this.maticRewards,
-    this.rewardInETH,
+    this.rewardInUsd,
   });
 
-  Widget rewardWidget({String title, String maticBalance, String ethBalance}) {
+  Widget rewardWidget({String title, String matic, String usd}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,11 +40,11 @@ class DelegationCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '$maticBalance',
+                '$matic',
                 style: AppTheme.balanceMain,
               ),
               Text(
-                '\$$ethBalance',
+                '\$$usd',
                 style: AppTheme.balanceSub.copyWith(
                     color: AppTheme.balanceSub.color.withOpacity(0.6)),
               ),
@@ -77,17 +73,6 @@ class DelegationCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: AppTheme.paddingHeight / 2,
-                        right: AppTheme.paddingHeight,
-                      ),
-                      child: FadeInImage.assetNetwork(
-                        placeholder: 'assets/icons/wallet_icon.png',
-                        image: iconURL,
-                        width: AppTheme.tokenIconHeight,
-                      ),
-                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,12 +108,12 @@ class DelegationCard extends StatelessWidget {
                   children: [
                     rewardWidget(
                         title: "Matic Staking",
-                        maticBalance: maticStake,
-                        ethBalance: stakeInETH),
+                        matic: maticStake,
+                        usd: stakeInUsd),
                     rewardWidget(
                         title: "Matic Reward",
-                        maticBalance: maticRewards,
-                        ethBalance: rewardInETH)
+                        matic: maticRewards,
+                        usd: rewardInUsd)
                   ],
                 ),
               ),
@@ -154,7 +139,7 @@ class DelegationCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: RaisedButton(
-                      color: AppTheme.buttonColorBlue,
+                      color: AppTheme.primaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.circular(AppTheme.cardRadiusSmall)),

@@ -50,7 +50,6 @@ class _PollyWalletState extends State<PollyWallet> {
   void initState() {
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
-        BoxUtils.setNetworkConfig(0);
         if (status) {
           setState(() {
             current = Home();

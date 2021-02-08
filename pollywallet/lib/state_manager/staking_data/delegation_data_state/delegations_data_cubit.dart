@@ -21,8 +21,9 @@ class DelegationsDataCubit extends Cubit<DelegationsDataState> {
         totalShares = totalShares + element.shares;
         claimedRewards = claimedRewards + element.claimedReward;
       });
+      BigInt rewards = totalShares - totalStake - claimedRewards;
       emit(DelegationsDataStateFinal(
-          info, totalStake, totalShares, claimedRewards));
+          info, totalShares, totalStake, rewards, claimedRewards));
     } catch (e) {
       print(e.toString());
       emit(DelegationsDataStateError(e.toString()));
@@ -42,8 +43,9 @@ class DelegationsDataCubit extends Cubit<DelegationsDataState> {
         totalShares = totalShares + element.shares;
         claimedRewards = claimedRewards + element.claimedReward;
       });
+      BigInt rewards = totalShares - totalStake - claimedRewards;
       emit(DelegationsDataStateFinal(
-          info, totalStake, totalShares, claimedRewards));
+          info, totalShares, totalStake, rewards, claimedRewards));
     } catch (e) {
       print(e.toString());
       emit(DelegationsDataStateError(e.toString()));

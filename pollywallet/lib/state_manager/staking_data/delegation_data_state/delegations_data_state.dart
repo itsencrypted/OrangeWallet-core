@@ -8,6 +8,10 @@ class DelegationsDataStateInitial extends DelegationsDataState {
   const DelegationsDataStateInitial();
 }
 
+class DelegationsDataStateLoading extends DelegationsDataState {
+  const DelegationsDataStateLoading();
+}
+
 class DelegationsDataStateFinal extends DelegationsDataState {
   final DelegationsPerAddress data;
   final BigInt stake;

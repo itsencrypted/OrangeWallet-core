@@ -50,77 +50,80 @@ class _HomeTabState extends State<HomeTab>
           }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ListView(children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30, bottom: 50),
-                child: TopBalance(amt.toString()),
-              ),
-              TransferAssetCard(),
-              CoinListCard(
-                tokens: state.covalentTokenList.data.items,
-              ),
-              Card(
-                shape: AppTheme.cardShape,
-                elevation: AppTheme.cardElevations,
-                child: SizedBox(
-                  height: 55,
-                  child: FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(context, withdrawsListRoute);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Withdraws in Progress",
-                            style: AppTheme.body1,
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: AppTheme.grey,
-                          ),
-                        ],
+            child: RefreshIndicator(
+              onRefresh: _refresh,
+              child: ListView(children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 50),
+                  child: TopBalance(amt.toString()),
+                ),
+                TransferAssetCard(),
+                CoinListCard(
+                  tokens: state.covalentTokenList.data.items,
+                ),
+                Card(
+                  shape: AppTheme.cardShape,
+                  elevation: AppTheme.cardElevations,
+                  child: SizedBox(
+                    height: 55,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(context, withdrawsListRoute);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Withdraws in Progress",
+                              style: AppTheme.body1,
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: AppTheme.grey,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Card(
-                shape: AppTheme.cardShape,
-                elevation: AppTheme.cardElevations,
-                child: SizedBox(
-                  height: 55,
-                  child: FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(context, transactionListRoute);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Transactions List",
-                            style: AppTheme.body1,
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: AppTheme.grey,
-                          ),
-                        ],
+                Card(
+                  shape: AppTheme.cardShape,
+                  elevation: AppTheme.cardElevations,
+                  child: SizedBox(
+                    height: 55,
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(context, transactionListRoute);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Transactions List",
+                              style: AppTheme.body1,
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: AppTheme.grey,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 120,
-              )
-            ]),
+                SizedBox(
+                  height: 120,
+                )
+              ]),
+            ),
           );
         } else {
           return Column(
@@ -133,7 +136,7 @@ class _HomeTabState extends State<HomeTab>
                       borderRadius: BorderRadius.circular(16)),
                   color: sendButtonColor.withOpacity(0.6),
                   child: Text("Refresh"),
-                  onPressed: _refresh()),
+                  onPressed: _initializeAgain),
             ],
           );
         }
@@ -141,11 +144,20 @@ class _HomeTabState extends State<HomeTab>
     );
   }
 
-  _refresh() async {
+  _initializeAgain() {
     final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
     tokenListCubit.getTokensList();
     final ethCubit = context.read<CovalentTokensListEthCubit>();
     ethCubit.getTokensList();
+  }
+
+  Future<void> _refresh() async {
+    final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    Future tokenListFuture = tokenListCubit.refresh();
+    final ethCubit = context.read<CovalentTokensListEthCubit>();
+    Future ethTokenListFuture = ethCubit.refresh();
+    await tokenListFuture;
+    await ethTokenListFuture;
   }
 
   @override

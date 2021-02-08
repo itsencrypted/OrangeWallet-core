@@ -8,12 +8,22 @@ class ValidatorsdataCubit extends Cubit<ValidatorsDataState> {
   ValidatorsdataCubit() : super(ValidatorsDataStateInitial());
   void setData() async {
     try {
+      emit(ValidatorsDataStateLoading());
       Validators info = await StakingApiWrapper.validatorsList();
       emit(ValidatorsDataStateFinal(info));
     } catch (e) {
       print(e.toString());
       emit(ValidatorsDataStateError(e.toString()));
     }
-    Validators info = await StakingApiWrapper.validatorsList();
+  }
+
+  refresh() async {
+    try {
+      Validators info = await StakingApiWrapper.validatorsList();
+      emit(ValidatorsDataStateFinal(info));
+    } catch (e) {
+      print(e.toString());
+      emit(ValidatorsDataStateError(e.toString()));
+    }
   }
 }

@@ -24,6 +24,7 @@ class AppTheme {
   static const Color tabbarBGColor = Color(0xFFE7E3D8);
   static const Color borderColorGreyish = Color(0xFFDCDFE6);
   static const Color buttonColorBlue = Color(0xFF003CB2);
+  static const String primaryHex = "#D287FD";
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;

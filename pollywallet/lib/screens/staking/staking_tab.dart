@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/screens/staking/ui_elements/staking_card.dart';
 import 'package:pollywallet/screens/staking/ui_elements/warning_card.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class StakingTab extends StatefulWidget {
@@ -26,7 +28,8 @@ class _StakingTabState extends State<StakingTab>
   Widget build(BuildContext context) {
     return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
         builder: (context, state) {
-      if (state is DelegationsDataStateInitial) {
+      if (state is DelegationsDataStateInitial ||
+          state is DelegationsDataStateLoading) {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -42,37 +45,40 @@ class _StakingTabState extends State<StakingTab>
       } else if (state is DelegationsDataStateFinal) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: ListView(children: [
-            if (showWarning)
-              WarningCard(
-                onClose: () {
-                  setState(() {
-                    showWarning = false;
-                  });
-                },
-              ),
-            StackingCard(
-                iconURL:
-                    'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                maticWalletBalance: '12434124',
-                etcWalletBalance: '123',
-                maticStake: '12431242',
-                stakeInETH: '421',
-                maticRewards: '21412',
-                rewardInETH: '31'),
-            listTile(
-                title: '0 Delegation',
-                onTap: () {
-                  print('Delegation');
-                  Navigator.of(context).pushNamed(delegationRoute);
-                }),
-            listTile(
-                title: '122 Validators',
-                onTap: () {
-                  print('Validators');
-                  Navigator.of(context).pushNamed(allValidatorsRoute);
-                }),
-          ]),
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView(children: [
+              if (showWarning)
+                WarningCard(
+                  onClose: () {
+                    setState(() {
+                      showWarning = false;
+                    });
+                  },
+                ),
+              StackingCard(
+                  iconURL:
+                      'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+                  maticWalletBalance: '12434124',
+                  etcWalletBalance: '123',
+                  maticStake: '12431242',
+                  stakeInETH: '421',
+                  maticRewards: '21412',
+                  rewardInETH: '31'),
+              listTile(
+                  title: '0 Delegation',
+                  onTap: () {
+                    print('Delegation');
+                    Navigator.of(context).pushNamed(delegationRoute);
+                  }),
+              listTile(
+                  title: '122 Validators',
+                  onTap: () {
+                    print('Validators');
+                    Navigator.of(context).pushNamed(allValidatorsRoute);
+                  }),
+            ]),
+          ),
         );
       } else {
         return Center(
@@ -124,6 +130,15 @@ class _StakingTabState extends State<StakingTab>
         ),
       ),
     );
+  }
+
+  Future<void> _refresh() async {
+    var delegationsCubit = context.read<DelegationsDataCubit>();
+    var validatorCubit = context.read<ValidatorsdataCubit>();
+    Future delegationsFuture = delegationsCubit.refresh();
+    var validatorFutre = validatorCubit.refresh();
+    await delegationsFuture;
+    await validatorFutre;
   }
 
   @override

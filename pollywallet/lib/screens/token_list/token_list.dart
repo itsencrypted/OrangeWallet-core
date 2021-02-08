@@ -5,7 +5,6 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/token_list/coin_list_tile.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/misc/box.dart';
 
 class TokenList extends StatefulWidget {
   @override
@@ -47,14 +46,17 @@ class _TokenListState extends State<TokenList> {
               color: AppTheme.white,
               shape: AppTheme.cardShape,
               elevation: AppTheme.cardElevations,
-              child: ListView.builder(
-                itemCount: ls.length,
-                itemBuilder: (context, index) {
-                  var token = ls[index];
-                  return CoinListTileWithCard(
-                    tokenData: token,
-                  );
-                },
+              child: RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemCount: ls.length,
+                  itemBuilder: (context, index) {
+                    var token = ls[index];
+                    return CoinListTileWithCard(
+                      tokenData: token,
+                    );
+                  },
+                ),
               ),
             );
           } else {
@@ -68,7 +70,7 @@ class _TokenListState extends State<TokenList> {
                         borderRadius: BorderRadius.circular(16)),
                     color: sendButtonColor.withOpacity(0.6),
                     child: Text("Refresh"),
-                    onPressed: _refresh()),
+                    onPressed: _initializeAgain()),
               ],
             );
           }
@@ -77,8 +79,13 @@ class _TokenListState extends State<TokenList> {
     );
   }
 
-  _refresh() async {
+  _initializeAgain() async {
     final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
-    tokenListCubit.getTokensList();
+    await tokenListCubit.getTokensList();
+  }
+
+  Future<void> _refresh() async {
+    final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    await tokenListCubit.refresh();
   }
 }

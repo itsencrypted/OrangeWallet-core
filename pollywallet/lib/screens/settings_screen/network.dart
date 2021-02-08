@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
+import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NetworkSetting extends StatefulWidget {
   @override
@@ -60,6 +65,10 @@ class _NetworkSettingState extends State<NetworkSetting> {
         setState(() {
           value = val;
           BoxUtils.setNetworkConfig(value);
+          context.read<CovalentTokensListEthCubit>().getTokensList();
+          context.read<CovalentTokensListMaticCubit>().getTokensList();
+          context.read<DelegationsDataCubit>().setData();
+          context.read<ValidatorsdataCubit>().setData();
         });
       },
       child: Card(

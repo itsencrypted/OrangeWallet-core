@@ -27,7 +27,9 @@ class NetworkConfig {
     exitPayload: "https://apis.matic.network/api/v1/mumbai/pos-exit-payload/",
     stakingEndpoint: "https://staking.api.subgraph.matic.today/api/v2",
     transakLink:
-        "https://staging-global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&defaultNetwork=matic&hideMenu=true&walletAddress="
+        "https://staging-global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&defaultNetwork=matic&hideMenu=true&themeColor" +
+            AppTheme.primaryHex +
+            "&walletAddress="
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
@@ -52,7 +54,9 @@ class NetworkConfig {
     exitPayload: "http://apis.matic.network/api/v1/matic/pos-exit-payload/",
     stakingEndpoint: "https://staking.api.matic.network/api/v1",
     transakLink:
-        "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&defaultNetwork=matic&hideMenu=true&walletAddress="
+        "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&defaultNetwork=matic&hideMenu=true&themeColor" +
+            AppTheme.primaryHex +
+            "&walletAddress="
   };
 }
 

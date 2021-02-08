@@ -16,4 +16,13 @@ class CovalentTokensListMaticCubit extends Cubit<CovalentTokensListMaticState> {
       emit(CovalentTokensListMaticError("Something Went wrong"));
     }
   }
+
+  Future<void> refresh() async {
+    try {
+      final list = await CovalentApiWrapper.tokensMaticList();
+      emit(CovalentTokensListMaticLoaded(list));
+    } on Exception {
+      emit(CovalentTokensListMaticError("Something Went wrong"));
+    }
+  }
 }

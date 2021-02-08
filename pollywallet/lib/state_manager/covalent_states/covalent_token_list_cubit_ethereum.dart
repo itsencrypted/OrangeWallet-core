@@ -16,4 +16,13 @@ class CovalentTokensListEthCubit extends Cubit<CovalentTokensListEthState> {
       emit(CovalentTokensListEthError("Something Went wrong"));
     }
   }
+
+  Future<void> refresh() async {
+    try {
+      final list = await CovalentApiWrapper.tokenEthList();
+      emit(CovalentTokensListEthLoaded(list));
+    } on Exception {
+      emit(CovalentTokensListEthError("Something Went wrong"));
+    }
+  }
 }

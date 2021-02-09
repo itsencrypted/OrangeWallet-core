@@ -21,6 +21,7 @@ class StakingApiWrapper {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.stakingEndpoint + '/validators';
     var resp = await http.get(url);
+    print(url);
     var json = jsonDecode(resp.body);
     print(resp.body);
     ctl = Validators.fromJson(json);

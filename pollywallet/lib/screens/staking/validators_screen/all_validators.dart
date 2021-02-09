@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/staking/validators_screen/ui_elements/validator_staked_card.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -114,11 +115,19 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + stakedAmount[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: stakedAmount[index].commissionPercent,
-                    name: name,
-                    performance: stakedAmount[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: stakedAmount[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: stakedAmount[index].commissionPercent,
+                      name: name,
+                      performance: stakedAmount[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
                 itemCount: stakedAmount.length,
@@ -133,11 +142,19 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + sorted[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: sorted[index].commissionPercent,
-                    name: name,
-                    performance: sorted[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: sorted[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: sorted[index].commissionPercent,
+                      name: name,
+                      performance: sorted[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
                 itemCount: sorted.length,
@@ -152,11 +169,19 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + commission[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: commission[index].commissionPercent,
-                    name: name,
-                    performance: commission[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: commission[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: commission[index].commissionPercent,
+                      name: name,
+                      performance: commission[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
                 itemCount: commission.length,

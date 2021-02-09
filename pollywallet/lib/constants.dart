@@ -40,6 +40,8 @@ const String transactionListRoute = "transactionListRoute";
 const String receivePageRoute = "receivePageRoute";
 const String networkSettingRoute = "networkSettingRoute";
 const String transakRoute = "transakRoute";
+const String validatorAndDelegationProfileRoute =
+    "validatorAndDelegationProfileRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

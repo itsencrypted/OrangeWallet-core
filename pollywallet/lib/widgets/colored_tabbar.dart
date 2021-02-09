@@ -14,9 +14,12 @@ class ColoredTabBar extends StatelessWidget implements PreferredSizeWidget {
       this.borderRadius = AppTheme.cardRadius,
       this.tabbarPadding = AppTheme.paddingHeight / 2});
 
+  // @override
+  // Size get preferredSize => Size(tabBar.preferredSize.width,
+  //     tabBar.preferredSize.height + tabbarMargin + tabbarPadding);
   @override
-  Size get preferredSize => Size(tabBar.preferredSize.width,
-      tabBar.preferredSize.height + tabbarMargin + tabbarPadding);
+  Size get preferredSize => Size(tabBar.preferredSize.width * 0.8,
+      tabBar.preferredSize.height * 0.8 + tabbarMargin + tabbarPadding);
 
   @override
   Widget build(BuildContext context) => Container(

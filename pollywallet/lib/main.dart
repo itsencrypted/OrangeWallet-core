@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
@@ -129,6 +130,8 @@ class _PollyWalletState extends State<PollyWallet> {
               receivePageRoute: (context) => Receive(),
               networkSettingRoute: (context) => NetworkSetting(),
               transakRoute: (context) => TransakWebView(),
+              validatorAndDelegationProfileRoute: (context) =>
+                  ValidatorAndDelegationProfile(),
             },
             home: current),
       ),

@@ -72,6 +72,7 @@ class DelegationScreen extends StatelessWidget {
                             .first
                             .quoteRate;
                         return DelegationCard(
+                            id: validator.id,
                             title: validator.name,
                             subtitle:
                                 '${validator.uptimePercent.toString()}% Checkpoints Signed',

@@ -69,7 +69,9 @@ class CovalentApiWrapper {
         config.chainId.toString() +
         "/address/" +
         address +
-        "/transfers_v2/?contract-address=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&key=ckey_780ed3c9aba3496e8e9948bada0";
+        "/transfers_v2/?contract-address=" +
+        contractAddress +
+        "&key=ckey_780ed3c9aba3496e8e9948bada0";
     print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);

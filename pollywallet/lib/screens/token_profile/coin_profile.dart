@@ -155,7 +155,7 @@ class _CoinProfileState extends State<CoinProfile> {
                               trailing: Icon(Icons.arrow_forward),
                               children: [
                                 Text(
-                                    tx.length == 0
+                                    tx.length != 0
                                         ? "All transactions"
                                         : "No transactions",
                                     style: AppTheme.subtitle),

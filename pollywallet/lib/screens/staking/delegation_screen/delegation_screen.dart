@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/ui_elements/delegation_card.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
@@ -25,7 +26,7 @@ class DelegationScreen extends StatelessWidget {
         ),
         body: BlocBuilder<CovalentTokensListMaticCubit,
             CovalentTokensListMaticState>(
-          builder: (context, covalentMaticState) {
+          builder: (context, tokenState) {
             return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
                 builder: (context, delegationState) {
               return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
@@ -52,7 +53,7 @@ class DelegationScreen extends StatelessWidget {
                   );
                 } else if (delegationState is DelegationsDataStateFinal &&
                     validatorState is ValidatorsDataStateFinal &&
-                    covalentMaticState is CovalentTokensListMaticLoaded) {
+                    tokenState is CovalentTokensListMaticLoaded) {
                   return Container(
                     child: ListView.builder(
                       itemBuilder: (context, index) {
@@ -63,8 +64,7 @@ class DelegationScreen extends StatelessWidget {
                                     .data.result[index].bondedValidator)
                             .toList()
                             .first;
-                        double qoute = covalentMaticState
-                            .covalentTokenList.data.items
+                        double qoute = tokenState.covalentTokenList.data.items
                             .where((element) =>
                                 element.contractTickerSymbol.toLowerCase() ==
                                 "matic")

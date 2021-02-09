@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -354,7 +355,11 @@ class _ValidatorAndDelegationProfileState
                                                                   50))),
                                                 ),
                                                 RaisedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(context,
+                                                        delegationAmountRoute,
+                                                        arguments: id);
+                                                  },
                                                   color:
                                                       AppTheme.secondaryColor,
                                                   child: SizedBox(

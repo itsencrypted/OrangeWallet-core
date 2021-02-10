@@ -55,10 +55,15 @@ class _CoinListCardState extends State<CoinListCard> {
     );
   }
 
-  Widget _divider = Divider(color: AppTheme.lightText);
+  Widget _divider = Padding(
+    padding: EdgeInsets.symmetric(
+      horizontal: 15,
+    ),
+    child: Divider(color: AppTheme.lightText),
+  );
   Widget _disclaimer = Container(
       margin: EdgeInsets.symmetric(
-        horizontal: 8,
+        horizontal: 20,
       ),
       child: Text(
         "Showing coins with balance only",

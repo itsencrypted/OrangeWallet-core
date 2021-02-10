@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
@@ -24,6 +23,7 @@ class _HomeAppBar extends State<HomeAppBar> {
         address = start + ".." + end;
       });
     });
+    _refresh();
     super.initState();
   }
 
@@ -75,6 +75,22 @@ class _HomeAppBar extends State<HomeAppBar> {
         )
       ],
     );
+  }
+
+  _refresh() async {
+    var box = await BoxUtils.getCredentialsListBox();
+    var stream = box.watch();
+    var bcast = stream.asBroadcastStream();
+    bcast.listen((event) {
+      print("event");
+      CredentialManager.getAddress().then((value) {
+        var start = value.substring(0, 4);
+        var end = value.substring(value.length - 3);
+        setState(() {
+          address = start + ".." + end;
+        });
+      });
+    });
   }
 
   _logout() {

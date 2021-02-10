@@ -42,8 +42,37 @@ class BoxUtils {
     } else {
       box.add(credsList);
     }
-    print(box.getAt(0).salt);
-    print(box.getAt(0).credentials[0].address);
+    return true;
+  }
+
+  static Future<bool> addAccount(
+    String privateKey,
+    String address,
+  ) async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    var mnemonic = box.getAt(0).credentials[0].mnemonic;
+    var creds = new CredentialsObject()
+      ..address = address
+      ..privateKey = privateKey
+      ..mnemonic = mnemonic;
+    List<CredentialsObject> list = box.getAt(0).credentials;
+    list.add(creds);
+    CredentialsList credsList = box.getAt(0);
+    credsList.credentials = list;
+    box.putAt(0, credsList);
+    return true;
+  }
+
+  static Future<int> getAccountCount() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box.getAt(0).credentials.length;
+  }
+
+  static Future<bool> setAccount(int id) async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    CredentialsList obj = box.getAt(0);
+    obj.active = id;
+    box.putAt(0, obj);
     return true;
   }
 
@@ -51,6 +80,22 @@ class BoxUtils {
     var box = await Hive.openBox<CredentialsList>(credentialBox);
     int active = box.getAt(0).active;
     CredentialsObject creds = box.getAt(0).credentials[active];
+    return creds;
+  }
+
+  static Future<Box<CredentialsList>> getCredentialsListBox() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box;
+  }
+
+  static Future<int> getActiveId() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box.getAt(0).active;
+  }
+
+  static Future<List<CredentialsObject>> getCredentialsList() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    List<CredentialsObject> creds = box.getAt(0).credentials;
     return creds;
   }
 

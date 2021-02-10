@@ -43,6 +43,8 @@ const String transakRoute = "transakRoute";
 const String validatorAndDelegationProfileRoute =
     "validatorAndDelegationProfileRoute";
 const String delegationAmountRoute = "delegationAmountRoute";
+const String accountRoute = "accountRoute";
+const String pinForNewAccountRoute = "pinForNewAccountRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
+import 'package:pollywallet/screens/settings_screen/accounts.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:pollywallet/screens/staking/delegation_stake_amount.dart';
@@ -135,6 +137,8 @@ class _PollyWalletState extends State<PollyWallet> {
               validatorAndDelegationProfileRoute: (context) =>
                   ValidatorAndDelegationProfile(),
               delegationAmountRoute: (context) => DelegationAmount(),
+              pinForNewAccountRoute: (context) => NewAccountPinWidget(),
+              accountRoute: (context) => AccountSelection()
             },
             home: current),
       ),

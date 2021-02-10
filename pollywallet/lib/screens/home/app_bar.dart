@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/screens/home/logout_popup.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -62,11 +65,19 @@ class _HomeAppBar extends State<HomeAppBar> {
       ),
       actions: [
         TextButton(
-          child: Image.asset("assets/icons/qr_icon.png",
-              color: AppTheme.darkerText),
-          onPressed: () {},
+          // child: Image.asset("assets/icons/qr_icon.png",
+          //     color: AppTheme.darkerText),
+          child: Icon(
+            Icons.power_settings_new_outlined,
+            color: AppTheme.darkerText,
+          ),
+          onPressed: _logout,
         )
       ],
     );
+  }
+
+  _logout() {
+    PopUpDialogLogout.showAlertDialog(context);
   }
 }

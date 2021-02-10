@@ -108,6 +108,7 @@ class _PollyWalletState extends State<PollyWallet> {
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             routes: {
+              importMnemonicRoute: (context) => ImportMnemonic(),
               pinWidgetRoute: (context) => PinWidget(),
               homeRoute: (context) => Home(),
               coinListRoute: (context) => TokenList(),

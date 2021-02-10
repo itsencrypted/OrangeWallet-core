@@ -285,7 +285,11 @@ class _ValidatorAndDelegationProfileState
                             child: validator.delegationEnabled
                                 ? (delegatorInfo == null
                                     ? RaisedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, delegationAmountRoute,
+                                              arguments: id);
+                                        },
                                         color: AppTheme.secondaryColor,
                                         child: SizedBox(
                                             width: MediaQuery.of(context)

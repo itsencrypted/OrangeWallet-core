@@ -4,7 +4,6 @@ import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
-import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
@@ -130,5 +129,16 @@ class BoxUtils {
     await box.clear();
     box.putAll(map);
     return currentPending;
+  }
+
+  static Future<void> clear() async {
+    var creds = await Hive.openBox<CredentialsList>(credentialBox);
+    Box<TransactionDetails> trx1 =
+        await Hive.openBox<TransactionDetails>(pendingTxBox + "0");
+    Box<TransactionDetails> trx2 =
+        await Hive.openBox<TransactionDetails>(pendingTxBox + "1");
+    creds.clear();
+    trx1.clear();
+    trx2.clear();
   }
 }

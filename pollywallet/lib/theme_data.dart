@@ -29,7 +29,7 @@ class AppTheme {
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
   static const double cardRadiusSmall = 10;
-  static const double cardElevations = 8;
+  static const double cardElevations = 2;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
   static const double paddingHeight = 16;

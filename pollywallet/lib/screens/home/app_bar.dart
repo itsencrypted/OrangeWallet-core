@@ -51,7 +51,7 @@ class _HomeAppBar extends State<HomeAppBar> {
           left: 4,
         ),
         child: SizedBox(
-          width: id == 0 ? 170 : 130,
+          width: id == 0 ? 180 : 130,
           child: FlatButton(
             onPressed: () {
               Clipboard.setData(new ClipboardData(text: fullAddress));

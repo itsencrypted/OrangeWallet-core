@@ -41,7 +41,9 @@ class _TokenListState extends State<TokenList> {
                 ),
               );
             }
-            var ls = state.covalentTokenList.data.items.reversed.toList();
+            var ls = state.covalentTokenList.data.items
+                .where((element) => element.nftData == null)
+                .toList();
             return Card(
               color: AppTheme.white,
               shape: AppTheme.cardShape,

@@ -83,7 +83,7 @@ class Items {
   String balance;
   double quoteRate;
   double quote;
-  Null nftData;
+  List<NftData> nftData;
 
   Items(
       {this.contractDecimals,
@@ -107,7 +107,12 @@ class Items {
     balance = json['balance'];
     quoteRate = json['quote_rate'];
     quote = json['quote'];
-    nftData = json['nft_data'];
+    if (json['nft_data'] != null) {
+      nftData = new List<NftData>();
+      json['nft_data'].forEach((v) {
+        nftData.add(new NftData.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -121,7 +126,108 @@ class Items {
     data['balance'] = this.balance;
     data['quote_rate'] = this.quoteRate;
     data['quote'] = this.quote;
-    data['nft_data'] = this.nftData;
+    if (this.nftData != null) {
+      data['nft_data'] = this.nftData.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class NftData {
+  String tokenId;
+  Null tokenBalance;
+  String tokenUrl;
+  ExternalData externalData;
+  String owner;
+
+  NftData(
+      {this.tokenId,
+      this.tokenBalance,
+      this.tokenUrl,
+      this.externalData,
+      this.owner});
+
+  NftData.fromJson(Map<String, dynamic> json) {
+    tokenId = json['token_id'];
+    tokenBalance = json['token_balance'];
+    tokenUrl = json['token_url'];
+    externalData = json['external_data'] != null
+        ? new ExternalData.fromJson(json['external_data'])
+        : null;
+    owner = json['owner'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['token_id'] = this.tokenId;
+    data['token_balance'] = this.tokenBalance;
+    data['token_url'] = this.tokenUrl;
+    if (this.externalData != null) {
+      data['external_data'] = this.externalData.toJson();
+    }
+    data['owner'] = this.owner;
+    return data;
+  }
+}
+
+class ExternalData {
+  String name;
+  String description;
+  String image;
+  String externalUrl;
+  List<Attributes> attributes;
+
+  ExternalData(
+      {this.name,
+      this.description,
+      this.image,
+      this.externalUrl,
+      this.attributes});
+
+  ExternalData.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    description = json['description'];
+    image = json['image'];
+    externalUrl = json['external_url'];
+    if (json['attributes'] != null) {
+      attributes = new List<Attributes>();
+      json['attributes'].forEach((v) {
+        attributes.add(new Attributes.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['image'] = this.image;
+    data['external_url'] = this.externalUrl;
+    if (this.attributes != null) {
+      data['attributes'] = this.attributes.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Attributes {
+  String traitType;
+  String value;
+  String displayType;
+
+  Attributes({this.traitType, this.value, this.displayType});
+
+  Attributes.fromJson(Map<String, dynamic> json) {
+    traitType = json['trait_type'];
+    value = json['value'].toString();
+    displayType = json['display_type'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['trait_type'] = this.traitType;
+    data['value'] = this.value;
+    data['display_type'] = this.displayType;
     return data;
   }
 }

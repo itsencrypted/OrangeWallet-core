@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
-import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 
 class CovalentApiWrapper {
@@ -30,23 +29,12 @@ class CovalentApiWrapper {
           address +
           "/balances_v2/?key=" +
           CovalentKey;
-      future = MaticTransactions.balanceOf(maticAddress);
-      BigInt native = await future;
-      data = Items(
-          balance: native.toString(),
-          contractAddress: maticAddress,
-          contractDecimals: 18,
-          contractTickerSymbol: "MATIC",
-          contractName: "Matic",
-          logoUrl: tokenIconUrl,
-          quote: 0,
-          quoteRate: 0);
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
           "/137/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }
 
@@ -91,7 +79,7 @@ class CovalentApiWrapper {
       String url = baseUrl +
           "/1/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
       var resp = await http.get(url);
 

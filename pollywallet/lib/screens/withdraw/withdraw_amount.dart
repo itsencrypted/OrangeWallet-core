@@ -23,7 +23,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   WithdrawBurnDataCubit data;
   BuildContext context;
   int bridge = 0;
-  bool _isInitialized;
   double balance;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;

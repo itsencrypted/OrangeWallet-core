@@ -119,6 +119,11 @@ class BoxUtils {
     return id;
   }
 
+  static Future<Box<int>> getNetworkIdBox() async {
+    Box<int> box = await Hive.openBox<int>(networkBox);
+    return box;
+  }
+
   static Future<void> setNetworkConfig(int id) async {
     Box<int> box = await Hive.openBox<int>(networkBox);
     box.put(networkBox, id);

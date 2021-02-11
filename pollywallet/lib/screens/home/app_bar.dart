@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
@@ -14,6 +17,8 @@ class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _HomeAppBar extends State<HomeAppBar> {
   String address = "";
+  int id = 1;
+  String fullAddress = "";
   @override
   void initState() {
     CredentialManager.getAddress().then((value) {
@@ -21,9 +26,16 @@ class _HomeAppBar extends State<HomeAppBar> {
       var end = value.substring(value.length - 3);
       setState(() {
         address = start + ".." + end;
+        fullAddress = value;
+      });
+    });
+    BoxUtils.getNetworkConfig().then((value) {
+      setState(() {
+        id = value;
       });
     });
     _refresh();
+    _refreshNetwork();
     super.initState();
   }
 
@@ -39,26 +51,54 @@ class _HomeAppBar extends State<HomeAppBar> {
           left: 4,
         ),
         child: SizedBox(
-          width: 130,
-          child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-            elevation: 0,
-            color: AppTheme.somewhatYellow,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: Icon(
-                    Icons.account_circle_sharp,
-                    color: AppTheme.darkText,
-                    size: 35,
+          width: id == 0 ? 170 : 130,
+          child: FlatButton(
+            onPressed: () {
+              Clipboard.setData(new ClipboardData(text: fullAddress));
+              print(fullAddress);
+              Fluttertoast.showToast(msg: "Address Copied");
+            },
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.all(0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40)),
+              elevation: 0,
+              color: AppTheme.somewhatYellow,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(0),
+                    child: Icon(
+                      Icons.account_circle_sharp,
+                      color: AppTheme.darkText,
+                      size: 35,
+                    ),
                   ),
-                ),
-                Text(address, style: AppTheme.subtitle)
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: Text(address, style: AppTheme.body2),
+                  ),
+                  id == 0
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 7),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 2),
+                              child: Text("TEST"),
+                            ),
+                            decoration: BoxDecoration(
+                                color: AppTheme.secondaryColor,
+                                borderRadius: BorderRadius.circular(6)),
+                          ),
+                        )
+                      : Container()
+                ],
+              ),
             ),
           ),
         ),
@@ -89,6 +129,18 @@ class _HomeAppBar extends State<HomeAppBar> {
         setState(() {
           address = start + ".." + end;
         });
+      });
+    });
+  }
+
+  _refreshNetwork() async {
+    var configBox = await BoxUtils.getNetworkIdBox();
+    var networkBCast = configBox.watch().asBroadcastStream();
+    networkBCast.listen((event) async {
+      var id = await BoxUtils.getNetworkConfig();
+      print("changed network");
+      setState(() {
+        this.id = id;
       });
     });
   }

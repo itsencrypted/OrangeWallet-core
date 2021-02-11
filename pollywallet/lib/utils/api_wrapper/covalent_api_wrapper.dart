@@ -93,7 +93,6 @@ class CovalentApiWrapper {
           address +
           "/balances_v2/?key=" +
           CovalentKey;
-      Future future = EthereumTransactions.balanceOf(ethAddress);
       var resp = await http.get(url);
 
       var json = jsonDecode(resp.body);

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/wallet_tab/coin_list.dart';
+import 'package:pollywallet/screens/wallet_tab/nft_list.dart';
 import 'package:pollywallet/screens/wallet_tab/top_balance.dart';
 import 'package:pollywallet/screens/wallet_tab/transfer_asset_card.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
@@ -46,8 +47,11 @@ class _HomeTabState extends State<HomeTab>
         } else if (state is CovalentTokensListMaticLoaded) {
           var amt = 0.0;
           if (state.covalentTokenList.data.items.length > 0) {
-            amt = state.covalentTokenList.data.items[0].quote;
+            state.covalentTokenList.data.items.forEach((element) {
+              amt += element.quote;
+            });
           }
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: RefreshIndicator(
@@ -55,12 +59,20 @@ class _HomeTabState extends State<HomeTab>
               child: ListView(children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 30, bottom: 50),
-                  child: TopBalance(amt.toString()),
+                  child: TopBalance(amt.toStringAsFixed(2)),
                 ),
                 TransferAssetCard(),
                 CoinListCard(
                   tokens: state.covalentTokenList.data.items,
                 ),
+                state.covalentTokenList.data.items
+                            .where((element) => element.nftData == null)
+                            .length !=
+                        0
+                    ? NftListCard(
+                        tokens: state.covalentTokenList.data.items,
+                      )
+                    : Container(),
                 Card(
                   shape: AppTheme.cardShape,
                   elevation: AppTheme.cardElevations,

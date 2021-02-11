@@ -5,20 +5,20 @@ import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
-class CoinListCard extends StatefulWidget {
+class NftListCard extends StatefulWidget {
   final List<Items> tokens;
 
-  const CoinListCard({Key key, @required this.tokens}) : super(key: key);
+  const NftListCard({Key key, @required this.tokens}) : super(key: key);
   @override
-  _CoinListCardState createState() => _CoinListCardState();
+  _NftListCardState createState() => _NftListCardState();
 }
 
-class _CoinListCardState extends State<CoinListCard> {
+class _NftListCardState extends State<NftListCard> {
   int total;
   List<Widget> ls = List<Widget>();
   @override
   void initState() {
-    total = widget.tokens.where((element) => element.nftData == null).length;
+    total = widget.tokens.where((element) => element.nftData != null).length;
     ls.add(_divider);
     ls.add(_disclaimer);
     ls.addAll(_tiles());
@@ -66,12 +66,12 @@ class _CoinListCardState extends State<CoinListCard> {
         horizontal: 20,
       ),
       child: Text(
-        "Showing coins with balance only",
+        "Showing owned collectibles only",
         style: AppTheme.subtitle,
       ));
   List<Widget> _tiles() {
     var tiles = List<Widget>();
-    var ls = widget.tokens.where((element) => element.nftData == null);
+    var ls = widget.tokens.where((element) => element.nftData != null);
     var index = 0;
     for (Items token in ls) {
       if (index == 5) {

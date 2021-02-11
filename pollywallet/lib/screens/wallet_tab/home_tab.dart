@@ -66,7 +66,7 @@ class _HomeTabState extends State<HomeTab>
                   tokens: state.covalentTokenList.data.items,
                 ),
                 state.covalentTokenList.data.items
-                            .where((element) => element.nftData == null)
+                            .where((element) => element.nftData != null)
                             .length !=
                         0
                     ? NftListCard(

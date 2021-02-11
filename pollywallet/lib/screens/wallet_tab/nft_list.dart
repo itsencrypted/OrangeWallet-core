@@ -37,7 +37,7 @@ class _NftListCardState extends State<NftListCard> {
       shape: AppTheme.cardShape,
       color: AppTheme.white,
       child: ExpansionTile(
-        title: Text("$total Coins"),
+        title: Text("$total Collectibles"),
         trailing: Icon(Icons.arrow_forward),
         children: [
           Padding(

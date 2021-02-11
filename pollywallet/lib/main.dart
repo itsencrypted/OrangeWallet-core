@@ -6,6 +6,8 @@ import 'package:pollywallet/screens/settings_screen/network.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:pollywallet/screens/staking/delegation_stake_amount.dart';
 import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dart';
+import 'package:pollywallet/screens/token_list/nft_list_full.dart';
+import 'package:pollywallet/screens/token_profile/nft_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
@@ -52,6 +54,12 @@ class _PollyWalletState extends State<PollyWallet> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: AppTheme.backgroundWhite,
+        statusBarColor: AppTheme.backgroundWhite,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarDividerColor: AppTheme.backgroundWhite,
+        systemNavigationBarIconBrightness: Brightness.dark));
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
         if (status) {
@@ -138,7 +146,9 @@ class _PollyWalletState extends State<PollyWallet> {
                   ValidatorAndDelegationProfile(),
               delegationAmountRoute: (context) => DelegationAmount(),
               pinForNewAccountRoute: (context) => NewAccountPinWidget(),
-              accountRoute: (context) => AccountSelection()
+              accountRoute: (context) => AccountSelection(),
+              nftTokenList: (context) => FullNftList(),
+              nftTokenProfile: (context) => NftProfile()
             },
             home: current),
       ),

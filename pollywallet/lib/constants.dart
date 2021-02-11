@@ -45,6 +45,8 @@ const String validatorAndDelegationProfileRoute =
 const String delegationAmountRoute = "delegationAmountRoute";
 const String accountRoute = "accountRoute";
 const String pinForNewAccountRoute = "pinForNewAccountRoute";
+const String nftTokenProfile = "nftTokenProfile";
+const String nftTokenList = "nftTokenList";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

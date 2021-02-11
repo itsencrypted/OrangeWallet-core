@@ -135,7 +135,7 @@ class Items {
 
 class NftData {
   String tokenId;
-  Null tokenBalance;
+  String tokenBalance;
   String tokenUrl;
   ExternalData externalData;
   String owner;

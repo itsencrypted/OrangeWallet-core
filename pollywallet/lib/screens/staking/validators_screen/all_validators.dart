@@ -40,17 +40,24 @@ class _AllValidatorsState extends State<AllValidators> {
         );
       } else if (state is ValidatorsDataStateFinal) {
         var stakedAmount = state.data.result;
+        print(stakedAmount);
         stakedAmount.sort((a, b) => a.selfStake > b.selfStake ? 1 : 0);
         var sorted = state.data.result;
-        sorted.sort((a, b) =>
-            double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
-                ? 1
-                : 0);
+        print(stakedAmount.length.toString() + " 1");
+
+        // sorted.sort((a, b) =>
+        //     double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
+        //         ? 1
+        //         : 0);
         var commission = state.data.result;
         commission.sort((a, b) => double.parse(a.commissionPercent) >
                 double.parse(b.commissionPercent)
             ? 1
             : 0);
+        print(stakedAmount.length.toString() + " 1");
+        print(sorted.length.toString() + " 2");
+        print(commission.length.toString() + " 3");
+
         return DefaultTabController(
           length: 3,
           child: Scaffold(

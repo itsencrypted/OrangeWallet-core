@@ -143,7 +143,8 @@ class _ValidatorAndDelegationProfileState
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                    validator.uptimePercent +
+                                                    validator.uptimePercent
+                                                            .toString() +
                                                         " %",
                                                     style: AppTheme.title),
                                                 Text(

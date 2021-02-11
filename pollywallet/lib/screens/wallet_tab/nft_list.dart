@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
+import 'package:pollywallet/screens/wallet_tab/nft_tile.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
 class NftListCard extends StatefulWidget {
   final List<Items> tokens;
@@ -23,7 +23,7 @@ class _NftListCardState extends State<NftListCard> {
     ls.add(_disclaimer);
     ls.addAll(_tiles());
     ls.add(_divider);
-    if (total > 5) {
+    if (total < 5) {
       ls.add(_raisedButton());
     }
 
@@ -79,7 +79,7 @@ class _NftListCardState extends State<NftListCard> {
       }
       if (token.type == null || token.balance != 0) {
         index++;
-        var tile = CoinListTile(
+        var tile = NftListTile(
           tokenData: token,
         );
         tiles.add(tile);
@@ -104,6 +104,6 @@ class _NftListCardState extends State<NftListCard> {
   }
 
   _allCoins() {
-    Navigator.pushNamed(context, coinListRoute);
+    Navigator.pushNamed(context, nftTokenList);
   }
 }

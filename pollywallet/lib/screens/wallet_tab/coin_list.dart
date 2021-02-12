@@ -23,7 +23,7 @@ class _CoinListCardState extends State<CoinListCard> {
     ls.add(_disclaimer);
     ls.addAll(_tiles());
     ls.add(_divider);
-    if (total > 5) {
+    if (total == 5) {
       ls.add(_raisedButton());
     }
 

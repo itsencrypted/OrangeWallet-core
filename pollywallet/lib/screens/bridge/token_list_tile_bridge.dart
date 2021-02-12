@@ -27,85 +27,89 @@ class TokenListTileBridge extends StatelessWidget {
     WithdrawBurnDataCubit withdrawBurnData =
         context.read<WithdrawBurnDataCubit>();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-      child: Center(
-        child: FlatButton(
-          onPressed: () async {
-            if (action == 0) {
-              GlobalKey<State> _key = GlobalKey<State>();
-              Dialogs.showLoadingDialog(context, _key);
-              Future posFuture = EthereumTransactions.checkPosMapping(
-                  tokenData.contractAddress);
-              Future plasmaFuture = EthereumTransactions.checkPlasmaMapping(
-                  tokenData.contractAddress);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: Card(
+          shape: AppTheme.cardShape,
+          elevation: AppTheme.cardElevations,
+          color: AppTheme.white,
+          child: FlatButton(
+            onPressed: () async {
+              if (action == 0) {
+                GlobalKey<State> _key = GlobalKey<State>();
+                Dialogs.showLoadingDialog(context, _key);
+                Future posFuture = EthereumTransactions.checkPosMapping(
+                    tokenData.contractAddress);
+                Future plasmaFuture = EthereumTransactions.checkPlasmaMapping(
+                    tokenData.contractAddress);
 
-              bool pos = await posFuture;
-              bool plasma = await plasmaFuture;
-              Navigator.of(_key.currentContext, rootNavigator: true).pop();
-              int status = 0;
-              if (pos) {
-                status = 1;
-              }
-              if (plasma) {
-                status == 1 ? status = 3 : status = 2;
-              }
-              print(tokenData.contractAddress.toLowerCase());
-              print(ethAddress);
-              if (tokenData.contractAddress.toLowerCase() ==
-                  ethAddress.toLowerCase()) {
+                bool pos = await posFuture;
+                bool plasma = await plasmaFuture;
+                Navigator.of(_key.currentContext, rootNavigator: true).pop();
+                int status = 0;
+                if (pos) {
+                  status = 1;
+                }
+                if (plasma) {
+                  status == 1 ? status = 3 : status = 2;
+                }
                 print(tokenData.contractAddress.toLowerCase());
                 print(ethAddress);
-                status = 3;
-              }
-              if (status == 0) {
-                Fluttertoast.showToast(msg: "No bridge available");
-                return;
-              }
-              DepositModel model = DepositModel(token: tokenData);
-              depositData.setData(model);
-              Navigator.pushNamed(context, depositAmountRoute,
-                  arguments: status);
-            } else {
-              GlobalKey<State> _key = GlobalKey<State>();
-              Dialogs.showLoadingDialog(context, _key);
-              Future posFuture = EthereumTransactions.childToRootPos(
-                  tokenData.contractAddress);
-              Future plasmaFuture = EthereumTransactions.childToRootPlasma(
-                  tokenData.contractAddress);
+                if (tokenData.contractAddress.toLowerCase() ==
+                    ethAddress.toLowerCase()) {
+                  print(tokenData.contractAddress.toLowerCase());
+                  print(ethAddress);
+                  status = 3;
+                }
+                if (status == 0) {
+                  Fluttertoast.showToast(msg: "No bridge available");
+                  return;
+                }
+                DepositModel model = DepositModel(token: tokenData);
+                depositData.setData(model);
+                Navigator.pushNamed(context, depositAmountRoute,
+                    arguments: status);
+              } else {
+                GlobalKey<State> _key = GlobalKey<State>();
+                Dialogs.showLoadingDialog(context, _key);
+                Future posFuture = EthereumTransactions.childToRootPos(
+                    tokenData.contractAddress);
+                Future plasmaFuture = EthereumTransactions.childToRootPlasma(
+                    tokenData.contractAddress);
 
-              bool pos = await posFuture;
-              bool plasma = await plasmaFuture;
-              Navigator.of(_key.currentContext, rootNavigator: true).pop();
-              int status = 0;
-              if (pos) {
-                status = 1;
-              }
-              if (plasma) {
-                status == 1 ? status = 3 : status = 2;
-              }
-              print(tokenData.contractAddress.toLowerCase());
-              print(ethAddress);
-              if (tokenData.contractAddress.toLowerCase() ==
-                  ethAddress.toLowerCase()) {
+                bool pos = await posFuture;
+                bool plasma = await plasmaFuture;
+                Navigator.of(_key.currentContext, rootNavigator: true).pop();
+                int status = 0;
+                if (pos) {
+                  status = 1;
+                }
+                if (plasma) {
+                  status == 1 ? status = 3 : status = 2;
+                }
                 print(tokenData.contractAddress.toLowerCase());
                 print(ethAddress);
-                status = 3;
+                if (tokenData.contractAddress.toLowerCase() ==
+                    ethAddress.toLowerCase()) {
+                  print(tokenData.contractAddress.toLowerCase());
+                  print(ethAddress);
+                  status = 3;
+                }
+                if (status == 0) {
+                  Fluttertoast.showToast(msg: "No bridge available");
+                  return;
+                }
+                WithdrawBurnDataModel model =
+                    WithdrawBurnDataModel(token: tokenData);
+                withdrawBurnData.setData(model);
+                Navigator.pushNamed(context, withdrawAmountRoute,
+                    arguments: status);
               }
-              if (status == 0) {
-                Fluttertoast.showToast(msg: "No bridge available");
-                return;
-              }
-              WithdrawBurnDataModel model =
-                  WithdrawBurnDataModel(token: tokenData);
-              withdrawBurnData.setData(model);
-              Navigator.pushNamed(context, withdrawAmountRoute,
-                  arguments: status);
-            }
-          },
-          child: Column(
-            children: [
-              ListTile(
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 3),
+              child: ListTile(
                 leading: FadeInImage.assetNetwork(
                   placeholder: tokenIcon,
                   image: tokenData.logoUrl,
@@ -130,10 +134,7 @@ class TokenListTileBridge extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(
-                color: AppTheme.darkText,
-              )
-            ],
+            ),
           ),
         ),
       ),

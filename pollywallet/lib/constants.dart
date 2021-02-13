@@ -15,6 +15,8 @@ const plasmaRegistryAbi = "assets/abi/plasma_registry.json";
 const rootChainProxyAbi = "assets/abi/root_chain_proxy.json";
 const rootChainAbi = "assets/abi/root_chain.json";
 const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
+const stakingContract = "assets/abi/staking_contract.json";
+
 // urls
 const tokenIconUrl =
     "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
@@ -47,6 +49,7 @@ const String accountRoute = "accountRoute";
 const String pinForNewAccountRoute = "pinForNewAccountRoute";
 const String nftTokenProfile = "nftTokenProfile";
 const String nftTokenList = "nftTokenList";
+const String stakeManagerProxy = "stakeManagerProxy";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";
@@ -72,6 +75,7 @@ const depositManager = "depositManager";
 const stakingEndpoint = "stakingEndpoint";
 const exitPayload = "exitPayLoad";
 const transakLink = "transakLink";
+const maticToken = "maticToken";
 const uintMax =
     "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 const ethAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";

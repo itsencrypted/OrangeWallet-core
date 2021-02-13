@@ -18,7 +18,7 @@ import 'package:web_socket_channel/io.dart';
 
 class EthereumTransactions {
   static Future<Transaction> depositErc20Pos(
-      String amount, String erc20Address, BuildContext context) async {
+      String amount, String erc20Address) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     var amt = RlpEncode.encode(_amt);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
@@ -43,8 +43,7 @@ class EthereumTransactions {
     return trx;
   }
 
-  static Future<Transaction> depositEthPos(
-      String amount, BuildContext context) async {
+  static Future<Transaction> depositEthPos(String amount) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
 
@@ -65,7 +64,7 @@ class EthereumTransactions {
   }
 
   static Future<Transaction> depositErc20Plasma(
-      String amount, String erc20Address, BuildContext context) async {
+      String amount, String erc20Address) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
 
     String abi = await rootBundle.loadString(depositManagerAbi);
@@ -86,8 +85,7 @@ class EthereumTransactions {
     return trx;
   }
 
-  static Future<Transaction> depositEthPlasma(
-      String amount, BuildContext context) async {
+  static Future<Transaction> depositEthPlasma(String amount) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
 
@@ -109,7 +107,7 @@ class EthereumTransactions {
   }
 
   static Future<Transaction> approveErc20(
-      String erc20Address, String spender, BuildContext context) async {
+      String erc20Address, String spender) async {
     String abi = await rootBundle.loadString(erc20Abi);
     print(erc20Address);
     final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
@@ -145,7 +143,7 @@ class EthereumTransactions {
     return balance[0];
   }
 
-  static Future<BigInt> allowanceERC20(
+  static Future<BigInt> bridgeAllowanceERC20(
       String erc20Address, Bridge bridge) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
@@ -162,6 +160,26 @@ class EthereumTransactions {
     print(erc20Address);
     final contract = DeployedContract(ContractAbi.fromJson(abi, "erc20"),
         EthereumAddress.fromHex(erc20Address));
+    var func = contract.function('allowance');
+    var balance = await client.call(
+      contract: contract,
+      function: func,
+      params: [
+        EthereumAddress.fromHex(address),
+        EthereumAddress.fromHex(spender)
+      ],
+    );
+    print(balance);
+    return balance[0];
+  }
+
+  static Future<BigInt> allowance(String spender, String erc20) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(erc20Abi);
+    var address = await CredentialManager.getAddress();
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "erc20"), EthereumAddress.fromHex(erc20));
     var func = contract.function('allowance');
     var balance = await client.call(
       contract: contract,

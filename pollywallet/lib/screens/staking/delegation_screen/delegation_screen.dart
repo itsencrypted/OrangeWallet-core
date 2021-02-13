@@ -71,28 +71,36 @@ class DelegationScreen extends StatelessWidget {
                             .toList()
                             .first
                             .quoteRate;
-                        return DelegationCard(
-                            id: validator.id,
-                            title: validator.name,
-                            subtitle:
-                                '${validator.uptimePercent.toString()}% Checkpoints Signed',
-                            commission: validator.commissionPercent.toString(),
-                            iconURL:
-                                'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                            maticStake: EthConversions.weiToEth(
-                                    delegationState.stake, 18)
-                                .toString(),
-                            stakeInUsd: (qoute *
-                                    EthConversions.weiToEth(
-                                        delegationState.stake, 18))
-                                .toStringAsFixed(2),
-                            maticRewards: EthConversions.weiToEth(
-                                    delegationState.rewards, 18)
-                                .toString(),
-                            rewardInUsd: (qoute *
-                                    EthConversions.weiToEth(
-                                        delegationState.rewards, 18))
-                                .toStringAsFixed(2));
+                        BigInt reward =
+                            delegationState.data.result[index].shares -
+                                delegationState.data.result[index].stake;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: DelegationCard(
+                              id: validator.id,
+                              title: validator.name,
+                              subtitle:
+                                  '${validator.uptimePercent.toString()}% Checkpoints Signed',
+                              commission:
+                                  validator.commissionPercent.toString(),
+                              iconURL:
+                                  'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+                              maticStake: EthConversions.weiToEth(
+                                      delegationState.data.result[index].stake,
+                                      18)
+                                  .toStringAsFixed(3),
+                              stakeInUsd: (qoute *
+                                      EthConversions.weiToEth(
+                                          delegationState
+                                              .data.result[index].stake,
+                                          18))
+                                  .toStringAsFixed(3),
+                              maticRewards: EthConversions.weiToEth(reward, 18)
+                                  .toString(),
+                              rewardInUsd:
+                                  (qoute * EthConversions.weiToEth(reward, 18))
+                                      .toStringAsFixed(3)),
+                        );
                       },
                       itemCount: delegationState.data.result.length,
                     ),

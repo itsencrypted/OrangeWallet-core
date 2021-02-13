@@ -13,25 +13,28 @@ class NetworkManager {
       config = NetworkConfig.MainnetConfig;
     }
     NetworkConfigObject obj = new NetworkConfigObject(
-        endpoint: config[endpoint],
-        blockExplorerMatic: config[blockExplorerMatic],
-        chainId: config[chainId],
-        ethChainId: config[ethChainId],
-        ethEndpoint: config[ethEndpoint],
-        rootChainProxy: config[rootChainProxy],
-        rootChainMatic: config[rootChainMatic],
-        erc20Predicate: config[erc20Predicate],
-        erc721Predicate: config[erc721Predicate],
-        ethWebsocket: config[ethWebsocket],
-        maticWebsocket: config[maticWebsocket],
-        etherscanEndpoint: config[etherscanEndpoint],
-        withdrawManagerProxy: config[withdrawManagerProxy],
-        plasmaRegistry: config[plasmaRegistry],
-        depositManager: config[depositManager],
-        exitPayload: config[exitPayload],
-        blockExplorerEth: config[blockExplorerEth],
-        stakingEndpoint: config[stakingEndpoint],
-        transakLink: config[transakLink]);
+      endpoint: config[endpoint],
+      blockExplorerMatic: config[blockExplorerMatic],
+      chainId: config[chainId],
+      ethChainId: config[ethChainId],
+      ethEndpoint: config[ethEndpoint],
+      rootChainProxy: config[rootChainProxy],
+      rootChainMatic: config[rootChainMatic],
+      erc20Predicate: config[erc20Predicate],
+      erc721Predicate: config[erc721Predicate],
+      ethWebsocket: config[ethWebsocket],
+      maticWebsocket: config[maticWebsocket],
+      etherscanEndpoint: config[etherscanEndpoint],
+      withdrawManagerProxy: config[withdrawManagerProxy],
+      plasmaRegistry: config[plasmaRegistry],
+      depositManager: config[depositManager],
+      exitPayload: config[exitPayload],
+      blockExplorerEth: config[blockExplorerEth],
+      stakingEndpoint: config[stakingEndpoint],
+      transakLink: config[transakLink],
+      maticToken: config[maticToken],
+      stakeManagerProxy: config[stakeManagerProxy],
+    );
 
     return obj;
   }

@@ -39,24 +39,26 @@ class _AllValidatorsState extends State<AllValidators> {
           ),
         );
       } else if (state is ValidatorsDataStateFinal) {
-        var stakedAmount = state.data.result;
+        var stakedAmount = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
         print(stakedAmount);
         stakedAmount.sort((a, b) => a.selfStake > b.selfStake ? 1 : 0);
-        var sorted = state.data.result;
-        print(stakedAmount.length.toString() + " 1");
+        var sorted = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
 
         // sorted.sort((a, b) =>
         //     double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
         //         ? 1
         //         : 0);
-        var commission = state.data.result;
+        var commission = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
         commission.sort((a, b) => double.parse(a.commissionPercent) >
                 double.parse(b.commissionPercent)
             ? 1
             : 0);
-        print(stakedAmount.length.toString() + " 1");
-        print(sorted.length.toString() + " 2");
-        print(commission.length.toString() + " 3");
 
         return DefaultTabController(
           length: 3,
@@ -118,7 +120,7 @@ class _AllValidatorsState extends State<AllValidators> {
                       stakedAmount[index].delegatedStake, 18);
                   var name;
                   if (stakedAmount[index].name != null) {
-                    name = state.data.result[index].name;
+                    name = stakedAmount[index].name;
                   } else {
                     name = "Validator " + stakedAmount[index].id.toString();
                   }

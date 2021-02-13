@@ -49,7 +49,7 @@ class _NetworkSettingState extends State<NetworkSetting> {
               ),
               networkCard(
                   title: "Testnet",
-                  body1: 'Ropstern testnet',
+                  body1: 'Goerli testnet',
                   body2: 'Matic testnet',
                   val: 0),
             ],

@@ -74,9 +74,7 @@ class StakingApiWrapper {
     DelegationsPerAddress ctl;
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     var address = await CredentialManager.getAddress();
-    String url = config.stakingEndpoint +
-        '/delegators/' +
-        "0x00211353E5e21C21BC5C75ea3547110db47A8a91";
+    String url = config.stakingEndpoint + '/delegators/' + address;
     print(url);
     var resp = await http.get(url);
     print(resp.body);

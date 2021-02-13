@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
+import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
+import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
+import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:web3dart/web3dart.dart';
 
 class DelegationAmount extends StatefulWidget {
   @override
@@ -17,6 +27,7 @@ class DelegationAmount extends StatefulWidget {
 }
 
 class _DelegationAmountState extends State<DelegationAmount> {
+  double balance = 0;
   TextEditingController _amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,6 @@ class _DelegationAmountState extends State<DelegationAmount> {
                         validatorState is ValidatorsDataStateFinal &&
                         covalentMaticState is CovalentTokensListMaticLoaded &&
                         covalentEthState is CovalentTokensListEthLoaded) {
-                      double balance = 0;
                       if (covalentEthState.covalentTokenList.data.items
                               .where((element) =>
                                   element.contractTickerSymbol.toLowerCase() ==
@@ -89,6 +99,11 @@ class _DelegationAmountState extends State<DelegationAmount> {
                               element.contractTickerSymbol.toLowerCase() ==
                               "matic")
                           .first;
+                      print("id");
+                      print(validatorState.data.result
+                          .where((element) => element.id == id)
+                          .toList()[0]
+                          .contractAddress);
                       ValidatorInfo validator = validatorState.data.result
                           .where((element) => element.id == id)
                           .toList()
@@ -201,7 +216,10 @@ class _DelegationAmountState extends State<DelegationAmount> {
                                     style: AppTheme.title,
                                   ),
                                   trailing: FlatButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      //print(validator.contractAddress);
+                                      _delegate(validator.contractAddress);
+                                    },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
                                     child: ClipOval(
@@ -251,5 +269,81 @@ class _DelegationAmountState extends State<DelegationAmount> {
             );
           },
         ));
+  }
+
+  _delegate(String spender) async {
+    if (double.tryParse(_amount.text) == null ||
+        double.tryParse(_amount.text) < 0 ||
+        double.tryParse(_amount.text) > balance) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    print(spender);
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context, false);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context, true);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      shape: AppTheme.cardShape,
+      content: Text(
+          "You haven't given sufficient approval, would you like to approve now?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    GlobalKey<State> _key = new GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    Transaction trx;
+    TransactionData transactionData;
+    BigInt approval = await EthereumTransactions.allowance(
+        config.stakeManagerProxy, config.maticToken);
+    var wei = EthConversions.ethToWei(_amount.text);
+    if (approval < wei) {
+      bool appr = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+      if (appr) {
+        trx = await EthereumTransactions.approveErc20(
+          config.maticToken,
+          spender,
+        );
+        transactionData = TransactionData(
+            to: config.maticToken,
+            amount: "0",
+            trx: trx,
+            type: TransactionType.APPROVE);
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        return;
+      }
+    } else {
+      trx = await StakingTransactions.buyVoucher(_amount.text, spender);
+      transactionData = TransactionData(
+          to: spender,
+          amount: _amount.text,
+          trx: trx,
+          type: TransactionType.STAKE);
+    }
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: transactionData);
   }
 }

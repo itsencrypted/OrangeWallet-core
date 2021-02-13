@@ -84,6 +84,7 @@ flutter:
     - assets/abi/root_chain.json
     - assets/abi/withdraw_manager.json
     - assets/icons/profit.png
+    - assets/abi/staking_contract.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

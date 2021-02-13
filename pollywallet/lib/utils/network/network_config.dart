@@ -29,7 +29,9 @@ class NetworkConfig {
     transakLink:
         "https://staging-global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&defaultNetwork=matic&hideMenu=true&themeColor" +
             AppTheme.primaryHex +
-            "&walletAddress="
+            "&walletAddress=",
+    maticToken: "0x499d11e0b6eac7c0593d8fb292dcbbf815fb29ae",
+    stakeManagerProxy: "0x00200eA4Ee292E253E6Ca07dBA5EdC07c8Aa37A3"
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
@@ -56,7 +58,9 @@ class NetworkConfig {
     transakLink:
         "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&defaultNetwork=matic&hideMenu=true&themeColor" +
             AppTheme.primaryHex +
-            "&walletAddress="
+            "&walletAddress=",
+    maticToken: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+    stakeManagerProxy: "0x5e3Ef299fDDf15eAa0432E6e66473ace8c13D908"
   };
 }
 
@@ -81,26 +85,29 @@ class NetworkConfigObject {
   final String blockExplorerEth;
   final String stakingEndpoint;
   final String transakLink;
-  NetworkConfigObject({
-    this.endpoint,
-    this.etherscanEndpoint,
-    this.maticBridgeApi,
-    this.blockExplorerMatic,
-    this.chainId,
-    this.ethChainId,
-    this.ethEndpoint,
-    this.rootChainProxy,
-    this.rootChainMatic,
-    this.erc721Predicate,
-    this.erc20Predicate,
-    this.ethWebsocket,
-    this.maticWebsocket,
-    this.withdrawManagerProxy,
-    this.plasmaRegistry,
-    this.depositManager,
-    this.exitPayload,
-    this.blockExplorerEth,
-    this.stakingEndpoint,
-    this.transakLink,
-  });
+  final String maticToken;
+  final String stakeManagerProxy;
+  NetworkConfigObject(
+      {this.endpoint,
+      this.etherscanEndpoint,
+      this.maticBridgeApi,
+      this.blockExplorerMatic,
+      this.chainId,
+      this.ethChainId,
+      this.ethEndpoint,
+      this.rootChainProxy,
+      this.rootChainMatic,
+      this.erc721Predicate,
+      this.erc20Predicate,
+      this.ethWebsocket,
+      this.maticWebsocket,
+      this.withdrawManagerProxy,
+      this.plasmaRegistry,
+      this.depositManager,
+      this.exitPayload,
+      this.blockExplorerEth,
+      this.stakingEndpoint,
+      this.transakLink,
+      this.maticToken,
+      this.stakeManagerProxy});
 }

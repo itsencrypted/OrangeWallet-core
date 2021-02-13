@@ -295,15 +295,14 @@ class _DepositScreenState extends State<DepositScreen>
       data.setData(DepositModel(
           token: state.data.token, amount: _amount.toString(), isEth: true));
       if (bridge == 1) {
-        trx = await EthereumTransactions.depositEthPos(_amount.text, context);
+        trx = await EthereumTransactions.depositEthPos(_amount.text);
         transactionData = TransactionData(
             to: config.erc20Predicate,
             trx: trx,
             amount: "0",
             type: TransactionType.DEPOSITPOS);
       } else {
-        trx =
-            await EthereumTransactions.depositEthPlasma(_amount.text, context);
+        trx = await EthereumTransactions.depositEthPlasma(_amount.text);
         transactionData = TransactionData(
             to: config.depositManager,
             trx: trx,
@@ -318,7 +317,7 @@ class _DepositScreenState extends State<DepositScreen>
         brd = Bridge.POS;
       else
         brd = Bridge.PLASMA;
-      BigInt approval = await EthereumTransactions.allowanceERC20(
+      BigInt approval = await EthereumTransactions.bridgeAllowanceERC20(
           state.data.token.contractAddress, brd);
       var wei = EthConversions.ethToWei(_amount.text);
       if (approval < wei) {
@@ -331,14 +330,14 @@ class _DepositScreenState extends State<DepositScreen>
         if (appr) {
           if (bridge == 1) {
             trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.erc20Predicate,
-                context);
+              state.data.token.contractAddress,
+              config.erc20Predicate,
+            );
           } else {
             trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.depositManager,
-                context);
+              state.data.token.contractAddress,
+              config.depositManager,
+            );
           }
           transactionData = TransactionData(
               to: state.data.token.contractAddress,
@@ -352,7 +351,7 @@ class _DepositScreenState extends State<DepositScreen>
       } else {
         if (bridge == 1) {
           trx = await EthereumTransactions.depositErc20Pos(
-              _amount.text, state.data.token.contractAddress, context);
+              _amount.text, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.erc20Predicate,
               amount: _amount.text,
@@ -360,7 +359,7 @@ class _DepositScreenState extends State<DepositScreen>
               type: TransactionType.DEPOSITPOS);
         } else {
           trx = await EthereumTransactions.depositErc20Plasma(
-              _amount.text, state.data.token.contractAddress, context);
+              _amount.text, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.depositManager,
               amount: _amount.text,

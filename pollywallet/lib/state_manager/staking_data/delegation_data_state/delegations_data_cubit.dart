@@ -21,7 +21,7 @@ class DelegationsDataCubit extends Cubit<DelegationsDataState> {
         totalShares = totalShares + element.shares;
         claimedRewards = claimedRewards + element.claimedReward;
       });
-      BigInt rewards = totalShares - totalStake - claimedRewards;
+      BigInt rewards = totalShares - totalStake;
       emit(DelegationsDataStateFinal(
           info, totalShares, totalStake, rewards, claimedRewards));
     } catch (e) {

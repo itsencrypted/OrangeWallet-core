@@ -23,4 +23,38 @@ class StakingTransactions {
 
     return trx;
   }
+
+  static Future<Transaction> restake(String validator) async {
+    String abi = await rootBundle.loadString(stakingContract);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "stakingContract"),
+        EthereumAddress.fromHex(validator));
+    var restake = contract.function('restake');
+    var address = await BoxUtils.getAddress();
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: restake,
+        maxGas: 425000,
+        from: EthereumAddress.fromHex(address),
+        parameters: []);
+
+    return trx;
+  }
+
+  static Future<Transaction> withdrawRewards(String validator) async {
+    String abi = await rootBundle.loadString(stakingContract);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "stakingContract"),
+        EthereumAddress.fromHex(validator));
+    var restake = contract.function('withdrawRewards');
+    var address = await BoxUtils.getAddress();
+    var trx = Transaction.callContract(
+        contract: contract,
+        function: restake,
+        maxGas: 425000,
+        from: EthereumAddress.fromHex(address),
+        parameters: []);
+
+    return trx;
+  }
 }

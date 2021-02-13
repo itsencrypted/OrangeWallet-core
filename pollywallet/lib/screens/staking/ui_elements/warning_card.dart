@@ -34,7 +34,9 @@ class WarningCard extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(
-                left: AppTheme.paddingHeight, bottom: AppTheme.paddingHeight),
+                left: AppTheme.paddingHeight,
+                bottom: AppTheme.paddingHeight,
+                right: 10),
             child: Text(
               'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
               style: AppTheme.body2White,

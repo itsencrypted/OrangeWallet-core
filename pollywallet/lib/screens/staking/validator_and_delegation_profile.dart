@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
+import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
+import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
+import 'package:pollywallet/widgets/loading_indicator.dart';
 
 class ValidatorAndDelegationProfile extends StatefulWidget {
   @override
@@ -80,6 +85,7 @@ class _ValidatorAndDelegationProfileState
                         .toList()
                         .first;
                   }
+                  var reward = delegatorInfo.shares - delegatorInfo.stake;
                   var stake = EthConversions.weiToEth(
                       validator.selfStake + validator.delegatedStake, 18);
                   return Stack(
@@ -337,7 +343,9 @@ class _ValidatorAndDelegationProfileState
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 RaisedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    _restake(reward, validator);
+                                                  },
                                                   color:
                                                       AppTheme.secondaryColor,
                                                   child: SizedBox(
@@ -392,7 +400,10 @@ class _ValidatorAndDelegationProfileState
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 RaisedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () async {
+                                                    _claimRewards(
+                                                        reward, validator);
+                                                  },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
                                                       width:
@@ -469,5 +480,44 @@ class _ValidatorAndDelegationProfileState
             });
           },
         ));
+  }
+
+  _restake(BigInt reward, ValidatorInfo validator) async {
+    if (reward < BigInt.from(10).pow(18)) {
+      Fluttertoast.showToast(
+          msg: "Rewards too low to redelegate", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    GlobalKey<State> key = GlobalKey();
+    Dialogs.showLoadingDialog(context, key);
+    var trx = await StakingTransactions.restake(validator.contractAddress);
+    TransactionData data = TransactionData(
+        trx: trx,
+        amount: EthConversions.weiToEth(reward, 18).toString(),
+        to: validator.contractAddress,
+        type: TransactionType.RESTAKE);
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: data);
+  }
+
+  _claimRewards(BigInt reward, ValidatorInfo validator) async {
+    if (reward < BigInt.from(10).pow(18)) {
+      Fluttertoast.showToast(
+          msg: "Rewards too low to be claimed", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    GlobalKey<State> key = GlobalKey();
+    Dialogs.showLoadingDialog(context, key);
+    var trx =
+        await StakingTransactions.withdrawRewards(validator.contractAddress);
+    TransactionData data = TransactionData(
+        trx: trx,
+        amount: EthConversions.weiToEth(reward, 18).toString(),
+        to: validator.contractAddress,
+        type: TransactionType.RESTAKE);
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: data);
   }
 }

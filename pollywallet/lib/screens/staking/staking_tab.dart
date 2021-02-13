@@ -195,8 +195,6 @@ class _StakingTabState extends State<StakingTab>
                   ),
                 );
               } else {
-                print(delegationState.toString());
-                print(validatorsState.toString());
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

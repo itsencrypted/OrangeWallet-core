@@ -36,7 +36,7 @@ class _DelegationAmountState extends State<DelegationAmount> {
         appBar: AppBar(
           elevation: 0,
           title: Text(
-            'Validator Information',
+            'Amount to Delegate',
             style: AppTheme.listTileTitle,
           ),
         ),
@@ -148,14 +148,14 @@ class _DelegationAmountState extends State<DelegationAmount> {
                                   textAlign: TextAlign.center,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
-                                  validator: (val) =>
-                                      (val == "" || val == null) ||
-                                              (double.tryParse(val) == null ||
-                                                  (double.tryParse(val) < 0 ||
-                                                      double.tryParse(val) >
-                                                          balance))
-                                          ? "Invalid Amount"
-                                          : null,
+                                  validator: (val) => (val == "" ||
+                                              val == null) ||
+                                          (double.tryParse(val) == null ||
+                                              (double.tryParse(val) < 1 ||
+                                                  double.tryParse(val) >
+                                                      balance))
+                                      ? "Stake atleast 1 Matic and less than your balance"
+                                      : null,
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true),
                                   style: AppTheme.bigLabel,
@@ -273,7 +273,7 @@ class _DelegationAmountState extends State<DelegationAmount> {
 
   _delegate(String spender) async {
     if (double.tryParse(_amount.text) == null ||
-        double.tryParse(_amount.text) < 0 ||
+        double.tryParse(_amount.text) < 1 ||
         double.tryParse(_amount.text) > balance) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);

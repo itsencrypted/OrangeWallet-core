@@ -85,7 +85,11 @@ class _ValidatorAndDelegationProfileState
                         .toList()
                         .first;
                   }
-                  var reward = delegatorInfo.shares - delegatorInfo.stake;
+                  BigInt reward = BigInt.zero;
+                  try {
+                    reward = delegatorInfo.shares - delegatorInfo.stake;
+                  } catch (e) {}
+
                   var stake = EthConversions.weiToEth(
                       validator.selfStake + validator.delegatedStake, 18);
                   return Stack(
@@ -424,7 +428,11 @@ class _ValidatorAndDelegationProfileState
                                                                   50))),
                                                 ),
                                                 RaisedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    Navigator.pushNamed(context,
+                                                        stakeWithDrawAmountRoute,
+                                                        arguments: id);
+                                                  },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
                                                       width:

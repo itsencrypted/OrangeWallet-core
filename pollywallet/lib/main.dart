@@ -3,8 +3,8 @@ import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
 import 'package:pollywallet/screens/settings_screen/accounts.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:pollywallet/screens/staking/delegation_stake_amount.dart';
+import 'package:pollywallet/screens/staking/delegation_screen/delegation_stake_amount.dart';
+import 'package:pollywallet/screens/staking/delegation_screen/withdraw_amount.dart';
 import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dart';
 import 'package:pollywallet/screens/token_list/nft_list_full.dart';
 import 'package:pollywallet/screens/token_profile/nft_profile.dart';
@@ -148,7 +148,8 @@ class _PollyWalletState extends State<PollyWallet> {
               pinForNewAccountRoute: (context) => NewAccountPinWidget(),
               accountRoute: (context) => AccountSelection(),
               nftTokenList: (context) => FullNftList(),
-              nftTokenProfile: (context) => NftProfile()
+              nftTokenProfile: (context) => NftProfile(),
+              stakeWithDrawAmountRoute: (context) => StakeWithdrawAmount()
             },
             home: current),
       ),

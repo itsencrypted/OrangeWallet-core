@@ -50,6 +50,7 @@ const String pinForNewAccountRoute = "pinForNewAccountRoute";
 const String nftTokenProfile = "nftTokenProfile";
 const String nftTokenList = "nftTokenList";
 const String stakeManagerProxy = "stakeManagerProxy";
+const String stakeWithDrawAmountRoute = "stakeWithDrawAmountRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

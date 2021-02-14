@@ -66,30 +66,44 @@ class _StakingTabState extends State<StakingTab>
                 print("here");
                 print(ethTokenListState
                     .covalentTokenList.data.items.first.contractTickerSymbol);
-                var eth = EthConversions.weiToEth(
-                    BigInt.parse(ethTokenListState.covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractTickerSymbol.toLowerCase() == "eth")
-                        .first
-                        .balance),
-                    18);
-                print(eth);
-                var matic = EthConversions.weiToEth(
-                    BigInt.parse(maticTokenListState
-                        .covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractTickerSymbol.toLowerCase() ==
-                            "matic")
-                        .first
-                        .balance),
-                    18);
-                print(matic);
-                double qouteRate = maticTokenListState
-                    .covalentTokenList.data.items
-                    .where((element) =>
-                        element.contractTickerSymbol.toLowerCase() == "matic")
-                    .first
-                    .quoteRate;
+                var eth = 0.0;
+                var matic = 0.0;
+                var qouteRate = 0.0;
+                try {
+                  eth = EthConversions.weiToEth(
+                      BigInt.parse(ethTokenListState
+                          .covalentTokenList.data.items
+                          .where((element) =>
+                              element.contractTickerSymbol.toLowerCase() ==
+                              "eth")
+                          .first
+                          .balance),
+                      18);
+                } catch (e) {
+                  matic = 0.0;
+                }
+                try {
+                  matic = EthConversions.weiToEth(
+                      BigInt.parse(maticTokenListState
+                          .covalentTokenList.data.items
+                          .where((element) =>
+                              element.contractTickerSymbol.toLowerCase() ==
+                              "matic")
+                          .first
+                          .balance),
+                      18);
+                } catch (e) {
+                  qouteRate = 0.0;
+                }
+                try {
+                  qouteRate = maticTokenListState.covalentTokenList.data.items
+                      .where((element) =>
+                          element.contractTickerSymbol.toLowerCase() == "matic")
+                      .first
+                      .quoteRate;
+                } catch (e) {
+                  eth = 0.0;
+                }
 
                 var stakeQoute = qouteRate *
                     EthConversions.weiToEth(delegationState.stake, 18);

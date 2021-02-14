@@ -45,21 +45,16 @@ class _FullNftListState extends State<FullNftList> {
             var ls = state.covalentTokenList.data.items
                 .where((element) => element.nftData != null)
                 .toList();
-            return Card(
-              color: AppTheme.white,
-              shape: AppTheme.cardShape,
-              elevation: AppTheme.cardElevations,
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                child: ListView.builder(
-                  itemCount: ls.length,
-                  itemBuilder: (context, index) {
-                    var token = ls[index];
-                    return NftTileCard(
-                      tokenData: token,
-                    );
-                  },
-                ),
+            return RefreshIndicator(
+              onRefresh: _refresh,
+              child: ListView.builder(
+                itemCount: ls.length,
+                itemBuilder: (context, index) {
+                  var token = ls[index];
+                  return NftTileCard(
+                    tokenData: token,
+                  );
+                },
               ),
             );
           } else {

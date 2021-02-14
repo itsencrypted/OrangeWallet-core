@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
-import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 
 class CovalentApiWrapper {
@@ -46,7 +45,7 @@ class CovalentApiWrapper {
       url = baseUrl +
           "/137/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }
 

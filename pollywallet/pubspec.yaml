@@ -46,6 +46,7 @@ dependencies:
   flutter_countdown_timer: ^3.0.0
   url_launcher: ^5.7.10
   flutter_webview_plugin: ^0.3.11
+  flutter_svg: ^0.20.0-nullsafety.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -85,6 +86,7 @@ flutter:
     - assets/abi/withdraw_manager.json
     - assets/icons/profit.png
     - assets/abi/staking_contract.json
+    - assets/icons/image_not_found.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

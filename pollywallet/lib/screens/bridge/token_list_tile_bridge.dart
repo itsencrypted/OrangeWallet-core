@@ -68,8 +68,13 @@ class TokenListTileBridge extends StatelessWidget {
                 }
                 DepositModel model = DepositModel(token: tokenData);
                 depositData.setData(model);
-                Navigator.pushNamed(context, depositAmountRoute,
-                    arguments: status);
+                if (tokenData.nftData == null) {
+                  Navigator.pushNamed(context, depositAmountRoute,
+                      arguments: status);
+                } else {
+                  Navigator.pushNamed(context, nftDepoitSelectRoute,
+                      arguments: status);
+                }
               } else {
                 GlobalKey<State> _key = GlobalKey<State>();
                 Dialogs.showLoadingDialog(context, _key);

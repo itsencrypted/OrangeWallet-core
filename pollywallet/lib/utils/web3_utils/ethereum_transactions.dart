@@ -362,4 +362,126 @@ class EthereumTransactions {
     var trx = client.getTransactionByHash(txHash);
     return trx;
   }
+
+  static Future<BigInt> erc721TokenId(String erc721Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(erc721Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc721"),
+        EthereumAddress.fromHex(erc721Address));
+    var func = contract.function('tokenOfOwnerByIndex');
+    try {
+      var id = await client.call(
+        contract: contract,
+        function: func,
+        params: [EthereumAddress.fromHex(address), BigInt.zero],
+      );
+      return id[0];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<bool> erc721ApprovalStatusPos(String erc721Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(erc721Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc721"),
+        EthereumAddress.fromHex(erc721Address));
+    var func = contract.function('isApprovedForAll');
+    try {
+      var status = await client.call(
+        contract: contract,
+        function: func,
+        params: [
+          EthereumAddress.fromHex(address),
+          EthereumAddress.fromHex(config.erc721Predicate)
+        ],
+      );
+      print(status);
+      return status[0];
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> erc721ApprovalStatusPlasma(String erc721Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(erc721Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc721"),
+        EthereumAddress.fromHex(erc721Address));
+    var func = contract.function('isApprovedForAll');
+    try {
+      var status = await client.call(
+        contract: contract,
+        function: func,
+        params: [
+          EthereumAddress.fromHex(address),
+          EthereumAddress.fromHex(config.depositManager)
+        ],
+      );
+      print(status);
+
+      return status[0];
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<Transaction> erc721Approve(
+      BigInt id, String erc721Address, String spender) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String abi = await rootBundle.loadString(erc721Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc721"),
+        EthereumAddress.fromHex(erc721Address));
+    var func = contract.function('setApprovalForAll');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [EthereumAddress.fromHex(spender), true],
+    );
+    return trx;
+  }
+
+  static Future<Transaction> erc721DepositPlasma(
+      BigInt id, String erc721Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String abi = await rootBundle.loadString(depositManagerAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "depositManager"),
+        EthereumAddress.fromHex(config.depositManager));
+    var func = contract.function('depositERC721');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [EthereumAddress.fromHex(erc721Address), id],
+    );
+    return trx;
+  }
+
+  static Future<Transaction> erc721DepositPos(
+      BigInt id, String erc721Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    var data = RlpEncode.encode(id);
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "rootchain"),
+        EthereumAddress.fromHex(config.rootChainProxy));
+    var func = contract.function('depositFor');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [
+        EthereumAddress.fromHex(address),
+        EthereumAddress.fromHex(erc721Address),
+        data
+      ],
+    );
+    return trx;
+  }
 }

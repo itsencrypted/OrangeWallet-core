@@ -52,6 +52,7 @@ const String nftTokenProfile = "nftTokenProfile";
 const String nftTokenList = "nftTokenList";
 const String stakeManagerProxy = "stakeManagerProxy";
 const String stakeWithDrawAmountRoute = "stakeWithDrawAmountRoute";
+const String nftDepoitSelectRoute = "nftDepoitSelectRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

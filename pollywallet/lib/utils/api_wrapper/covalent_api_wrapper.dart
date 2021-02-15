@@ -27,7 +27,7 @@ class CovalentApiWrapper {
       url = baseUrl +
           "/80001/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
       BigInt native = await future;
@@ -48,7 +48,7 @@ class CovalentApiWrapper {
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }
-
+    print(url);
     var resp = await http.get(url);
 
     var json = jsonDecode(resp.body);

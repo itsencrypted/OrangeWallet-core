@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
+import 'package:pollywallet/screens/settings_screen/export_mnemonic.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
@@ -130,6 +131,7 @@ class _PollyWalletState extends State<PollyWallet> {
               receivePageRoute: (context) => Receive(),
               networkSettingRoute: (context) => NetworkSetting(),
               transakRoute: (context) => TransakWebView(),
+              exportMnemonic: (context) => ExportMnemonic(),
             },
             home: current),
       ),

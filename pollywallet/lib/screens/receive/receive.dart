@@ -86,7 +86,7 @@ class _ReceiveState extends State<Receive> {
                               ),
                               onPressed: () {
                                 Clipboard.setData(
-                                    new ClipboardData(text: "your text"));
+                                    new ClipboardData(text: address));
                                 Fluttertoast.showToast(
                                   msg: "Address copied",
                                 );
@@ -117,7 +117,7 @@ class _ReceiveState extends State<Receive> {
 
                                 Share.share(
                                     'Hey my wallet address is : $address',
-                                    subject: 'THis is my wallet address');
+                                    subject: 'This is my wallet address');
                               },
                               shape: CircleBorder(),
                             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/credential_manager.dart';
 
 class SettingsTab extends StatefulWidget {
   @override
@@ -42,6 +43,15 @@ class _SettingsTabState extends State<SettingsTab>
             showTrailingIcon: false,
             onTap: () {
               Navigator.of(context).pushNamed(networkSettingRoute);
+            }),
+        listTile(
+            title: 'Export Mnenomic',
+            showTrailingIcon: false,
+            onTap: () async {
+              final String mnemonic =
+                  await CredentialManager.getMnemonic(context);
+              Navigator.of(context)
+                  .pushNamed(exportMnemonic, arguments: mnemonic);
             }),
         listTile(
             title: 'Privacy',

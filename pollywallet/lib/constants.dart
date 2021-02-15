@@ -16,7 +16,8 @@ const plasmaRegistryAbi = "assets/abi/plasma_registry.json";
 const rootChainProxyAbi = "assets/abi/root_chain_proxy.json";
 const rootChainAbi = "assets/abi/root_chain.json";
 const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
-const stakingContract = "assets/abi/staking_contract.json";
+const stakingContractAbi = "assets/abi/staking_contract.json";
+const erc1155Abi = "assets/abi/erc1155.json";
 
 // urls
 const tokenIconUrl =

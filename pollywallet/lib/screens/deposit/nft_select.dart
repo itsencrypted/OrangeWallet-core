@@ -30,6 +30,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
   BuildContext context;
   int bridge = 0;
   double balance;
+  int tokenCountToSend = 1;
   int selectedIndex = 0;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
@@ -163,7 +164,17 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                       SafeArea(
                         child: ListTile(
                           leading: FlatButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (state
+                                      .data.token.nftData[index].tokenBalance ==
+                                  null) {
+                                return;
+                              }
+                              setState(() {
+                                tokenCountToSend = int.parse(state
+                                    .data.token.nftData[index].tokenBalance);
+                              });
+                            },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             child: ClipOval(
@@ -173,24 +184,114 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                                   height: 56,
                                   width: 56,
                                   child: Center(
-                                    child: Text(
-                                      state.data.token.contractName
-                                          .substring(0, 1)
-                                          .toUpperCase(),
-                                      style: AppTheme.title,
-                                    ),
+                                    child: state.data.token.nftData[index]
+                                                .tokenBalance ==
+                                            null
+                                        ? Text(
+                                            state.data.token.contractName
+                                                .substring(0, 1)
+                                                .toUpperCase(),
+                                            style: AppTheme.title,
+                                          )
+                                        : Text(
+                                            "Max",
+                                            style: AppTheme.title,
+                                          ),
                                   )),
                             )),
                           ),
-                          title: Text(
-                            "NFTs",
-                            style: AppTheme.subtitle,
-                          ),
-                          subtitle: Text(
-                            state.data.token.nftData.length.toString() +
-                                " " +
-                                state.data.token.contractName,
-                            style: AppTheme.title,
+                          contentPadding: EdgeInsets.all(0),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              state.data.token.nftData[index].tokenBalance ==
+                                      null
+                                  ? Text(
+                                      "NFTs",
+                                      style: AppTheme.subtitle,
+                                    )
+                                  : Text(
+                                      "NFTs to send",
+                                      style: AppTheme.subtitle,
+                                    ),
+                              state.data.token.nftData[index].tokenBalance ==
+                                      null
+                                  ? Text(
+                                      state.data.token.nftData.length
+                                              .toString() +
+                                          " " +
+                                          state.data.token.contractName,
+                                      style: AppTheme.title,
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (tokenCountToSend > 1) {
+                                                setState(() {
+                                                  tokenCountToSend--;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("-"))),
+                                            )),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          child:
+                                              Text(tokenCountToSend.toString()),
+                                        ),
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (tokenCountToSend <
+                                                  int.parse(state
+                                                      .data
+                                                      .token
+                                                      .nftData[index]
+                                                      .tokenBalance)) {
+                                                setState(() {
+                                                  tokenCountToSend++;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("+"))),
+                                            )),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ],
                           ),
                           trailing: FlatButton(
                             onPressed: () {

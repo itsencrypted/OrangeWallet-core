@@ -8,7 +8,7 @@ class StakingTransactions {
   static Future<Transaction> buyVoucher(String amount, String validator) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     BigInt slippage = BigInt.from((_amt * BigInt.from(10)) / BigInt.from(100));
-    String abi = await rootBundle.loadString(stakingContract);
+    String abi = await rootBundle.loadString(stakingContractAbi);
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "stakingContract"),
         EthereumAddress.fromHex(validator));
@@ -28,7 +28,7 @@ class StakingTransactions {
       String amount, String validator) async {
     BigInt _amt = EthConversions.ethToWei(amount);
     BigInt slippage = _amt * BigInt.from(10);
-    String abi = await rootBundle.loadString(stakingContract);
+    String abi = await rootBundle.loadString(stakingContractAbi);
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "stakingContract"),
         EthereumAddress.fromHex(validator));
@@ -45,7 +45,7 @@ class StakingTransactions {
   }
 
   static Future<Transaction> restake(String validator) async {
-    String abi = await rootBundle.loadString(stakingContract);
+    String abi = await rootBundle.loadString(stakingContractAbi);
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "stakingContract"),
         EthereumAddress.fromHex(validator));
@@ -62,7 +62,7 @@ class StakingTransactions {
   }
 
   static Future<Transaction> withdrawRewards(String validator) async {
-    String abi = await rootBundle.loadString(stakingContract);
+    String abi = await rootBundle.loadString(stakingContractAbi);
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "stakingContract"),
         EthereumAddress.fromHex(validator));

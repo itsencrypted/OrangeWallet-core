@@ -12,6 +12,10 @@ class NftDepositTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String suffix = "";
+    if (data.tokenBalance != null) {
+      suffix = " (" + data.tokenBalance.toString() + "Tokens)";
+    }
     var type;
     var url;
     try {
@@ -47,7 +51,7 @@ class NftDepositTile extends StatelessWidget {
                         }),
             ),
             ListTile(
-              title: Text(data.externalData.name),
+              title: Text(data.externalData.name + suffix),
               subtitle: Text(
                 data.externalData.description,
                 overflow: TextOverflow.ellipsis,

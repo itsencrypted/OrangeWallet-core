@@ -35,6 +35,12 @@ class TestNetTokenData {
       erc721Futures.add(future);
       erc721Keys.add(key);
     }
+    for (var key in erc1155.keys) {
+      Future future =
+          EthereumTransactions.balanceOfERC1155(BigInt.from(123), erc1155[key]);
+      erc1155Futures.add(future);
+      erc1155Keys.add(key);
+    }
     for (int i = 0; i < futureList.length; i++) {
       BigInt balance = await futureList[i];
       Items item = new Items(
@@ -65,6 +71,31 @@ class TestNetTokenData {
                 externalData: ExternalData(
                     name: "ERC721 Test",
                     description: "ERC721 test token for matic.",
+                    image:
+                        "https://media.giphy.com/media/3orieKKmYyvUdR3RkY/giphy.gif"))
+          ],
+          contractDecimals: 0);
+      ls.add(item);
+    }
+    for (int i = 0; i < erc1155Futures.length; i++) {
+      BigInt id = BigInt.from(123);
+      BigInt balance = await erc1155Futures[i];
+      if (id == null) continue;
+      Items item = new Items(
+          contractTickerSymbol: erc1155Keys[i],
+          balance: balance.toString(),
+          quote: 0,
+          contractName: erc1155Keys[i],
+          quoteRate: 0,
+          contractAddress: erc1155[erc1155Keys[i]],
+          logoUrl: tokenIconUrl,
+          nftData: [
+            NftData(
+                tokenId: id.toString(),
+                tokenBalance: balance.toString(),
+                externalData: ExternalData(
+                    name: "ERC1155 Test",
+                    description: "ERC1155 test token for matic.",
                     image:
                         "https://media.giphy.com/media/3orieKKmYyvUdR3RkY/giphy.gif"))
           ],

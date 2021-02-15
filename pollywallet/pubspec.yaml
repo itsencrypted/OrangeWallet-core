@@ -87,6 +87,7 @@ flutter:
     - assets/icons/profit.png
     - assets/abi/staking_contract.json
     - assets/icons/image_not_found.png
+    - assets/abi/erc1155.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

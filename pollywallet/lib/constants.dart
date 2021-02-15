@@ -4,6 +4,8 @@ const String balanceString = "Matic Wallet Balance";
 const sendButtonColor = Color(0xff8248E5);
 const receiveButtonColor = Color(0xffEABC78);
 const String tokenIcon = "assets/icons/token_icon.png";
+const String profitIcon = "assets/icons/profit.png";
+const String imageNotFoundIcon = "assets/icons/image_not_found.png";
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
 const depositManagerAbi = "assets/abi/deposit_manager.json";
@@ -14,6 +16,9 @@ const plasmaRegistryAbi = "assets/abi/plasma_registry.json";
 const rootChainProxyAbi = "assets/abi/root_chain_proxy.json";
 const rootChainAbi = "assets/abi/root_chain.json";
 const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
+const stakingContractAbi = "assets/abi/staking_contract.json";
+const erc1155Abi = "assets/abi/erc1155.json";
+
 // urls
 const tokenIconUrl =
     "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
@@ -40,6 +45,16 @@ const String receivePageRoute = "receivePageRoute";
 const String exportMnemonic = "exportMnemonic";
 const String networkSettingRoute = "networkSettingRoute";
 const String transakRoute = "transakRoute";
+const String validatorAndDelegationProfileRoute =
+    "validatorAndDelegationProfileRoute";
+const String delegationAmountRoute = "delegationAmountRoute";
+const String accountRoute = "accountRoute";
+const String pinForNewAccountRoute = "pinForNewAccountRoute";
+const String nftTokenProfile = "nftTokenProfile";
+const String nftTokenList = "nftTokenList";
+const String stakeManagerProxy = "stakeManagerProxy";
+const String stakeWithDrawAmountRoute = "stakeWithDrawAmountRoute";
+const String nftDepoitSelectRoute = "nftDepoitSelectRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";
@@ -65,6 +80,7 @@ const depositManager = "depositManager";
 const stakingEndpoint = "stakingEndpoint";
 const exitPayload = "exitPayLoad";
 const transakLink = "transakLink";
+const maticToken = "maticToken";
 const uintMax =
     "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 const ethAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";

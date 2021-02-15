@@ -21,42 +21,40 @@ class CoinListTileWithCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       child: Center(
-        child: FlatButton(
-          onPressed: () {
-            data.setData(SendTokenData(token: tokenData));
-            Navigator.pushNamed(context, coinProfileRoute);
-          },
-          child: Column(
-            children: [
-              ListTile(
-                leading: FadeInImage.assetNetwork(
-                  placeholder: tokenIcon,
-                  image: tokenData.logoUrl,
-                  width: AppTheme.tokenIconHeight,
-                ),
-                title: Text(tokenData.contractName, style: AppTheme.title),
-                subtitle: Text(tokenData.contractTickerSymbol,
-                    style: AppTheme.subtitle),
-                trailing: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "\$${tokenData.quote}",
-                      style: AppTheme.balanceMain,
-                    ),
-                    Text(
-                      amount,
-                      style: AppTheme.balanceSub,
-                    ),
-                  ],
-                ),
+        child: Card(
+          color: AppTheme.white,
+          shape: AppTheme.cardShape,
+          elevation: AppTheme.cardElevations,
+          child: FlatButton(
+            onPressed: () {
+              data.setData(SendTokenData(token: tokenData));
+              Navigator.pushNamed(context, coinProfileRoute);
+            },
+            child: ListTile(
+              leading: FadeInImage.assetNetwork(
+                placeholder: tokenIcon,
+                image: tokenData.logoUrl,
+                width: AppTheme.tokenIconHeight,
               ),
-              Divider(
-                color: AppTheme.darkText,
-              )
-            ],
+              title: Text(tokenData.contractName, style: AppTheme.title),
+              subtitle: Text(tokenData.contractTickerSymbol,
+                  style: AppTheme.subtitle),
+              trailing: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "\$${tokenData.quote}",
+                    style: AppTheme.balanceMain,
+                  ),
+                  Text(
+                    amount,
+                    style: AppTheme.balanceSub,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

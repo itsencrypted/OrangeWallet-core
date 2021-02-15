@@ -19,6 +19,7 @@ class TransactionData {
     6: "Exit-POS",
     7: "Confirm-Plasma",
     8: "Exit-Plasma",
-    9: "Speed Up"
+    9: "Speed Up",
+    10: "Restake"
   };
 }

@@ -6,20 +6,20 @@ class StackingCard extends StatelessWidget {
   final String maticWalletBalance;
   final String etcWalletBalance;
   final String maticStake;
-  final String stakeInETH;
+  final String stakeUSD;
   final String maticRewards;
-  final String rewardInETH;
+  final String rewardUSD;
   StackingCard({
     this.iconURL,
     this.maticWalletBalance,
     this.etcWalletBalance,
     this.maticStake,
-    this.stakeInETH,
+    this.stakeUSD,
     this.maticRewards,
-    this.rewardInETH,
+    this.rewardUSD,
   });
 
-  Widget rewardWidget({String title, String maticBalance, String ethBalance}) {
+  Widget rewardWidget({String title, String maticBalance, String amountUSD}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -42,7 +42,7 @@ class StackingCard extends StatelessWidget {
                 style: AppTheme.balanceMain,
               ),
               Text(
-                '\$$ethBalance',
+                '\$$amountUSD',
                 style: AppTheme.balanceSub.copyWith(
                     color: AppTheme.balanceSub.color.withOpacity(0.6)),
               ),
@@ -95,7 +95,7 @@ class StackingCard extends StatelessWidget {
                       "$maticWalletBalance Matic",
                       style: AppTheme.balanceMain,
                     ),
-                    Text('\$$etcWalletBalance',
+                    Text('$etcWalletBalance ETH',
                         style: AppTheme.balanceSub.copyWith(
                             color: AppTheme.balanceSub.color.withOpacity(0.4)))
                   ],
@@ -117,11 +117,11 @@ class StackingCard extends StatelessWidget {
                     rewardWidget(
                         title: "Matic Staking",
                         maticBalance: maticStake,
-                        ethBalance: stakeInETH),
+                        amountUSD: stakeUSD),
                     rewardWidget(
                         title: "Matic Reward",
                         maticBalance: maticRewards,
-                        ethBalance: rewardInETH)
+                        amountUSD: rewardUSD)
                   ],
                 ),
               )

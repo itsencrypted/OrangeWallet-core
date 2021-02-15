@@ -48,193 +48,185 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Card(
-          shape: AppTheme.cardShape,
-          elevation: AppTheme.cardElevations,
-          color: AppTheme.white,
-          child: RefreshIndicator(
-            onRefresh: _refresh,
-            child: SizedBox(
-              height: double.infinity,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _loading || _error || pendingTx.isEmpty
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text("Pending Transaction",
-                                style: AppTheme.subtitle),
-                          ),
-                    _loading || _error || pendingTx.isEmpty
-                        ? Container()
-                        : ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: pendingTx.length,
-                            itemBuilder: (context, index) {
-                              TransactionDetails item = pendingTx[index];
-                              return FlatButton(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ListTile(
-                                      isThreeLine: true,
-                                      leading: Icon(
-                                        Icons.timer,
-                                        color: Colors.red,
-                                        size: 30,
-                                      ),
-                                      title: Text(
-                                        item.txHash,
-                                        style: AppTheme.title,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      trailing: Text(
-                                        "Waiting..",
-                                        style: AppTheme.title,
-                                      ),
-                                      subtitle: item.to == null
-                                          ? Container()
-                                          : Wrap(
-                                              alignment: WrapAlignment.start,
-                                              children: [
-                                                Icon(Icons.arrow_forward),
-                                                Text(
-                                                  item.to,
-                                                  style: AppTheme.subtitle,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                    ),
-                                    Divider(
-                                      color: AppTheme.grey,
-                                    )
-                                  ],
-                                ),
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, ethereumTransactionStatusRoute,
-                                      arguments: item.txHash);
-                                },
-                              );
-                            },
-                          ),
-                    _loading || _error || result.isEmpty
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Merged  Transactions",
-                              style: AppTheme.subtitle,
-                            ),
-                          ),
-                    _loading
-                        ? SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.8,
-                            child: Center(
-                              child: SpinKitFadingFour(
-                                size: 50,
-                                color: AppTheme.primaryColor,
-                              ),
-                            ),
-                          )
-                        : _error
-                            ? Center(
-                                child: Text(
-                                  "Something went wrong..",
-                                  style: AppTheme.body1,
-                                ),
-                              )
-                            : result.isEmpty && pendingTx.isEmpty
-                                ? SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.8,
-                                    child: Center(
-                                      child: Text(
-                                        "No Transactions",
-                                        style: AppTheme.subtitle,
-                                      ),
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: result.length,
-                                    itemBuilder: (context, index) {
-                                      Result item = result[index];
-                                      return FlatButton(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        child: SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _loading || _error || pendingTx.isEmpty
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Pending Transaction",
+                            style: AppTheme.subtitle),
+                      ),
+                _loading || _error || pendingTx.isEmpty
+                    ? Container()
+                    : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: pendingTx.length,
+                        itemBuilder: (context, index) {
+                          TransactionDetails item = pendingTx[index];
+                          return Card(
+                            color: AppTheme.white,
+                            shape: AppTheme.cardShape,
+                            elevation: AppTheme.cardElevations,
+                            child: FlatButton(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: ListTile(
+                                  isThreeLine: true,
+                                  leading: Icon(
+                                    Icons.timer,
+                                    color: Colors.red,
+                                    size: 30,
+                                  ),
+                                  title: Text(
+                                    item.txHash,
+                                    style: AppTheme.title,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: Text(
+                                    "Waiting..",
+                                    style: AppTheme.title,
+                                  ),
+                                  subtitle: item.to == null
+                                      ? Container()
+                                      : Wrap(
+                                          alignment: WrapAlignment.start,
                                           children: [
-                                            ListTile(
-                                              isThreeLine: true,
-                                              leading: Icon(
-                                                Icons.check_circle_outline,
-                                                color: Colors.green,
-                                                size: 30,
-                                              ),
-                                              trailing: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                      EthConversions.weiToEth(
-                                                                  BigInt.parse(
-                                                                      item.value),
-                                                                  18)
-                                                              .toString() +
-                                                          " ETH",
-                                                      style: AppTheme.title),
-                                                ],
-                                              ),
-                                              title: Text(
-                                                item.hash,
-                                                style: AppTheme.title,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              subtitle: item.to == null
-                                                  ? Container()
-                                                  : Wrap(
-                                                      alignment:
-                                                          WrapAlignment.start,
-                                                      children: [
-                                                        Icon(Icons
-                                                            .arrow_forward),
-                                                        Text(
-                                                          item.to,
-                                                          style:
-                                                              AppTheme.subtitle,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ],
-                                                    ),
+                                            Icon(Icons.arrow_forward),
+                                            Text(
+                                              item.to,
+                                              style: AppTheme.subtitle,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            Divider(
-                                              color: AppTheme.grey,
-                                            )
                                           ],
                                         ),
-                                        onPressed: () {
-                                          Navigator.pushNamed(context,
-                                              ethereumTransactionStatusRoute,
-                                              arguments: item.hash);
-                                        },
-                                      );
-                                    },
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, ethereumTransactionStatusRoute,
+                                    arguments: item.txHash);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                _loading || _error || result.isEmpty
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Merged  Transactions",
+                          style: AppTheme.subtitle,
+                        ),
+                      ),
+                _loading
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: Center(
+                          child: SpinKitFadingFour(
+                            size: 50,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      )
+                    : _error
+                        ? Center(
+                            child: Text(
+                              "Something went wrong..",
+                              style: AppTheme.body1,
+                            ),
+                          )
+                        : result.isEmpty && pendingTx.isEmpty
+                            ? SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                child: Center(
+                                  child: Text(
+                                    "No Transactions",
+                                    style: AppTheme.subtitle,
                                   ),
-                  ],
-                ),
-              ),
+                                ),
+                              )
+                            : ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: result.length,
+                                itemBuilder: (context, index) {
+                                  Result item = result[index];
+                                  return Card(
+                                    shape: AppTheme.cardShape,
+                                    elevation: AppTheme.cardElevations,
+                                    child: FlatButton(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                        child: ListTile(
+                                          isThreeLine: true,
+                                          leading: Icon(
+                                            Icons.check_circle_outline,
+                                            color: Colors.green,
+                                            size: 30,
+                                          ),
+                                          trailing: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                  EthConversions.weiToEth(
+                                                              BigInt.parse(
+                                                                  item.value),
+                                                              18)
+                                                          .toString() +
+                                                      " ETH",
+                                                  style: AppTheme.title),
+                                            ],
+                                          ),
+                                          title: Text(
+                                            item.hash,
+                                            style: AppTheme.title,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          subtitle: item.to == null
+                                              ? Container()
+                                              : Wrap(
+                                                  alignment:
+                                                      WrapAlignment.start,
+                                                  children: [
+                                                    Icon(Icons.arrow_forward),
+                                                    Text(
+                                                      item.to,
+                                                      style: AppTheme.subtitle,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(context,
+                                            ethereumTransactionStatusRoute,
+                                            arguments: item.hash);
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 

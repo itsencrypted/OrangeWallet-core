@@ -8,6 +8,10 @@ class ValidatorsDataStateInitial extends ValidatorsDataState {
   const ValidatorsDataStateInitial();
 }
 
+class ValidatorsDataStateLoading extends ValidatorsDataState {
+  const ValidatorsDataStateLoading();
+}
+
 class ValidatorsDataStateFinal extends ValidatorsDataState {
   final Validators data;
 

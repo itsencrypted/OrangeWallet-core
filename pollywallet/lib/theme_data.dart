@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  static const Color backgroundWhite = Color(0xffE5E5E5);
+  static const Color backgroundWhite = Color(0xffF3F2EF);
   static const Color white = Color(0xFFFFFFFF);
   static const Color somewhatYellow = Color(0xffE3DECF);
   static const Color primaryColor = Color(0xFFD287FD);
@@ -24,11 +24,12 @@ class AppTheme {
   static const Color tabbarBGColor = Color(0xFFE7E3D8);
   static const Color borderColorGreyish = Color(0xFFDCDFE6);
   static const Color buttonColorBlue = Color(0xFF003CB2);
+  static const String primaryHex = "#D287FD";
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
   static const double cardRadiusSmall = 10;
-  static const double cardElevations = 8;
+  static const double cardElevations = 0;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
   static const double paddingHeight = 16;

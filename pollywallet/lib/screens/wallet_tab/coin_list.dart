@@ -18,7 +18,7 @@ class _CoinListCardState extends State<CoinListCard> {
   List<Widget> ls = List<Widget>();
   @override
   void initState() {
-    total = widget.tokens.length;
+    total = widget.tokens.where((element) => element.nftData == null).length;
     ls.add(_divider);
     ls.add(_disclaimer);
     ls.addAll(_tiles());
@@ -55,10 +55,15 @@ class _CoinListCardState extends State<CoinListCard> {
     );
   }
 
-  Widget _divider = Divider(color: AppTheme.lightText);
+  Widget _divider = Padding(
+    padding: EdgeInsets.symmetric(
+      horizontal: 15,
+    ),
+    child: Divider(color: AppTheme.lightText),
+  );
   Widget _disclaimer = Container(
       margin: EdgeInsets.symmetric(
-        horizontal: 8,
+        horizontal: 20,
       ),
       child: Text(
         "Showing coins with balance only",
@@ -66,7 +71,7 @@ class _CoinListCardState extends State<CoinListCard> {
       ));
   List<Widget> _tiles() {
     var tiles = List<Widget>();
-    var ls = widget.tokens.reversed.toList();
+    var ls = widget.tokens.where((element) => element.nftData == null);
     var index = 0;
     for (Items token in ls) {
       if (index == 5) {

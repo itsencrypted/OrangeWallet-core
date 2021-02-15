@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
-import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 
 class CovalentApiWrapper {
@@ -28,7 +27,7 @@ class CovalentApiWrapper {
       url = baseUrl +
           "/80001/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
       BigInt native = await future;
@@ -46,10 +45,10 @@ class CovalentApiWrapper {
       url = baseUrl +
           "/137/address/" +
           address +
-          "/balances_v2/?key=" +
+          "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }
-
+    print(url);
     var resp = await http.get(url);
 
     var json = jsonDecode(resp.body);
@@ -69,7 +68,9 @@ class CovalentApiWrapper {
         config.chainId.toString() +
         "/address/" +
         address +
-        "/transfers_v2/?contract-address=0xc2132d05d31c914a87c6611c10748aeb04b58e8f&key=ckey_780ed3c9aba3496e8e9948bada0";
+        "/transfers_v2/?contract-address=" +
+        contractAddress +
+        "&key=ckey_780ed3c9aba3496e8e9948bada0";
     print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
@@ -91,7 +92,6 @@ class CovalentApiWrapper {
           address +
           "/balances_v2/?key=" +
           CovalentKey;
-      Future future = EthereumTransactions.balanceOf(ethAddress);
       var resp = await http.get(url);
 
       var json = jsonDecode(resp.body);

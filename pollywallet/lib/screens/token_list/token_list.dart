@@ -5,7 +5,6 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/token_list/coin_list_tile.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/misc/box.dart';
 
 class TokenList extends StatefulWidget {
   @override
@@ -42,11 +41,11 @@ class _TokenListState extends State<TokenList> {
                 ),
               );
             }
-            var ls = state.covalentTokenList.data.items.reversed.toList();
-            return Card(
-              color: AppTheme.white,
-              shape: AppTheme.cardShape,
-              elevation: AppTheme.cardElevations,
+            var ls = state.covalentTokenList.data.items
+                .where((element) => element.nftData == null)
+                .toList();
+            return RefreshIndicator(
+              onRefresh: _refresh,
               child: ListView.builder(
                 itemCount: ls.length,
                 itemBuilder: (context, index) {
@@ -68,7 +67,7 @@ class _TokenListState extends State<TokenList> {
                         borderRadius: BorderRadius.circular(16)),
                     color: sendButtonColor.withOpacity(0.6),
                     child: Text("Refresh"),
-                    onPressed: _refresh()),
+                    onPressed: _initializeAgain()),
               ],
             );
           }
@@ -77,8 +76,13 @@ class _TokenListState extends State<TokenList> {
     );
   }
 
-  _refresh() async {
+  _initializeAgain() async {
     final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
-    tokenListCubit.getTokensList();
+    await tokenListCubit.getTokensList();
+  }
+
+  Future<void> _refresh() async {
+    final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    await tokenListCubit.refresh();
   }
 }

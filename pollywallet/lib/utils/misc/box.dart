@@ -4,7 +4,6 @@ import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
-import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
@@ -43,8 +42,37 @@ class BoxUtils {
     } else {
       box.add(credsList);
     }
-    print(box.getAt(0).salt);
-    print(box.getAt(0).credentials[0].address);
+    return true;
+  }
+
+  static Future<bool> addAccount(
+    String privateKey,
+    String address,
+  ) async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    var mnemonic = box.getAt(0).credentials[0].mnemonic;
+    var creds = new CredentialsObject()
+      ..address = address
+      ..privateKey = privateKey
+      ..mnemonic = mnemonic;
+    List<CredentialsObject> list = box.getAt(0).credentials;
+    list.add(creds);
+    CredentialsList credsList = box.getAt(0);
+    credsList.credentials = list;
+    box.putAt(0, credsList);
+    return true;
+  }
+
+  static Future<int> getAccountCount() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box.getAt(0).credentials.length;
+  }
+
+  static Future<bool> setAccount(int id) async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    CredentialsList obj = box.getAt(0);
+    obj.active = id;
+    box.putAt(0, obj);
     return true;
   }
 
@@ -52,6 +80,22 @@ class BoxUtils {
     var box = await Hive.openBox<CredentialsList>(credentialBox);
     int active = box.getAt(0).active;
     CredentialsObject creds = box.getAt(0).credentials[active];
+    return creds;
+  }
+
+  static Future<Box<CredentialsList>> getCredentialsListBox() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box;
+  }
+
+  static Future<int> getActiveId() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    return box.getAt(0).active;
+  }
+
+  static Future<List<CredentialsObject>> getCredentialsList() async {
+    var box = await Hive.openBox<CredentialsList>(credentialBox);
+    List<CredentialsObject> creds = box.getAt(0).credentials;
     return creds;
   }
 
@@ -73,6 +117,11 @@ class BoxUtils {
     int id = box.get(networkBox);
     print(id);
     return id;
+  }
+
+  static Future<Box<int>> getNetworkIdBox() async {
+    Box<int> box = await Hive.openBox<int>(networkBox);
+    return box;
   }
 
   static Future<void> setNetworkConfig(int id) async {
@@ -130,5 +179,16 @@ class BoxUtils {
     await box.clear();
     box.putAll(map);
     return currentPending;
+  }
+
+  static Future<void> clear() async {
+    var creds = await Hive.openBox<CredentialsList>(credentialBox);
+    Box<TransactionDetails> trx1 =
+        await Hive.openBox<TransactionDetails>(pendingTxBox + "0");
+    Box<TransactionDetails> trx2 =
+        await Hive.openBox<TransactionDetails>(pendingTxBox + "1");
+    creds.clear();
+    trx1.clear();
+    trx2.clear();
   }
 }

@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class ValidatorsStakedCard extends StatelessWidget {
-  final String iconURL;
   final String name;
   final String stakedMatic;
   final String performance;
   final String commission;
   ValidatorsStakedCard(
-      {this.commission,
-      this.iconURL,
-      this.name,
-      this.performance,
-      this.stakedMatic});
+      {this.commission, this.name, this.performance, this.stakedMatic});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -30,14 +25,6 @@ class ValidatorsStakedCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: AppTheme.paddingHeight),
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/icons/wallet_icon.png',
-                    image: iconURL,
-                    width: AppTheme.tokenIconHeight,
-                  ),
-                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

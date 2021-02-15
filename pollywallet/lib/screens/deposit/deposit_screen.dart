@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
-import 'package:pollywallet/screens/deposit/pop_up_dialog.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -263,6 +261,30 @@ class _DepositScreenState extends State<DepositScreen>
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
       return;
     }
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context, false);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context, true);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      shape: AppTheme.cardShape,
+      content: Text(
+          "You haven't given sufficient approval, would you like to approve now?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
@@ -273,15 +295,14 @@ class _DepositScreenState extends State<DepositScreen>
       data.setData(DepositModel(
           token: state.data.token, amount: _amount.toString(), isEth: true));
       if (bridge == 1) {
-        trx = await EthereumTransactions.depositEthPos(_amount.text, context);
+        trx = await EthereumTransactions.depositEthPos(_amount.text);
         transactionData = TransactionData(
             to: config.erc20Predicate,
             trx: trx,
             amount: "0",
             type: TransactionType.DEPOSITPOS);
       } else {
-        trx =
-            await EthereumTransactions.depositEthPlasma(_amount.text, context);
+        trx = await EthereumTransactions.depositEthPlasma(_amount.text);
         transactionData = TransactionData(
             to: config.depositManager,
             trx: trx,
@@ -296,22 +317,27 @@ class _DepositScreenState extends State<DepositScreen>
         brd = Bridge.POS;
       else
         brd = Bridge.PLASMA;
-      BigInt approval = await EthereumTransactions.allowanceERC20(
+      BigInt approval = await EthereumTransactions.bridgeAllowanceERC20(
           state.data.token.contractAddress, brd);
       var wei = EthConversions.ethToWei(_amount.text);
       if (approval < wei) {
-        bool appr = PopUpDialogAproval.showAlertDialog(context);
+        bool appr = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
         if (appr) {
           if (bridge == 1) {
             trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.erc20Predicate,
-                context);
+              state.data.token.contractAddress,
+              config.erc20Predicate,
+            );
           } else {
             trx = await EthereumTransactions.approveErc20(
-                state.data.token.contractAddress,
-                config.depositManager,
-                context);
+              state.data.token.contractAddress,
+              config.depositManager,
+            );
           }
           transactionData = TransactionData(
               to: state.data.token.contractAddress,
@@ -319,13 +345,13 @@ class _DepositScreenState extends State<DepositScreen>
               trx: trx,
               type: TransactionType.APPROVE);
         } else {
-          Navigator.of(_key.currentContext, rootNavigator: true).pop();
+          Navigator.of(context, rootNavigator: true).pop();
           return;
         }
       } else {
         if (bridge == 1) {
           trx = await EthereumTransactions.depositErc20Pos(
-              _amount.text, state.data.token.contractAddress, context);
+              _amount.text, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.erc20Predicate,
               amount: _amount.text,
@@ -333,7 +359,7 @@ class _DepositScreenState extends State<DepositScreen>
               type: TransactionType.DEPOSITPOS);
         } else {
           trx = await EthereumTransactions.depositErc20Plasma(
-              _amount.text, state.data.token.contractAddress, context);
+              _amount.text, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.depositManager,
               amount: _amount.text,

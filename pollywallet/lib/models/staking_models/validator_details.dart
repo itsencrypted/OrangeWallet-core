@@ -28,10 +28,10 @@ class ValidatorData {
   String owner;
   String signer;
   String activationEpoch;
-  Null deactivationEpoch;
-  Null jailEndEpoch;
-  Null url;
-  Null logoUrl;
+  String deactivationEpoch;
+  String jailEndEpoch;
+  String url;
+  String logoUrl;
   String commissionPercent;
   String status;
   String uptimePercent;
@@ -41,7 +41,7 @@ class ValidatorData {
   BigInt claimedReward;
   int signatureMissCount;
   bool isInAuction;
-  Null auctionAmount;
+  String auctionAmount;
   String createdAt;
   String updatedAt;
   String contractAddress;

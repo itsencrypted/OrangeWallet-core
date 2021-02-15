@@ -1,40 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/ui_elements/delegation_card.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
+import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
+import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
 class DelegationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundWhite,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppTheme.stackingGrey,
-        title: Text(
-          'All Validators',
-          style: AppTheme.listTileTitle,
+        backgroundColor: AppTheme.backgroundWhite,
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            'All Delegations',
+            style: AppTheme.listTileTitle,
+          ),
+          actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
         ),
-        actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
-      ),
-      body: Container(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return DelegationCard(
-                title: 'Decentral.Gaming',
-                subtitle: '98.72% Checkpoints Signed',
-                commission: '10',
-                iconURL:
-                    'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                maticWalletBalance: '12434124',
-                etcWalletBalance: '123',
-                maticStake: '12431242',
-                stakeInETH: '421',
-                maticRewards: '21412',
-                rewardInETH: '31');
+        body: BlocBuilder<CovalentTokensListMaticCubit,
+            CovalentTokensListMaticState>(
+          builder: (context, tokenState) {
+            return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
+                builder: (context, delegationState) {
+              return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
+                  builder: (context, validatorState) {
+                if (validatorState is ValidatorsDataStateLoading ||
+                    validatorState is ValidatorsDataStateInitial ||
+                    delegationState is DelegationsDataStateInitial ||
+                    delegationState is DelegationsDataStateLoading) {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SpinKitFadingFour(
+                          size: 50,
+                          color: AppTheme.primaryColor,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text("Loading .."),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (delegationState is DelegationsDataStateFinal &&
+                    validatorState is ValidatorsDataStateFinal &&
+                    tokenState is CovalentTokensListMaticLoaded) {
+                  return Container(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        ValidatorInfo validator = validatorState.data.result
+                            .where((element) =>
+                                element.id ==
+                                delegationState
+                                    .data.result[index].bondedValidator)
+                            .toList()
+                            .first;
+                        double qoute = tokenState.covalentTokenList.data.items
+                            .where((element) =>
+                                element.contractTickerSymbol.toLowerCase() ==
+                                "matic")
+                            .toList()
+                            .first
+                            .quoteRate;
+                        BigInt reward =
+                            delegationState.data.result[index].shares -
+                                delegationState.data.result[index].stake;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: DelegationCard(
+                              id: validator.id,
+                              title: validator.name,
+                              subtitle:
+                                  '${validator.uptimePercent.toString()}% Checkpoints Signed',
+                              commission:
+                                  validator.commissionPercent.toString(),
+                              iconURL:
+                                  'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+                              maticStake: EthConversions.weiToEth(
+                                      delegationState.data.result[index].stake,
+                                      18)
+                                  .toStringAsFixed(3),
+                              stakeInUsd: (qoute *
+                                      EthConversions.weiToEth(
+                                          delegationState
+                                              .data.result[index].stake,
+                                          18))
+                                  .toStringAsFixed(3),
+                              maticRewards: EthConversions.weiToEth(reward, 18)
+                                  .toString(),
+                              rewardInUsd:
+                                  (qoute * EthConversions.weiToEth(reward, 18))
+                                      .toStringAsFixed(3)),
+                        );
+                      },
+                      itemCount: delegationState.data.result.length,
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.refresh),
+                            color: AppTheme.grey,
+                            onPressed: () {
+                              context.read<DelegationsDataCubit>().setData();
+                              context.read<ValidatorsdataCubit>().setData();
+                            }),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Something Went wrong."),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              });
+            });
           },
-          itemCount: 10,
-        ),
-      ),
-    );
+        ));
   }
 }

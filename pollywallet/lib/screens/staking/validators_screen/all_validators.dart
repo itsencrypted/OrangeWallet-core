@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/staking/validators_screen/ui_elements/validator_staked_card.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -38,22 +39,32 @@ class _AllValidatorsState extends State<AllValidators> {
           ),
         );
       } else if (state is ValidatorsDataStateFinal) {
-        var sorted = state.data.result;
-        sorted.sort((a, b) =>
-            double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
-                ? 1
-                : 0);
-        var commission = state.data.result;
+        var stakedAmount = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
+        print(stakedAmount);
+        stakedAmount.sort((a, b) => a.selfStake > b.selfStake ? 1 : 0);
+        var sorted = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
+
+        // sorted.sort((a, b) =>
+        //     double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
+        //         ? 1
+        //         : 0);
+        var commission = state.data.result
+            .where((element) => element.status != "inactive")
+            .toList();
         commission.sort((a, b) => double.parse(a.commissionPercent) >
                 double.parse(b.commissionPercent)
             ? 1
             : 0);
+
         return DefaultTabController(
           length: 3,
           child: Scaffold(
             backgroundColor: AppTheme.backgroundWhite,
             appBar: AppBar(
-                backgroundColor: AppTheme.stackingGrey,
                 title: Text(
                   'All Validators',
                   style: AppTheme.listTileTitle,
@@ -74,7 +85,7 @@ class _AllValidatorsState extends State<AllValidators> {
                       Tab(
                         child: Align(
                           child: Text(
-                            'Staked',
+                            'Stake',
                             style: AppTheme.tabbarTextStyle,
                           ),
                         ),
@@ -106,24 +117,29 @@ class _AllValidatorsState extends State<AllValidators> {
               ListView.builder(
                 itemBuilder: (context, index) {
                   var stake = EthConversions.weiToEth(
-                      state.data.result[index].delegatedStake, 18);
+                      stakedAmount[index].delegatedStake, 18);
                   var name;
-                  if (state.data.result[index].name != null) {
-                    name = state.data.result[index].name;
+                  if (stakedAmount[index].name != null) {
+                    name = stakedAmount[index].name;
                   } else {
-                    name =
-                        "Validator " + state.data.result[index].id.toString();
+                    name = "Validator " + stakedAmount[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: state.data.result[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                    name: name,
-                    performance: state.data.result[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: stakedAmount[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: stakedAmount[index].commissionPercent,
+                      name: name,
+                      performance: stakedAmount[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
-                itemCount: state.data.result.length,
+                itemCount: stakedAmount.length,
               ),
               ListView.builder(
                 itemBuilder: (context, index) {
@@ -135,13 +151,19 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + sorted[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: sorted[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                    name: name,
-                    performance: sorted[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: sorted[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: sorted[index].commissionPercent,
+                      name: name,
+                      performance: sorted[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
                 itemCount: sorted.length,
@@ -156,13 +178,19 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + commission[index].id.toString();
                   }
-                  return ValidatorsStakedCard(
-                    commission: commission[index].commissionPercent,
-                    iconURL:
-                        'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                    name: name,
-                    performance: commission[index].uptimePercent,
-                    stakedMatic: stake.toString(),
+                  return FlatButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, validatorAndDelegationProfileRoute,
+                          arguments: commission[index].id);
+                    },
+                    child: ValidatorsStakedCard(
+                      commission: commission[index].commissionPercent,
+                      name: name,
+                      performance: commission[index].uptimePercent,
+                      stakedMatic: stake.toString(),
+                    ),
                   );
                 },
                 itemCount: commission.length,

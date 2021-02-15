@@ -16,27 +16,10 @@ class _SettingsTabState extends State<SettingsTab>
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView(children: [
         listTile(
-            title: 'Profile',
-            trailingText: 'ass...afs',
+            title: 'Account',
+            showTrailingIcon: false,
             onTap: () {
-              print('profile');
-            }),
-        listTile(
-            title: 'Contacts',
-            trailingText: '23',
-            onTap: () {
-              print('Contacts');
-            }),
-        listTile(
-            title: 'Currency',
-            trailingText: 'USD',
-            onTap: () {
-              print('currency');
-            }),
-        listTile(
-            title: 'Notification',
-            onTap: () {
-              print('Notification');
+              Navigator.of(context).pushNamed(accountRoute);
             }),
         listTile(
             title: 'Network',

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
-import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 

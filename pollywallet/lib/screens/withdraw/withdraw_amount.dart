@@ -3,22 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
-import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
-import 'package:pollywallet/screens/deposit/pop_up_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
-import 'package:pollywallet/utils/network/network_config.dart';
-import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
-import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
-import 'package:web3dart/web3dart.dart';
 
 class WithdrawScreen extends StatefulWidget {
   @override
@@ -30,7 +23,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   WithdrawBurnDataCubit data;
   BuildContext context;
   int bridge = 0;
-  bool _isInitialized;
   double balance;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;

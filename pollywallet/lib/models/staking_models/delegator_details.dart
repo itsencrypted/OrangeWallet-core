@@ -89,11 +89,11 @@ class DelegatorInfo {
 
   DelegatorInfo.fromJson(Map<String, dynamic> json) {
     address = json['address'];
-    stake = BigInt.parse(json['stake'].toString());
-    shares = BigInt.parse(json['shares'].toString());
+    stake = BigInt.from(json['stake']);
+    shares = BigInt.from(json['shares']);
     bondedValidator = json['bondedValidator'];
     deactivationEpoch = json['deactivationEpoch'];
-    claimedReward = BigInt.parse(json['claimedReward'].toString());
+    claimedReward = BigInt.from(json['claimedReward']);
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }

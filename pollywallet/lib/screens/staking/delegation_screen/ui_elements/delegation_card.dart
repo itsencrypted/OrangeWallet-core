@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 
 class DelegationCard extends StatelessWidget {
@@ -6,26 +7,24 @@ class DelegationCard extends StatelessWidget {
   final String commission;
   final String subtitle;
   final String iconURL;
-  final String maticWalletBalance;
-  final String etcWalletBalance;
   final String maticStake;
-  final String stakeInETH;
+  final String stakeInUsd;
   final String maticRewards;
-  final String rewardInETH;
+  final String rewardInUsd;
+  final int id;
   DelegationCard({
+    this.id,
     this.title,
     this.subtitle,
     this.commission,
     this.iconURL,
-    this.maticWalletBalance,
-    this.etcWalletBalance,
     this.maticStake,
-    this.stakeInETH,
+    this.stakeInUsd,
     this.maticRewards,
-    this.rewardInETH,
+    this.rewardInUsd,
   });
 
-  Widget rewardWidget({String title, String maticBalance, String ethBalance}) {
+  Widget rewardWidget({String title, String matic, String usd}) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,11 +43,11 @@ class DelegationCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '$maticBalance',
+                '$matic',
                 style: AppTheme.balanceMain,
               ),
               Text(
-                '\$$ethBalance',
+                '\$$usd',
                 style: AppTheme.balanceSub.copyWith(
                     color: AppTheme.balanceSub.color.withOpacity(0.6)),
               ),
@@ -61,114 +60,78 @@ class DelegationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppTheme.cardRadiusBig))),
-        color: AppTheme.white,
-        elevation: AppTheme.cardElevations,
-        child: Container(
-          margin: EdgeInsets.all(AppTheme.paddingHeight),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: AppTheme.paddingHeight),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: AppTheme.paddingHeight / 2,
-                        right: AppTheme.paddingHeight,
+    return FlatButton(
+      padding: EdgeInsets.all(0),
+      onPressed: () {
+        Navigator.pushNamed(context, validatorAndDelegationProfileRoute,
+            arguments: id);
+      },
+      child: Card(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(AppTheme.cardRadiusBig))),
+          color: AppTheme.white,
+          elevation: AppTheme.cardElevations,
+          child: Container(
+            margin: EdgeInsets.all(AppTheme.paddingHeight),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: AppTheme.paddingHeight),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "$title",
+                            style: AppTheme.listTileTitle,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight / 4,
+                          ),
+                          Text('$subtitle',
+                              style: AppTheme.balanceSub.copyWith(
+                                  color: AppTheme.balanceSub.color
+                                      .withOpacity(0.4))),
+                          Text('$commission% Commission',
+                              style: AppTheme.balanceSub.copyWith(
+                                  color: AppTheme.balanceSub.color
+                                      .withOpacity(0.4))),
+                        ],
                       ),
-                      child: FadeInImage.assetNetwork(
-                        placeholder: 'assets/icons/wallet_icon.png',
-                        image: iconURL,
-                        width: AppTheme.tokenIconHeight,
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "$title",
-                          style: AppTheme.listTileTitle,
-                        ),
-                        SizedBox(
-                          height: AppTheme.paddingHeight / 4,
-                        ),
-                        Text('$subtitle',
-                            style: AppTheme.balanceSub.copyWith(
-                                color: AppTheme.balanceSub.color
-                                    .withOpacity(0.4))),
-                        Text('$commission% Commission',
-                            style: AppTheme.balanceSub.copyWith(
-                                color: AppTheme.balanceSub.color
-                                    .withOpacity(0.4))),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                  color: AppTheme.stackingGrey,
-                ),
-                height: 110,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    rewardWidget(
-                        title: "Matic Staking",
-                        maticBalance: maticStake,
-                        ethBalance: stakeInETH),
-                    rewardWidget(
-                        title: "Matic Reward",
-                        maticBalance: maticRewards,
-                        ethBalance: rewardInETH)
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: AppTheme.cardRadius,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                      child: FlatButton(
-                          shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: AppTheme.borderColorGreyish),
-                              borderRadius: BorderRadius.circular(
-                                  AppTheme.cardRadiusSmall)),
-                          onPressed: () {},
-                          child: Text(
-                            'Withdraw Reward',
-                            style: AppTheme.tabbarTextStyle,
-                          ))),
-                  SizedBox(
-                    width: AppTheme.paddingHeight / 2,
+                    ],
                   ),
-                  Expanded(
-                    child: RaisedButton(
-                      color: AppTheme.buttonColorBlue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AppTheme.cardRadiusSmall)),
-                      onPressed: () {},
-                      child: Text(
-                        'Restake Reward',
-                        style: AppTheme.textW600White14,
-                      ),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ));
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                    color: AppTheme.stackingGrey,
+                  ),
+                  height: 110,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      rewardWidget(
+                          title: "Matic Stake",
+                          matic: maticStake,
+                          usd: stakeInUsd),
+                      rewardWidget(
+                          title: "Matic Reward",
+                          matic: maticRewards,
+                          usd: rewardInUsd)
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: AppTheme.cardRadius,
+                ),
+              ],
+            ),
+          )),
+    );
   }
 }

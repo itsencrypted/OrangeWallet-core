@@ -52,30 +52,25 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                 tabbarMargin: AppTheme.cardRadius,
                 tabbarPadding: AppTheme.paddingHeight / 4,
               )),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Card(
-              shape: AppTheme.cardShape,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text("All Tokens", style: AppTheme.subtitle),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TabBarView(
-                        children: [
-                          DepositTokenList(),
-                          WithdrawTokenList(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text("All Tokens", style: AppTheme.subtitle),
               ),
-            ),
+              Expanded(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
+                  child: TabBarView(
+                    children: [
+                      DepositTokenList(),
+                      WithdrawTokenList(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           )),
     );
   }

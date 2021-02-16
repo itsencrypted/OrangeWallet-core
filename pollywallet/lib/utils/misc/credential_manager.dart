@@ -13,8 +13,10 @@ class CredentialManager {
 
   static Future<String> getMnemonic(BuildContext context) async {
     CredentialsObject creds = await BoxUtils.getCredentialBox();
+
     var mnemonic = await Navigator.pushNamed(context, pinWidgetRoute,
         arguments: creds.mnemonic);
+
     return mnemonic;
   }
 

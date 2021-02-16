@@ -28,7 +28,7 @@ class PinWidgetState extends State<PinWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //final String args = ModalRoute.of(context).settings.arguments;
+    final String args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       backgroundColor: AppTheme.backgroundWhite,
       appBar: AppBar(
@@ -108,7 +108,9 @@ class PinWidgetState extends State<PinWidget> {
               Icons.backspace,
               color: Colors.black87,
             ),
-            rightButtonFn: _decrypt,
+            rightButtonFn: () {
+              _decrypt(args);
+            },
             rightIcon: Icon(
               Icons.check,
               color: Colors.black87,
@@ -130,7 +132,7 @@ class PinWidgetState extends State<PinWidget> {
     });
   }
 
-  _decrypt() async {
+  _decrypt(args) async {
     if (pin.length != 4) {
       setState(() {
         failed = true;
@@ -140,7 +142,7 @@ class PinWidgetState extends State<PinWidget> {
     print("indecrypt");
     Dialogs.showLoadingDialog(context, _keyLoader);
     String salt = await BoxUtils.getSalt();
-    String key = (await BoxUtils.getCredentialBox()).privateKey;
+    String key = args;
     String decrypted = await Encryptions.decrypt(key, salt, pin);
     if (decrypted == Encryptions.failed) {
       print(failed);

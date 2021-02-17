@@ -312,6 +312,7 @@ class _DelegationAmountState extends State<DelegationAmount> {
     BigInt approval = await EthereumTransactions.allowance(
         config.stakeManagerProxy, config.maticToken);
     var wei = EthConversions.ethToWei(_amount.text);
+    print(approval);
     if (approval < wei) {
       bool appr = await showDialog(
         context: context,

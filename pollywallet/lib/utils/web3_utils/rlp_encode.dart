@@ -19,6 +19,27 @@ class RlpEncode {
     return rt;
   }
 
+  static Uint8List encode1155params(BigInt id, BigInt amount, String bytes) {
+    var baz = ContractFunction('', [
+      FunctionParameter('', UintType(length: 256)),
+    ]);
+    var byteEncode = ContractFunction('', [
+      FunctionParameter('', DynamicBytes()),
+    ]);
+
+    var ls = baz.encodeCall([amount]);
+    var idEncode = baz.encodeCall([id]);
+
+    var rt = ls.sublist(4, ls.length);
+    var idTrimmed = ls.sublist(4, idEncode.length);
+    var bytesEncoded = byteEncode.encodeCall([bytes]);
+
+    // String hex = HEX.encode(rt);
+    // var str = "0x" + hex.substring(2);
+    // print(str);
+    return rt;
+  }
+
   static Uint8List encodeHex(String payload) {
     // BigInt bi = hexToInt(payload);
     // var baz = ContractFunction('', [

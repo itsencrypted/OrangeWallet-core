@@ -435,7 +435,6 @@ class EthereumTransactions {
 
   static Future<Transaction> erc721Approve(
       BigInt id, String erc721Address, String spender) async {
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String abi = await rootBundle.loadString(erc721Abi);
     final contract = DeployedContract(ContractAbi.fromJson(abi, "erc721"),
         EthereumAddress.fromHex(erc721Address));
@@ -508,5 +507,47 @@ class EthereumTransactions {
       print(e);
       return BigInt.zero;
     }
+  }
+
+  static Future<bool> erc1155ApprovalStatus(
+      String erc1155Address, String spender) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(erc1155Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
+        EthereumAddress.fromHex(erc1155Address));
+    var func = contract.function('isApprovedForAll');
+
+    try {
+      var status = await client.call(
+        contract: contract,
+        function: func,
+        params: [
+          EthereumAddress.fromHex(address),
+          EthereumAddress.fromHex(spender)
+        ],
+      );
+      print(status);
+
+      return status[0];
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<Transaction> erc1155Approve(
+      BigInt id, String erc1155Address, String spender) async {
+    String abi = await rootBundle.loadString(erc1155Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
+        EthereumAddress.fromHex(erc1155Address));
+    var func = contract.function('setApprovalForAll');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [EthereumAddress.fromHex(spender), true],
+    );
+    return trx;
   }
 }

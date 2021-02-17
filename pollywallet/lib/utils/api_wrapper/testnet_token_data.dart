@@ -80,7 +80,7 @@ class TestNetTokenData {
     for (int i = 0; i < erc1155Futures.length; i++) {
       BigInt id = BigInt.from(123);
       BigInt balance = await erc1155Futures[i];
-      if (id == null) continue;
+      if (balance == null) continue;
       Items item = new Items(
           contractTickerSymbol: erc1155Keys[i],
           balance: balance.toString(),

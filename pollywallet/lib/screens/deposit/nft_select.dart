@@ -295,7 +295,13 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              _sendDepositTransaction(state, context);
+                              if (state
+                                      .data.token.nftData[index].tokenBalance ==
+                                  null) {
+                                _sendDepositTransactionERC721(state, context);
+                              } else {
+                                _sendDepositTransactionERC1155(state, context);
+                              }
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -324,7 +330,8 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
         ));
   }
 
-  _sendDepositTransaction(DepositDataFinal state, BuildContext context) async {
+  _sendDepositTransactionERC721(
+      DepositDataFinal state, BuildContext context) async {
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -408,6 +415,99 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
             trx: trx,
             type: TransactionType.DEPOSITPLASMA);
       }
+    }
+
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: transactionData);
+  }
+
+  _sendDepositTransactionERC1155(
+      DepositDataFinal state, BuildContext context) async {
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context, false);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed: () {
+        Navigator.pop(context, true);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      shape: AppTheme.cardShape,
+      content: Text(
+          "You haven't given sufficient approval, would you like to approve now?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    GlobalKey<State> _key = new GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    Transaction trx;
+    TransactionData transactionData;
+    var spender = "";
+    var approvalStatus = false;
+    if (bridge == 1) {
+      spender = config.erc721Predicate;
+      approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
+          state.data.token.contractAddress, spender);
+    } else {
+      spender = config.depositManager;
+      approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
+          state.data.token.contractAddress, spender);
+    }
+
+    if (!approvalStatus) {
+      bool appr = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+      if (appr) {
+        trx = await EthereumTransactions.erc721Approve(
+            BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
+            state.data.token.contractAddress,
+            spender);
+        transactionData = TransactionData(
+            to: state.data.token.contractAddress,
+            amount: "0",
+            trx: trx,
+            type: TransactionType.APPROVE);
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        return;
+      }
+    } else {
+      // if (bridge == 1) {
+      //   trx = await EthereumTransactions.erc721DepositPos(
+      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
+      //       state.data.token.contractAddress);
+
+      //   transactionData = TransactionData(
+      //       to: config.rootChainProxy,
+      //       amount: "0",
+      //       trx: trx,
+      //       type: TransactionType.DEPOSITPOS);
+      // } else {
+      //   trx = await EthereumTransactions.erc721DepositPlasma(
+      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
+      //       state.data.token.contractAddress);
+      //   transactionData = TransactionData(
+      //       to: config.depositManager,
+      //       amount: "0",
+      //       trx: trx,
+      //       type: TransactionType.DEPOSITPLASMA);
+      // }
     }
 
     Navigator.of(context, rootNavigator: true).pop();

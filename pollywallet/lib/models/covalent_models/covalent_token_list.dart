@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 class CovalentTokenList {
   Data data;
   bool error;
@@ -151,9 +155,20 @@ class NftData {
     tokenId = json['token_id'];
     tokenBalance = json['token_balance'];
     tokenUrl = json['token_url'];
-    externalData = json['external_data'] != null
-        ? new ExternalData.fromJson(json['external_data'])
-        : null;
+    if (json['external_data'] == null) {
+      try {
+        _getExternalData(json['token_url']).then((data) {
+          externalData = data;
+        });
+      } catch (e) {
+        externalData = null;
+      }
+    } else {
+      externalData = json['external_data'] != null
+          ? new ExternalData.fromJson(json['external_data'])
+          : null;
+    }
+
     owner = json['owner'];
   }
 
@@ -167,6 +182,37 @@ class NftData {
     }
     data['owner'] = this.owner;
     return data;
+  }
+
+  Future<ExternalData> _getExternalData(
+    String url,
+  ) async {
+    var resp = await http.get(url);
+    Map json = jsonDecode(resp.body);
+    var list = json.keys.toList();
+    RegExp imageRegex = RegExp(
+      r".*image.*",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    RegExp descriptionRegex = RegExp(
+      r".*description.*",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    RegExp nameRegex = RegExp(
+      r".*name.*",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    var nameKey = list.where((element) => nameRegex.hasMatch(element)).first;
+    var descriptionKey =
+        list.where((element) => descriptionRegex.hasMatch(element)).first;
+    var imageKey = list.where((element) => imageRegex.hasMatch(element)).first;
+    return ExternalData(
+        name: json[nameKey],
+        description: json[descriptionKey],
+        image: json[imageKey]);
   }
 }
 

@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
-import 'package:pollywallet/models/send_token_model/send_token_data.dart';
-import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 
-class NftTile extends StatelessWidget {
+class SendNftTile extends StatelessWidget {
   final NftData data;
-
-  const NftTile({Key key, this.data}) : super(key: key);
+  const SendNftTile({Key key, this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String suffix = "";
+    if (data.tokenBalance != null) {
+      suffix = " (" + data.tokenBalance.toString() + "Tokens)";
+    }
     var type;
     var url;
     try {
@@ -35,6 +36,7 @@ class NftTile extends StatelessWidget {
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width * 0.78,
               child: type == "svg"
                   ? SvgPicture.network(url)
                   : type == "notFound"
@@ -48,7 +50,7 @@ class NftTile extends StatelessWidget {
                         }),
             ),
             ListTile(
-              title: Text(data.externalData.name),
+              title: Text(data.externalData.name + suffix),
               subtitle: Text(
                 data.externalData.description,
                 overflow: TextOverflow.ellipsis,

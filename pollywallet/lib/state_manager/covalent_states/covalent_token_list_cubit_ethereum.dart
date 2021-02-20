@@ -13,7 +13,8 @@ class CovalentTokensListEthCubit extends Cubit<CovalentTokensListEthState> {
       final list = await CovalentApiWrapper.tokenEthList();
 
       emit(CovalentTokensListEthLoaded(list));
-    } on Exception {
+    } catch (e) {
+      print(e.toString());
       emit(CovalentTokensListEthError("Something Went wrong"));
     }
   }

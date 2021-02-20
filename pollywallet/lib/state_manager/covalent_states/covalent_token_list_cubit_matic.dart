@@ -13,7 +13,8 @@ class CovalentTokensListMaticCubit extends Cubit<CovalentTokensListMaticState> {
       final list = await CovalentApiWrapper.tokensMaticList();
 
       emit(CovalentTokensListMaticLoaded(list));
-    } on Exception {
+    } catch (e) {
+      print(e.toString());
       emit(CovalentTokensListMaticError("Something Went wrong"));
     }
   }

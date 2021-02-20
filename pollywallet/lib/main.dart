@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
 import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
+import 'package:pollywallet/screens/send_token/send_nft.dart';
 import 'package:pollywallet/screens/settings_screen/export_mnemonic.dart';
 import 'package:pollywallet/screens/settings_screen/accounts.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
@@ -153,7 +154,8 @@ class _PollyWalletState extends State<PollyWallet> {
               nftTokenList: (context) => FullNftList(),
               nftTokenProfile: (context) => NftProfile(),
               stakeWithDrawAmountRoute: (context) => StakeWithdrawAmount(),
-              nftDepoitSelectRoute: (context) => NftSelectDeposit()
+              nftDepoitSelectRoute: (context) => NftSelectDeposit(),
+              sendNftRoute: (context) => SendNft()
             },
             home: current),
       ),

@@ -23,8 +23,7 @@ class NftListTile extends StatelessWidget {
       child: Center(
         child: FlatButton(
           onPressed: () {
-            Navigator.pushNamed(context, nftTokenProfile,
-                arguments: tokenData.nftData);
+            Navigator.pushNamed(context, nftTokenProfile, arguments: tokenData);
           },
           child: ListTile(
             leading: FadeInImage.assetNetwork(

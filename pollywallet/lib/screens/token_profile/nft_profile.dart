@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/covalent_models/token_history.dart';
+import 'package:pollywallet/models/send_token_model/send_token_data.dart';
 import 'package:pollywallet/screens/token_profile/nft_tile.dart';
+import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NftProfile extends StatefulWidget {
   @override
@@ -12,7 +15,7 @@ class NftProfile extends StatefulWidget {
 }
 
 class _NftProfileState extends State<NftProfile> {
-  List<NftData> args;
+  Items args;
   String address = "";
   List<TransferInfo> txList;
   @override
@@ -24,9 +27,19 @@ class _NftProfileState extends State<NftProfile> {
   @override
   Widget build(BuildContext context) {
     args = ModalRoute.of(context).settings.arguments;
-    List<Widget> ls = List<Widget>();
-    args.forEach((element) {
-      ls.add(NftTile(data: element));
+    var nft = args.nftData;
+    List<Widget> ls = [];
+    args.nftData.forEach((element) {
+      ls.add(FlatButton(
+          padding: EdgeInsets.all(0),
+          onPressed: () {
+            var cubit = context.read<SendTransactionCubit>();
+
+            cubit.setData(SendTokenData(token: args));
+            Navigator.pushNamed(context, sendNftRoute,
+                arguments: element.tokenId);
+          },
+          child: NftTile(data: element)));
     });
     print(ls.length);
     return Scaffold(

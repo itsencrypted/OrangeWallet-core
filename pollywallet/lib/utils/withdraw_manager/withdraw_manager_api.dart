@@ -80,16 +80,26 @@ class WithdrawManagerApi {
     }
   }
 
-  static Future<PlasmaState> checkPlasmaState(String txHash) async {
+  static Future<PlasmaState> checkPlasmaState(
+      String txHash, String withdrawTx, String confirmTx) async {
     String burnUrl = baseUrl + "/v1/plasma-burn";
     String confirmUrl = baseUrl + "/v1/plasma-confirm";
     String exitUrl = baseUrl + "/v1/plasma-exit";
-    var body = {
+    var body1 = {
       "txHashes": [txHash],
     };
-    Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
-    Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
-    Future exitFuture = http.post(exitUrl, body: jsonEncode(body));
+
+    var body2 = {
+      "txHashes": [
+        {"burnTxHash": txHash, "confirmTxHash": withdrawTx},
+      ]
+    };
+    var body3 = {
+      "txHashes": [confirmTx],
+    };
+    Future burnFuture = http.post(burnUrl, body: jsonEncode(body1));
+    Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body2));
+    Future exitFuture = http.post(exitUrl, body: jsonEncode(body3));
     var burnResp = await burnFuture;
     Map burnJson = jsonDecode(burnResp.body);
     print(burnJson);
@@ -106,13 +116,28 @@ class WithdrawManagerApi {
     } else if (burnObj.message.code == -3) {
       return PlasmaState.BURNED;
     } else if (burnObj.message.code == -4) {
+      if (withdrawTx == "" || withdrawTx == null) {
+        return PlasmaState.CHECKPOINTED;
+      }
       var confirmResp = await confirmFuture;
-      Map confirmJson = jsonDecode(confirmResp);
+      print(confirmUrl);
+      print(exitUrl);
+      Map confirmJson = jsonDecode(confirmResp.body);
+      print(confirmJson);
       BridgeApiData confirmObj;
+      bool badPayload = false;
       confirmJson.forEach((key, value) {
+        print(value);
+        if (value == "Bad Payload") {
+          badPayload = true;
+          return PlasmaState.BADEXITHASH;
+        }
         confirmObj = new BridgeApiData(
             txHash: key, message: BridgeApiMessage.fromJson(value));
       });
+      if (badPayload) {
+        return PlasmaState.BADEXITHASH;
+      }
       if (confirmObj.message.code == -5) {
         return PlasmaState.PENDINGCONFIRM;
       } else if (confirmObj.message.code == -6) {
@@ -122,10 +147,14 @@ class WithdrawManagerApi {
       } else if (confirmObj.message.code == -8) {
         return PlasmaState.CONFIRMEXITABLE;
       } else if (confirmObj.message.code == -9) {
+        if (confirmTx == "" || confirmTx == null) {
+          return PlasmaState.READYTOEXIT;
+        }
         var exitResp = await exitFuture;
-        Map exitJson = jsonDecode(exitResp);
+        Map exitJson = jsonDecode(exitResp.body);
         BridgeApiData exitObj;
         exitJson.forEach((key, value) {
+          print(value);
           exitObj = new BridgeApiData(
               txHash: key, message: BridgeApiMessage.fromJson(value));
         });
@@ -151,7 +180,7 @@ class WithdrawManagerApi {
     };
     Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
     var confirmResp = await confirmFuture;
-    Map confirmJson = jsonDecode(confirmResp);
+    Map confirmJson = jsonDecode(confirmResp.body);
     BridgeApiData confirmObj;
     confirmJson.forEach((key, value) {
       confirmObj = new BridgeApiData(
@@ -164,12 +193,26 @@ class WithdrawManagerApi {
       return null;
   }
 
-  static Future<String> getPayloadForExit(String burnTxHash) async {
+  static Future<String> getPayloadForExitPos(String burnTxHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.exitPayload + burnTxHash;
+    String url = config.exitPayloadPos + burnTxHash;
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     print(resp.body);
+    var payload = Payload.fromJson(json);
+    if (payload.error == null) {
+      return payload.result;
+    } else {
+      return null;
+    }
+  }
+
+  static Future<String> getPayloadForExitPlasma(String burnTxHash) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.exitPayloadPlasma + burnTxHash;
+    print(url);
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
     var payload = Payload.fromJson(json);
     if (payload.error == null) {
       return payload.result;

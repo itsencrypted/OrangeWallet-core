@@ -30,6 +30,15 @@ class _DelegationAmountState extends State<DelegationAmount> {
   double balance = 0;
   TextEditingController _amount = TextEditingController();
   @override
+  @override
+  void initState() {
+    super.initState();
+    _amount.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var id = ModalRoute.of(context).settings.arguments;
     return Scaffold(
@@ -170,7 +179,7 @@ class _DelegationAmountState extends State<DelegationAmount> {
                               Text(
                                 "\$" +
                                     FiatCryptoConversions.cryptoToFiat(
-                                            double.parse(_amount.text == ""
+                                            double.tryParse(_amount.text == ""
                                                 ? "0"
                                                 : _amount.text),
                                             matic.quoteRate)

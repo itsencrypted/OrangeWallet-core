@@ -7,8 +7,9 @@ class FiatCryptoConversions {
   }
 
   static double cryptoToFiat(double amount, double qoute) {
-    print(amount);
-    print(qoute);
+    if (amount == null) {
+      amount = 0;
+    }
     return amount * qoute;
   }
 }

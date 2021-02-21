@@ -98,7 +98,7 @@ class EthereumTransactions {
     var trx = Transaction.callContract(
         contract: contract,
         function: depositEther,
-        maxGas: 125000,
+        maxGas: 925000,
         from: EthereumAddress.fromHex(address),
         value: EtherAmount.inWei(_amt),
         parameters: []);
@@ -152,7 +152,7 @@ class EthereumTransactions {
     print(config.ethEndpoint);
     var spender;
     if (bridge == Bridge.POS) {
-      spender = config.erc20Predicate;
+      spender = config.erc20PredicatePos;
     } else {
       spender = config.depositManager;
     }
@@ -397,7 +397,7 @@ class EthereumTransactions {
         function: func,
         params: [
           EthereumAddress.fromHex(address),
-          EthereumAddress.fromHex(config.erc721Predicate)
+          EthereumAddress.fromHex(config.erc721PredicatePos)
         ],
       );
       print(status);

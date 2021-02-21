@@ -366,7 +366,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
     if (bridge == 1) {
       approvalStatus = await EthereumTransactions.erc721ApprovalStatusPos(
           state.data.token.contractAddress);
-      spender = config.erc721Predicate;
+      spender = config.erc721PredicatePos;
     } else {
       approvalStatus = await EthereumTransactions.erc721ApprovalStatusPlasma(
           state.data.token.contractAddress);
@@ -457,7 +457,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
     var spender = "";
     var approvalStatus = false;
     if (bridge == 1) {
-      spender = config.erc721Predicate;
+      spender = config.erc721PredicatePos;
       approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
           state.data.token.contractAddress, spender);
     } else {

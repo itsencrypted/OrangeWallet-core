@@ -35,7 +35,7 @@ class _SendNftState extends State<SendNft> {
     this.args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-        appBar: AppBar(title: Text("Deposit to Matic")),
+        appBar: AppBar(title: Text("Send Token")),
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
             if (state is SendTransactionFinal) {

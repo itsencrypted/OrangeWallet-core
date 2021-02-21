@@ -23,7 +23,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   WithdrawBurnDataCubit data;
   BuildContext context;
   int bridge = 0;
-  double balance;
+  double balance = 0;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
 
@@ -37,6 +37,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   Widget build(BuildContext context) {
     this.data = context.read<WithdrawBurnDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
+    print("args");
     print(args);
 
     if (args == 3 && bridge == 0) {
@@ -172,7 +173,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                       Text(
                         "\$" +
                             FiatCryptoConversions.cryptoToFiat(
-                                    double.parse(_amount.text == ""
+                                    double.tryParse(_amount.text == ""
                                         ? "0"
                                         : _amount.text),
                                     state.data.token.quoteRate)

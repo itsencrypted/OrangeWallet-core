@@ -27,7 +27,8 @@ class WithdrawManagerWeb3 {
   static Future<Transaction> exitPos(String burnTxHash) async {
     String abi = await rootBundle.loadString(rootChainProxyAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String exitPayload = await WithdrawManagerApi.getPayloadForExit(burnTxHash);
+    String exitPayload =
+        await WithdrawManagerApi.getPayloadForExitPos(burnTxHash);
 
     var uint8List = RlpEncode.encodeHex(exitPayload);
     if (exitPayload == null) {
@@ -46,9 +47,10 @@ class WithdrawManagerWeb3 {
   }
 
   static Future<Transaction> initiateExitPlasma(String burnTxHash) async {
-    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    String abi = await rootBundle.loadString(erc20PredicateAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String exitPayload = await WithdrawManagerApi.getPayloadForExit(burnTxHash);
+    String exitPayload =
+        await WithdrawManagerApi.getPayloadForExitPlasma(burnTxHash);
 
     var uint8List = RlpEncode.encodeHex(exitPayload);
     if (exitPayload == null) {
@@ -56,7 +58,7 @@ class WithdrawManagerWeb3 {
     }
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "erc20predicate"),
-        EthereumAddress.fromHex(config.erc20Predicate));
+        EthereumAddress.fromHex(config.erc20PredicatePlasma));
     var exit = contract.function('startExitWithBurntTokens');
     var tx = Transaction.callContract(
         contract: contract,
@@ -67,7 +69,7 @@ class WithdrawManagerWeb3 {
   }
 
   static Future<Transaction> exitPlasma(String token) async {
-    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    String abi = await rootBundle.loadString(withdrawManagerAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
 
     final contract = DeployedContract(

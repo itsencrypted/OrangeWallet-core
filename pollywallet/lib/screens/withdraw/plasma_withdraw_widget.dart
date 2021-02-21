@@ -15,9 +15,15 @@ import 'package:web3dart/web3dart.dart';
 
 class PlasmaWithdrawWidget extends StatefulWidget {
   final txHash;
+  final withdrawTx;
   final tokenAddress;
+  final confirmTx;
   const PlasmaWithdrawWidget(
-      {Key key, @required this.txHash, @required this.tokenAddress})
+      {Key key,
+      @required this.txHash,
+      @required this.tokenAddress,
+      @required this.withdrawTx,
+      @required this.confirmTx})
       : super(key: key);
   @override
   _PlasmaWithdrawWidget createState() => _PlasmaWithdrawWidget();
@@ -29,9 +35,12 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
   int endTime;
   @override
   void initState() {
-    WithdrawManagerApi.checkPlasmaState(widget.txHash).then((value) {
+    WithdrawManagerApi.checkPlasmaState(
+            widget.txHash, widget.withdrawTx, widget.confirmTx)
+        .then((value) {
       setState(() {
         status = value;
+        print(value);
         _loading = false;
       });
     });
@@ -84,7 +93,7 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
                                             : status ==
                                                     PlasmaState.CONFIRMFAILED
                                                 ? _confirmFailed()
-                                                : status ==
+                                                : status !=
                                                         PlasmaState
                                                             .CONFIRMEXITABLE
                                                     ? _exitableInTime()
@@ -201,7 +210,10 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.cancel_outlined, color: Colors.red, size: 50),
+            IconButton(
+              icon: Icon(Icons.refresh, color: Colors.grey, size: 50),
+              onPressed: _confirm,
+            ),
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
@@ -339,7 +351,7 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
         _loading = true;
       });
       _getExitTime();
-      return Container();
+      //return Container();
     }
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -433,7 +445,7 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
         type: TransactionType.EXITPLASMA,
         to: config.withdrawManagerProxy,
         trx: trx);
-    Navigator.of(_key.currentContext, rootNavigator: true).pop();
+    Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: data);
   }
@@ -451,7 +463,7 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
     TransactionData data = TransactionData(
         amount: "0",
         type: TransactionType.CONFIRMPLASMA,
-        to: config.erc20Predicate,
+        to: config.erc20PredicatePos,
         trx: trx);
     Navigator.of(_key.currentContext, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
@@ -471,7 +483,9 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
     setState(() {
       _loading = true;
     });
-    WithdrawManagerApi.checkPlasmaState(widget.txHash).then((value) {
+    WithdrawManagerApi.checkPlasmaState(
+            widget.txHash, widget.withdrawTx, widget.confirmTx)
+        .then((value) {
       setState(() {
         status = value;
         _loading = false;

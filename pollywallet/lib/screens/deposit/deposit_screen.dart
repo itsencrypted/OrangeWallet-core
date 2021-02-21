@@ -297,7 +297,7 @@ class _DepositScreenState extends State<DepositScreen>
       if (bridge == 1) {
         trx = await EthereumTransactions.depositEthPos(_amount.text);
         transactionData = TransactionData(
-            to: config.erc20Predicate,
+            to: config.erc20PredicatePos,
             trx: trx,
             amount: "0",
             type: TransactionType.DEPOSITPOS);
@@ -331,7 +331,7 @@ class _DepositScreenState extends State<DepositScreen>
           if (bridge == 1) {
             trx = await EthereumTransactions.approveErc20(
               state.data.token.contractAddress,
-              config.erc20Predicate,
+              config.erc20PredicatePos,
             );
           } else {
             trx = await EthereumTransactions.approveErc20(
@@ -353,7 +353,7 @@ class _DepositScreenState extends State<DepositScreen>
           trx = await EthereumTransactions.depositErc20Pos(
               _amount.text, state.data.token.contractAddress);
           transactionData = TransactionData(
-              to: config.erc20Predicate,
+              to: config.erc20PredicatePos,
               amount: _amount.text,
               trx: trx,
               type: TransactionType.DEPOSITPOS);

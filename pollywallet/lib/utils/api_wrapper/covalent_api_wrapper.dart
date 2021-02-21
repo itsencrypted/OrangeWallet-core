@@ -39,12 +39,14 @@ class CovalentApiWrapper {
           contractName: "Matic",
           logoUrl: tokenIconUrl,
           quote: 0,
-          quoteRate: 0);
+          quoteRate: 12);
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
-          "/1/address/" +
-          "0x7092Fdbc448698461A3ae98488C35568f368e0AD" +
+          // "/1/address/" +
+          // "0x7092Fdbc448698461A3ae98488C35568f368e0AD" +
+          "/137/address/" +
+          address +
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }

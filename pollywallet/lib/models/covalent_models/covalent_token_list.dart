@@ -109,12 +109,12 @@ class Items {
     logoUrl = json['logo_url'];
     type = json['type'];
     balance = json['balance'];
-    quoteRate = json['quote_rate'];
+    quoteRate = json['quote_rate'] != null ? json['quote_rate'] : 0.0;
     quote = json['quote'];
     if (json['nft_data'] != null) {
       nftData = new List<NftData>();
       json['nft_data'].forEach((v) {
-        nftData.add(new NftData.fromJson(v));
+        nftData.add(new NftData.fromJson(v, contractName));
       });
     }
   }
@@ -151,13 +151,13 @@ class NftData {
       this.externalData,
       this.owner});
 
-  NftData.fromJson(Map<String, dynamic> json) {
+  NftData.fromJson(Map<String, dynamic> json, String name) {
     tokenId = json['token_id'];
     tokenBalance = json['token_balance'];
     tokenUrl = json['token_url'];
     if (json['external_data'] == null) {
       try {
-        _getExternalData(json['token_url']).then((data) {
+        _getExternalData(json['token_url'], name).then((data) {
           externalData = data;
         });
       } catch (e) {
@@ -166,7 +166,11 @@ class NftData {
     } else {
       externalData = json['external_data'] != null
           ? new ExternalData.fromJson(json['external_data'])
-          : null;
+          : ExternalData(
+              name: name,
+              image:
+                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+              description: "");
     }
 
     owner = json['owner'];
@@ -184,9 +188,14 @@ class NftData {
     return data;
   }
 
-  Future<ExternalData> _getExternalData(
-    String url,
-  ) async {
+  Future<ExternalData> _getExternalData(String url, String name) async {
+    print(url);
+    if (url == null || url == "") {
+      return ExternalData(
+          name: name,
+          image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+          description: "");
+    }
     var resp = await http.get(url);
     Map json = jsonDecode(resp.body);
     var list = json.keys.toList();

@@ -11,8 +11,24 @@ import 'package:web3dart/web3dart.dart';
 
 class WithdrawManagerWeb3 {
   static Future<Transaction> burnTx(String amount, String address) async {
+    if (address == "0x0000000000000000000000000000000000001010") {
+      BigInt _amt = EthConversions.ethToWei(amount);
+      String abi = await rootBundle.loadString(mrc20Abi);
+
+      final contract = DeployedContract(
+          ContractAbi.fromJson(abi, "mrc20"), EthereumAddress.fromHex(address));
+      var withdraw = contract.function('withdraw');
+      var tx = Transaction.callContract(
+          contract: contract,
+          function: withdraw,
+          maxGas: 925000,
+          value: EtherAmount.inWei(_amt),
+          parameters: [_amt]);
+      return tx;
+    }
     BigInt _amt = EthConversions.ethToWei(amount);
     String abi = await rootBundle.loadString(childERC20Abi);
+
     final contract = DeployedContract(ContractAbi.fromJson(abi, "ChildERC20"),
         EthereumAddress.fromHex(address));
     var withdraw = contract.function('withdraw');

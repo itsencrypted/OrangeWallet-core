@@ -18,6 +18,7 @@ const rootChainAbi = "assets/abi/root_chain.json";
 const withdrawManagerAbi = "assets/abi/withdraw_manager.json";
 const stakingContractAbi = "assets/abi/staking_contract.json";
 const erc1155Abi = "assets/abi/erc1155.json";
+const mrc20Abi = "assets/abi/mrc20.json";
 
 // urls
 const tokenIconUrl =

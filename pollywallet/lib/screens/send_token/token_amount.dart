@@ -40,7 +40,11 @@ class _SendTokenAmountState extends State<SendTokenAmount>
     _controller.addListener(() {
       setState(() {
         index = _controller.index;
+        _amount.text = "";
       });
+    });
+    _amount.addListener(() {
+      setState(() {});
     });
     super.initState();
   }
@@ -90,217 +94,437 @@ class _SendTokenAmountState extends State<SendTokenAmount>
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return TabBarView(
+                controller: _controller,
                 children: [
-                  SizedBox(),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: TextFormField(
-                          controller: _address,
-                          keyboardAppearance: Brightness.dark,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (val) =>
-                              reg.hasMatch(val) ? null : "Invalid addresss",
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.text,
-                          style: AppTheme.bigLabel,
-                          decoration: InputDecoration(
-                              prefix: FlatButton(
-                                child: Icon(Icons.paste),
-                                onPressed: () async {
-                                  ClipboardData data =
-                                      await Clipboard.getData('text/plain');
-                                  _address.text = data.text;
-                                },
+                      SizedBox(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: TextFormField(
+                              controller: _address,
+                              keyboardAppearance: Brightness.dark,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (val) =>
+                                  reg.hasMatch(val) ? null : "Invalid addresss",
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              style: AppTheme.bigLabel,
+                              decoration: InputDecoration(
+                                  prefix: FlatButton(
+                                    child: Icon(Icons.paste),
+                                    onPressed: () async {
+                                      ClipboardData data =
+                                          await Clipboard.getData('text/plain');
+                                      _address.text = data.text;
+                                    },
+                                  ),
+                                  suffix: FlatButton(
+                                    child: Icon(Icons.qr_code),
+                                    onPressed: () async {
+                                      var qrResult =
+                                          await BarcodeScanner.scan();
+                                      RegExp reg =
+                                          RegExp(r'^0x[0-9a-fA-F]{40}$');
+                                      print(qrResult.rawContent);
+                                      if (reg.hasMatch(qrResult.rawContent)) {
+                                        print("Regex");
+                                        if (qrResult.rawContent.length == 42) {
+                                          _address.text = qrResult.rawContent;
+                                        } else {
+                                          Fluttertoast.showToast(
+                                            msg: "Invalid QR",
+                                          );
+                                        }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Invalid QR",
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  hintText: "Address",
+                                  hintStyle: AppTheme.body1,
+                                  focusColor: AppTheme.secondaryColor
+                                  //focusedBorder: InputBorder.none,
+                                  //enabledBorder: InputBorder.none,
+                                  ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: TextFormField(
+                              controller: _amount,
+                              keyboardAppearance: Brightness.dark,
+                              textAlign: TextAlign.center,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (val) => (val == "" || val == null) ||
+                                      (double.tryParse(val) == null ||
+                                          (double.tryParse(val) < 0 ||
+                                              double.tryParse(val) > balance))
+                                  ? "Invalid Amount"
+                                  : null,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
+                              style: AppTheme.bigLabel,
+                              decoration: InputDecoration(
+                                hintText: "Amount",
+                                hintStyle: AppTheme.body1,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
                               ),
-                              suffix: FlatButton(
-                                child: Icon(Icons.qr_code),
-                                onPressed: () async {
-                                  var qrResult = await BarcodeScanner.scan();
-                                  RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-                                  print(qrResult.rawContent);
-                                  if (reg.hasMatch(qrResult.rawContent)) {
-                                    print("Regex");
-                                    if (qrResult.rawContent.length == 42) {
-                                      _address.text = qrResult.rawContent;
-                                    } else {
-                                      Fluttertoast.showToast(
-                                        msg: "Invalid QR",
-                                      );
-                                    }
-                                  } else {
-                                    Fluttertoast.showToast(
-                                      msg: "Invalid QR",
-                                    );
-                                  }
-                                },
-                              ),
-                              hintText: "Address",
-                              hintStyle: AppTheme.body1,
-                              focusColor: AppTheme.secondaryColor
-                              //focusedBorder: InputBorder.none,
-                              //enabledBorder: InputBorder.none,
-                              ),
-                        ),
+                            ),
+                          ),
+                          Text(
+                            "\$" +
+                                FiatCryptoConversions.cryptoToFiat(
+                                        double.parse(_amount.text == ""
+                                            ? "0"
+                                            : _amount.text),
+                                        state.data.token.quoteRate)
+                                    .toString(),
+                            style: AppTheme.bigLabel,
+                          )
+                        ],
                       ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: TextFormField(
-                          controller: _amount,
-                          keyboardAppearance: Brightness.dark,
-                          textAlign: TextAlign.center,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (val) => (val == "" || val == null) ||
-                                  (double.tryParse(val) == null ||
-                                      (double.tryParse(val) < 0 ||
-                                          double.tryParse(val) > balance))
-                              ? "Invalid Amount"
-                              : null,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          style: AppTheme.bigLabel,
-                          decoration: InputDecoration(
-                            hintText: "Amount",
-                            hintStyle: AppTheme.body1,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
+                      SafeArea(
+                        child: ListTile(
+                          leading: FlatButton(
+                            onPressed: () {
+                              if (index == 0) {
+                                setState(() {
+                                  _amount.text = balance.toString();
+                                });
+                              } else {
+                                setState(() {
+                                  _amount.text =
+                                      FiatCryptoConversions.cryptoToFiat(
+                                              balance,
+                                              state.data.token.quoteRate)
+                                          .toString();
+                                });
+                              }
+                            },
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            child: ClipOval(
+                                child: Material(
+                              color: AppTheme.secondaryColor.withOpacity(0.3),
+                              child: SizedBox(
+                                  height: 56,
+                                  width: 56,
+                                  child: Center(
+                                    child: Text(
+                                      "Max",
+                                      style: AppTheme.title,
+                                    ),
+                                  )),
+                            )),
+                          ),
+                          title: Text(
+                            "Balance",
+                            style: AppTheme.subtitle,
+                          ),
+                          subtitle: Text(
+                            balance.toStringAsFixed(2) +
+                                " " +
+                                state.data.token.contractName,
+                            style: AppTheme.title,
+                          ),
+                          trailing: FlatButton(
+                            onPressed: () async {
+                              double amount;
+                              if (double.tryParse(_amount.text) == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Invalid amount",
+                                    toastLength: Toast.LENGTH_LONG);
+                                return;
+                              }
+                              if (index == 0) {
+                                amount = double.parse(_amount.text);
+                              } else {
+                                amount = FiatCryptoConversions.fiatToCrypto(
+                                    state.data.token.quoteRate,
+                                    double.parse(_amount.text));
+                              }
+                              if (validateAddress(_address.text) != null ||
+                                  amount < 0 ||
+                                  amount > balance) {
+                                Fluttertoast.showToast(
+                                  msg: "Invalid inputs",
+                                );
+                                return;
+                              }
+
+                              data.setData(SendTokenData(
+                                  token: state.data.token,
+                                  receiver: _address.text,
+                                  amount: amount.toString()));
+                              Transaction trx;
+                              if (state.data.token.contractAddress ==
+                                  maticAddress)
+                                trx = await MaticTransactions.transferMatic(
+                                    _amount.text, _address.text, context);
+                              else
+                                trx = await MaticTransactions.transferERC20(
+                                    _amount.text,
+                                    _address.text,
+                                    state.data.token.contractAddress,
+                                    context);
+                              TransactionData args = TransactionData(
+                                  trx: trx,
+                                  amount: _amount.text,
+                                  to: _address.text,
+                                  type: TransactionType.SEND);
+
+                              Navigator.pushNamed(
+                                  context, confirmMaticTransactionRoute,
+                                  arguments: args);
+                            },
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            child: ClipOval(
+                                child: Material(
+                              color: AppTheme.primaryColor,
+                              child: SizedBox(
+                                  height: 56,
+                                  width: 56,
+                                  child: Center(
+                                    child: Icon(Icons.check,
+                                        color: AppTheme.white),
+                                  )),
+                            )),
                           ),
                         ),
-                      ),
-                      index == 0
-                          ? Text(
-                              FiatCryptoConversions.fiatToCrypto(
-                                          state.data.token.quoteRate,
-                                          double.parse(_amount.text == ""
-                                              ? "0"
-                                              : _amount.text))
-                                      .toString() +
-                                  " " +
-                                  state.data.token.contractName,
-                              style: AppTheme.bigLabel,
-                            )
-                          : Text(
-                              "\$" +
-                                  FiatCryptoConversions.cryptoToFiat(
-                                          double.parse(_amount.text == ""
-                                              ? "0"
-                                              : _amount.text),
-                                          state.data.token.quoteRate)
-                                      .toString(),
-                              style: AppTheme.bigLabel,
-                            )
+                      )
                     ],
                   ),
-                  SafeArea(
-                    child: ListTile(
-                      leading: FlatButton(
-                        onPressed: () {
-                          if (index == 0) {
-                            setState(() {
-                              _amount.text = balance.toString();
-                            });
-                          } else {
-                            setState(() {
-                              _amount.text = FiatCryptoConversions.cryptoToFiat(
-                                      balance, state.data.token.quoteRate)
-                                  .toString();
-                            });
-                          }
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        child: ClipOval(
-                            child: Material(
-                          color: AppTheme.secondaryColor.withOpacity(0.3),
-                          child: SizedBox(
-                              height: 56,
-                              width: 56,
-                              child: Center(
-                                child: Text(
-                                  "Max",
-                                  style: AppTheme.title,
-                                ),
-                              )),
-                        )),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: TextFormField(
+                              controller: _address,
+                              keyboardAppearance: Brightness.dark,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (val) =>
+                                  reg.hasMatch(val) ? null : "Invalid addresss",
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.text,
+                              style: AppTheme.bigLabel,
+                              decoration: InputDecoration(
+                                  prefix: FlatButton(
+                                    child: Icon(Icons.paste),
+                                    onPressed: () async {
+                                      ClipboardData data =
+                                          await Clipboard.getData('text/plain');
+                                      _address.text = data.text;
+                                    },
+                                  ),
+                                  suffix: FlatButton(
+                                    child: Icon(Icons.qr_code),
+                                    onPressed: () async {
+                                      var qrResult =
+                                          await BarcodeScanner.scan();
+                                      RegExp reg =
+                                          RegExp(r'^0x[0-9a-fA-F]{40}$');
+                                      print(qrResult.rawContent);
+                                      if (reg.hasMatch(qrResult.rawContent)) {
+                                        print("Regex");
+                                        if (qrResult.rawContent.length == 42) {
+                                          _address.text = qrResult.rawContent;
+                                        } else {
+                                          Fluttertoast.showToast(
+                                            msg: "Invalid QR",
+                                          );
+                                        }
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Invalid QR",
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  hintText: "Address",
+                                  hintStyle: AppTheme.body1,
+                                  focusColor: AppTheme.secondaryColor
+                                  //focusedBorder: InputBorder.none,
+                                  //enabledBorder: InputBorder.none,
+                                  ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: TextFormField(
+                              controller: _amount,
+                              keyboardAppearance: Brightness.dark,
+                              textAlign: TextAlign.center,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (val) => (val == "" || val == null) ||
+                                      (double.tryParse(val) == null ||
+                                          (double.tryParse(val) < 0 ||
+                                              double.tryParse(val) >
+                                                  FiatCryptoConversions
+                                                      .cryptoToFiat(
+                                                          balance,
+                                                          state.data.token
+                                                              .quoteRate)))
+                                  ? "Invalid Amount"
+                                  : null,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
+                              style: AppTheme.bigLabel,
+                              decoration: InputDecoration(
+                                hintText: "Amount",
+                                hintStyle: AppTheme.body1,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            FiatCryptoConversions.fiatToCrypto(
+                                        state.data.token.quoteRate,
+                                        double.tryParse(_amount.text == ""
+                                            ? "0"
+                                            : _amount.text))
+                                    .toString() +
+                                " " +
+                                state.data.token.contractName,
+                            style: AppTheme.bigLabel,
+                          )
+                        ],
                       ),
-                      title: Text(
-                        "Balance",
-                        style: AppTheme.subtitle,
-                      ),
-                      subtitle: Text(
-                        balance.toStringAsFixed(2) +
-                            " " +
-                            state.data.token.contractName,
-                        style: AppTheme.title,
-                      ),
-                      trailing: FlatButton(
-                        onPressed: () async {
-                          double amount;
-                          if (double.tryParse(_amount.text) == null) {
-                            Fluttertoast.showToast(
-                                msg: "Invalid amount",
-                                toastLength: Toast.LENGTH_LONG);
-                            return;
-                          }
-                          if (index == 0) {
-                            amount = double.parse(_amount.text);
-                          } else {
-                            amount = FiatCryptoConversions.fiatToCrypto(
-                                state.data.token.quoteRate,
-                                double.parse(_amount.text));
-                          }
-                          if (validateAddress(_address.text) != null ||
-                              amount < 0 ||
-                              amount > balance) {
-                            Fluttertoast.showToast(
-                              msg: "Invalid inputs",
-                            );
-                            return;
-                          }
+                      SafeArea(
+                        child: ListTile(
+                          leading: FlatButton(
+                            onPressed: () {
+                              if (index == 0) {
+                                setState(() {
+                                  _amount.text = balance.toString();
+                                });
+                              } else {
+                                setState(() {
+                                  _amount.text =
+                                      FiatCryptoConversions.cryptoToFiat(
+                                              balance,
+                                              state.data.token.quoteRate)
+                                          .toString();
+                                });
+                              }
+                            },
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            child: ClipOval(
+                                child: Material(
+                              color: AppTheme.secondaryColor.withOpacity(0.3),
+                              child: SizedBox(
+                                  height: 56,
+                                  width: 56,
+                                  child: Center(
+                                    child: Text(
+                                      "Max",
+                                      style: AppTheme.title,
+                                    ),
+                                  )),
+                            )),
+                          ),
+                          title: Text(
+                            "Balance",
+                            style: AppTheme.subtitle,
+                          ),
+                          subtitle: Text(
+                            balance.toStringAsFixed(2) +
+                                " " +
+                                state.data.token.contractName,
+                            style: AppTheme.title,
+                          ),
+                          trailing: FlatButton(
+                            onPressed: () async {
+                              double amount;
+                              if (double.tryParse(_amount.text) == null) {
+                                Fluttertoast.showToast(
+                                    msg: "Invalid amount",
+                                    toastLength: Toast.LENGTH_LONG);
+                                return;
+                              }
+                              if (index == 0) {
+                                amount = double.parse(_amount.text);
+                              } else {
+                                amount = FiatCryptoConversions.fiatToCrypto(
+                                    state.data.token.quoteRate,
+                                    double.parse(_amount.text));
+                              }
+                              if (validateAddress(_address.text) != null ||
+                                  amount < 0 ||
+                                  amount > balance) {
+                                Fluttertoast.showToast(
+                                  msg: "Invalid inputs",
+                                );
+                                return;
+                              }
 
-                          data.setData(SendTokenData(
-                              token: state.data.token,
-                              receiver: _address.text,
-                              amount: amount.toString()));
-                          Transaction trx;
-                          if (state.data.token.contractAddress == maticAddress)
-                            trx = await MaticTransactions.transferMatic(
-                                _amount.text, _address.text, context);
-                          else
-                            trx = await MaticTransactions.transferERC20(
-                                _amount.text,
-                                _address.text,
-                                state.data.token.contractAddress,
-                                context);
-                          TransactionData args = TransactionData(
-                              trx: trx,
-                              amount: _amount.text,
-                              to: _address.text,
-                              type: TransactionType.SEND);
+                              data.setData(SendTokenData(
+                                  token: state.data.token,
+                                  receiver: _address.text,
+                                  amount: amount.toString()));
+                              Transaction trx;
+                              if (state.data.token.contractAddress ==
+                                  maticAddress)
+                                trx = await MaticTransactions.transferMatic(
+                                    _amount.text, _address.text, context);
+                              else
+                                trx = await MaticTransactions.transferERC20(
+                                    _amount.text,
+                                    _address.text,
+                                    state.data.token.contractAddress,
+                                    context);
+                              TransactionData args = TransactionData(
+                                  trx: trx,
+                                  amount: _amount.text,
+                                  to: _address.text,
+                                  type: TransactionType.SEND);
 
-                          Navigator.pushNamed(
-                              context, confirmMaticTransactionRoute,
-                              arguments: args);
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        child: ClipOval(
-                            child: Material(
-                          color: AppTheme.primaryColor,
-                          child: SizedBox(
-                              height: 56,
-                              width: 56,
-                              child: Center(
-                                child: Icon(Icons.check, color: AppTheme.white),
-                              )),
-                        )),
-                      ),
-                    ),
-                  )
+                              Navigator.pushNamed(
+                                  context, confirmMaticTransactionRoute,
+                                  arguments: args);
+                            },
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            child: ClipOval(
+                                child: Material(
+                              color: AppTheme.primaryColor,
+                              child: SizedBox(
+                                  height: 56,
+                                  width: 56,
+                                  child: Center(
+                                    child: Icon(Icons.check,
+                                        color: AppTheme.white),
+                                  )),
+                            )),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               );
             } else {

@@ -42,18 +42,26 @@ class _DepositScreenState extends State<DepositScreen>
 
   @override
   Widget build(BuildContext context) {
+    this.args = ModalRoute.of(context).settings.arguments;
+    _controller = TabController(length: 2, vsync: this);
+
     if (!_isInitialized) {
-      _controller = TabController(length: 2, vsync: this);
+      if (args == 1) {
+        _controller.animateTo(0);
+      }
+      if (args == 2) {
+        _controller.animateTo(1);
+      }
       _controller.addListener(() {
         if (_controller.index == 0) {
           bridge = 1;
+          print(bridge);
         } else {
           bridge = 2;
         }
       });
     }
     this.data = context.read<DepositDataCubit>();
-    this.args = ModalRoute.of(context).settings.arguments;
     print(args);
 
     if (args == 3 && bridge == 0) {
@@ -101,6 +109,7 @@ class _DepositScreenState extends State<DepositScreen>
                   )
                 : null),
         body: TabBarView(
+          physics: args == 3 ? ScrollPhysics() : NeverScrollableScrollPhysics(),
           controller: _controller,
           children: [
             BlocBuilder<DepositDataCubit, DepositDataState>(
@@ -114,14 +123,10 @@ class _DepositScreenState extends State<DepositScreen>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      bridge == 1
-                          ? Text(
-                              "POS bridge",
-                              style: AppTheme.title,
-                            )
-                          : bridge == 2
-                              ? Text("Plasma Bridge", style: AppTheme.title)
-                              : SizedBox(),
+                      Text(
+                        "POS bridge",
+                        style: AppTheme.title,
+                      ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -251,14 +256,7 @@ class _DepositScreenState extends State<DepositScreen>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      bridge == 1
-                          ? Text(
-                              "POS bridge",
-                              style: AppTheme.title,
-                            )
-                          : bridge == 2
-                              ? Text("Plasma Bridge", style: AppTheme.title)
-                              : SizedBox(),
+                      Text("Plasma Bridge", style: AppTheme.title),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,

@@ -102,4 +102,23 @@ class MaticTransactions {
       }
     }
   }
+
+  static Future<Transaction> transferERC721(
+      BigInt id, String erc721Address, String recipient) async {
+    String abi = await rootBundle.loadString(erc721Abi);
+    String address = await CredentialManager.getAddress();
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
+        EthereumAddress.fromHex(erc721Address));
+    var func = contract.function('transferFrom');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [
+        EthereumAddress.fromHex(address),
+        EthereumAddress.fromHex(recipient),
+        id
+      ],
+    );
+    return trx;
+  }
 }

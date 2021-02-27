@@ -58,6 +58,7 @@ const String stakeManagerProxy = "stakeManagerProxy";
 const String stakeWithDrawAmountRoute = "stakeWithDrawAmountRoute";
 const String nftDepoitSelectRoute = "nftDepoitSelectRoute";
 const String sendNftRoute = "sendNftRoute";
+const String burnNftRoute = "burnNftRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

@@ -108,8 +108,12 @@ class TokenListTileBridge extends StatelessWidget {
                 WithdrawBurnDataModel model =
                     WithdrawBurnDataModel(token: tokenData);
                 withdrawBurnData.setData(model);
-                Navigator.pushNamed(context, withdrawAmountRoute,
-                    arguments: status);
+                if (tokenData.nftData == null) {
+                  Navigator.pushNamed(context, withdrawAmountRoute,
+                      arguments: status);
+                } else {
+                  Navigator.pushNamed(context, burnNftRoute, arguments: status);
+                }
               }
             },
             child: Padding(

@@ -13,6 +13,7 @@ import 'package:pollywallet/screens/token_list/nft_list_full.dart';
 import 'package:pollywallet/screens/token_profile/nft_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
+import 'package:pollywallet/screens/withdraw/burn_nft.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
@@ -155,7 +156,8 @@ class _PollyWalletState extends State<PollyWallet> {
               nftTokenProfile: (context) => NftProfile(),
               stakeWithDrawAmountRoute: (context) => StakeWithdrawAmount(),
               nftDepoitSelectRoute: (context) => NftSelectDeposit(),
-              sendNftRoute: (context) => SendNft()
+              sendNftRoute: (context) => SendNft(),
+              burnNftRoute: (context) => NftBurn(),
             },
             home: current),
       ),

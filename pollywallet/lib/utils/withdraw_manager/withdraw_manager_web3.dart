@@ -40,6 +40,20 @@ class WithdrawManagerWeb3 {
     return tx;
   }
 
+  static Future<Transaction> burnErc721(String address, String tokenId) async {
+    String abi = await rootBundle.loadString(erc721ChildAbi);
+
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "ChildERC721"),
+        EthereumAddress.fromHex(address));
+    var withdraw = contract.function('withdraw');
+    var tx = Transaction.callContract(
+        contract: contract,
+        function: withdraw,
+        maxGas: 925000,
+        parameters: [BigInt.parse(tokenId)]);
+    return tx;
+  }
+
   static Future<Transaction> exitPos(String burnTxHash) async {
     String abi = await rootBundle.loadString(rootChainProxyAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();

@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
-import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
-import 'package:pollywallet/screens/deposit/nft_tile.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -17,6 +14,7 @@ import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:pollywallet/widgets/nft_tile.dart';
 import 'package:web3dart/web3dart.dart';
 
 class NftSelectDeposit extends StatefulWidget {
@@ -121,7 +119,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                           ? Text("Plasma Bridge", style: AppTheme.title)
                           : SizedBox(),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: ListView.builder(
                       itemCount: state.data.token.nftData.length,
                       itemBuilder: (context, index) {

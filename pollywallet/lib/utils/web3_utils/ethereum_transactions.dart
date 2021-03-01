@@ -349,6 +349,7 @@ class EthereumTransactions {
         }
         return txHash;
       } catch (e) {
+        print(e);
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
         return null;
@@ -538,7 +539,7 @@ class EthereumTransactions {
   }
 
   static Future<Transaction> erc1155Approve(
-      BigInt id, String erc1155Address, String spender) async {
+      String erc1155Address, String spender) async {
     String abi = await rootBundle.loadString(erc1155Abi);
     final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
         EthereumAddress.fromHex(erc1155Address));
@@ -547,6 +548,28 @@ class EthereumTransactions {
       contract: contract,
       function: func,
       parameters: [EthereumAddress.fromHex(spender), true],
+    );
+    return trx;
+  }
+
+  static Future<Transaction> depositErc1155Pos(List<BigInt> tokenIdList,
+      List<BigInt> amountList, String erc1155Address) async {
+    var config = await NetworkManager.getNetworkObject();
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "rootchainProxy"),
+        EthereumAddress.fromHex(config.rootChainProxy));
+    var data = RlpEncode.erc1155Params(tokenIdList, amountList);
+    var address = await CredentialManager.getAddress();
+    var func = contract.function('depositFor');
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [
+        EthereumAddress.fromHex(address),
+        EthereumAddress.fromHex(erc1155Address),
+        data
+      ],
     );
     return trx;
   }

@@ -40,6 +40,9 @@ class _WithdrawTokenListState extends State<WithdrawTokenList> {
           return ListView.builder(
             itemCount: ls.length,
             itemBuilder: (context, index) {
+              if (ls[index].type == "nft" && ls[index].balance == "0") {
+                return Container();
+              }
               return TokenListTileBridge(
                 tokenData: ls[index],
                 action: 1,

@@ -36,7 +36,8 @@ class NetworkManager {
         stakeManagerProxy: config[stakeManagerProxy],
         exitPayloadPlasma: config[exitPayloadPlasma],
         erc20PredicatePlasma: config[erc20PredicatePlasma],
-        erc721PredicatePlasma: config[erc721PredicatePlasma]);
+        erc721PredicatePlasma: config[erc721PredicatePlasma],
+        erc1155PredicatePos: config[erc1155PredicatePos]);
 
     return obj;
   }

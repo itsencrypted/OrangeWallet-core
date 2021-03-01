@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
@@ -12,24 +13,24 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/utils/web3_utils/rlp_encode.dart';
 import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:pollywallet/widgets/nft_tile.dart';
 import 'package:web3dart/web3dart.dart';
 
-class NftSelectDeposit extends StatefulWidget {
+class Erc1155Deposit extends StatefulWidget {
   @override
-  _NftSelectDepositState createState() => _NftSelectDepositState();
+  _Erc1155DepositState createState() => _Erc1155DepositState();
 }
 
-class _NftSelectDepositState extends State<NftSelectDeposit>
+class _Erc1155DepositState extends State<Erc1155Deposit>
     with SingleTickerProviderStateMixin {
   DepositDataCubit data;
   BuildContext context;
   int bridge = 0;
   double balance;
-  int tokenCountToSend = 1;
-  int selectedIndex = 0;
+  List<_Erc1155DepositData> selectedData = [];
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
@@ -123,17 +124,132 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                     child: ListView.builder(
                       itemCount: state.data.token.nftData.length,
                       itemBuilder: (context, index) {
-                        return FlatButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          padding: EdgeInsets.all(0),
-                          child: NftDepositTile(
-                            data: state.data.token.nftData[index],
-                            selected: index == selectedIndex,
-                          ),
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedData
+                                          .where((element) =>
+                                              element.index == index)
+                                          .isNotEmpty
+                                      ? selectedData.removeWhere(
+                                          (element) => element.index == index)
+                                      : selectedData
+                                          .add(_Erc1155DepositData(1, index));
+                                });
+                              },
+                              padding: EdgeInsets.all(0),
+                              child: NftDepositTile(
+                                data: state.data.token.nftData[index],
+                                selected: selectedData
+                                    .where((element) => element.index == index)
+                                    .isNotEmpty,
+                              ),
+                            ),
+                            selectedData
+                                    .where((element) => element.index == index)
+                                    .isNotEmpty
+                                ? Text(
+                                    "Amount to depoist",
+                                    style: AppTheme.subtitle,
+                                  )
+                                : Container(),
+                            selectedData
+                                    .where((element) => element.index == index)
+                                    .isNotEmpty
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 30,
+                                        child: FlatButton(
+                                          padding: EdgeInsets.all(0),
+                                          onPressed: () {
+                                            if (selectedData
+                                                    .where((element) =>
+                                                        element.index == index)
+                                                    .first
+                                                    .count >
+                                                1) {
+                                              setState(() {
+                                                selectedData
+                                                    .where((element) =>
+                                                        element.index == index)
+                                                    .first
+                                                    .count--;
+                                              });
+                                            }
+                                          },
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          child: ClipOval(
+                                              child: Material(
+                                            color: AppTheme.white,
+                                            child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    Center(child: Text("-"))),
+                                          )),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        child: Text(selectedData.isEmpty ||
+                                                selectedData
+                                                    .where((element) =>
+                                                        element.index == index)
+                                                    .isEmpty
+                                            ? "0"
+                                            : selectedData[index]
+                                                .count
+                                                .toString()),
+                                      ),
+                                      SizedBox(
+                                        width: 30,
+                                        child: FlatButton(
+                                          padding: EdgeInsets.all(0),
+                                          onPressed: () {
+                                            if (selectedData
+                                                    .where((element) =>
+                                                        element.index == index)
+                                                    .first
+                                                    .count <
+                                                int.parse(state
+                                                    .data
+                                                    .token
+                                                    .nftData[index]
+                                                    .tokenBalance)) {
+                                              setState(() {
+                                                selectedData
+                                                    .where((element) =>
+                                                        element.index == index)
+                                                    .first
+                                                    .count++;
+                                              });
+                                            }
+                                          },
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          child: ClipOval(
+                                              child: Material(
+                                            color: AppTheme.white,
+                                            child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    Center(child: Text("+"))),
+                                          )),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
+                          ],
                         );
                       },
                     ),
@@ -162,19 +278,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                       SafeArea(
                         child: ListTile(
                           leading: FlatButton(
-                            onPressed: () {
-                              if (state
-                                      .data.token.nftData[index].tokenBalance ==
-                                  null) {
-                                return;
-                              }
-                              setState(() {
-                                tokenCountToSend = int.parse(state
-                                    .data.token.nftData[index].tokenBalance);
-                              });
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
                             child: ClipOval(
                                 child: Material(
                               color: AppTheme.secondaryColor.withOpacity(0.3),
@@ -192,8 +295,8 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                           ),
                           contentPadding: EdgeInsets.all(0),
                           title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 state.data.token.contractName,
@@ -203,13 +306,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              if (state
-                                      .data.token.nftData[index].tokenBalance ==
-                                  null) {
-                                _sendDepositTransactionERC721(state, context);
-                              } else {
-                                _sendDepositTransactionERC1155(state, context);
-                              }
+                              _sendDepositTransactionERC1155(state, context);
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -238,101 +335,13 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
         ));
   }
 
-  _sendDepositTransactionERC721(
-      DepositDataFinal state, BuildContext context) async {
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.pop(context, false);
-      },
-    );
-    Widget continueButton = FlatButton(
-      child: Text("Continue"),
-      onPressed: () {
-        Navigator.pop(context, true);
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      shape: AppTheme.cardShape,
-      content: Text(
-          "You haven't given sufficient approval, would you like to approve now?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
-    GlobalKey<State> _key = new GlobalKey<State>();
-    Dialogs.showLoadingDialog(context, _key);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    Transaction trx;
-    TransactionData transactionData;
-    var spender = "";
-    var approvalStatus = false;
-    if (bridge == 1) {
-      approvalStatus = await EthereumTransactions.erc721ApprovalStatusPos(
-          state.data.token.contractAddress);
-      spender = config.erc721PredicatePos;
-    } else {
-      approvalStatus = await EthereumTransactions.erc721ApprovalStatusPlasma(
-          state.data.token.contractAddress);
-      spender = config.depositManager;
-    }
-
-    if (!approvalStatus) {
-      bool appr = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-      if (appr) {
-        trx = await EthereumTransactions.erc721Approve(
-            BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-            state.data.token.contractAddress,
-            spender);
-        transactionData = TransactionData(
-            to: state.data.token.contractAddress,
-            amount: "0",
-            trx: trx,
-            type: TransactionType.APPROVE);
-      } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        return;
-      }
-    } else {
-      if (bridge == 1) {
-        trx = await EthereumTransactions.erc721DepositPos(
-            BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-            state.data.token.contractAddress);
-
-        transactionData = TransactionData(
-            to: config.rootChainProxy,
-            amount: "0",
-            trx: trx,
-            type: TransactionType.DEPOSITPOS);
-      } else {
-        trx = await EthereumTransactions.erc721DepositPlasma(
-            BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-            state.data.token.contractAddress);
-        transactionData = TransactionData(
-            to: config.depositManager,
-            amount: "0",
-            trx: trx,
-            type: TransactionType.DEPOSITPLASMA);
-      }
-    }
-
-    Navigator.of(context, rootNavigator: true).pop();
-
-    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
-        arguments: transactionData);
-  }
-
   _sendDepositTransactionERC1155(
       DepositDataFinal state, BuildContext context) async {
+    if (selectedData.isEmpty) {
+      Fluttertoast.showToast(
+          msg: "Select at least 1 token", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -362,17 +371,9 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     Transaction trx;
     TransactionData transactionData;
-    var spender = "";
     var approvalStatus = false;
-    if (bridge == 1) {
-      spender = config.erc721PredicatePos;
-      approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
-          state.data.token.contractAddress, spender);
-    } else {
-      spender = config.depositManager;
-      approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
-          state.data.token.contractAddress, spender);
-    }
+    approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
+        state.data.token.contractAddress, config.erc1155PredicatePos);
 
     if (!approvalStatus) {
       bool appr = await showDialog(
@@ -382,10 +383,8 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
         },
       );
       if (appr) {
-        trx = await EthereumTransactions.erc721Approve(
-            BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-            state.data.token.contractAddress,
-            spender);
+        trx = await EthereumTransactions.erc1155Approve(
+            state.data.token.contractAddress, config.erc1155PredicatePos);
         transactionData = TransactionData(
             to: state.data.token.contractAddress,
             amount: "0",
@@ -396,26 +395,21 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
         return;
       }
     } else {
-      // if (bridge == 1) {
-      //   trx = await EthereumTransactions.erc721DepositPos(
-      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-      //       state.data.token.contractAddress);
+      List<BigInt> tokenIdList = [];
+      List<BigInt> amountList = [];
+      selectedData.forEach((element) {
+        tokenIdList
+            .add(BigInt.parse(state.data.token.nftData[element.index].tokenId));
+        amountList.add(BigInt.from(element.count));
+      });
+      trx = await EthereumTransactions.depositErc1155Pos(
+          tokenIdList, amountList, state.data.token.contractAddress);
 
-      //   transactionData = TransactionData(
-      //       to: config.rootChainProxy,
-      //       amount: "0",
-      //       trx: trx,
-      //       type: TransactionType.DEPOSITPOS);
-      // } else {
-      //   trx = await EthereumTransactions.erc721DepositPlasma(
-      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-      //       state.data.token.contractAddress);
-      //   transactionData = TransactionData(
-      //       to: config.depositManager,
-      //       amount: "0",
-      //       trx: trx,
-      //       type: TransactionType.DEPOSITPLASMA);
-      // }
+      transactionData = TransactionData(
+          to: config.rootChainProxy,
+          amount: "0",
+          trx: trx,
+          type: TransactionType.DEPOSITPOS);
     }
 
     Navigator.of(context, rootNavigator: true).pop();
@@ -423,4 +417,11 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: transactionData);
   }
+}
+
+class _Erc1155DepositData {
+  int count;
+  int index;
+
+  _Erc1155DepositData(this.count, this.index);
 }

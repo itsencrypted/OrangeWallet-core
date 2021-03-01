@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/deposit/erc1155_deposit.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
 import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
@@ -158,6 +159,7 @@ class _PollyWalletState extends State<PollyWallet> {
               nftDepoitSelectRoute: (context) => NftSelectDeposit(),
               sendNftRoute: (context) => SendNft(),
               burnNftRoute: (context) => NftBurn(),
+              erc1155DepositRoute: (context) => Erc1155Deposit()
             },
             home: current),
       ),

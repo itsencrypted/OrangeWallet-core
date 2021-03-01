@@ -11,7 +11,8 @@ class CovalentTokensListMaticCubit extends Cubit<CovalentTokensListMaticState> {
     try {
       emit(CovalentTokensListMaticLoading());
       final list = await CovalentApiWrapper.tokensMaticList();
-
+      list.data.items.removeWhere(
+          (element) => element.type == "nft" && element.balance == "0");
       emit(CovalentTokensListMaticLoaded(list));
     } catch (e) {
       print(e.toString());
@@ -22,7 +23,8 @@ class CovalentTokensListMaticCubit extends Cubit<CovalentTokensListMaticState> {
   Future<void> refresh() async {
     try {
       final list = await CovalentApiWrapper.tokensMaticList();
-
+      list.data.items.removeWhere(
+          (element) => element.type == "nft" && element.balance == "0");
       emit(CovalentTokensListMaticLoading());
       emit(CovalentTokensListMaticLoaded(list));
     } on Exception {

@@ -71,6 +71,9 @@ class TokenListTileBridge extends StatelessWidget {
                 if (tokenData.nftData == null) {
                   Navigator.pushNamed(context, depositAmountRoute,
                       arguments: status);
+                } else if (tokenData.nftData.first.tokenBalance != null) {
+                  Navigator.pushNamed(context, erc1155DepositRoute,
+                      arguments: status);
                 } else {
                   Navigator.pushNamed(context, nftDepoitSelectRoute,
                       arguments: status);

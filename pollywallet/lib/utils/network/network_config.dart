@@ -37,6 +37,7 @@ class NetworkConfig {
     stakeManagerProxy: "0x00200eA4Ee292E253E6Ca07dBA5EdC07c8Aa37A3",
     erc20PredicatePlasma: "0x033a0A06dc6e78a518003C81B64f9CA80A55cb06",
     erc721PredicatePlasma: "0xDbBffd69Ef9F34bA8Fb8722157A51a4733992B35",
+    erc1155PredicatePos: "0xB19a86ba1b50f0A395BfdC3557608789ee184dC8"
   };
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
@@ -70,6 +71,7 @@ class NetworkConfig {
     stakeManagerProxy: "0x5e3Ef299fDDf15eAa0432E6e66473ace8c13D908",
     erc20PredicatePlasma: "0x886e02327cAd4E1E29688C7Db0c9d28879ac44Da",
     erc721PredicatePlasma: "0xe4924d8708D6646C0A6B2985DCFe2855211f4ddD",
+    erc1155PredicatePos: "0x0B9020d4E32990D67559b1317c7BF0C15D6EB88f"
   };
 }
 
@@ -99,6 +101,7 @@ class NetworkConfigObject {
   final String stakeManagerProxy;
   final String erc20PredicatePlasma;
   final String erc721PredicatePlasma;
+  final String erc1155PredicatePos;
   NetworkConfigObject(
       {this.endpoint,
       this.etherscanEndpoint,
@@ -124,5 +127,6 @@ class NetworkConfigObject {
       this.stakeManagerProxy,
       this.exitPayloadPlasma,
       this.erc20PredicatePlasma,
-      this.erc721PredicatePlasma});
+      this.erc721PredicatePlasma,
+      this.erc1155PredicatePos});
 }

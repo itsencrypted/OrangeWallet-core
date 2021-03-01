@@ -121,4 +121,29 @@ class MaticTransactions {
     );
     return trx;
   }
+
+  static Future<BigInt> balanceOfERC1155(
+      BigInt id, String erc1155Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.endpoint, http.Client());
+    var address = await CredentialManager.getAddress();
+    String abi = await rootBundle.loadString(erc1155Abi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
+        EthereumAddress.fromHex(erc1155Address));
+    var func = contract.function('balanceOf');
+
+    try {
+      var status = await client.call(
+        contract: contract,
+        function: func,
+        params: [EthereumAddress.fromHex(address), id],
+      );
+      print(status);
+
+      return status[0];
+    } catch (e) {
+      print(e);
+      return BigInt.zero;
+    }
+  }
 }

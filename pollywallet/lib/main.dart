@@ -14,6 +14,7 @@ import 'package:pollywallet/screens/token_list/nft_list_full.dart';
 import 'package:pollywallet/screens/token_profile/nft_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
+import 'package:pollywallet/screens/withdraw/burn_erc1155.dart';
 import 'package:pollywallet/screens/withdraw/burn_nft.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
@@ -159,7 +160,8 @@ class _PollyWalletState extends State<PollyWallet> {
               nftDepoitSelectRoute: (context) => NftSelectDeposit(),
               sendNftRoute: (context) => SendNft(),
               burnNftRoute: (context) => NftBurn(),
-              erc1155DepositRoute: (context) => Erc1155Deposit()
+              erc1155DepositRoute: (context) => Erc1155Deposit(),
+              erc1155BurnRoute: (context) => Erc1155Burn()
             },
             home: current),
       ),

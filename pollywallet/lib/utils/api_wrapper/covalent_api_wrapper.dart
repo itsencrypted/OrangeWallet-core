@@ -22,6 +22,8 @@ class CovalentApiWrapper {
     String url;
     CovalentTokenList ctl;
     Future future;
+    Future erc1155Balance;
+    var data2;
     var data;
     if (id == 0) {
       url = baseUrl +
@@ -30,7 +32,10 @@ class CovalentApiWrapper {
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
+      erc1155Balance = MaticTransactions.balanceOfERC1155(
+          BigInt.from(123), "0xA07e45A987F19E25176c877d98388878622623FA");
       BigInt native = await future;
+      BigInt erc1155 = await erc1155Balance;
       data = Items(
           balance: native.toString(),
           contractAddress: maticAddress,
@@ -40,6 +45,27 @@ class CovalentApiWrapper {
           logoUrl: tokenIconUrl,
           quote: 0,
           quoteRate: 12);
+      if (erc1155 != BigInt.zero && erc1155Balance != null) {
+        data2 = new Items(
+            contractTickerSymbol: "erc1155Test",
+            balance: erc1155.toString(),
+            quote: 0,
+            contractName: "erc1155Test",
+            quoteRate: 0,
+            contractAddress: "0xA07e45A987F19E25176c877d98388878622623FA",
+            logoUrl: tokenIconUrl,
+            nftData: [
+              NftData(
+                  tokenId: 123.toString(),
+                  tokenBalance: erc1155.toString(),
+                  externalData: ExternalData(
+                      name: "ERC1155 Test",
+                      description: "ERC1155 test token for matic.",
+                      image:
+                          "https://media.giphy.com/media/3orieKKmYyvUdR3RkY/giphy.gif"))
+            ],
+            contractDecimals: 0);
+      }
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
@@ -56,6 +82,7 @@ class CovalentApiWrapper {
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
     if (data != null) ctl.data.items.add(data);
+    if (data2 != null) ctl.data.items.add(data2);
     return ctl;
   }
 

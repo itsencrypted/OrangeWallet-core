@@ -113,4 +113,19 @@ class WithdrawManagerWeb3 {
         parameters: [EthereumAddress.fromHex(token)]);
     return tx;
   }
+
+  static Future<Transaction> burnERC1155(
+      String address, List<BigInt> tokenIds, List<BigInt> amounts) async {
+    String abi = await rootBundle.loadString(erc1155ChildAbi);
+
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "childERC1155"),
+        EthereumAddress.fromHex(address));
+    var withdraw = contract.function('withdrawBatch');
+    var tx = Transaction.callContract(
+        contract: contract,
+        function: withdraw,
+        maxGas: 925000,
+        parameters: [tokenIds, amounts]);
+    return tx;
+  }
 }

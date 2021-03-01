@@ -6,50 +6,34 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
-import 'package:pollywallet/utils/web3_utils/rlp_encode.dart';
-import 'package:pollywallet/widgets/colored_tabbar.dart';
+import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:pollywallet/widgets/nft_tile.dart';
 import 'package:web3dart/web3dart.dart';
 
-class Erc1155Deposit extends StatefulWidget {
+class Erc1155Burn extends StatefulWidget {
   @override
-  _Erc1155DepositState createState() => _Erc1155DepositState();
+  _Erc1155BurnState createState() => _Erc1155BurnState();
 }
 
-class _Erc1155DepositState extends State<Erc1155Deposit>
-    with SingleTickerProviderStateMixin {
+class _Erc1155BurnState extends State<Erc1155Burn> {
   DepositDataCubit data;
   BuildContext context;
   int bridge = 0;
   double balance;
-  List<_Erc1155DepositData> selectedData = [];
+  List<_Erc1155BrunData> selectedData = [];
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
-  TabController _controller;
   @override
-  initState() {
-    Future.delayed(Duration.zero, () {
-      _controller = TabController(length: 2, vsync: this);
-      _controller.addListener(() {
-        if (_controller.index == 0) {
-          bridge = 1;
-        } else {
-          bridge = 2;
-        }
-      });
-    });
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     this.data = context.read<DepositDataCubit>();
@@ -64,45 +48,11 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
 
     return Scaffold(
         appBar: AppBar(
-            title: Text("Deposit to Matic"),
-            bottom: args == 3
-                ? ColoredTabBar(
-                    tabBar: TabBar(
-                      controller: _controller,
-                      labelStyle: AppTheme.tabbarTextStyle,
-                      unselectedLabelStyle: AppTheme.tabbarTextStyle,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppTheme.white),
-                      tabs: [
-                        Tab(
-                          child: Align(
-                            child: Text(
-                              'POS',
-                              style: AppTheme.tabbarTextStyle,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Align(
-                            child: Text(
-                              'Plasma',
-                              style: AppTheme.tabbarTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    borderRadius: AppTheme.cardRadius,
-                    color: AppTheme.tabbarBGColor,
-                    tabbarMargin: AppTheme.cardRadius,
-                    tabbarPadding: AppTheme.paddingHeight / 4,
-                  )
-                : null),
-        body: BlocBuilder<DepositDataCubit, DepositDataState>(
+          title: Text("Withdraw from Matic"),
+        ),
+        body: BlocBuilder<WithdrawBurnDataCubit, WithdrawBurnDataState>(
           builder: (BuildContext context, state) {
-            if (state is DepositDataFinal) {
+            if (state is WithdrawBurnDataFinal) {
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);
@@ -138,7 +88,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                                       ? selectedData.removeWhere(
                                           (element) => element.index == index)
                                       : selectedData
-                                          .add(_Erc1155DepositData(1, index));
+                                          .add(_Erc1155BrunData(1, index));
                                 });
                               },
                               padding: EdgeInsets.all(0),
@@ -296,10 +246,11 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                           contentPadding: EdgeInsets.all(0),
                           title: Text(
                             state.data.token.contractName,
+                            textAlign: TextAlign.center,
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              _sendDepositTransactionERC1155(state, context);
+                              _burnErc1155(state, context);
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -328,93 +279,43 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
         ));
   }
 
-  _sendDepositTransactionERC1155(
-      DepositDataFinal state, BuildContext context) async {
+  _burnErc1155(WithdrawBurnDataFinal state, BuildContext context) async {
     if (selectedData.isEmpty) {
       Fluttertoast.showToast(
           msg: "Select at least 1 token", toastLength: Toast.LENGTH_LONG);
       return;
     }
-    Widget cancelButton = FlatButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.pop(context, false);
-      },
-    );
-    Widget continueButton = FlatButton(
-      child: Text("Continue"),
-      onPressed: () {
-        Navigator.pop(context, true);
-      },
-    );
+    List<BigInt> tokenIdList = [];
+    List<BigInt> amountList = [];
+    var sum = 0;
+    selectedData.forEach((element) {
+      sum += element.count;
+      tokenIdList
+          .add(BigInt.parse(state.data.token.nftData[element.index].tokenId));
+      amountList.add(BigInt.from(element.count));
+    });
+    var trx = await WithdrawManagerWeb3.burnERC1155(
+        state.data.token.contractAddress, tokenIdList, amountList);
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
-      shape: AppTheme.cardShape,
-      content: Text(
-          "You haven't given sufficient approval, would you like to approve now?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-    );
+    var transactionData = TransactionData(
+        to: state.data.token.contractAddress,
+        amount: sum.toString(),
+        trx: trx,
+        type: TransactionType.WITHDRAW);
+
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    Transaction trx;
-    TransactionData transactionData;
-    var approvalStatus = false;
-    approvalStatus = await EthereumTransactions.erc1155ApprovalStatus(
-        state.data.token.contractAddress, config.erc1155PredicatePos);
-
-    if (!approvalStatus) {
-      bool appr = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alert;
-        },
-      );
-      if (appr) {
-        trx = await EthereumTransactions.erc1155Approve(
-            state.data.token.contractAddress, config.erc1155PredicatePos);
-        transactionData = TransactionData(
-            to: state.data.token.contractAddress,
-            amount: "0",
-            trx: trx,
-            type: TransactionType.APPROVE);
-      } else {
-        Navigator.of(context, rootNavigator: true).pop();
-        return;
-      }
-    } else {
-      List<BigInt> tokenIdList = [];
-      List<BigInt> amountList = [];
-      selectedData.forEach((element) {
-        tokenIdList
-            .add(BigInt.parse(state.data.token.nftData[element.index].tokenId));
-        amountList.add(BigInt.from(element.count));
-      });
-      trx = await EthereumTransactions.depositErc1155Pos(
-          tokenIdList, amountList, state.data.token.contractAddress);
-
-      transactionData = TransactionData(
-          to: config.rootChainProxy,
-          amount: "0",
-          trx: trx,
-          type: TransactionType.DEPOSITPOS);
-    }
 
     Navigator.of(context, rootNavigator: true).pop();
 
-    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+    Navigator.pushNamed(context, confirmMaticTransactionRoute,
         arguments: transactionData);
   }
 }
 
-class _Erc1155DepositData {
+class _Erc1155BrunData {
   int count;
   int index;
 
-  _Erc1155DepositData(this.count, this.index);
+  _Erc1155BrunData(this.count, this.index);
 }

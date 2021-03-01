@@ -7,6 +7,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import 'eth_conversions.dart';
@@ -145,5 +146,27 @@ class MaticTransactions {
       print(e);
       return BigInt.zero;
     }
+  }
+
+  static Future<Transaction> transferErc1155(
+      BigInt id, BigInt amount, String erc1155Address, String recipient) async {
+    String abi = await rootBundle.loadString(erc1155Abi);
+    String address = await CredentialManager.getAddress();
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "erc1155"),
+        EthereumAddress.fromHex(erc1155Address));
+    var func = contract.function('safeTransferFrom');
+    var data = hexToBytes("0x00");
+    var trx = Transaction.callContract(
+      contract: contract,
+      function: func,
+      parameters: [
+        EthereumAddress.fromHex(address),
+        EthereumAddress.fromHex(recipient),
+        id,
+        amount,
+        data
+      ],
+    );
+    return trx;
   }
 }

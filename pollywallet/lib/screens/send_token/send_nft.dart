@@ -251,8 +251,17 @@ class _SendNftState extends State<SendNft> {
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              _sendERC721(BigInt.parse(args),
-                                  state.data.token.contractAddress, context);
+                              if (state.data.token.nftData.first.tokenBalance ==
+                                  null) {
+                                _sendERC721(BigInt.parse(args),
+                                    state.data.token.contractAddress, context);
+                              } else {
+                                _sendErc1155(
+                                    BigInt.parse(args),
+                                    BigInt.from(tokenCountToSend),
+                                    state.data.token.contractAddress,
+                                    context);
+                              }
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -295,6 +304,30 @@ class _SendNftState extends State<SendNft> {
         await MaticTransactions.transferERC721(id, tokenAddress, _address.text);
     TransactionData transactionData = TransactionData(
         trx: trx, amount: "1", type: TransactionType.SEND, to: _address.text);
+
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, confirmMaticTransactionRoute,
+        arguments: transactionData);
+  }
+
+  _sendErc1155(BigInt id, BigInt amount, String tokenAddress,
+      BuildContext context) async {
+    if (validateAddress(_address.text) != null) {
+      Fluttertoast.showToast(
+        msg: "Invalid inputs",
+      );
+      return;
+    }
+    GlobalKey<State> _key = new GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    Transaction trx = await MaticTransactions.transferErc1155(
+        id, amount, tokenAddress, _address.text);
+    TransactionData transactionData = TransactionData(
+        trx: trx,
+        amount: amount.toString(),
+        type: TransactionType.SEND,
+        to: _address.text);
 
     Navigator.of(context, rootNavigator: true).pop();
 

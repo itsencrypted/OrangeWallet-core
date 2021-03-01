@@ -114,8 +114,11 @@ class TokenListTileBridge extends StatelessWidget {
                 if (tokenData.nftData == null) {
                   Navigator.pushNamed(context, withdrawAmountRoute,
                       arguments: status);
-                } else {
+                } else if (tokenData.nftData.first.tokenBalance == null) {
                   Navigator.pushNamed(context, burnNftRoute, arguments: status);
+                } else {
+                  Navigator.pushNamed(context, erc1155BurnRoute,
+                      arguments: status);
                 }
               }
             },

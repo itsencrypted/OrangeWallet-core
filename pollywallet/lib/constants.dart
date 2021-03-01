@@ -20,6 +20,7 @@ const stakingContractAbi = "assets/abi/staking_contract.json";
 const erc1155Abi = "assets/abi/erc1155.json";
 const mrc20Abi = "assets/abi/mrc20.json";
 const erc721ChildAbi = "assets/abi/childERC721.json";
+const erc1155ChildAbi = "assets/abi/childERC1155.json";
 
 // urls
 const tokenIconUrl =
@@ -60,6 +61,7 @@ const String nftDepoitSelectRoute = "nftDepoitSelectRoute";
 const String sendNftRoute = "sendNftRoute";
 const String burnNftRoute = "burnNftRoute";
 const String erc1155DepositRoute = "erc1155DepositRoute";
+const String erc1155BurnRoute = "erc1155BurnRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

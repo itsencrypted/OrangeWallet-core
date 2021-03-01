@@ -278,6 +278,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                       SafeArea(
                         child: ListTile(
                           leading: FlatButton(
+                            onPressed: () {},
                             child: ClipOval(
                                 child: Material(
                               color: AppTheme.secondaryColor.withOpacity(0.3),

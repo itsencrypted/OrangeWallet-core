@@ -22,7 +22,7 @@ class CovalentTokensListEthCubit extends Cubit<CovalentTokensListEthState> {
   Future<void> refresh() async {
     try {
       final list = await CovalentApiWrapper.tokenEthList();
-      emit(CovalentTokensListEthLoading());
+      //emit(CovalentTokensListEthLoading());
 
       emit(CovalentTokensListEthLoaded(list));
     } on Exception {

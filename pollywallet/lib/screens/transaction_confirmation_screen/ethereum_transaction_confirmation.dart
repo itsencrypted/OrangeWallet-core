@@ -270,7 +270,7 @@ class _EthTransactionConfirmationState
     if (hash == null || hash == "failed") {
       return;
     }
-
+    Navigator.pop(context);
     Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
         arguments: hash);
   }

@@ -114,7 +114,8 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
     if (hash == null || hash == "failed") {
       return;
     }
-    Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
+    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, transactionStatusMaticRoute,
         arguments: hash);
   }
 }

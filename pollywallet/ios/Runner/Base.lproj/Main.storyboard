@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -25,94 +25,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-16" y="-21"/>
-        </scene>
-        <!--WalletConnectViewController-->
-        <scene sceneID="kzn-Lz-PQ8">
-            <objects>
-                <viewController storyboardIdentifier="walletconnect" title="WalletConnectViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="b8q-pU-z6m" customClass="WalletConnectViewController" customModule="Runner" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="yoe-yQ-PvW"/>
-                        <viewControllerLayoutGuide type="bottom" id="PBe-YH-CR1"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="mKa-7j-0AU">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ygn-LI-UIG">
-                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <color key="barTintColor" red="0.9529411793" green="0.94901961089999998" blue="0.93725490570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <items>
-                                    <navigationItem title="aifiasfiashfiashfaishfiashf" id="lJa-Q5-dAC"/>
-                                </items>
-                            </navigationBar>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcE-h0-z16">
-                                <rect key="frame" x="20" y="99" width="310" height="25.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dapp :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DbR-nu-oD6">
-                                <rect key="frame" x="20" y="166.5" width="119" height="25.5"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="119" id="63r-HH-tan"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="www.uniswap.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bA5-kY-EYU">
-                                <rect key="frame" x="43" y="187" width="336" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="5bj-Mx-96B"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q63-C2-xdQ">
-                                <rect key="frame" x="20" y="232" width="119" height="54"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="54" id="uS4-Yq-fSO"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWF-Ex-VQq">
-                                <rect key="frame" x="43" y="281" width="336" height="37"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="RM1-QA-vnX"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.9529411793" green="0.94901961089999998" blue="0.93725490570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <constraints>
-                            <constraint firstItem="bA5-kY-EYU" firstAttribute="trailing" secondItem="TWF-Ex-VQq" secondAttribute="trailing" id="2Rg-LZ-WTd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="bA5-kY-EYU" secondAttribute="trailing" constant="15" id="3CT-Y0-P6S"/>
-                            <constraint firstItem="fcE-h0-z16" firstAttribute="leading" secondItem="mKa-7j-0AU" secondAttribute="leadingMargin" id="3Ks-Mz-RFk"/>
-                            <constraint firstItem="DbR-nu-oD6" firstAttribute="leading" secondItem="Q63-C2-xdQ" secondAttribute="leading" id="6aj-FD-buW"/>
-                            <constraint firstItem="Q63-C2-xdQ" firstAttribute="top" secondItem="DbR-nu-oD6" secondAttribute="bottom" constant="40" id="BZU-lr-eYm"/>
-                            <constraint firstItem="fcE-h0-z16" firstAttribute="top" secondItem="Ygn-LI-UIG" secondAttribute="bottom" constant="11" id="Eis-kw-SWD"/>
-                            <constraint firstItem="Ygn-LI-UIG" firstAttribute="leading" secondItem="mKa-7j-0AU" secondAttribute="leadingMargin" constant="-20" id="H3x-Ug-gNK"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="fcE-h0-z16" secondAttribute="trailing" constant="64" id="NMu-qK-tvf"/>
-                            <constraint firstItem="DbR-nu-oD6" firstAttribute="trailing" secondItem="Q63-C2-xdQ" secondAttribute="trailing" id="T2D-Ql-QRK"/>
-                            <constraint firstItem="DbR-nu-oD6" firstAttribute="top" secondItem="fcE-h0-z16" secondAttribute="bottom" constant="42" id="USv-NP-Zk7"/>
-                            <constraint firstItem="bA5-kY-EYU" firstAttribute="leading" secondItem="TWF-Ex-VQq" secondAttribute="leading" id="dhU-cM-bUf"/>
-                            <constraint firstItem="bA5-kY-EYU" firstAttribute="leading" secondItem="mKa-7j-0AU" secondAttribute="leadingMargin" constant="23" id="kAb-Pa-vZp"/>
-                            <constraint firstItem="Ygn-LI-UIG" firstAttribute="top" secondItem="mKa-7j-0AU" secondAttribute="topMargin" id="kbX-Ld-3qt"/>
-                            <constraint firstItem="TWF-Ex-VQq" firstAttribute="top" secondItem="bA5-kY-EYU" secondAttribute="bottom" constant="57" id="not-v2-edv"/>
-                            <constraint firstItem="fcE-h0-z16" firstAttribute="leading" secondItem="DbR-nu-oD6" secondAttribute="leading" id="rL9-ob-ssr"/>
-                            <constraint firstItem="Ygn-LI-UIG" firstAttribute="centerX" secondItem="mKa-7j-0AU" secondAttribute="centerX" id="vZM-Pt-2c8"/>
-                            <constraint firstItem="Q63-C2-xdQ" firstAttribute="top" secondItem="bA5-kY-EYU" secondAttribute="bottom" constant="8" id="wN2-Ko-Xbg"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="war-cc-UWp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="931.88405797101461" y="-21.428571428571427"/>
         </scene>
     </scenes>
 </document>

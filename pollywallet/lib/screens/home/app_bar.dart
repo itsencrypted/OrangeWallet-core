@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
+import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
@@ -108,7 +109,11 @@ class _HomeAppBar extends State<HomeAppBar> {
           child: Image.asset("assets/icons/qr_icon.png",
               color: AppTheme.darkerText),
           onPressed: () {
-            WalletConnectLauncher.launchWalletConnect(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => WalletConnectIos()),
+            );
+            // WalletConnectLauncher.launchWalletConnect(context);
           },
         ),
         TextButton(

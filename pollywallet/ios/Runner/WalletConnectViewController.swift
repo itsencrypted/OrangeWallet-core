@@ -8,19 +8,33 @@
 import UIKit
 
 class WalletConnectViewController: UIViewController {
-   // @IBOutlet weak var addressLabel: UILabel!
-//    var address:String = ""
-//    var uri:String = ""
-//    var chainId:String = ""
-//    var privateKey:String = ""
+    @IBOutlet var addressLabel: UILabel!
+    var address:String = ""
+    var uri:String = ""
+    var chainId:String = ""
+    var privateKey:String = ""
 
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //addressLabel.text = address
-        // Do any additional setup after loading the view.
+        addressLabel.text = address
+        NSLog("Start remove sibview")
+            if let viewWithTag = self.view.viewWithTag(100) {
+                viewWithTag.removeFromSuperview()
+            }else{
+                NSLog("No!")
+            }
+            // Do any additional setup after loading the view.
     }
+    @IBAction func disconnectAction(_ sender: UIButton) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let homeC = storyBoard.instantiateViewController(withIdentifier: "main") as? FlutterViewController
   
+        self.navigationController?.pushViewController(homeC!, animated: true)
+        NSLog("asdads")
+        
+    }
 
     /*
     // MARK: - Navigation

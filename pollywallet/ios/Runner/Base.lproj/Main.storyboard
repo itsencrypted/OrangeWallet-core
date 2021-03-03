@@ -29,7 +29,6 @@
         <!--WalletConnectViewController-->
         <scene sceneID="kzn-Lz-PQ8">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="war-cc-UWp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="walletconnect" title="WalletConnectViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="b8q-pU-z6m" customClass="WalletConnectViewController" customModule="Runner" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yoe-yQ-PvW"/>
@@ -97,7 +96,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="center" highlighted="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mk1-zQ-o8j">
+                            <button opaque="NO" contentMode="center" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mk1-zQ-o8j">
                                 <rect key="frame" x="20" y="407" width="374" height="57"/>
                                 <color key="backgroundColor" red="0.47843140360000003" green="0.2941176593" blue="0.86666667460000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <accessibility key="accessibilityConfiguration" identifier="disconnectButton"/>
@@ -156,6 +155,7 @@
                         <outlet property="disconnectButton" destination="Mk1-zQ-o8j" id="sXB-dh-hzE"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="war-cc-UWp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="931.88405797101461" y="-21.428571428571427"/>
         </scene>

@@ -8,16 +8,16 @@
 import UIKit
 
 class WalletConnectViewController: UIViewController {
-    @IBOutlet weak var addressLabel: UILabel!
-    var address:String = ""
-    var uri:String = ""
-    var chainId:String = ""
-    var privateKey:String = ""
+   // @IBOutlet weak var addressLabel: UILabel!
+//    var address:String = ""
+//    var uri:String = ""
+//    var chainId:String = ""
+//    var privateKey:String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addressLabel.text = address
+        //addressLabel.text = address
         // Do any additional setup after loading the view.
     }
   

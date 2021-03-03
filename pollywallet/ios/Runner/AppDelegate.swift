@@ -21,24 +21,27 @@ import Flutter
            result(FlutterMethodNotImplemented)
            return
          }
+        NSLog("dasdadasd")
         self.launchWalletConnect(result: result, address: arguments[0] as String, privateKey:  arguments[1] as String, uri: arguments[2] as String)
         })
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     private func launchWalletConnect(result: FlutterResult, address: String, privateKey: String, uri: String) {
-        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
 
-        let homeC = storyboard.instantiateViewController(withIdentifier: "walletconnect") as? WalletConnectViewController
-        homeC?.address = address
-        homeC?.privateKey = privateKey
-        homeC?.uri = uri
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let homeC = storyBoard.instantiateViewController(withIdentifier: "walletconnect") as? WalletConnectViewController
+//        homeC?.address = address
+//        homeC?.privateKey = privateKey
+//        homeC?.uri = uri
+    
             if homeC != nil {
                 homeC!.view.frame = (self.window!.frame)
                 self.window!.addSubview(homeC!.view)
                 self.window!.bringSubviewToFront( homeC!.view)
             }
-  
-    }
+
     
+    
+    }
 }

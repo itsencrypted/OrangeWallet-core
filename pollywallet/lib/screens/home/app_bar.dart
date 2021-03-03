@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/walletconnect/walletconnect_launcher.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -105,8 +105,13 @@ class _HomeAppBar extends State<HomeAppBar> {
       ),
       actions: [
         TextButton(
-          // child: Image.asset("assets/icons/qr_icon.png",
-          //     color: AppTheme.darkerText),
+          child: Image.asset("assets/icons/qr_icon.png",
+              color: AppTheme.darkerText),
+          onPressed: () {
+            WalletConnectLauncher.launchWalletConnect(context);
+          },
+        ),
+        TextButton(
           child: Icon(
             Icons.power_settings_new_outlined,
             color: AppTheme.darkerText,

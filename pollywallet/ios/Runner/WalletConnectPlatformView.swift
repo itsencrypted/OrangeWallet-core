@@ -110,7 +110,10 @@ class FLNativeView: NSObject, FlutterPlatformView {
     private func configureServer() {
        
         server = Server(delegate: self)
-        guard let url = WCURL(_args[2]) else { return }
+        guard let url = WCURL(_args[2]) else {
+            self.statusLabel.text = "Invalid Url"
+            self.dappLabel.text = "Dapp Not found"
+            return }
         server.register(handler: PersonalSignHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))
         server.register(handler: SignTransactionHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))
         server.register(handler: SendTransactionHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))

@@ -151,14 +151,14 @@ extension FLNativeView: ServerDelegate {
                                             url: URL(string: "matic.network")!)
         let walletInfo = Session.WalletInfo(approved: true,
                                             accounts: [privateKey.address.hex(eip55: true)],
-                                            chainId: 4,
+                                            chainId: Int(self._args[3]) ?? 80001,
                                             peerId: UUID().uuidString,
                                             peerMeta: walletMeta)
         onMainThread {
             UIAlertController.showShouldStart(clientName: session.dAppInfo.peerMeta.name, onStart: {
                 completion(walletInfo)
             }, onClose: {
-                completion(Session.WalletInfo(approved: false, accounts: [], chainId: 4, peerId: "", peerMeta: walletMeta))
+                completion(Session.WalletInfo(approved: false, accounts: [], chainId: Int(self._args[3]) ?? 80001, peerId: "", peerMeta: walletMeta))
                
             })
         }
@@ -183,36 +183,6 @@ extension FLNativeView: ServerDelegate {
 }
 
 
-extension UIAlertController {
-    func withCloseButton(title: String = "Close", onClose: (() -> Void)? = nil ) -> UIAlertController {
-        addAction(UIAlertAction(title: title, style: .cancel) { _ in onClose?() } )
-        return self
-    }
-
-    static func showShouldStart( clientName: String, onStart: @escaping () -> Void, onClose: @escaping (() -> Void)) {
-        let alert = UIAlertController(title: "Request to start a session", message: clientName, preferredStyle: .alert)
-        let startAction = UIAlertAction(title: "Start", style: .default) { _ in onStart() }
-        alert.addAction(startAction)
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(onClose: onClose), animated: true)
-    }
-
-    static func showFailedToConnect() {
-        let alert = UIAlertController(title: "Failed to connect", message: nil, preferredStyle: .alert)
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(), animated: true)
-    }
-
-    static func showDisconnected() {
-        let alert = UIAlertController(title: "Did disconnect", message: nil, preferredStyle: .alert)
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(), animated: true)
-    }
-
-    static func showShouldSign(title: String, message: String, onSign: @escaping () -> Void, onCancel: @escaping () -> Void) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let startAction = UIAlertAction(title: "Sign", style: .default) { _ in onSign() }
-        alert.addAction(startAction)
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(title: "Reject", onClose: onCancel), animated: true)
-    }
-}
 
 extension EthereumTransaction {
     var description: String {

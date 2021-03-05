@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -136,8 +138,14 @@ class _HomeAppBar extends State<HomeAppBar> {
               if (privateKey == null) {
                 return;
               }
-              Navigator.pushNamed(context, walletConnectRoute,
-                  arguments: [privateKey, qrResult.rawContent]);
+              if (Platform.isAndroid) {
+                Fluttertoast.showToast(msg: "Platfrom unsupported for now");
+              } else if (Platform.isIOS) {
+                Navigator.pushNamed(context, walletConnectRoute,
+                    arguments: [privateKey, qrResult.rawContent]);
+              } else {
+                Fluttertoast.showToast(msg: "Unsupported Platform");
+              }
             }
           },
         ),

@@ -33,6 +33,7 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
           return FlutterStandardMessageCodec.sharedInstance()
     }
+   
 }
 
 class FLNativeView: NSObject, FlutterPlatformView {
@@ -64,7 +65,16 @@ class FLNativeView: NSObject, FlutterPlatformView {
         configureServer()
        
     }
-
+    deinit {
+        do{
+        try self.server.disconnect(from: self.session)
+            statusLabel.text = "Disconnected"
+            disconnectButton.setTitle("Connect", for: UIControl.State.normal)
+        }
+        catch {
+            NSLog("Failed")
+        }
+    }
     func view() -> UIView {
         return _view
     }

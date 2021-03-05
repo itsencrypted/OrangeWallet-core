@@ -58,12 +58,27 @@ extension FLNativeView {
         statusTag.sizeToFit()
         _verticalStack.addArrangedSubview(statusTag)
         // Status label
-        statusLabel.text = "Connected";
         statusLabel.textColor = UIColor.black
         statusLabel.textAlignment = .center
         statusLabel.frame = CGRect(x: 60, y: 0, width: 48 , height: 48.0)
         statusLabel.sizeToFit()
         _verticalStack.addArrangedSubview(statusLabel)
+        
+        //Network Name
+        let networkTag = UILabel()
+        networkTag.text = "Network :"
+        networkTag.font = UIFont.boldSystemFont(ofSize: 16.0)
+        networkTag.textColor = UIColor.black
+        networkTag.textAlignment = .center
+        networkTag.frame = CGRect(x: 20, y: 0, width: 48 , height: 48.0)
+        networkTag.sizeToFit()
+        _verticalStack.addArrangedSubview(networkTag)
+        // Status label
+        networkLabel.textColor = UIColor.black
+        networkLabel.textAlignment = .center
+        networkLabel.frame = CGRect(x: 60, y: 0, width: 48 , height: 48.0)
+        networkLabel.sizeToFit()
+        _verticalStack.addArrangedSubview(networkLabel)
         
         //Disconnect button
         disconnectButton.backgroundColor = UIColor(red: 130/255, green: 72/255, blue: 229/255, alpha: 1)
@@ -93,14 +108,20 @@ extension FLNativeView {
     }
     @objc func buttonClicked(){
         if(statusLabel.text == "Connected"){
-            do{
-            try self.server.disconnect(from: self.session)
+            if(self.session != nil){
+                do{
+                try self.server.disconnect(from: self.session)
+                    statusLabel.text = "Disconnected"
+                    disconnectButton.setTitle("Connect", for: UIControl.State.normal)
+                }
+                catch {
+                    NSLog("Failed")
+                }
+            }else {
                 statusLabel.text = "Disconnected"
                 disconnectButton.setTitle("Connect", for: UIControl.State.normal)
             }
-            catch {
-                NSLog("Failed")
-            }
+            
         }else {
             do{
                 guard let url = WCURL(_args[2]) else { return }

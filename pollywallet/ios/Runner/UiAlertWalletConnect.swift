@@ -32,6 +32,10 @@ extension UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let startAction = UIAlertAction(title: "Sign", style: .default) { _ in onSign() }
         alert.addAction(startAction)
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(title: "Reject", onClose: onCancel), animated: true)
+        UIApplication.shared.keyWindow?.rootViewController?.present(alert.withCloseButton(
+                                                                        title: "Reject", onClose: onCancel
+        ), animated: true
+                                                                    
+        )
     }
 }

@@ -44,6 +44,8 @@ class FLNativeView: NSObject, FlutterPlatformView {
     var dapp: String = ""
     let dappLabel = UILabel()
     let statusLabel = UILabel()
+    let networkLabel = UILabel()
+    var chainId:Int
     let disconnectButton:UIButton = UIButton(frame: CGRect(x: 0 , y:0, width: 200, height: 50))
 
     let privateKey: EthereumPrivateKey
@@ -56,24 +58,42 @@ class FLNativeView: NSObject, FlutterPlatformView {
         arguments args: Any?,
         binaryMessenger messenger: FlutterBinaryMessenger?
     ) {
+        statusLabel.text = "Not Connected, please wait.."
         _view = UIView()
         privateKey = try! EthereumPrivateKey(
             privateKey: .init(hex: (args as! Array<String>)[1]))
        _args = args as! Array<String>
+        if let int = NumberFormatter().number(from: _args[3]) {
+            chainId  = int.intValue
+            NSLog("ChainId---->" + chainId.description)
+          } else {
+            
+            chainId = 80001
+          }
+        NSLog("ChainId" + _args[3])
+        if(chainId == 80001){
+            networkLabel.text = "Matic Testnet"
+        }else if(chainId == 137){
+            networkLabel.text = "Matic Mainnet"
+        }
+        
         super.init()
         createNativeView(view: _view)
         configureServer()
        
     }
     deinit {
-        do{
-        try self.server.disconnect(from: self.session)
-            statusLabel.text = "Disconnected"
-            disconnectButton.setTitle("Connect", for: UIControl.State.normal)
+        if(self.session != nil ){
+            do{
+            try self.server.disconnect(from: self.session)
+                statusLabel.text = "Disconnected"
+                disconnectButton.setTitle("Connect", for: UIControl.State.normal)
+            }
+            catch {
+                NSLog("Failed")
+            }
         }
-        catch {
-            NSLog("Failed")
-        }
+       
     }
     func view() -> UIView {
         return _view
@@ -91,8 +111,9 @@ class FLNativeView: NSObject, FlutterPlatformView {
        
         server = Server(delegate: self)
         guard let url = WCURL(_args[2]) else { return }
-        server.register(handler: PersonalSignHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: Int(_args[3]) ?? 80001))
-            server.register(handler: SignTransactionHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: Int(_args[3]) ?? 80001))
+        server.register(handler: PersonalSignHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))
+        server.register(handler: SignTransactionHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))
+        server.register(handler: SendTransactionHandler(server: server, privateKey: privateKey, uri: _args[2], chainId: self.chainId))
 
         do {
             try self.server.connect(to: url)

@@ -6,7 +6,7 @@
 //
 import Web3
 import WalletConnectSwift
-
+import Web3PromiseKit
 class BaseHandler: RequestHandler {
 
     weak var server: Server!
@@ -41,7 +41,8 @@ class BaseHandler: RequestHandler {
                                              title: "Request to sign a message",
                                              message: message,
                                              onSign: onSign,
-                                             onCancel: onCancel)
+                                             onCancel: onCancel
+            )
         }
     }
 }
@@ -97,7 +98,6 @@ class SignTransactionHandler: BaseHandler {
             askToSign(request: request, message: transaction.description) {
                 let signedTx = try! transaction.sign(with: self.privateKey, chainId: EthereumQuantity(ethereumValue: self.chainId))
                 let (r, s, v) = (signedTx.r, signedTx.s, signedTx.v)
-                
                 return r.hex() + s.hex().dropFirst(2) + String(v.quantity, radix: 16)
             }
         } catch {
@@ -119,16 +119,35 @@ class SendTransactionHandler: BaseHandler {
             }
 
             askToSign(request: request, message: transaction.description) {
-                let signedTx = try! transaction.sign(with: self.privateKey, chainId: EthereumQuantity(ethereumValue: self.chainId))
-                let (r, s, v) = (signedTx.r, signedTx.s, signedTx.v)
-                //send raw transaction
-                return r.hex() + s.hex().dropFirst(2) + String(v.quantity, radix: 16)
+                var signedTx:EthereumSignedTransaction
+                if(self.chainId == 80001){
+                    signedTx = try! transaction.sign(with: self.privateKey, chainId: 80001)
+
+                }else if(self.chainId == 80001) {
+                    signedTx = try! transaction.sign(with: self.privateKey, chainId: 137)
+
+                }else {
+                    signedTx = try! transaction.sign(with: self.privateKey, chainId: 80001)
+
+                    NSLog("Invalid chainId")
+                }
+                var rpcEndpoint:String
+                if(self.chainId == 137){
+                    rpcEndpoint = "https://rpc-mainnet.matic.network"
+                }else{
+                    rpcEndpoint = "https://rpc-mumbai.matic.today"
+                }
+                let web3 = Web3(rpcURL: rpcEndpoint)
+                let data = web3.eth.sendRawTransaction(transaction: signedTx)
+                NSLog(data.result.debugDescription)
+                return try! data.wait().hex()
             }
         } catch {
             self.server.send(.invalid(request))
         }
     }
 }
+
 
 extension Response {
     static func signature(_ signature: String, for request: Request) -> Response {
@@ -169,7 +188,8 @@ extension FLNativeView: ServerDelegate {
         let sessionData = try! JSONEncoder().encode(session)
         UserDefaults.standard.set(sessionData, forKey: sessionKey)
         onMainThread {
-            self.dappLabel.text = "Connected to \(session.dAppInfo.peerMeta.name)"
+            self.dappLabel.text = session.dAppInfo.peerMeta.url.description
+            self.statusLabel.text = "Connected"
         }
     }
 
@@ -196,3 +216,4 @@ extension EthereumTransaction {
         """
     }
 }
+

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 
@@ -17,17 +16,28 @@ class _WalletConnectIosState extends State<WalletConnectIos> {
   String uri = "Asda";
   String privateKey = "asda";
   bool _loading = true;
+  List<String> args;
   @override
   initState() {
-    CredentialManager.getAddress().then((address) =>
-        {NetworkManager.getNetworkObject().then((networkObject) => {})});
+    CredentialManager.getAddress().then((address) {
+      NetworkManager.getNetworkObject().then((value) {
+        setState(() {
+          this.address = address;
+          this.chainId = value.chainId.toString();
+          _loading = false;
+        });
+      });
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    args = ModalRoute.of(context).settings.arguments;
+    privateKey = args[0];
+    uri = args[1];
     final String viewType = 'WalletConnectView';
-    final List<String> creationParams = [address, privateKey, uri, chainId];
+    final List<String> creationParams = [address, args[0], uri, chainId];
 
     return Scaffold(
         backgroundColor: AppTheme.backgroundWhite,

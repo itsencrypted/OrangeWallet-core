@@ -62,6 +62,7 @@ const String sendNftRoute = "sendNftRoute";
 const String burnNftRoute = "burnNftRoute";
 const String erc1155DepositRoute = "erc1155DepositRoute";
 const String erc1155BurnRoute = "erc1155BurnRoute";
+const String walletConnectRoute = "walletConnectRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

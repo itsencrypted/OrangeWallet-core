@@ -1,7 +1,9 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -108,11 +110,17 @@ class _HomeAppBar extends State<HomeAppBar> {
         TextButton(
           child: Image.asset("assets/icons/qr_icon.png",
               color: AppTheme.darkerText),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WalletConnectIos()),
-            );
+          onPressed: () async {
+            var qrResult = await BarcodeScanner.scan();
+            if (qrResult.rawContent == null || qrResult.rawContent == "") {
+              return;
+            }
+            String privateKey = await CredentialManager.getPrivateKey(context);
+            if (privateKey == null) {
+              return;
+            }
+            Navigator.pushNamed(context, walletConnectRoute,
+                arguments: [privateKey, qrResult.rawContent]);
             // WalletConnectLauncher.launchWalletConnect(context);
           },
         ),

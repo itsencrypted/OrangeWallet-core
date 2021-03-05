@@ -15,6 +15,7 @@
 		4F0510F525F0170E00B85E6A /* Web3PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F425F0170E00B85E6A /* Web3PromiseKit */; };
 		4F0510F725F0170E00B85E6A /* Web3ContractABI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F625F0170E00B85E6A /* Web3ContractABI */; };
 		4F0510F925F0170E00B85E6A /* Web3 in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F825F0170E00B85E6A /* Web3 */; };
+		4FE54CE625F0D9E500CA3506 /* WalletConnectUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE54CE525F0D9E500CA3506 /* WalletConnectUtils.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		4F0510E125EFEEEC00B85E6A /* WalletConnectPlatformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectPlatformView.swift; sourceTree = "<group>"; };
+		4FE54CE525F0D9E500CA3506 /* WalletConnectUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectUtils.swift; sourceTree = "<group>"; };
 		67C22EE4B5B91BCA81364F5B /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				4F0510E125EFEEEC00B85E6A /* WalletConnectPlatformView.swift */,
+				4FE54CE525F0D9E500CA3506 /* WalletConnectUtils.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				4F0510E225EFEEEC00B85E6A /* WalletConnectPlatformView.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				4FE54CE625F0D9E500CA3506 /* WalletConnectUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

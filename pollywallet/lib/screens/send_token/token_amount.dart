@@ -91,6 +91,8 @@ class _SendTokenAmountState extends State<SendTokenAmount>
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
             if (state is SendTransactionFinal) {
+              var reciever = state.data.receiver;
+              _address.text = reciever;
               var balance = EthConversions.weiToEth(
                   BigInt.parse(state.data.token.balance),
                   state.data.token.contractDecimals);

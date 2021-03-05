@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/send_token_model/send_token_data.dart';
 import 'package:pollywallet/screens/home/logout_popup.dart';
-import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
+import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
-import 'package:pollywallet/utils/walletconnect/walletconnect_launcher.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -22,6 +23,7 @@ class _HomeAppBar extends State<HomeAppBar> {
   String address = "";
   int id = 1;
   String fullAddress = "";
+  SendTransactionCubit cubit;
   @override
   void initState() {
     CredentialManager.getAddress().then((value) {
@@ -115,13 +117,28 @@ class _HomeAppBar extends State<HomeAppBar> {
             if (qrResult.rawContent == null || qrResult.rawContent == "") {
               return;
             }
-            String privateKey = await CredentialManager.getPrivateKey(context);
-            if (privateKey == null) {
-              return;
+            RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
+            print(qrResult.rawContent);
+            if (reg.hasMatch(qrResult.rawContent)) {
+              print("Regex");
+              if (qrResult.rawContent.length == 42) {
+                cubit = context.read<SendTransactionCubit>();
+                cubit.setData(SendTokenData(receiver: qrResult.rawContent));
+                Navigator.pushNamed(context, pickTokenRoute);
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Invalid QR",
+                );
+              }
+            } else {
+              String privateKey =
+                  await CredentialManager.getPrivateKey(context);
+              if (privateKey == null) {
+                return;
+              }
+              Navigator.pushNamed(context, walletConnectRoute,
+                  arguments: [privateKey, qrResult.rawContent]);
             }
-            Navigator.pushNamed(context, walletConnectRoute,
-                arguments: [privateKey, qrResult.rawContent]);
-            // WalletConnectLauncher.launchWalletConnect(context);
           },
         ),
         TextButton(

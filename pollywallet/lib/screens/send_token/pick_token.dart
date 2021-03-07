@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/send_token/pick_token_file.dart';
-import 'package:pollywallet/screens/token_list/coin_list_tile.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';

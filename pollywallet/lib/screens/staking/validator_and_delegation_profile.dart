@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +10,7 @@ import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
@@ -23,6 +27,18 @@ class ValidatorAndDelegationProfile extends StatefulWidget {
 
 class _ValidatorAndDelegationProfileState
     extends State<ValidatorAndDelegationProfile> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      final dCubit = context.read<DelegationsDataCubit>();
+      final vCubit = context.read<ValidatorsdataCubit>();
+
+      _refreshLoop(tokenListCubit, vCubit, dCubit);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var id = ModalRoute.of(context).settings.arguments;
@@ -527,5 +543,16 @@ class _ValidatorAndDelegationProfileState
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: data);
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit mCubit, ValidatorsdataCubit vCubit,
+      DelegationsDataCubit dCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        vCubit.refresh();
+        dCubit.refresh();
+        mCubit.refresh();
+      }
+    });
   }
 }

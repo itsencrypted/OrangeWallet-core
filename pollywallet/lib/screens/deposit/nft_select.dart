@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -44,6 +46,10 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
           bridge = 2;
         }
       });
+    });
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final ethCubit = context.read<CovalentTokensListEthCubit>();
+      _refreshLoop(ethCubit);
     });
 
     super.initState();
@@ -101,139 +107,144 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                 : null),
         body: BlocBuilder<DepositDataCubit, DepositDataState>(
           builder: (BuildContext context, state) {
-            if (state is DepositDataFinal) {
-              var balance = EthConversions.weiToEth(
-                  BigInt.parse(state.data.token.balance),
-                  state.data.token.contractDecimals);
-              this.balance = balance;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  bridge == 1
-                      ? Text(
-                          "POS bridge",
-                          style: AppTheme.title,
-                        )
-                      : bridge == 2
-                          ? Text("Plasma Bridge", style: AppTheme.title)
-                          : SizedBox(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: ListView.builder(
-                      itemCount: state.data.token.nftData.length,
-                      itemBuilder: (context, index) {
-                        return FlatButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          padding: EdgeInsets.all(0),
-                          child: NftDepositTile(
-                            data: state.data.token.nftData[index],
-                            selected: index == selectedIndex,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      bridge == 2
-                          ? ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            )
-                          : Container(),
-                      SafeArea(
-                        child: ListTile(
-                          leading: FlatButton(
+            return BlocBuilder<CovalentTokensListEthCubit,
+                CovalentTokensListEthState>(builder: (context, tokenstate) {
+              if (state is DepositDataFinal &&
+                  state is CovalentTokensListEthLoaded) {
+                var balance = EthConversions.weiToEth(
+                    BigInt.parse(state.data.token.balance),
+                    state.data.token.contractDecimals);
+                this.balance = balance;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    bridge == 1
+                        ? Text(
+                            "POS bridge",
+                            style: AppTheme.title,
+                          )
+                        : bridge == 2
+                            ? Text("Plasma Bridge", style: AppTheme.title)
+                            : SizedBox(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      child: ListView.builder(
+                        itemCount: state.data.token.nftData.length,
+                        itemBuilder: (context, index) {
+                          return FlatButton(
                             onPressed: () {
-                              if (state
-                                      .data.token.nftData[index].tokenBalance ==
-                                  null) {
-                                return;
-                              }
                               setState(() {
-                                tokenCountToSend = int.parse(state
-                                    .data.token.nftData[index].tokenBalance);
+                                selectedIndex = index;
                               });
                             },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.secondaryColor.withOpacity(0.3),
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                      child: Text(
-                                    state.data.token.contractName
-                                        .substring(0, 1)
-                                        .toUpperCase(),
-                                    style: AppTheme.title,
-                                  ))),
-                            )),
-                          ),
-                          contentPadding: EdgeInsets.all(0),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                state.data.token.contractName,
-                                style: AppTheme.subtitle,
+                            padding: EdgeInsets.all(0),
+                            child: NftDepositTile(
+                              data: state.data.token.nftData[index],
+                              selected: index == selectedIndex,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        bridge == 2
+                            ? ListTile(
+                                leading: ClipOval(
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Container(
+                                    child: Text("!",
+                                        style: TextStyle(
+                                            fontSize: 50,
+                                            color: AppTheme.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                                title: Text("Note"),
+                                subtitle: Text(
+                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                isThreeLine: true,
                               )
-                            ],
-                          ),
-                          trailing: FlatButton(
-                            onPressed: () {
-                              if (state
-                                      .data.token.nftData[index].tokenBalance ==
-                                  null) {
-                                _sendDepositTransactionERC721(state, context);
-                              } else {
-                                _sendDepositTransactionERC1155(state, context);
-                              }
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.primaryColor,
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: Icon(Icons.check,
-                                        color: AppTheme.white),
-                                  )),
-                            )),
+                            : Container(),
+                        SafeArea(
+                          child: ListTile(
+                            leading: FlatButton(
+                              onPressed: () {
+                                if (state.data.token.nftData[index]
+                                        .tokenBalance ==
+                                    null) {
+                                  return;
+                                }
+                                setState(() {
+                                  tokenCountToSend = int.parse(state
+                                      .data.token.nftData[index].tokenBalance);
+                                });
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.secondaryColor.withOpacity(0.3),
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                        child: Text(
+                                      state.data.token.contractName
+                                          .substring(0, 1)
+                                          .toUpperCase(),
+                                      style: AppTheme.title,
+                                    ))),
+                              )),
+                            ),
+                            contentPadding: EdgeInsets.all(0),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  state.data.token.contractName,
+                                  style: AppTheme.subtitle,
+                                )
+                              ],
+                            ),
+                            trailing: FlatButton(
+                              onPressed: () {
+                                if (state.data.token.nftData[index]
+                                        .tokenBalance ==
+                                    null) {
+                                  _sendDepositTransactionERC721(state, context);
+                                } else {
+                                  _sendDepositTransactionERC1155(
+                                      state, context);
+                                }
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.primaryColor,
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                      child: Icon(Icons.check,
+                                          color: AppTheme.white),
+                                    )),
+                              )),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              );
-            } else {
-              return Center(child: Text("Something went Wrong"));
-            }
+                      ],
+                    )
+                  ],
+                );
+              } else {
+                return Center(child: Text("Something went Wrong"));
+              }
+            });
           },
         ));
   }
@@ -396,31 +407,20 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
         return;
       }
     } else {
-      // if (bridge == 1) {
-      //   trx = await EthereumTransactions.erc721DepositPos(
-      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-      //       state.data.token.contractAddress);
-
-      //   transactionData = TransactionData(
-      //       to: config.rootChainProxy,
-      //       amount: "0",
-      //       trx: trx,
-      //       type: TransactionType.DEPOSITPOS);
-      // } else {
-      //   trx = await EthereumTransactions.erc721DepositPlasma(
-      //       BigInt.parse(state.data.token.nftData[selectedIndex].tokenId),
-      //       state.data.token.contractAddress);
-      //   transactionData = TransactionData(
-      //       to: config.depositManager,
-      //       amount: "0",
-      //       trx: trx,
-      //       type: TransactionType.DEPOSITPLASMA);
-      // }
+      return;
     }
 
     Navigator.of(context, rootNavigator: true).pop();
 
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: transactionData);
+  }
+
+  _refreshLoop(CovalentTokensListEthCubit cubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+      }
+    });
   }
 }

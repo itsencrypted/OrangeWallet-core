@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,19 +20,23 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab>
     with AutomaticKeepAliveClientMixin<HomeTab> {
+  CovalentTokensListMaticState state;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       tokenListCubit.getTokensList();
       final ethCubit = context.read<CovalentTokensListEthCubit>();
       ethCubit.getTokensList();
+      _refreshLoop(tokenListCubit);
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("building");
     return BlocBuilder<CovalentTokensListMaticCubit,
         CovalentTokensListMaticState>(
       builder: (context, state) {
@@ -45,6 +51,7 @@ class _HomeTabState extends State<HomeTab>
             color: AppTheme.primaryColor,
           );
         } else if (state is CovalentTokensListMaticLoaded) {
+          this.state = state;
           var amt = 0.0;
           if (state.covalentTokenList.data.items.length > 0) {
             state.covalentTokenList.data.items.forEach((element) {
@@ -170,6 +177,15 @@ class _HomeTabState extends State<HomeTab>
     Future ethTokenListFuture = ethCubit.refresh();
     await tokenListFuture;
     await ethTokenListFuture;
+    setState(() {});
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit cubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+      }
+    });
   }
 
   @override

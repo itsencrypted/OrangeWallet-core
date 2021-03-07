@@ -1,17 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/ui_elements/delegation_card.dart';
-import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
-import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
-class DelegationScreen extends StatelessWidget {
+class DelegationScreen extends StatefulWidget {
+  @override
+  _DelegationScreenState createState() => _DelegationScreenState();
+}
+
+class _DelegationScreenState extends State<DelegationScreen> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      var validatorListCubit = context.read<ValidatorsdataCubit>();
+      var delegatorListCubit = context.read<DelegationsDataCubit>();
+
+      tokenListCubit.getTokensList();
+      _refreshLoop(tokenListCubit, delegatorListCubit, validatorListCubit);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +53,8 @@ class DelegationScreen extends StatelessWidget {
                 if (validatorState is ValidatorsDataStateLoading ||
                     validatorState is ValidatorsDataStateInitial ||
                     delegationState is DelegationsDataStateInitial ||
-                    delegationState is DelegationsDataStateLoading) {
+                    delegationState is DelegationsDataStateLoading ||
+                    tokenState is CovalentTokensListMaticLoading) {
                   return Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -130,5 +150,16 @@ class DelegationScreen extends StatelessWidget {
             });
           },
         ));
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit cubit, DelegationsDataCubit dCubit,
+      ValidatorsdataCubit vCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+        dCubit.refresh();
+        vCubit.refresh();
+      }
+    });
   }
 }

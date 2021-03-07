@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/wallet_tab/coin_list.dart';
 import 'package:pollywallet/screens/wallet_tab/nft_list.dart';
@@ -181,10 +180,10 @@ class _HomeTabState extends State<HomeTab>
     setState(() {});
   }
 
-  _refreshLoop(CovalentTokensListMaticCubit maticCubit) {
+  _refreshLoop(CovalentTokensListMaticCubit cubit) {
     new Timer.periodic(Duration(seconds: 30), (Timer t) {
       if (mounted) {
-        maticCubit.refresh();
+        cubit.refresh();
       }
     });
   }

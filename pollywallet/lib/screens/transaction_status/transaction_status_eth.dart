@@ -7,7 +7,6 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/misc/refresh_utils.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';

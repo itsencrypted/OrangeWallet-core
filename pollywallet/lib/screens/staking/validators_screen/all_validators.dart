@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
@@ -14,6 +17,15 @@ class AllValidators extends StatefulWidget {
 }
 
 class _AllValidatorsState extends State<AllValidators> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var vCubit = context.read<ValidatorsdataCubit>();
+      _refreshLoop(vCubit);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
@@ -222,6 +234,14 @@ class _AllValidatorsState extends State<AllValidators> {
             ),
           ),
         );
+      }
+    });
+  }
+
+  _refreshLoop(ValidatorsdataCubit cubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
       }
     });
   }

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,6 +33,21 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
   double balance = 0;
   TextEditingController _amount = TextEditingController();
   @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      var validatorListCubit = context.read<ValidatorsdataCubit>();
+      var delegatorListCubit = context.read<DelegationsDataCubit>();
+      var ethListCubit = context.read<CovalentTokensListEthCubit>();
+
+      tokenListCubit.getTokensList();
+      _refreshLoop(
+          tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var id = ModalRoute.of(context).settings.arguments;
     return Scaffold(
@@ -53,7 +71,9 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
                     if (validatorState is ValidatorsDataStateLoading ||
                         validatorState is ValidatorsDataStateInitial ||
                         delegationState is DelegationsDataStateInitial ||
-                        delegationState is DelegationsDataStateLoading) {
+                        delegationState is DelegationsDataStateLoading ||
+                        covalentMaticState is CovalentTokensListMaticLoading ||
+                        covalentEthState is CovalentTokensListMaticLoading) {
                       return Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -338,5 +358,20 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
 
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: transactionData);
+  }
+
+  _refreshLoop(
+      CovalentTokensListMaticCubit cubit,
+      CovalentTokensListEthCubit ethCubit,
+      DelegationsDataCubit dCubit,
+      ValidatorsdataCubit vCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+        ethCubit.refresh();
+        dCubit.refresh();
+        vCubit.refresh();
+      }
+    });
   }
 }

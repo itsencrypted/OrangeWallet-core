@@ -21,12 +21,28 @@ class CovalentTokensListEthLoaded extends CovalentTokensListEthState {
     if (identical(this, o)) return true;
 
     return o is CovalentTokensListEthLoaded &&
-        o.covalentTokenList.data.items[0].quote ==
-            covalentTokenList.data.items[0].quote;
+        o.covalentTokenList.data.items.length ==
+            covalentTokenList.data.items.length &&
+        _checkEquality(o.covalentTokenList, covalentTokenList);
   }
 
   @override
   int get hashCode => covalentTokenList.hashCode;
+  _checkEquality(CovalentTokenList o1, CovalentTokenList o2) {
+    print("equality");
+    for (int i = 0; i < o1.data.items.length; i++) {
+      var element1 = o1.data.items[i];
+      var ls = o2.data.items.where(
+          (element2) => element1.contractAddress == element2.contractAddress);
+      if (ls.isNotEmpty) {
+        if (ls.first.balance != element1.balance) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 }
 
 class CovalentTokensListEthError extends CovalentTokensListEthState {

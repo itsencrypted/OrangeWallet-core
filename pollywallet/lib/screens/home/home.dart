@@ -12,6 +12,7 @@ import 'package:pollywallet/state_manager/staking_data/delegation_data_state/del
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/utils/misc/refresh_utils.dart';
 import 'navigation_bar.dart';
 
 class Home extends StatefulWidget {

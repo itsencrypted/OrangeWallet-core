@@ -7,6 +7,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/refresh_utils.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
@@ -197,8 +198,6 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
 
   Future<void> txStatus(String txHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    print(config.ethEndpoint);
-    print(config.ethWebsocket);
     final client =
         Web3Client(config.ethEndpoint, http.Client(), socketConnector: () {
       return IOWebSocketChannel.connect(config.ethWebsocket).cast<String>();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:pollywallet/constants.dart';
 
 class CovalentTokenList {
   Data data;
@@ -102,11 +103,16 @@ class Items {
       this.nftData});
 
   Items.fromJson(Map<String, dynamic> json) {
-    contractDecimals = json['contract_decimals'];
-    contractName = json['contract_name'];
-    contractTickerSymbol = json['contract_ticker_symbol'];
+    contractDecimals =
+        json['contract_decimals'] == null ? 1 : json['contract_decimals'];
+    contractName =
+        json['contract_name'] == null ? "N/A" : json['contract_name'];
+    contractTickerSymbol = json['contract_ticker_symbol'] == null
+        ? "NA"
+        : json['contract_ticker_symbol'];
     contractAddress = json['contract_address'];
-    logoUrl = json['logo_url'];
+
+    logoUrl = json['logo_url'] != null ? json['logo_url'] : tokenIcon;
     type = json['type'];
     balance = json['balance'];
     quoteRate = json['quote_rate'] != null ? json['quote_rate'] : 0.0;
@@ -190,38 +196,71 @@ class NftData {
 
   Future<ExternalData> _getExternalData(String url, String name) async {
     print(url);
+
     if (url == null || url == "") {
       return ExternalData(
           name: name,
           image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
           description: "");
     }
-    var resp = await http.get(url);
-    Map json = jsonDecode(resp.body);
-    var list = json.keys.toList();
-    RegExp imageRegex = RegExp(
-      r".*image.*",
-      caseSensitive: false,
-      multiLine: false,
-    );
-    RegExp descriptionRegex = RegExp(
-      r".*description.*",
-      caseSensitive: false,
-      multiLine: false,
-    );
-    RegExp nameRegex = RegExp(
-      r".*name.*",
-      caseSensitive: false,
-      multiLine: false,
-    );
-    var nameKey = list.where((element) => nameRegex.hasMatch(element)).first;
-    var descriptionKey =
-        list.where((element) => descriptionRegex.hasMatch(element)).first;
-    var imageKey = list.where((element) => imageRegex.hasMatch(element)).first;
-    return ExternalData(
-        name: json[nameKey],
-        description: json[descriptionKey],
-        image: json[imageKey]);
+    try {
+      var resp = await http.get(url);
+      Map json = jsonDecode(resp.body);
+      var list = json.keys.toList();
+      RegExp imageRegex = RegExp(
+        r".*image.*",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      RegExp descriptionRegex = RegExp(
+        r".*description.*",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      RegExp nameRegex = RegExp(
+        r".*name.*",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      var nameKey = list.where((element) => nameRegex.hasMatch(element)).first;
+      var descriptionKey =
+          list.where((element) => descriptionRegex.hasMatch(element)).first;
+      var imageKey =
+          list.where((element) => imageRegex.hasMatch(element)).first;
+      bool _validURL = Uri.parse(json[imageKey]).isAbsolute;
+      if (_validURL) {
+        return ExternalData(
+            name: json[nameKey],
+            description: json[descriptionKey],
+            image: json[imageKey]);
+      } else {
+        if (name == null) {
+          return ExternalData(
+              name: "Name Missing",
+              image:
+                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+              description: "");
+        } else {
+          return ExternalData(
+              name: name,
+              image:
+                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+              description: "");
+        }
+      }
+    } catch (e) {
+      if (name == null) {
+        return ExternalData(
+            name: "Name Missing",
+            image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+            description: "");
+      } else {
+        return ExternalData(
+            name: name,
+            image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
+            description: "");
+      }
+    }
   }
 }
 

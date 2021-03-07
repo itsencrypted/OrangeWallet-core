@@ -115,7 +115,7 @@ class _HomeAppBar extends State<HomeAppBar> {
           child: Image.asset("assets/icons/qr_icon.png",
               color: AppTheme.darkerText),
           onPressed: () async {
-            Navigator.pushNamed(context, walletConnectRoute,
+            Navigator.pushNamed(context, walletConnectAndroidRoute,
                 arguments: ["privateKey", "qrResult.rawContent"]);
             // var qrResult = await BarcodeScanner.scan();
             // if (qrResult.rawContent == null || qrResult.rawContent == "") {

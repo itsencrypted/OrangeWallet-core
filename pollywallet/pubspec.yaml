@@ -47,6 +47,8 @@ dependencies:
   url_launcher: ^5.7.10
   flutter_webview_plugin: ^0.3.11
   flutter_svg: ^0.19.3
+  wallet_connect_plugin:
+    path: /Users/abhimanyushekhawat/projects/wallet_connect_plugin
 
   # you may delete the below ones
   # googleapis: ^0.54.0

@@ -5,6 +5,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:wallet_connect_plugin/wallet_connect_plugin.dart';
 
 class WalletConnectAndroid extends StatefulWidget {
   @override
@@ -38,12 +39,7 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
     privateKey = args[0];
     uri = args[1];
     final String viewType = 'WalletConnectView';
-    final Map<String, dynamic> creationParams = {
-      addressString: address,
-      privateKeyString: "privateKey",
-      wcUri: "uri",
-      "chainId": "80001"
-    };
+    final creationParams = ["address", "privateKey", "uri", "80001"];
 
     return Scaffold(
         backgroundColor: AppTheme.backgroundWhite,
@@ -51,6 +47,7 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
           backgroundColor: AppTheme.backgroundWhite,
           elevation: 0,
           brightness: Brightness.light,
+          centerTitle: true,
           title: Text("Wallet Connect"),
         ),
         body: _loading
@@ -60,6 +57,8 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
                 layoutDirection: TextDirection.ltr,
                 creationParams: creationParams,
                 creationParamsCodec: const StandardMessageCodec(),
+                clipBehavior: Clip.hardEdge,
+                onPlatformViewCreated: (_) {},
               ));
   }
 }

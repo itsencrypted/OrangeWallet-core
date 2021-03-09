@@ -25,11 +25,12 @@ class NftTile extends StatelessWidget {
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.85,
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.43,
       child: Card(
         shape: AppTheme.cardShape,
         elevation: AppTheme.cardElevations,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,

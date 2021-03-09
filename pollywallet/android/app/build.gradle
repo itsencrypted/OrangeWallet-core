@@ -36,10 +36,11 @@ android {
         disable 'InvalidPackage'
     }
 
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.pollywallet"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -52,6 +53,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
 }
 
 flutter {
@@ -60,4 +62,15 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.6'
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+    implementation "com.github.komputing:khex:1.0.0"
+    implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation "com.squareup.okhttp3:okhttp:4.0.1"
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
+    implementation 'com.google.android:flexbox:2.0.1'
+    //implementation 'com.github.komputing:kethereum:0.83.4'
 }
+

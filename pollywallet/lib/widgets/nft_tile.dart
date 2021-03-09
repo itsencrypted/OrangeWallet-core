@@ -29,11 +29,12 @@ class NftDepositTile extends StatelessWidget {
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.85,
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.42,
       child: Card(
         shape: AppTheme.cardShape,
         elevation: AppTheme.cardElevations,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,

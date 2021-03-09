@@ -30,10 +30,10 @@ class _NftBurnState extends State<NftBurn> {
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   int selectedIndex = 0;
+  var tokenListCubit;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       tokenListCubit.getTokensList();
 
       _refreshLoop(tokenListCubit);
@@ -44,6 +44,7 @@ class _NftBurnState extends State<NftBurn> {
 
   @override
   Widget build(BuildContext context) {
+    tokenListCubit = context.read<CovalentTokensListMaticCubit>();
     this.data = context.read<WithdrawBurnDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print("args");

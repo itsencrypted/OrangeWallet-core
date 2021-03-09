@@ -35,10 +35,13 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
+  var ethCubit;
   @override
   initState() {
     Future.delayed(Duration.zero, () {
       _controller = TabController(length: 2, vsync: this);
+
+      _refreshLoop(ethCubit);
       _controller.addListener(() {
         if (_controller.index == 0) {
           bridge = 1;
@@ -47,15 +50,13 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
         }
       });
     });
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      final ethCubit = context.read<CovalentTokensListEthCubit>();
-      _refreshLoop(ethCubit);
-    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    ethCubit = context.read<CovalentTokensListEthCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print(args);
@@ -124,7 +125,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                           ? Text("Plasma Bridge", style: AppTheme.title)
                           : SizedBox(),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: ListView.builder(
                       itemCount: state.data.token.nftData.length,
                       itemBuilder: (context, index) {

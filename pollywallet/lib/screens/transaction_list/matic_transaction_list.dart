@@ -127,7 +127,10 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                                 children: [
                                                   Icon(Icons.arrow_forward),
                                                   Text(
-                                                    item.toAddress,
+                                                    DateTime.parse(
+                                                            item.blockSignedAt)
+                                                        .toIso8601String()
+                                                        .toString(),
                                                     style: AppTheme.subtitle,
                                                     overflow:
                                                         TextOverflow.ellipsis,

@@ -66,6 +66,7 @@ class PersonalSignHandler: BaseHandler {
 
             askToSign(request: request, message: decodedMessage) {
                 let personalMessageData = self.personalMessageData(messageData: Data(hex: messageBytes))
+              
                 let (v, r, s) = try! self.privateKey.sign(message: .init(hex: personalMessageData.toHexString()))
                 return "0x" + r.toHexString() + s.toHexString() + String(v + 27, radix: 16) // v in [0, 1]
             }

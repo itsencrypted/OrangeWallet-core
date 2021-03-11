@@ -129,7 +129,7 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                                   Text(
                                                     DateTime.parse(
                                                             item.blockSignedAt)
-                                                        .toIso8601String()
+                                                        .toLocal()
                                                         .toString(),
                                                     style: AppTheme.subtitle,
                                                     overflow:

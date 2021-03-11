@@ -125,7 +125,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                           ? Text("Plasma Bridge", style: AppTheme.title)
                           : SizedBox(),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
+                    height: MediaQuery.of(context).size.height * 0.73,
                     child: ListView.builder(
                       itemCount: state.data.token.nftData.length,
                       itemBuilder: (context, index) {

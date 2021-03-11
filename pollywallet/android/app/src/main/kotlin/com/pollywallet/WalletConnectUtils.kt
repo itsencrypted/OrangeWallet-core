@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.multidex.MultiDexApplication
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
+import okhttp3.internal.wait
 import org.walletconnect.Session
 import org.walletconnect.impls.*
 import org.walletconnect.nullOnThrow

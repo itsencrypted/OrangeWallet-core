@@ -121,7 +121,7 @@ extension FLNativeView {
                 statusLabel.text = "Disconnected"
                 disconnectButton.setTitle("Connect", for: UIControl.State.normal)
             }
-            
+
         }else {
             do{
                 guard let url = WCURL(_args[2]) else { return }
@@ -131,6 +131,8 @@ extension FLNativeView {
 
             }catch {}
         }
+        
     }
+  
     
 }

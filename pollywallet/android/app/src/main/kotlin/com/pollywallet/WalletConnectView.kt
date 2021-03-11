@@ -1,17 +1,5 @@
 package com.pollywallet
 
-//import org.kethereum.crypto.signMessage
-//import org.kethereum.crypto.toECKeyPair
-//import org.kethereum.eip155.signViaEIP155
-//import org.kethereum.extensions.transactions.encodeRLP
-//import org.kethereum.model.Address
-//import org.kethereum.model.ChainId
-//import org.kethereum.model.PrivateKey
-//import org.kethereum.model.Transaction
-//import org.kethereum.rpc.BaseEthereumRPC
-//import org.kethereum.rpc.min3.getMin3RPC
-//import org.komputing.khex.extensions.toHexString
-//import org.komputing.khex.model.HexString
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,22 +9,31 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Looper
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import com.google.android.flexbox.*
 import io.flutter.Log
 import io.flutter.plugin.platform.PlatformView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
+import org.komputing.khex.extensions.toHexString
 import org.walletconnect.Session
 import org.walletconnect.nullOnThrow
+import org.web3j.crypto.Credentials
+import org.web3j.crypto.RawTransaction
+import org.web3j.crypto.Sign
+import org.web3j.protocol.Web3j
+import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount
+import org.web3j.protocol.core.methods.response.EthSendTransaction
+import org.web3j.protocol.http.HttpService
+import org.web3j.tx.RawTransactionManager
+import org.web3j.tx.gas.DefaultGasProvider
+import java.math.BigInteger
 import kotlin.random.Random
 
 
@@ -56,9 +53,9 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
     private val requestsTag = TextView(context)
     private val scrollView = ScrollView(context)
     private val requestsLinearLayout = LinearLayout(context)
-    private val walletConnectUtils = WalletConnectUtils(address!!, uri!!, chainId!!, context);
+    private val walletConnectUtils = WalletConnectUtils(address!!, uri!!, "42", context);
     private var context = context
-    // var rpc: BaseEthereumRPC? = null
+    var rpc: String? = null
 
     private var txRequest: Long? = null
     override fun getView(): LinearLayout {
@@ -67,6 +64,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
     override fun dispose() {
         walletConnectUtils.disconnectSession()
+        Thread.sleep(500)
     }
 
     init {
@@ -94,16 +92,26 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
 
             }
+            is Session.MethodCall.SignMessage -> {
+
+                GlobalScope.launch(Main) {
+                    try {
+                        signMessage(call,  context)
+                    } catch (t: Throwable) {
+                        //fail?.invoke(t)
+                    }}
+
+            }
             is Session.MethodCall.Custom -> {
                 if (call.method == "personal_sign"){
                     GlobalScope.launch(Main) {
                         try {
-                            signMessage(call, context)
+                            personalSign(call, context)
                         } catch (t: Throwable) {
                             //fail?.invoke(t)
                         }
                     }
-                }
+              }
                 else {
                     walletConnectUtils!!.session.rejectRequest(call.id(), 1, "Method not Implemented")
 
@@ -112,7 +120,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
             }
             is Session.MethodCall.SessionRequest ->{
-                walletConnectUtils.session.approve(listOf(address!!), chainId!!.toLong())
+                walletConnectUtils.session.approve(listOf(address!!), 42.toLong())
             }
 
             else -> {
@@ -128,7 +136,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
             Session.Status.Connected,
             Session.Status.Disconnected,
             is Session.Status.Error -> {
-                // Do Stuff
+                Log.e("error", status.toString())
             }
         }
     }
@@ -141,13 +149,12 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
     }
     private fun initialSetup(context: Context) {
-        var okHttpClient = OkHttpClient()
-//        rpc = if(chainId == "137"){
-//            getMin3RPC(listOf("https://rpc-mainnet.matic.network"), okHttpClient)
-//        } else {
-//            getMin3RPC(listOf("https://rpc-mumbai.matic.today"),okHttpClient)
-//        }
-
+        rpc = if(chainId == "137"){
+            "https://rpc-mainnet.matic.network"
+        } else {
+            "https://rpc-mumbai.matic.today"
+        }
+        rpc = "https://kovan.infura.io/v3/0e4ce57afbd04131b6842f08265b4d4b"
         this.context = context
         val session = nullOnThrow { walletConnectUtils!!.session } ?: return
         session.addCallback(this)
@@ -155,6 +162,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
     private fun handleResponse(resp: Session.MethodCall.Response) {
 
     }
+    @SuppressLint("SetTextI18n")
     private fun initializeView(context: Context, creationParams: List<String?>?){
         linearLayout.orientation = LinearLayout.VERTICAL
         linearLayout.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -213,19 +221,22 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         button.background = shape
         //button.setBackgroundColor(0xFF8248E5.toInt());
         button.setOnClickListener {
-            //sendTransactionConfirm( context)
-//            if(connectionState == 1){
-//                button.text = "Connect"
-//                walletConnectUtils!!.disconnectSession()
-//                statusLabel.text = "Disconnected"
-//                connectionState = 2
-//            }else if (connectionState == 2){
-//                button.text = "Disconnect"
-//                walletConnectUtils!!.session.approve(listOf(creationParams[0]!!), 42.toLong())
-//                connectionState  = 1
-//            }else {
-//                Toast.makeText(this.context,"Please Wait", Toast.LENGTH_SHORT).show()
-//            }
+            when (connectionState) {
+                1 -> {
+                    button.text = "Connect"
+                    walletConnectUtils!!.disconnectSession()
+                    statusLabel.text = "Disconnected"
+                    connectionState = 2
+                }
+                2 -> {
+                    button.text = "Disconnect"
+                    walletConnectUtils!!.session.approve(listOf(creationParams[0]!!), 42.toLong())
+                    connectionState  = 1
+                }
+                else -> {
+                    Toast.makeText(this.context,"Please Wait", Toast.LENGTH_SHORT).show()
+                }
+            }
 
 
         }
@@ -281,13 +292,10 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         val data = TextView(context)
 
         data.gravity = Gravity.CENTER_HORIZONTAL
-        data.text = "\"From: ${call.from})\\n\" +\n" +
-                "                \"To: ${call.to})\\n\" +\n" +
-                "                \"Nonce: ${call.nonce})\\n\" +\n" +
-                "                \"Gas Limit: ${call.gasLimit})\\n\" +\n" +
-                "                \"Gas Price: ${call.from})\\n\" +\n" +
-                "                \"Value: ${call.value})\\n\" +\n" +
-                "                \"Data: ${call.data})\\n\""
+        data.text = "\"From: ${call.from}\n" +
+                "                \"To: ${call.to}\n" +
+                "                \"Value: ${call.value}\n" +
+                "                \"Data: ${call.data}"
         data.textSize = 16.0.toFloat()
         request.addView(TextView(context))
         request.addView(data)
@@ -334,18 +342,25 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         requestsLinearLayout.addView(pad)
         requestsTag.text = "Requests"
         approve.setOnClickListener {
-//            var tx = Transaction()
-//            tx.chain = BigInteger(chainId)
-//            tx.value = BigInteger(call.value)
-//            tx.nonce = BigInteger(call.nonce)
-//            tx.gasPrice = BigInteger(call.gasPrice)
-//            tx.gasLimit = BigInteger(call.gasLimit)
-//            tx.to = Address(call.to)
-//            var keyPair = PrivateKey(HexString(privateKey!!)).toECKeyPair()
-//            var signed = tx.signViaEIP155(keyPair, ChainId(BigInteger(chainId)) )
-//            val rlpTx = tx.encodeRLP(signed).toHexString()
-//            var txHash = rpc!!.sendRawTransaction(rlpTx)
-         //   walletConnectUtils!!.session.approveRequest(call.id, "0xcd3f19b398f688e462b404dd6db01713918d79b4ff35b304f2bdc2edd4fa1714")
+
+                val web3 = Web3j.build(HttpService(rpc))
+                var credentials = Credentials.create(privateKey)
+                val transactionManager = RawTransactionManager(web3, credentials, 42.toLong() )
+                val ethGetTransactionCount: EthGetTransactionCount =
+                    web3.ethGetTransactionCount(
+                            address, DefaultBlockParameterName.LATEST).sendAsync().get()
+                val nonce: BigInteger = ethGetTransactionCount.transactionCount
+                var rawTransaction  = RawTransaction.createTransaction(
+                        nonce, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT , call.to, BigInteger.valueOf(call.value.substring(2).toLong(16)), call.data)
+            CoroutineScope(Dispatchers.IO ).launch {
+                var resp:EthSendTransaction = transactionManager.signAndSend(rawTransaction)
+                walletConnectUtils!!.session.approveRequest(call.id,resp.transactionHash )
+            }
+
+
+
+
+
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -353,7 +368,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
         }
         reject.setOnClickListener {
-        //    walletConnectUtils!!.session.rejectRequest(call.id, 1, "Transaction Rejected")
+        walletConnectUtils!!.session.rejectRequest(call.id, 1, "Transaction Rejected")
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -437,10 +452,12 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         requestsLinearLayout.addView(pad)
         requestsTag.text = "Requests"
         approve.setOnClickListener {
-//            var keyPair = PrivateKey(HexString(privateKey!!)).toECKeyPair()
-//            var signed = keyPair.signMessage((call.message).toByteArray())
-//            walletConnectUtils!!.session.approveRequest(call.id, signed!!)
-            //   walletConnectUtils!!.session.approveRequest(call.id, "0xcd3f19b398f688e462b404dd6db01713918d79b4ff35b304f2bdc2edd4fa1714")
+            call as Session.MethodCall.SignMessage
+            var credentials = Credentials.create(privateKey)
+            val payload = (call.message as String).toByteArray()
+            val sign = Sign.signMessage(payload, credentials.ecKeyPair )
+            val result = "0x" + sign.r.toHexString("") + sign.s.toHexString("") + Integer.toHexString(byteToInt(sign.v))
+            walletConnectUtils!!.session.approveRequest(call.id, result)
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -448,7 +465,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
         }
         reject.setOnClickListener {
-           // walletConnectUtils!!.session.rejectRequest(call.id, 1, "Message Not Signed")
+            walletConnectUtils!!.session.rejectRequest(call.id, 1, "Message Not Signed")
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -458,6 +475,8 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
 
     }
+
+    @SuppressLint("SetTextI18n")
     private fun personalSign(call: Session.MethodCall, context: Context){
 
         call as Session.MethodCall.Custom
@@ -475,7 +494,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         request.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         val tag = TextView(context)
         tag.setTypeface(null, Typeface.BOLD)
-        tag.text = "Transaction Request "
+        tag.text = "Sign "
 
         tag.gravity = Gravity.CENTER_HORIZONTAL
         tag.setTypeface(null, Typeface.BOLD);
@@ -483,9 +502,9 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         tag.setTextColor(Color.BLACK)
         request.addView(tag)
         val data = TextView(context)
-
+        data.text= "Personal sign requested"
         data.gravity = Gravity.CENTER_HORIZONTAL
-        data.text = "${walletConnectUtils!!.session.peerMeta()!!.name} has Requested your signature"
+       // data.text = "${walletConnectUtils!!.session.peerMeta()!!.name} has Requested your signature"
         data.textSize = 16.0.toFloat()
         request.addView(TextView(context))
         request.addView(data)
@@ -532,12 +551,13 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         requestsLinearLayout.addView(pad)
         requestsTag.text = "Requests"
         approve.setOnClickListener {
-            var message: String? =  call.params!![0]!!.toString()!!
 
-//            var keyPair = PrivateKey(HexString(privateKey!!)).toECKeyPair()
-//            var signed = keyPair.signMessage((call.message).toByteArray())
-//            walletConnectUtils!!.session.approveRequest(call.id, signed!!)
-            //   walletConnectUtils!!.session.approveRequest(call.id, "0xcd3f19b398f688e462b404dd6db01713918d79b4ff35b304f2bdc2edd4fa1714")
+            var credentials = Credentials.create(privateKey)
+            val payload = (call.params!![0] as String).toByteArray()
+            val sign = Sign.signMessage(0x19.toByte().toByteArray() +("Ethereum Signed Message:\n" + payload.size).toByteArray() + payload, credentials.ecKeyPair )
+            val result = "0x" + sign.r.toHexString("") + sign.s.toHexString("") + Integer.toHexString(byteToInt(sign.v))
+            walletConnectUtils!!.session.approveRequest(call.id, result )
+
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -545,7 +565,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
         }
         reject.setOnClickListener {
-            // walletConnectUtils!!.session.rejectRequest(call.id, 1, "Message Not Signed")
+            walletConnectUtils!!.session.rejectRequest(call.id, 1, "Message Not Signed")
             var v1 = requestsLinearLayout.findViewWithTag<CardView>(i)
             var v2 = requestsLinearLayout.findViewWithTag<TextView>(j)
             requestsLinearLayout.removeView(v1)
@@ -556,9 +576,17 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
 
     }
 
+    private fun byteToInt(bytes: ByteArray): Int {
+        var result = 0
+        var shift = 0
+        for (byte in bytes) {
+            result = result or (byte.toInt() shl shift)
+            shift += 8
+        }
+        return result
+    }
 
-
-
+    private fun Byte.toByteArray() = ByteArray(1) { this }
 }
 
 

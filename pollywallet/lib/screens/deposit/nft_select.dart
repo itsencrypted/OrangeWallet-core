@@ -35,10 +35,12 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
+  var ethCubit;
   @override
   initState() {
     Future.delayed(Duration.zero, () {
       _controller = TabController(length: 2, vsync: this);
+
       _controller.addListener(() {
         if (_controller.index == 0) {
           bridge = 1;
@@ -48,7 +50,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
       });
     });
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final ethCubit = context.read<CovalentTokensListEthCubit>();
       _refreshLoop(ethCubit);
     });
 
@@ -57,6 +58,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
 
   @override
   Widget build(BuildContext context) {
+    ethCubit = context.read<CovalentTokensListEthCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print(args);
@@ -109,8 +111,10 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
           builder: (BuildContext context, state) {
             return BlocBuilder<CovalentTokensListEthCubit,
                 CovalentTokensListEthState>(builder: (context, tokenstate) {
+              print(tokenstate);
+              print(state);
               if (state is DepositDataFinal &&
-                  state is CovalentTokensListEthLoaded) {
+                  tokenstate is CovalentTokensListEthLoaded) {
                 var balance = EthConversions.weiToEth(
                     BigInt.parse(state.data.token.balance),
                     state.data.token.contractDecimals);
@@ -242,6 +246,8 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                   ],
                 );
               } else {
+                print(tokenstate);
+                print(state);
                 return Center(child: Text("Something went Wrong"));
               }
             });

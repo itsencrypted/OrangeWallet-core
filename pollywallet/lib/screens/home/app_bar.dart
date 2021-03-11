@@ -115,40 +115,39 @@ class _HomeAppBar extends State<HomeAppBar> {
           child: Image.asset("assets/icons/qr_icon.png",
               color: AppTheme.darkerText),
           onPressed: () async {
-            Navigator.pushNamed(context, walletConnectRoute,
-                arguments: ["privateKey", "qrResult.rawContent"]);
-            // var qrResult = await BarcodeScanner.scan();
-            // if (qrResult.rawContent == null || qrResult.rawContent == "") {
-            //   return;
-            // }
-            // RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-            // print(qrResult.rawContent);
-            // if (reg.hasMatch(qrResult.rawContent)) {
-            //   print("Regex");
-            //   if (qrResult.rawContent.length == 42) {
-            //     cubit = context.read<SendTransactionCubit>();
-            //     cubit.setData(SendTokenData(receiver: qrResult.rawContent));
-            //     Navigator.pushNamed(context, pickTokenRoute);
-            //   } else {
-            //     Fluttertoast.showToast(
-            //       msg: "Invalid QR",
-            //     );
-            //   }
-            // } else {
-            //   String privateKey =
-            //       await CredentialManager.getPrivateKey(context);
-            //   if (privateKey == null) {
-            //     return;
-            //   }
-            //   if (Platform.isAndroid) {
-            //     Fluttertoast.showToast(msg: "Platfrom unsupported for now");
-            //   } else if (Platform.isIOS) {
-            //     Navigator.pushNamed(context, walletConnectRoute,
-            //         arguments: [privateKey, qrResult.rawContent]);
-            //   } else {
-            //     Fluttertoast.showToast(msg: "Unsupported Platform");
-            //   }
-            // }
+            var qrResult = await BarcodeScanner.scan();
+            if (qrResult.rawContent == null || qrResult.rawContent == "") {
+              return;
+            }
+            RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
+            print(qrResult.rawContent);
+            if (reg.hasMatch(qrResult.rawContent)) {
+              print("Regex");
+              if (qrResult.rawContent.length == 42) {
+                cubit = context.read<SendTransactionCubit>();
+                cubit.setData(SendTokenData(receiver: qrResult.rawContent));
+                Navigator.pushNamed(context, pickTokenRoute);
+              } else {
+                Fluttertoast.showToast(
+                  msg: "Invalid QR",
+                );
+              }
+            } else {
+              String privateKey =
+                  await CredentialManager.getPrivateKey(context);
+              if (privateKey == null) {
+                return;
+              }
+              if (Platform.isAndroid) {
+                Navigator.pushNamed(context, walletConnectAndroidRoute,
+                    arguments: [privateKey, qrResult.rawContent]);
+              } else if (Platform.isIOS) {
+                Navigator.pushNamed(context, walletConnectRoute,
+                    arguments: [privateKey, qrResult.rawContent]);
+              } else {
+                Fluttertoast.showToast(msg: "Unsupported Platform");
+              }
+            }
           },
         ),
         TextButton(

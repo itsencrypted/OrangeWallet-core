@@ -160,6 +160,7 @@ class _MaticTransactionStatusState extends State<MaticTransactionStatus> {
         Web3Client(config.endpoint, http.Client(), socketConnector: () {
       return IOWebSocketChannel.connect(config.maticWebsocket).cast<String>();
     });
+    client.getTransactionByHash(txHash);
     print(txHash);
     final client2 = Web3Client(config.endpoint, http.Client());
     var tx = await client2.getTransactionReceipt(txHash);

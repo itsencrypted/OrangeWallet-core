@@ -38,12 +38,8 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
     privateKey = args[0];
     uri = args[1];
     final String viewType = 'WalletConnectView';
-    final Map<String, dynamic> creationParams = {
-      addressString: address,
-      privateKeyString: "privateKey",
-      wcUri: "uri",
-      "chainId": "80001"
-    };
+    final creationParams = [address, privateKey, uri, chainId];
+    print(creationParams);
 
     return Scaffold(
         backgroundColor: AppTheme.backgroundWhite,
@@ -51,6 +47,7 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
           backgroundColor: AppTheme.backgroundWhite,
           elevation: 0,
           brightness: Brightness.light,
+          centerTitle: true,
           title: Text("Wallet Connect"),
         ),
         body: _loading
@@ -60,6 +57,8 @@ class _WalletConnectAndroidState extends State<WalletConnectAndroid> {
                 layoutDirection: TextDirection.ltr,
                 creationParams: creationParams,
                 creationParamsCodec: const StandardMessageCodec(),
+                clipBehavior: Clip.hardEdge,
+                onPlatformViewCreated: (_) {},
               ));
   }
 }

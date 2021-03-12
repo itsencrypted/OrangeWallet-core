@@ -7,7 +7,7 @@ class DepositTransaction extends HiveObject {
   String txHash;
 
   @HiveField(1)
-  int amount;
+  String amount;
 
   @HiveField(2)
   bool merged;

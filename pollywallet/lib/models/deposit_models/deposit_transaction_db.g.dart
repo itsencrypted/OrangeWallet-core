@@ -18,7 +18,7 @@ class DepositTransactionAdapter extends TypeAdapter<DepositTransaction> {
     };
     return DepositTransaction()
       ..txHash = fields[0] as String
-      ..amount = fields[1] as int
+      ..amount = fields[1] as String
       ..merged = fields[2] as bool
       ..name = fields[3] as String;
   }

@@ -104,5 +104,6 @@ const walletconnectChannel = "com.pollywallet/walletconnect";
 const addressString = "address";
 const privateKeyString = "privateKey";
 const wcUri = "walletConnectUri";
+const depositTransactionDbBox = "depositTransactionDbBox";
 //ENUMS
 enum BridgeType { PLASMA, POS, NONE, BOTH }

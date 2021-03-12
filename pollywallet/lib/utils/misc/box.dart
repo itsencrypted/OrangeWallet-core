@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:pollywallet/models/credential_models/credentails_list_model.dart';
 import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
@@ -15,6 +16,7 @@ class BoxUtils {
     Hive.registerAdapter(CredentialsObjectAdapter());
     Hive.registerAdapter(CredentialsListAdapter());
     Hive.registerAdapter(TransactionDetailsAdapter());
+    Hive.registerAdapter(DepositTransactionAdapter());
   }
 
   static Future<bool> checkLogin() async {
@@ -143,6 +145,35 @@ class BoxUtils {
       ..network = network
       ..to = to;
     box.put(tx, txObj);
+    await box.close();
+    return;
+  }
+
+  static Future<void> addDepositTransaction(
+      String txhash, String name, String amount) async {
+    var network = await getNetworkConfig();
+    var boxName = depositTransactionDbBox + network.toString();
+    Box<DepositTransaction> box =
+        await Hive.openBox<DepositTransaction>(boxName);
+    DepositTransaction txObj = DepositTransaction()
+      ..txHash = txhash
+      ..amount = amount
+      ..merged = false
+      ..name = name;
+    box.put(txhash, txObj);
+    await box.close();
+    return;
+  }
+
+  static Future<void> updateDepositStatus(String txhash) async {
+    var network = await getNetworkConfig();
+    var boxName = depositTransactionDbBox + network.toString();
+    Box<DepositTransaction> box =
+        await Hive.openBox<DepositTransaction>(boxName);
+
+    DepositTransaction txObj = box.get(txhash);
+    txObj.merged = true;
+    txObj.save();
     await box.close();
     return;
   }

@@ -220,4 +220,79 @@ class WithdrawManagerApi {
       return null;
     }
   }
+
+  static Future<int> posStatusCodes(String txHash, String exitHash) async {
+    String burnUrl = baseUrl + "/v1/pos-burn";
+    String exitUrl = baseUrl + "/v1/pos-exit";
+    var body = {
+      "txHashes": [txHash],
+    };
+    var body2 = {
+      "txHashes": [exitHash],
+    };
+    Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
+    Future exitFuture = http.post(exitUrl, body: jsonEncode(body2));
+    var burnStatus = await burnFuture;
+    Map json = jsonDecode(burnStatus.body);
+    BridgeApiData obj = BridgeApiData(
+        txHash: txHash, message: BridgeApiMessage.fromJson(json[txHash]));
+    if (obj.message.code == -4) {
+      if (exitHash != "" && exitHash != null) {
+        var exitResp = await exitFuture;
+        Map json2 = jsonDecode(exitResp.body);
+        BridgeApiData obj2 = BridgeApiData(
+            txHash: txHash,
+            message: BridgeApiMessage.fromJson(json2[exitHash]));
+        return obj2.message.code;
+      } else {
+        return obj.message.code;
+      }
+    }
+  }
+
+  static Future<int> plasmaStatusCodes(
+      String txHash, String confirmHash, String exitHash) async {
+    String burnUrl = baseUrl + "/v1/plasma-burn";
+    String confirmUrl = baseUrl + "/v1/plasma-confirm";
+    String exitUrl = baseUrl + "/v1/plasma-exit";
+    var body1 = {
+      "txHashes": [txHash],
+    };
+
+    var body2 = {
+      "txHashes": [
+        {"burnTxHash": txHash, "confirmTxHash": confirmHash},
+      ]
+    };
+    var body3 = {
+      "txHashes": [exitHash],
+    };
+    Future burnFuture = http.post(burnUrl, body: jsonEncode(body1));
+    Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body2));
+    Future exitFuture = http.post(exitUrl, body: jsonEncode(body3));
+    var burnStatus = await burnFuture;
+    Map json = jsonDecode(burnStatus.body);
+    BridgeApiData obj = BridgeApiData(
+        txHash: txHash, message: BridgeApiMessage.fromJson(json[txHash]));
+    if (obj.message.code == -4) {
+      if (confirmHash != "" && confirmHash != null) {
+        var confirmResp = await confirmFuture;
+        Map json2 = jsonDecode(confirmResp.body);
+        BridgeApiData obj2 = BridgeApiData(
+            txHash: confirmHash,
+            message: BridgeApiMessage.fromJson(json2[confirmHash]));
+        if (obj2.message.code == -9 && exitHash != "" && exitHash != null) {
+          var exitResp = await exitFuture;
+          Map json2 = jsonDecode(exitResp.body);
+          BridgeApiData obj3 = BridgeApiData(
+              txHash: exitHash,
+              message: BridgeApiMessage.fromJson(json2[exitHash]));
+          return obj3.message.code;
+        }
+        return obj2.message.code;
+      } else {
+        return obj.message.code;
+      }
+    }
+  }
 }

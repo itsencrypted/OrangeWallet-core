@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
@@ -21,6 +24,16 @@ class _StakingTabState extends State<StakingTab>
   bool showWarning;
   @override
   void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+      var validatorListCubit = context.read<ValidatorsdataCubit>();
+      var delegatorListCubit = context.read<DelegationsDataCubit>();
+      var ethListCubit = context.read<CovalentTokensListEthCubit>();
+
+      tokenListCubit.getTokensList();
+      _refreshLoop(
+          tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
+    });
     super.initState();
     showWarning = true;
   }
@@ -271,6 +284,21 @@ class _StakingTabState extends State<StakingTab>
     var validatorFutre = validatorCubit.refresh();
     await delegationsFuture;
     await validatorFutre;
+  }
+
+  _refreshLoop(
+      CovalentTokensListMaticCubit cubit,
+      CovalentTokensListEthCubit ethCubit,
+      DelegationsDataCubit dCubit,
+      ValidatorsdataCubit vCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+        ethCubit.refresh();
+        dCubit.refresh();
+        vCubit.refresh();
+      }
+    });
   }
 
   @override

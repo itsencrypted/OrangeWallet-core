@@ -5,33 +5,23 @@ import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
 import 'package:pollywallet/screens/wallet_tab/nft_tile.dart';
 import 'package:pollywallet/theme_data.dart';
 
-class NftListCard extends StatefulWidget {
+class NftListCard extends StatelessWidget {
   final List<Items> tokens;
 
-  const NftListCard({Key key, @required this.tokens}) : super(key: key);
-  @override
-  _NftListCardState createState() => _NftListCardState();
-}
+  NftListCard({Key key, @required this.tokens}) : super(key: key);
 
-class _NftListCardState extends State<NftListCard> {
-  int total;
-  List<Widget> ls = List<Widget>();
   @override
-  void initState() {
-    total = widget.tokens.where((element) => element.nftData != null).length;
+  Widget build(BuildContext context) {
+    int total;
+    List<Widget> ls = List<Widget>();
+    total = tokens.where((element) => element.nftData != null).length;
     ls.add(_divider);
     ls.add(_disclaimer);
     ls.addAll(_tiles());
     ls.add(_divider);
     if (total < 5) {
-      ls.add(_raisedButton());
+      ls.add(_raisedButton(context));
     }
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Card(
       elevation: AppTheme.cardElevations,
       shape: AppTheme.cardShape,
@@ -71,7 +61,7 @@ class _NftListCardState extends State<NftListCard> {
       ));
   List<Widget> _tiles() {
     var tiles = List<Widget>();
-    var ls = widget.tokens.where((element) => element.nftData != null);
+    var ls = tokens.where((element) => element.nftData != null);
     var index = 0;
     for (Items token in ls) {
       if (index == 5) {
@@ -88,12 +78,14 @@ class _NftListCardState extends State<NftListCard> {
     return tiles;
   }
 
-  _raisedButton() {
+  _raisedButton(context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RaisedButton(
-          onPressed: _allCoins,
+          onPressed: () {
+            _allCoins(context);
+          },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Text("View All Tokens"),
@@ -103,7 +95,7 @@ class _NftListCardState extends State<NftListCard> {
     );
   }
 
-  _allCoins() {
+  _allCoins(context) {
     Navigator.pushNamed(context, nftTokenList);
   }
 }

@@ -197,8 +197,6 @@ class _EthTransactionStatusState extends State<EthTransactionStatus> {
 
   Future<void> txStatus(String txHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    print(config.ethEndpoint);
-    print(config.ethWebsocket);
     final client =
         Web3Client(config.ethEndpoint, http.Client(), socketConnector: () {
       return IOWebSocketChannel.connect(config.ethWebsocket).cast<String>();

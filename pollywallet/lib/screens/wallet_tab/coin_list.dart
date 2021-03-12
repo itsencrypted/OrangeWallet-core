@@ -5,33 +5,23 @@ import 'package:pollywallet/screens/wallet_tab/coin_list_tile.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 
-class CoinListCard extends StatefulWidget {
+class CoinListCard extends StatelessWidget {
   final List<Items> tokens;
+  CoinListCard({Key key, @required this.tokens}) : super(key: key);
 
-  const CoinListCard({Key key, @required this.tokens}) : super(key: key);
   @override
-  _CoinListCardState createState() => _CoinListCardState();
-}
-
-class _CoinListCardState extends State<CoinListCard> {
-  int total;
-  List<Widget> ls = List<Widget>();
-  @override
-  void initState() {
-    total = widget.tokens.where((element) => element.nftData == null).length;
+  Widget build(BuildContext context) {
+    print("rebuilding");
+    int total;
+    List<Widget> ls = List<Widget>();
+    total = tokens.where((element) => element.nftData == null).length;
     ls.add(_divider);
     ls.add(_disclaimer);
     ls.addAll(_tiles());
     ls.add(_divider);
     if (total > 5) {
-      ls.add(_raisedButton());
+      ls.add(_raisedButton(context));
     }
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Card(
       elevation: AppTheme.cardElevations,
       shape: AppTheme.cardShape,
@@ -71,7 +61,7 @@ class _CoinListCardState extends State<CoinListCard> {
       ));
   List<Widget> _tiles() {
     var tiles = List<Widget>();
-    var ls = widget.tokens.where((element) => element.nftData == null);
+    var ls = tokens.where((element) => element.nftData == null);
     var index = 0;
     for (Items token in ls) {
       if (index == 5) {
@@ -88,12 +78,14 @@ class _CoinListCardState extends State<CoinListCard> {
     return tiles;
   }
 
-  _raisedButton() {
+  _raisedButton(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RaisedButton(
-          onPressed: _allCoins,
+          onPressed: () {
+            Navigator.pushNamed(context, coinListRoute);
+          },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Text("View All Tokens"),
@@ -101,9 +93,5 @@ class _CoinListCardState extends State<CoinListCard> {
         )
       ],
     );
-  }
-
-  _allCoins() {
-    Navigator.pushNamed(context, coinListRoute);
   }
 }

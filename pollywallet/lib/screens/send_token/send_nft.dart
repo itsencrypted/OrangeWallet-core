@@ -11,6 +11,7 @@ import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/screens/send_token/send_nft_tile.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
@@ -41,251 +42,265 @@ class _SendNftState extends State<SendNft> {
   Widget build(BuildContext context) {
     this.data = context.read<SendTransactionCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
-
+    var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+    _refreshLoop(tokenListCubit);
     return Scaffold(
         appBar: AppBar(title: Text("Send Token")),
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
-            if (state is SendTransactionFinal) {
-              NftData token = state.data.token.nftData
-                  .where((element) => element.tokenId == args.toString())
-                  .first;
-              tokenBalance = token.tokenBalance;
-              this.balance = balance;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(),
-                  Column(
-                    children: [
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: Center(
-                            child: SendNftTile(
-                              data: token,
-                            ),
-                          )),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: TextFormField(
-                          controller: _address,
-                          keyboardAppearance: Brightness.dark,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (val) =>
-                              reg.hasMatch(val) ? null : "Invalid addresss",
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.text,
-                          style: AppTheme.bigLabel,
-                          decoration: InputDecoration(
-                              prefix: FlatButton(
-                                child: Icon(Icons.paste),
-                                onPressed: () async {
-                                  ClipboardData data =
-                                      await Clipboard.getData('text/plain');
-                                  _address.text = data.text;
-                                },
+            return BlocBuilder<CovalentTokensListMaticCubit,
+                CovalentTokensListMaticState>(builder: (context, tokenState) {
+              if (state is SendTransactionFinal &&
+                  tokenState is CovalentTokensListMaticLoaded) {
+                var _token = tokenState.covalentTokenList.data.items
+                    .where((element) =>
+                        state.data.token.contractAddress ==
+                        element.contractAddress)
+                    .first;
+                NftData token = _token.nftData
+                    .where((element) => element.tokenId == args.toString())
+                    .first;
+                tokenBalance = token.tokenBalance;
+                this.balance = balance;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(),
+                    Column(
+                      children: [
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: Center(
+                              child: SendNftTile(
+                                data: token,
                               ),
-                              suffix: FlatButton(
-                                child: Icon(Icons.qr_code),
-                                onPressed: () async {
-                                  var qrResult = await BarcodeScanner.scan();
-                                  RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-                                  print(qrResult.rawContent);
-                                  if (reg.hasMatch(qrResult.rawContent)) {
-                                    print("Regex");
-                                    if (qrResult.rawContent.length == 42) {
-                                      _address.text = qrResult.rawContent;
+                            )),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: TextFormField(
+                            controller: _address,
+                            keyboardAppearance: Brightness.dark,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (val) =>
+                                reg.hasMatch(val) ? null : "Invalid addresss",
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.text,
+                            style: AppTheme.bigLabel,
+                            decoration: InputDecoration(
+                                prefix: FlatButton(
+                                  child: Icon(Icons.paste),
+                                  onPressed: () async {
+                                    ClipboardData data =
+                                        await Clipboard.getData('text/plain');
+                                    _address.text = data.text;
+                                  },
+                                ),
+                                suffix: FlatButton(
+                                  child: Icon(Icons.qr_code),
+                                  onPressed: () async {
+                                    var qrResult = await BarcodeScanner.scan();
+                                    RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
+                                    print(qrResult.rawContent);
+                                    if (reg.hasMatch(qrResult.rawContent)) {
+                                      print("Regex");
+                                      if (qrResult.rawContent.length == 42) {
+                                        _address.text = qrResult.rawContent;
+                                      } else {
+                                        Fluttertoast.showToast(
+                                          msg: "Invalid QR",
+                                        );
+                                      }
                                     } else {
                                       Fluttertoast.showToast(
                                         msg: "Invalid QR",
                                       );
                                     }
-                                  } else {
-                                    Fluttertoast.showToast(
-                                      msg: "Invalid QR",
-                                    );
-                                  }
-                                },
-                              ),
-                              hintText: "Address",
-                              hintStyle: AppTheme.body1,
-                              focusColor: AppTheme.secondaryColor
-                              //focusedBorder: InputBorder.none,
-                              //enabledBorder: InputBorder.none,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SafeArea(
-                        child: ListTile(
-                          leading: FlatButton(
-                            onPressed: () {
-                              if (tokenBalance == null) {
-                                return;
-                              }
-                              setState(() {
-                                tokenCountToSend = int.parse(state
-                                    .data.token.nftData[index].tokenBalance);
-                              });
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.secondaryColor.withOpacity(0.3),
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: tokenBalance == null
-                                        ? Text(
-                                            state.data.token.contractName
-                                                .substring(0, 1)
-                                                .toUpperCase(),
-                                            style: AppTheme.title,
-                                          )
-                                        : Text(
-                                            "Max",
-                                            style: AppTheme.title,
-                                          ),
-                                  )),
-                            )),
-                          ),
-                          contentPadding: EdgeInsets.all(0),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              state.data.token.nftData[index].tokenBalance ==
-                                      null
-                                  ? Text(
-                                      "NFTs",
-                                      style: AppTheme.subtitle,
-                                    )
-                                  : Text(
-                                      "NFTs to send",
-                                      style: AppTheme.subtitle,
-                                    ),
-                              state.data.token.nftData[index].tokenBalance ==
-                                      null
-                                  ? Text(
-                                      state.data.token.nftData.length
-                                              .toString() +
-                                          " " +
-                                          state.data.token.contractName,
-                                      style: AppTheme.title,
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 30,
-                                          child: FlatButton(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              if (tokenCountToSend > 1) {
-                                                setState(() {
-                                                  tokenCountToSend--;
-                                                });
-                                              }
-                                            },
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            child: ClipOval(
-                                                child: Material(
-                                              color: AppTheme.white,
-                                              child: SizedBox(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      Center(child: Text("-"))),
-                                            )),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          child:
-                                              Text(tokenCountToSend.toString()),
-                                        ),
-                                        SizedBox(
-                                          width: 30,
-                                          child: FlatButton(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              if (tokenCountToSend <
-                                                  int.parse(state
-                                                      .data
-                                                      .token
-                                                      .nftData[index]
-                                                      .tokenBalance)) {
-                                                setState(() {
-                                                  tokenCountToSend++;
-                                                });
-                                              }
-                                            },
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            child: ClipOval(
-                                                child: Material(
-                                              color: AppTheme.white,
-                                              child: SizedBox(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      Center(child: Text("+"))),
-                                            )),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          ),
-                          trailing: FlatButton(
-                            onPressed: () {
-                              if (state.data.token.nftData.first.tokenBalance ==
-                                  null) {
-                                _sendERC721(BigInt.parse(args),
-                                    state.data.token.contractAddress, context);
-                              } else {
-                                _sendErc1155(
-                                    BigInt.parse(args),
-                                    BigInt.from(tokenCountToSend),
-                                    state.data.token.contractAddress,
-                                    context);
-                              }
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.primaryColor,
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: Icon(Icons.check,
-                                        color: AppTheme.white),
-                                  )),
-                            )),
+                                  },
+                                ),
+                                hintText: "Address",
+                                hintStyle: AppTheme.body1,
+                                focusColor: AppTheme.secondaryColor
+                                //focusedBorder: InputBorder.none,
+                                //enabledBorder: InputBorder.none,
+                                ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              );
-            } else {
-              return Center(child: Text("Something went Wrong"));
-            }
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SafeArea(
+                          child: ListTile(
+                            leading: FlatButton(
+                              onPressed: () {
+                                if (tokenBalance == null) {
+                                  return;
+                                }
+                                setState(() {
+                                  tokenCountToSend = int.parse(state
+                                      .data.token.nftData[index].tokenBalance);
+                                });
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.secondaryColor.withOpacity(0.3),
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                      child: tokenBalance == null
+                                          ? Text(
+                                              state.data.token.contractName
+                                                  .substring(0, 1)
+                                                  .toUpperCase(),
+                                              style: AppTheme.title,
+                                            )
+                                          : Text(
+                                              "Max",
+                                              style: AppTheme.title,
+                                            ),
+                                    )),
+                              )),
+                            ),
+                            contentPadding: EdgeInsets.all(0),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                state.data.token.nftData[index].tokenBalance ==
+                                        null
+                                    ? Text(
+                                        "NFTs",
+                                        style: AppTheme.subtitle,
+                                      )
+                                    : Text(
+                                        "NFTs to send",
+                                        style: AppTheme.subtitle,
+                                      ),
+                                state.data.token.nftData[index].tokenBalance ==
+                                        null
+                                    ? Text(
+                                        state.data.token.nftData.length
+                                                .toString() +
+                                            " " +
+                                            state.data.token.contractName,
+                                        style: AppTheme.title,
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                            child: FlatButton(
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                if (tokenCountToSend > 1) {
+                                                  setState(() {
+                                                    tokenCountToSend--;
+                                                  });
+                                                }
+                                              },
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: AppTheme.white,
+                                                child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: Center(
+                                                        child: Text("-"))),
+                                              )),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12),
+                                            child: Text(
+                                                tokenCountToSend.toString()),
+                                          ),
+                                          SizedBox(
+                                            width: 30,
+                                            child: FlatButton(
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                if (tokenCountToSend <
+                                                    int.parse(state
+                                                        .data
+                                                        .token
+                                                        .nftData[index]
+                                                        .tokenBalance)) {
+                                                  setState(() {
+                                                    tokenCountToSend++;
+                                                  });
+                                                }
+                                              },
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: AppTheme.white,
+                                                child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: Center(
+                                                        child: Text("+"))),
+                                              )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                              ],
+                            ),
+                            trailing: FlatButton(
+                              onPressed: () {
+                                if (state.data.token.nftData.first
+                                        .tokenBalance ==
+                                    null) {
+                                  _sendERC721(
+                                      BigInt.parse(args),
+                                      state.data.token.contractAddress,
+                                      context);
+                                } else {
+                                  _sendErc1155(
+                                      BigInt.parse(args),
+                                      BigInt.from(tokenCountToSend),
+                                      state.data.token.contractAddress,
+                                      context);
+                                }
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.primaryColor,
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                      child: Icon(Icons.check,
+                                          color: AppTheme.white),
+                                    )),
+                              )),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                );
+              } else {
+                return Center(child: Text("Something went Wrong"));
+              }
+            });
           },
         ));
   }
@@ -313,26 +328,30 @@ class _SendNftState extends State<SendNft> {
 
   _sendErc1155(BigInt id, BigInt amount, String tokenAddress,
       BuildContext context) async {
-    if (validateAddress(_address.text) != null) {
-      Fluttertoast.showToast(
-        msg: "Invalid inputs",
-      );
-      return;
+    try {
+      if (validateAddress(_address.text) != null) {
+        Fluttertoast.showToast(
+          msg: "Invalid inputs",
+        );
+        return;
+      }
+      GlobalKey<State> _key = new GlobalKey<State>();
+      Dialogs.showLoadingDialog(context, _key);
+      Transaction trx = await MaticTransactions.transferErc1155(
+          id, amount, tokenAddress, _address.text);
+      TransactionData transactionData = TransactionData(
+          trx: trx,
+          amount: amount.toString(),
+          type: TransactionType.SEND,
+          to: _address.text);
+
+      Navigator.of(context, rootNavigator: true).pop();
+
+      Navigator.pushNamed(context, confirmMaticTransactionRoute,
+          arguments: transactionData);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     }
-    GlobalKey<State> _key = new GlobalKey<State>();
-    Dialogs.showLoadingDialog(context, _key);
-    Transaction trx = await MaticTransactions.transferErc1155(
-        id, amount, tokenAddress, _address.text);
-    TransactionData transactionData = TransactionData(
-        trx: trx,
-        amount: amount.toString(),
-        type: TransactionType.SEND,
-        to: _address.text);
-
-    Navigator.of(context, rootNavigator: true).pop();
-
-    Navigator.pushNamed(context, confirmMaticTransactionRoute,
-        arguments: transactionData);
   }
 
   String validateAddress(String value) {
@@ -341,5 +360,13 @@ class _SendNftState extends State<SendNft> {
       return 'Enter a valid Ethereum address';
     else
       return null;
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit maticCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        maticCubit.refresh();
+      }
+    });
   }
 }

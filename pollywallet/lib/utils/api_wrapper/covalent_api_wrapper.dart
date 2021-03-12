@@ -17,13 +17,10 @@ class CovalentApiWrapper {
   static const baseUrl = "https://api.covalenthq.com/v1";
   static Future<CovalentTokenList> tokensMaticList() async {
     int id = await BoxUtils.getNetworkConfig();
-    print(id);
     String address = await CredentialManager.getAddress();
     String url;
     CovalentTokenList ctl;
     Future future;
-    Future erc1155Balance;
-    var data2;
     var data;
     if (id == 0) {
       url = baseUrl +
@@ -32,10 +29,9 @@ class CovalentApiWrapper {
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
-      erc1155Balance = MaticTransactions.balanceOfERC1155(
-          BigInt.from(123), "0xA07e45A987F19E25176c877d98388878622623FA");
+
       BigInt native = await future;
-      BigInt erc1155 = await erc1155Balance;
+
       data = Items(
           balance: native.toString(),
           contractAddress: maticAddress,
@@ -45,51 +41,26 @@ class CovalentApiWrapper {
           logoUrl: tokenIconUrl,
           quote: 0,
           quoteRate: 12);
-      if (erc1155 != BigInt.zero && erc1155Balance != null) {
-        data2 = new Items(
-            contractTickerSymbol: "erc1155Test",
-            balance: erc1155.toString(),
-            quote: 0,
-            contractName: "erc1155Test",
-            quoteRate: 0,
-            contractAddress: "0xA07e45A987F19E25176c877d98388878622623FA",
-            logoUrl: tokenIconUrl,
-            nftData: [
-              NftData(
-                  tokenId: 123.toString(),
-                  tokenBalance: erc1155.toString(),
-                  externalData: ExternalData(
-                      name: "ERC1155 Test",
-                      description: "ERC1155 test token for matic.",
-                      image:
-                          "https://media.giphy.com/media/3orieKKmYyvUdR3RkY/giphy.gif"))
-            ],
-            contractDecimals: 0);
-      }
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
-          "/1/address/" +
-          "0x7092Fdbc448698461A3ae98488C35568f368e0AD" +
-          // "/137/address/" +
-          // address +
+          // "/1/address/" +
+          // "0x7092Fdbc448698461A3ae98488C35568f368e0AD" +
+          "/137/address/" +
+          address +
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
     }
-    print(url);
     var resp = await http.get(url);
 
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
     if (data != null) ctl.data.items.add(data);
-    if (data2 != null) ctl.data.items.add(data2);
     return ctl;
   }
 
   static Future<TokenHistory> maticTokenTransfers(
       String contractAddress) async {
-    int id = await BoxUtils.getNetworkConfig();
-    print(id);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     TokenHistory ctl;
     String address = await CredentialManager.getAddress();
@@ -100,7 +71,6 @@ class CovalentApiWrapper {
         "/transfers_v2/?contract-address=" +
         contractAddress +
         "&key=ckey_780ed3c9aba3496e8e9948bada0";
-    print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = TokenHistory.fromJson(json);
@@ -110,7 +80,6 @@ class CovalentApiWrapper {
 
   static Future<CovalentTokenList> tokenEthList() async {
     int id = await BoxUtils.getNetworkConfig();
-    print(id);
     CovalentTokenList ctl;
     if (id == 0) {
       ctl = await TestNetTokenData.goerliTokenList();
@@ -141,10 +110,8 @@ class CovalentApiWrapper {
         address +
         "/transactions_v2/?key=" +
         CovalentKey;
-    print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
-    print(resp.body);
     ctl = MaticTransactionListModel.fromJson(json);
 
     return ctl;

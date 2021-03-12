@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -13,7 +15,6 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
-import 'package:pollywallet/utils/web3_utils/rlp_encode.dart';
 import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:pollywallet/widgets/nft_tile.dart';
@@ -34,10 +35,13 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
+  var ethCubit;
   @override
   initState() {
     Future.delayed(Duration.zero, () {
       _controller = TabController(length: 2, vsync: this);
+
+      _refreshLoop(ethCubit);
       _controller.addListener(() {
         if (_controller.index == 0) {
           bridge = 1;
@@ -52,6 +56,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
 
   @override
   Widget build(BuildContext context) {
+    ethCubit = context.read<CovalentTokensListEthCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print(args);
@@ -120,7 +125,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                           ? Text("Plasma Bridge", style: AppTheme.title)
                           : SizedBox(),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.73,
                     child: ListView.builder(
                       itemCount: state.data.token.nftData.length,
                       itemBuilder: (context, index) {
@@ -410,6 +415,14 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
 
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: transactionData);
+  }
+
+  _refreshLoop(CovalentTokensListEthCubit cubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+      }
+    });
   }
 }
 

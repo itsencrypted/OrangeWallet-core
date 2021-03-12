@@ -21,9 +21,7 @@ class StakingApiWrapper {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.stakingEndpoint + '/validators';
     var resp = await http.get(url);
-    print(url);
     var json = jsonDecode(resp.body);
-    print(resp.body);
     ctl = Validators.fromJson(json);
     return ctl;
   }
@@ -75,9 +73,7 @@ class StakingApiWrapper {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     var address = await CredentialManager.getAddress();
     String url = config.stakingEndpoint + '/delegators/' + address;
-    print(url);
     var resp = await http.get(url);
-    print(resp.body);
     var json = jsonDecode(resp.body);
     ctl = DelegationsPerAddress.fromJson(json);
     return ctl;

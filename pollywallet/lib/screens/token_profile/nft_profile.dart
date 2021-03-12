@@ -5,7 +5,6 @@ import 'package:pollywallet/models/covalent_models/token_history.dart';
 import 'package:pollywallet/models/send_token_model/send_token_data.dart';
 import 'package:pollywallet/screens/token_profile/nft_tile.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
-import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

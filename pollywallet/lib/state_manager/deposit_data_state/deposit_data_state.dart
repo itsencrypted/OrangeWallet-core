@@ -15,7 +15,9 @@ class DepositDataFinal extends DepositDataState {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is DepositDataFinal && o.data == data;
+    return o is DepositDataFinal &&
+        o.data.token.balance == data.token.balance &&
+        data.amount == o.data.amount;
   }
 
   @override

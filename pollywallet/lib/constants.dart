@@ -62,6 +62,10 @@ const String sendNftRoute = "sendNftRoute";
 const String burnNftRoute = "burnNftRoute";
 const String erc1155DepositRoute = "erc1155DepositRoute";
 const String erc1155BurnRoute = "erc1155BurnRoute";
+const String walletConnectRoute = "walletConnectRoute";
+const String pickTokenRoute = "pickTokenRoute";
+const String walletConnectAndroidRoute = "walletConnectAndroidRoute";
+
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";
@@ -96,6 +100,9 @@ const uintMax =
     "115792089237316195423570985008687907853269984665640564039457584007913129639935";
 const ethAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 const maticAddress = "0x0000000000000000000000000000000000001010";
-
+const walletconnectChannel = "com.pollywallet/walletconnect";
+const addressString = "address";
+const privateKeyString = "privateKey";
+const wcUri = "walletConnectUri";
 //ENUMS
 enum BridgeType { PLASMA, POS, NONE, BOTH }

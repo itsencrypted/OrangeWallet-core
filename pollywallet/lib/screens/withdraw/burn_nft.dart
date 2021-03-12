@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -5,6 +7,7 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:pollywallet/utils/fiat_crypto_conversions.dart';
@@ -27,14 +30,21 @@ class _NftBurnState extends State<NftBurn> {
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   int selectedIndex = 0;
+  var tokenListCubit;
   @override
-  initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {});
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      tokenListCubit.getTokensList();
+
+      _refreshLoop(tokenListCubit);
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    tokenListCubit = context.read<CovalentTokensListMaticCubit>();
     this.data = context.read<WithdrawBurnDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
     print("args");
@@ -51,11 +61,18 @@ class _NftBurnState extends State<NftBurn> {
           title: Text("Withdraw from Matic"),
         ),
         body: BlocBuilder<WithdrawBurnDataCubit, WithdrawBurnDataState>(
-          builder: (BuildContext context, state) {
-            if (state is WithdrawBurnDataFinal) {
+            builder: (BuildContext context, state) {
+          return BlocBuilder<CovalentTokensListMaticCubit,
+              CovalentTokensListMaticState>(builder: (context, tokenState) {
+            if (state is WithdrawBurnDataFinal &&
+                tokenState is CovalentTokensListMaticLoaded) {
+              var token = tokenState.covalentTokenList.data.items
+                  .where((element) =>
+                      element.contractAddress ==
+                      state.data.token.contractAddress)
+                  .first;
               var balance = EthConversions.weiToEth(
-                  BigInt.parse(state.data.token.balance),
-                  state.data.token.contractDecimals);
+                  BigInt.parse(token.balance), token.contractDecimals);
               this.balance = balance;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -149,7 +166,7 @@ class _NftBurnState extends State<NftBurn> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: ListView.builder(
-                          itemCount: state.data.token.nftData.length,
+                          itemCount: token.nftData.length,
                           itemBuilder: (context, index) {
                             return FlatButton(
                               onPressed: () {
@@ -159,7 +176,7 @@ class _NftBurnState extends State<NftBurn> {
                               },
                               padding: EdgeInsets.all(0),
                               child: NftDepositTile(
-                                data: state.data.token.nftData[index],
+                                data: token.nftData[index],
                                 selected: index == selectedIndex,
                               ),
                             );
@@ -201,8 +218,7 @@ class _NftBurnState extends State<NftBurn> {
                                 setState(() {
                                   _amount.text =
                                       FiatCryptoConversions.cryptoToFiat(
-                                              balance,
-                                              state.data.token.quoteRate)
+                                              balance, token.quoteRate)
                                           .toString();
                                 });
                               }
@@ -230,7 +246,7 @@ class _NftBurnState extends State<NftBurn> {
                           subtitle: Text(
                             balance.toStringAsFixed(2) +
                                 " " +
-                                state.data.token.contractName,
+                                token.contractName,
                             style: AppTheme.title,
                           ),
                           trailing: FlatButton(
@@ -260,8 +276,8 @@ class _NftBurnState extends State<NftBurn> {
             } else {
               return Center(child: Text("Something went Wrong"));
             }
-          },
-        ));
+          });
+        }));
   }
 
   _sendWithDrawTransaction(
@@ -283,5 +299,13 @@ class _NftBurnState extends State<NftBurn> {
       Navigator.pushNamed(context, confirmMaticTransactionRoute,
           arguments: transactionData);
     }
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit cubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        cubit.refresh();
+      }
+    });
   }
 }

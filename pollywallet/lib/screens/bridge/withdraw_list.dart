@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/token_list_tile_bridge.dart';
@@ -12,6 +15,16 @@ class WithdrawTokenList extends StatefulWidget {
 }
 
 class _WithdrawTokenListState extends State<WithdrawTokenList> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+
+      _refreshLoop(tokenListCubit);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CovalentTokensListMaticCubit,
@@ -66,5 +79,13 @@ class _WithdrawTokenListState extends State<WithdrawTokenList> {
         }
       },
     );
+  }
+
+  _refreshLoop(CovalentTokensListMaticCubit maticCubit) {
+    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+      if (mounted) {
+        maticCubit.refresh();
+      }
+    });
   }
 }

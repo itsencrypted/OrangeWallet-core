@@ -3,6 +3,7 @@ import 'package:pollywallet/screens/deposit/erc1155_deposit.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
 import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
+import 'package:pollywallet/screens/send_token/pick_token.dart';
 import 'package:pollywallet/screens/send_token/send_nft.dart';
 import 'package:pollywallet/screens/settings_screen/export_mnemonic.dart';
 import 'package:pollywallet/screens/settings_screen/accounts.dart';
@@ -14,6 +15,8 @@ import 'package:pollywallet/screens/token_list/nft_list_full.dart';
 import 'package:pollywallet/screens/token_profile/nft_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
+import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
+import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
 import 'package:pollywallet/screens/withdraw/burn_erc1155.dart';
 import 'package:pollywallet/screens/withdraw/burn_nft.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
@@ -66,6 +69,10 @@ class _PollyWalletState extends State<PollyWallet> {
         statusBarBrightness: Brightness.light,
         systemNavigationBarDividerColor: AppTheme.backgroundWhite,
         systemNavigationBarIconBrightness: Brightness.dark));
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     BoxUtils.initializeHive().then((value) {
       BoxUtils.checkLogin().then((bool status) {
         if (status) {
@@ -161,7 +168,10 @@ class _PollyWalletState extends State<PollyWallet> {
               sendNftRoute: (context) => SendNft(),
               burnNftRoute: (context) => NftBurn(),
               erc1155DepositRoute: (context) => Erc1155Deposit(),
-              erc1155BurnRoute: (context) => Erc1155Burn()
+              erc1155BurnRoute: (context) => Erc1155Burn(),
+              walletConnectRoute: (context) => WalletConnectIos(),
+              pickTokenRoute: (context) => PickTokenList(),
+              walletConnectAndroidRoute: (context) => WalletConnectAndroid(),
             },
             home: current),
       ),

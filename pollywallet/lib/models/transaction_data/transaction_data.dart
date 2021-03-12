@@ -7,8 +7,10 @@ class TransactionData {
   final String amount;
   final TransactionType type;
   final BigInt gas;
+  final Items token;
 
-  TransactionData({this.trx, this.to, this.amount, this.type, this.gas});
+  TransactionData(
+      {this.trx, this.to, this.amount, this.type, this.gas, this.token});
   static Map txTypeString = {
     0: "Approve",
     1: "Deposit POS",

@@ -23,3 +23,17 @@ class TransactionData {
     10: "Restake"
   };
 }
+
+enum TransactionType {
+  APPROVE,
+  DEPOSITPOS,
+  DEPOSITPLASMA,
+  WITHDRAW,
+  STAKE,
+  SEND,
+  EXITPOS,
+  CONFIRMPLASMA,
+  EXITPLASMA,
+  SPEEDUP,
+  RESTAKE
+}

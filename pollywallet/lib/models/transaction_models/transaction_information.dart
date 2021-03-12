@@ -15,17 +15,3 @@ class TransactionDetails extends HiveObject {
   String to; //0 testnet 1 mainnet
 
 }
-
-enum TransactionType {
-  APPROVE,
-  DEPOSITPOS,
-  DEPOSITPLASMA,
-  WITHDRAW,
-  STAKE,
-  SEND,
-  EXITPOS,
-  CONFIRMPLASMA,
-  EXITPLASMA,
-  SPEEDUP,
-  RESTAKE
-}

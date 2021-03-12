@@ -3,6 +3,7 @@ import 'package:pollywallet/models/credential_models/credentails_list_model.dart
 import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
+import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 

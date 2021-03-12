@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
-import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
@@ -265,7 +265,7 @@ class _EthTransactionConfirmationState
     final GlobalKey<State> _keyLoader = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _keyLoader);
     String hash = await EthereumTransactions.sendTransaction(
-        args.trx, selectedGas, args.type, context);
+        args.trx, selectedGas, args.type, args, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     if (hash == null || hash == "failed") {
       return;

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
+import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
@@ -332,8 +333,12 @@ class EthereumTransactions {
     return price.getInWei;
   }
 
-  static Future<String> sendTransaction(Transaction trx, BigInt gasPrice,
-      TransactionType type, BuildContext context) async {
+  static Future<String> sendTransaction(
+      Transaction trx,
+      BigInt gasPrice,
+      TransactionType type,
+      TransactionData details,
+      BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
     String privateKey = await CredentialManager.getPrivateKey(context);
@@ -347,6 +352,7 @@ class EthereumTransactions {
         if (type == TransactionType.SPEEDUP) {
           BoxUtils.addPendingTx(txHash, type, trx.to.hex);
         }
+        if (details.type.index == 1 || details.type.index == 2) {}
         return txHash;
       } catch (e) {
         print(e);

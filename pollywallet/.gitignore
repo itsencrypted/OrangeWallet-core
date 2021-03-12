@@ -31,12 +31,7 @@
 .pub-cache/
 .pub/
 /build/
-<<<<<<< HEAD
 /ios/build/
-=======
-/ios/build
-
->>>>>>> d8b90024338f461246f9aaa9f09fb7a2f3d6d285
 # Web related
 lib/generated_plugin_registrant.dart
 

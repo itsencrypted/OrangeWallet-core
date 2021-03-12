@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:pollywallet/constants.dart';
-import 'package:pollywallet/models/tansaction_data/transaction_data.dart';
+import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/matic_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';

@@ -178,13 +178,22 @@ class BoxUtils {
     return;
   }
 
+  static Future<Box<DepositTransaction>> getDepositTransactionsList() async {
+    var network = await getNetworkConfig();
+    var boxName = depositTransactionDbBox + network.toString();
+    Box<DepositTransaction> box =
+        await Hive.openBox<DepositTransaction>(boxName);
+
+    return box;
+  }
+
   static Future<List<TransactionDetails>> getPendingTx(
       EtherScanTxList merged) async {
     var network = await getNetworkConfig();
     var boxName = pendingTxBox + network.toString();
     Box<TransactionDetails> box =
         await Hive.openBox<TransactionDetails>(boxName);
-    var currentPending = List<TransactionDetails>();
+    var currentPending = [];
     Map<String, TransactionDetails> map = {};
     box.values.forEach((element) {
       bool flag = false;

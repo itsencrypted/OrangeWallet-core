@@ -65,6 +65,7 @@ const String erc1155BurnRoute = "erc1155BurnRoute";
 const String walletConnectRoute = "walletConnectRoute";
 const String pickTokenRoute = "pickTokenRoute";
 const String walletConnectAndroidRoute = "walletConnectAndroidRoute";
+const String transactionDetailsRoute = "transactionDetailsRoute";
 
 //strings
 const endpoint = "endpoint";

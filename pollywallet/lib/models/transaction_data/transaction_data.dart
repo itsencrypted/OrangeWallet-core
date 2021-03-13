@@ -1,3 +1,4 @@
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:web3dart/web3dart.dart';
 

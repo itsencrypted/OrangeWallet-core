@@ -8,7 +8,7 @@ import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/api_wrapper/deposit_bridge_api.dart';
 import 'package:pollywallet/utils/misc/box.dart';
-import 'package:timelines/timelines.dart';
+import 'package:pollywallet/widgets/transaction_details_timeline.dart';
 
 class TransactionDetails extends StatefulWidget {
   @override
@@ -19,11 +19,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   bool show = false;
   Box<DepositTransaction> box;
   BridgeApiData bridgeApiData;
+  bool transactionPending = true;
   final List<String> processes = [
-    'done',
-    'done',
-    'asfa',
-    'mun',
+    'Initialized',
+    'Transaction Pending',
+    'Transaction Confirmed',
   ];
 
   @override
@@ -57,37 +57,49 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 40),
+                padding: EdgeInsets.symmetric(
+                    vertical: AppTheme.paddingHeight20 * 2),
                 child: Column(
                   children: [
+                    Container(
+                      padding: EdgeInsets.all(AppTheme.paddingHeight / 4),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.cardRadiusSmall)),
+                      child: Text(
+                        'afsasfa',
+                        style: AppTheme.body2White,
+                      ),
+                    ),
                     Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
                             tokenIcon,
-                            height: 36,
+                            height: AppTheme.tokenIconHeight,
                           ),
                           SizedBox(
-                            width: 16,
+                            width: AppTheme.paddingHeight,
                           ),
                           Text(
                             "\$${box?.values?.first?.amount} ${box?.values?.first?.name}",
                             style: AppTheme.display1,
                           ),
                           SizedBox(
-                            width: 52,
+                            width: AppTheme.paddingHeight20 * 2,
                           ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
                       child: Text(
                         '\$${box?.values?.first?.amount}',
                         style: AppTheme.subtitle,
@@ -97,8 +109,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ),
               Card(
+                shape: AppTheme.cardShape,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(AppTheme.paddingHeight),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -109,32 +122,44 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         children: [
                           Icon(
                             Icons.timer,
-                            color: Colors.amber,
+                            color: AppTheme.yellow_500,
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(left: 8),
+                              padding: EdgeInsets.only(
+                                  left: AppTheme.paddingHeight / 2),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Sending Transaction'),
                                   Text(
-                                    'Transaction may take a few moments to complete.',
+                                    transactionPending
+                                        ? 'Sending Transaction'
+                                        : "Transaction Successful",
+                                    style: AppTheme.header_H5,
+                                  ),
+                                  Text(
+                                    transactionPending
+                                        ? 'Transaction may take a few moments to complete.'
+                                        : "Transaction Finished Successfully",
                                     maxLines: 4,
+                                    style: AppTheme.body2,
                                   ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('${bridgeApiData?.message?.code}'),
+                                      Text(
+                                        '${bridgeApiData?.message?.code}',
+                                        style: AppTheme.body2,
+                                      ),
                                       IconButton(
                                           icon: Icon(Icons
-                                              .arrow_drop_down_circle_outlined),
+                                              .keyboard_arrow_down_outlined),
                                           onPressed: () {
                                             setState(() {
                                               show = !show;
                                             });
-                                          })
+                                          }),
                                     ],
                                   ),
                                 ],
@@ -153,6 +178,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             ),
                             TransactionDetailsTimeline(
                               details: processes,
+                              doneTillIndex: 1,
                             )
                           ],
                         )
@@ -161,8 +187,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ),
               Card(
+                shape: AppTheme.cardShape,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
                   child: Column(
                     children: [
                       Container(
@@ -187,19 +214,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                           ],
                         ),
                       ),
-                      ListTile(
-                        leading: Image.asset(
-                          tokenIcon,
-                          height: 36,
-                        ),
-                        title: Text(
-                          'from',
-                          style: AppTheme.subtitle,
-                        ),
-                        subtitle: Text(
-                          "afsassssss",
-                          style: AppTheme.title,
-                        ),
+                      getListTile(
+                        imageUrl: tokenIcon,
+                        title: 'from',
+                        subtitle: "afsassssss",
                         // trailing: IconButton(
                         //     icon: Icon(
                         //       Icons.file_copy,
@@ -207,19 +225,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         //     ),
                         //     onPressed: () {}),
                       ),
-                      ListTile(
-                        leading: Image.asset(
-                          tokenIcon,
-                          height: 36,
-                        ),
-                        title: Text(
-                          'to',
-                          style: AppTheme.subtitle,
-                        ),
-                        subtitle: Text(
-                          "afsassssss",
-                          style: AppTheme.title,
-                        ),
+                      getListTile(
+                        imageUrl: tokenIcon,
+                        title: 'to',
+                        subtitle: "Matic Network",
                         trailing: IconButton(
                             icon: Icon(
                               Icons.file_copy,
@@ -230,19 +239,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                       Divider(
                         color: Colors.grey,
                       ),
-                      ListTile(
-                        leading: Image.asset(
-                          tokenIcon,
-                          height: 36,
-                        ),
-                        title: Text(
-                          'Transaction Hash',
-                          style: AppTheme.subtitle,
-                        ),
-                        subtitle: Text(
-                          "afsassssss",
-                          style: AppTheme.title,
-                        ),
+                      getListTile(
+                        imageUrl: tokenIcon,
+                        title: 'Transaction Hash',
+                        subtitle: 'afsassssss',
                         trailing: IconButton(
                             icon: Icon(
                               Icons.file_copy,
@@ -259,6 +259,24 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         ),
       ),
     );
+  }
+
+  Widget getListTile(
+      {String imageUrl, String title, String subtitle, Widget trailing}) {
+    return ListTile(
+        leading: Image.asset(
+          imageUrl,
+          height: AppTheme.tokenIconHeight,
+        ),
+        title: Text(
+          title,
+          style: AppTheme.subtitle,
+        ),
+        subtitle: Text(
+          subtitle,
+          style: AppTheme.title,
+        ),
+        trailing: trailing);
   }
 
   Widget detailsArea({String title, String subtitle, Widget topWidget}) {
@@ -283,67 +301,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 .copyWith(color: AppTheme.balanceSub.color.withOpacity(0.6)),
           )
         ],
-      ),
-    );
-  }
-}
-
-class TransactionDetailsTimeline extends StatelessWidget {
-  final List<String> details;
-  TransactionDetailsTimeline({this.details});
-  @override
-  Widget build(BuildContext context) {
-    return FixedTimeline.tileBuilder(
-      mainAxisSize: MainAxisSize.min,
-      theme: TimelineThemeData(
-        direction: Axis.vertical,
-        nodePosition: 0,
-        color: Colors.blue,
-        indicatorTheme: IndicatorThemeData(
-          position: 0,
-          size: 20.0,
-        ),
-        connectorTheme: ConnectorThemeData(
-          thickness: 2.5,
-        ),
-      ),
-      builder: TimelineTileBuilder.connected(
-        connectionDirection: ConnectionDirection.before,
-        itemCount: details.length,
-        contentsBuilder: (_, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 8.0, bottom: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  details[index],
-                ),
-                Text("messages: processes[index].messages"),
-              ],
-            ),
-          );
-        },
-        indicatorBuilder: (_, index) {
-          if (details[index] == 'done') {
-            return DotIndicator(
-              color: Colors.red,
-              child: Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 12.0,
-              ),
-            );
-          } else {
-            return OutlinedDotIndicator(
-              borderWidth: 2.5,
-            );
-          }
-        },
-        connectorBuilder: (_, index, ___) => SolidLineConnector(
-          color: details[index] == 'done' ? Colors.red : null,
-        ),
       ),
     );
   }

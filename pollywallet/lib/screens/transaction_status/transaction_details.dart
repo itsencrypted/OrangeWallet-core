@@ -192,10 +192,15 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Icon(
-                  Icons.timer,
-                  color: AppTheme.yellow_500,
-                ),
+                transactionPending
+                    ? Icon(
+                        Icons.timer,
+                        color: AppTheme.yellow_500,
+                      )
+                    : Icon(
+                        Icons.check,
+                        color: Colors.teal[500],
+                      ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(left: AppTheme.paddingHeight / 2),

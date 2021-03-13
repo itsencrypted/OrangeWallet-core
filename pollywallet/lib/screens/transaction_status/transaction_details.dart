@@ -26,13 +26,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     'Transaction Confirmed',
   ];
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    //_getBox();
-    super.initState();
-  }
-
   _getBox() async {
     box = await BoxUtils.getDepositTransactionsList();
     log(box.values.toString());
@@ -60,132 +53,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: AppTheme.paddingHeight20 * 2),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(AppTheme.paddingHeight / 4),
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius:
-                              BorderRadius.circular(AppTheme.cardRadiusSmall)),
-                      child: Text(
-                        'afsasfa',
-                        style: AppTheme.body2White,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            tokenIcon,
-                            height: AppTheme.tokenIconHeight,
-                          ),
-                          SizedBox(
-                            width: AppTheme.paddingHeight,
-                          ),
-                          Text(
-                            "\$${box?.values?.first?.amount} ${box?.values?.first?.name}",
-                            style: AppTheme.display1,
-                          ),
-                          SizedBox(
-                            width: AppTheme.paddingHeight20 * 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                      child: Text(
-                        '\$${box?.values?.first?.amount}',
-                        style: AppTheme.subtitle,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                shape: AppTheme.cardShape,
-                child: Padding(
-                  padding: EdgeInsets.all(AppTheme.paddingHeight),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Icon(
-                            Icons.timer,
-                            color: AppTheme.yellow_500,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: AppTheme.paddingHeight / 2),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    transactionPending
-                                        ? 'Sending Transaction'
-                                        : "Transaction Successful",
-                                    style: AppTheme.header_H5,
-                                  ),
-                                  Text(
-                                    transactionPending
-                                        ? 'Transaction may take a few moments to complete.'
-                                        : "Transaction Finished Successfully",
-                                    maxLines: 4,
-                                    style: AppTheme.body2,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${bridgeApiData?.message?.code}',
-                                        style: AppTheme.body2,
-                                      ),
-                                      IconButton(
-                                          icon: Icon(Icons
-                                              .keyboard_arrow_down_outlined),
-                                          onPressed: () {
-                                            setState(() {
-                                              show = !show;
-                                            });
-                                          }),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (show)
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Divider(
-                              color: Colors.grey,
-                            ),
-                            TransactionDetailsTimeline(
-                              details: processes,
-                              doneTillIndex: 1,
-                            )
-                          ],
-                        )
-                    ],
-                  ),
-                ),
-              ),
+              getTopContainer(),
+              getStatusCard(),
               Card(
                 shape: AppTheme.cardShape,
                 child: Padding(
@@ -256,6 +125,133 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget getTopContainer() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: AppTheme.paddingHeight20 * 2),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(AppTheme.paddingHeight / 4),
+            decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(AppTheme.cardRadiusSmall)),
+            child: Text(
+              'afsasfa',
+              style: AppTheme.body2White,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  tokenIcon,
+                  height: AppTheme.tokenIconHeight,
+                ),
+                SizedBox(
+                  width: AppTheme.paddingHeight,
+                ),
+                Text(
+                  "\$${box?.values?.first?.amount} ${box?.values?.first?.name}",
+                  style: AppTheme.display1,
+                ),
+                SizedBox(
+                  width: AppTheme.paddingHeight20 * 2,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+            child: Text(
+              '\$${box?.values?.first?.amount}',
+              style: AppTheme.subtitle,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getStatusCard() {
+    return Card(
+      shape: AppTheme.cardShape,
+      child: Padding(
+        padding: EdgeInsets.all(AppTheme.paddingHeight),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Icon(
+                  Icons.timer,
+                  color: AppTheme.yellow_500,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: AppTheme.paddingHeight / 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          transactionPending
+                              ? 'Sending Transaction'
+                              : "Transaction Successful",
+                          style: AppTheme.header_H5,
+                        ),
+                        Text(
+                          transactionPending
+                              ? 'Transaction may take a few moments to complete.'
+                              : "Transaction Finished Successfully",
+                          maxLines: 4,
+                          style: AppTheme.body2,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${bridgeApiData?.message?.code}',
+                              style: AppTheme.body2,
+                            ),
+                            IconButton(
+                                icon: Icon(Icons.keyboard_arrow_down_outlined),
+                                onPressed: () {
+                                  setState(() {
+                                    show = !show;
+                                  });
+                                }),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (show)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  TransactionDetailsTimeline(
+                    details: processes,
+                    doneTillIndex: 1,
+                  )
+                ],
+              )
+          ],
         ),
       ),
     );

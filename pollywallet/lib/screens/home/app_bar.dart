@@ -112,6 +112,15 @@ class _HomeAppBar extends State<HomeAppBar> {
       ),
       actions: [
         TextButton(
+          child: Icon(
+            Icons.notifications_active_outlined,
+            color: AppTheme.darkerText,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, notificationsScreenRoute);
+          },
+        ),
+        TextButton(
           child: Image.asset("assets/icons/qr_icon.png",
               color: AppTheme.darkerText),
           onPressed: () async {
@@ -142,7 +151,7 @@ class _HomeAppBar extends State<HomeAppBar> {
                 Navigator.pushNamed(context, walletConnectAndroidRoute,
                     arguments: [privateKey, qrResult.rawContent]);
               } else if (Platform.isIOS) {
-                Navigator.pushNamed(context, walletConnectRoute,
+                Navigator.pushNamed(context, walletConnectIosRoute,
                     arguments: [privateKey, qrResult.rawContent]);
               } else {
                 Fluttertoast.showToast(msg: "Unsupported Platform");

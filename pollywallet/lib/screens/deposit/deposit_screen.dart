@@ -513,6 +513,7 @@ class _DepositScreenState extends State<DepositScreen>
               to: config.erc20PredicatePos,
               amount: _amount.text,
               trx: trx,
+              token: state.data.token,
               type: TransactionType.DEPOSITPOS);
         } else {
           trx = await EthereumTransactions.depositErc20Plasma(
@@ -521,6 +522,7 @@ class _DepositScreenState extends State<DepositScreen>
               to: config.depositManager,
               amount: _amount.text,
               trx: trx,
+              token: state.data.token,
               type: TransactionType.DEPOSITPLASMA);
         }
       }

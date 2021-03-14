@@ -53,6 +53,10 @@ class _SettingsTabState extends State<SettingsTab>
             showTrailingIcon: false,
             onTap: () {
               print('tos');
+              Navigator.pushNamed(
+                context,
+                transactionDetailsRoute,
+              );
             }),
       ]),
     );

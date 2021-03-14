@@ -10,6 +10,13 @@ class AppTheme {
   static const Color secondaryColor = Color(0xffEABC78);
   static const Color black = Color(0xFF000000);
   static const Color warningCardColor = Color(0xFFD3AA6B);
+  static const Color warmgray_200 = Color(0xFFD2CDC5);
+  static const Color warmgray_300 = Color(0xFFB6B1A8);
+
+  static const Color warmgray_900 = Color(0xFF26241E);
+
+  static const Color purple_600 = Color(0xFF8046E4);
+  static const Color yellow_500 = Color(0xFFE7B549);
 
   static const Color grey = Color(0xFF3A5160);
   static const Color stackingGrey = Color(0xFFF3F2EF);
@@ -169,6 +176,33 @@ class AppTheme {
     fontSize: 16,
     letterSpacing: 0.2,
     color: black, // was lightText
+  );
+
+  static const TextStyle header_H5 = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    letterSpacing: 0.18,
+    color: warmgray_900,
+  );
+
+  static const TextStyle label_xsmall = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 12,
+    letterSpacing: 0.2,
+    color: warmgray_900,
+  );
+
+  static const TextStyle caption_normal = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    color: warmgray_300,
   );
   static const cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(cardRadius)));

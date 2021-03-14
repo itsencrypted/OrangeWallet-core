@@ -148,6 +148,16 @@ class BoxUtils {
     return;
   }
 
+  static Future<void> removePendingTx(String txhash) async {
+    var network = await getNetworkConfig();
+    var boxName = pendingTxBox + network.toString();
+    Box<TransactionDetails> box =
+        await Hive.openBox<TransactionDetails>(boxName);
+    box.delete(txhash);
+    await box.close();
+    return;
+  }
+
   static Future<void> addDepositTransaction(
       String txhash,
       String name,

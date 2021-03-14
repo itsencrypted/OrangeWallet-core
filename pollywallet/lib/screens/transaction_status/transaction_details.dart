@@ -1,13 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/bridge_api_models/bridge_api_data.dart';
 import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/api_wrapper/deposit_bridge_api.dart';
-import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/widgets/transaction_details_timeline.dart';
 
 class TransactionDetails extends StatefulWidget {
@@ -25,15 +22,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     'Transaction Pending',
     'Transaction Confirmed',
   ];
-
-  _getBox() async {
-    box = await BoxUtils.getDepositTransactionsList();
-    log(box.toString());
-    bridgeApiData =
-        await DepositBridgeApi.depositStatusCode(box?.first?.txHash);
-
-    log(bridgeApiData.toString());
-  }
 
   @override
   Widget build(BuildContext context) {

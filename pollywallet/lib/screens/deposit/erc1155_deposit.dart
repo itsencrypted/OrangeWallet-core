@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
@@ -104,235 +105,253 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                 : null),
         body: BlocBuilder<DepositDataCubit, DepositDataState>(
           builder: (BuildContext context, state) {
-            if (state is DepositDataFinal) {
-              var balance = EthConversions.weiToEth(
-                  BigInt.parse(state.data.token.balance),
-                  state.data.token.contractDecimals);
-              this.balance = balance;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  bridge == 1
-                      ? Text(
-                          "POS bridge",
-                          style: AppTheme.title,
-                        )
-                      : bridge == 2
-                          ? Text("Plasma Bridge", style: AppTheme.title)
-                          : SizedBox(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.73,
-                    child: ListView.builder(
-                      itemCount: state.data.token.nftData.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedData
-                                          .where((element) =>
-                                              element.index == index)
-                                          .isNotEmpty
-                                      ? selectedData.removeWhere(
+            return BlocBuilder<CovalentTokensListEthCubit,
+                    CovalentTokensListEthState>(
+                builder: (BuildContext context, tokenState) {
+              if (state is DepositDataFinal &&
+                  tokenState is CovalentTokensListEthLoaded) {
+                var token = tokenState.covalentTokenList.data.items
+                    .where((element) =>
+                        element.contractAddress ==
+                        state.data.token.contractAddress)
+                    .first;
+                var balance = EthConversions.weiToEth(
+                    BigInt.parse(token.balance), token.contractDecimals);
+                this.balance = balance;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    bridge == 1
+                        ? Text(
+                            "POS bridge",
+                            style: AppTheme.title,
+                          )
+                        : bridge == 2
+                            ? Text("Plasma Bridge", style: AppTheme.title)
+                            : SizedBox(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.73,
+                      child: ListView.builder(
+                        itemCount: state.data.token.nftData.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              FlatButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selectedData
+                                            .where((element) =>
+                                                element.index == index)
+                                            .isNotEmpty
+                                        ? selectedData.removeWhere(
+                                            (element) => element.index == index)
+                                        : selectedData
+                                            .add(_Erc1155DepositData(1, index));
+                                  });
+                                },
+                                padding: EdgeInsets.all(0),
+                                child: NftDepositTile(
+                                  data: token.nftData[index],
+                                  selected: selectedData
+                                      .where(
                                           (element) => element.index == index)
-                                      : selectedData
-                                          .add(_Erc1155DepositData(1, index));
-                                });
-                              },
-                              padding: EdgeInsets.all(0),
-                              child: NftDepositTile(
-                                data: state.data.token.nftData[index],
-                                selected: selectedData
-                                    .where((element) => element.index == index)
-                                    .isNotEmpty,
-                              ),
-                            ),
-                            selectedData
-                                    .where((element) => element.index == index)
-                                    .isNotEmpty
-                                ? Text(
-                                    "Amount to depoist",
-                                    style: AppTheme.subtitle,
-                                  )
-                                : Container(),
-                            selectedData
-                                    .where((element) => element.index == index)
-                                    .isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 30,
-                                        child: FlatButton(
-                                          padding: EdgeInsets.all(0),
-                                          onPressed: () {
-                                            if (selectedData
-                                                    .where((element) =>
-                                                        element.index == index)
-                                                    .first
-                                                    .count >
-                                                1) {
-                                              setState(() {
-                                                selectedData
-                                                    .where((element) =>
-                                                        element.index == index)
-                                                    .first
-                                                    .count--;
-                                              });
-                                            }
-                                          },
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          child: ClipOval(
-                                              child: Material(
-                                            color: AppTheme.white,
-                                            child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                    Center(child: Text("-"))),
-                                          )),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        child: Text(selectedData.isEmpty ||
-                                                selectedData
-                                                    .where((element) =>
-                                                        element.index == index)
-                                                    .isEmpty
-                                            ? "0"
-                                            : selectedData[index]
-                                                .count
-                                                .toString()),
-                                      ),
-                                      SizedBox(
-                                        width: 30,
-                                        child: FlatButton(
-                                          padding: EdgeInsets.all(0),
-                                          onPressed: () {
-                                            if (selectedData
-                                                    .where((element) =>
-                                                        element.index == index)
-                                                    .first
-                                                    .count <
-                                                int.parse(state
-                                                    .data
-                                                    .token
-                                                    .nftData[index]
-                                                    .tokenBalance)) {
-                                              setState(() {
-                                                selectedData
-                                                    .where((element) =>
-                                                        element.index == index)
-                                                    .first
-                                                    .count++;
-                                              });
-                                            }
-                                          },
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          child: ClipOval(
-                                              child: Material(
-                                            color: AppTheme.white,
-                                            child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                    Center(child: Text("+"))),
-                                          )),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      bridge == 2
-                          ? ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
+                                      .isNotEmpty,
                                 ),
                               ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            )
-                          : Container(),
-                      SafeArea(
-                        child: ListTile(
-                          leading: FlatButton(
-                            onPressed: () {},
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.secondaryColor.withOpacity(0.3),
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                      child: Text(
-                                    state.data.token.contractName
-                                        .substring(0, 1)
-                                        .toUpperCase(),
-                                    style: AppTheme.title,
-                                  ))),
-                            )),
-                          ),
-                          contentPadding: EdgeInsets.all(0),
-                          title: Text(
-                            state.data.token.contractName,
-                          ),
-                          trailing: FlatButton(
-                            onPressed: () {
-                              _sendDepositTransactionERC1155(state, context);
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.primaryColor,
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: Icon(Icons.check,
-                                        color: AppTheme.white),
-                                  )),
-                            )),
+                              selectedData
+                                      .where(
+                                          (element) => element.index == index)
+                                      .isNotEmpty
+                                  ? Text(
+                                      "Amount to depoist",
+                                      style: AppTheme.subtitle,
+                                    )
+                                  : Container(),
+                              selectedData
+                                      .where(
+                                          (element) => element.index == index)
+                                      .isNotEmpty
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (selectedData
+                                                      .where((element) =>
+                                                          element.index ==
+                                                          index)
+                                                      .first
+                                                      .count >
+                                                  1) {
+                                                setState(() {
+                                                  selectedData
+                                                      .where((element) =>
+                                                          element.index ==
+                                                          index)
+                                                      .first
+                                                      .count--;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("-"))),
+                                            )),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          child: Text(selectedData.isEmpty ||
+                                                  selectedData
+                                                      .where((element) =>
+                                                          element.index ==
+                                                          index)
+                                                      .isEmpty
+                                              ? "0"
+                                              : selectedData[index]
+                                                  .count
+                                                  .toString()),
+                                        ),
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (selectedData
+                                                      .where((element) =>
+                                                          element.index ==
+                                                          index)
+                                                      .first
+                                                      .count <
+                                                  int.parse(token.nftData[index]
+                                                      .tokenBalance)) {
+                                                setState(() {
+                                                  selectedData
+                                                      .where((element) =>
+                                                          element.index ==
+                                                          index)
+                                                      .first
+                                                      .count++;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("+"))),
+                                            )),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        bridge == 2
+                            ? ListTile(
+                                leading: ClipOval(
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Container(
+                                    child: Text("!",
+                                        style: TextStyle(
+                                            fontSize: 50,
+                                            color: AppTheme.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                                title: Text("Note"),
+                                subtitle: Text(
+                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                isThreeLine: true,
+                              )
+                            : Container(),
+                        SafeArea(
+                          child: ListTile(
+                            leading: FlatButton(
+                              onPressed: () {},
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.secondaryColor.withOpacity(0.3),
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                        child: Text(
+                                      state.data.token.contractName
+                                          .substring(0, 1)
+                                          .toUpperCase(),
+                                      style: AppTheme.title,
+                                    ))),
+                              )),
+                            ),
+                            contentPadding: EdgeInsets.all(0),
+                            title: Text(
+                              state.data.token.contractName,
+                            ),
+                            trailing: FlatButton(
+                              onPressed: () {
+                                _sendDepositTransactionERC1155(
+                                    state, token, context);
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              child: ClipOval(
+                                  child: Material(
+                                color: AppTheme.primaryColor,
+                                child: SizedBox(
+                                    height: 56,
+                                    width: 56,
+                                    child: Center(
+                                      child: Icon(Icons.check,
+                                          color: AppTheme.white),
+                                    )),
+                              )),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
-              );
-            } else {
-              return Center(child: Text("Something went Wrong"));
-            }
+                      ],
+                    )
+                  ],
+                );
+              } else {
+                return Center(child: Text("Something went Wrong"));
+              }
+            });
           },
         ));
   }
 
   _sendDepositTransactionERC1155(
-      DepositDataFinal state, BuildContext context) async {
+      DepositDataFinal state, Items tokenState, BuildContext context) async {
     if (selectedData.isEmpty) {
       Fluttertoast.showToast(
           msg: "Select at least 1 token", toastLength: Toast.LENGTH_LONG);
@@ -405,6 +424,7 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
           to: config.rootChainProxy,
           amount: "0",
           trx: trx,
+          token: tokenState,
           type: TransactionType.DEPOSITPOS);
     }
 

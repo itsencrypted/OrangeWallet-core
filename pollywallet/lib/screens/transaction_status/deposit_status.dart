@@ -198,7 +198,7 @@ class _DepositStatusState extends State<DepositStatus> {
                   width: AppTheme.paddingHeight,
                 ),
                 Text(
-                  "\$${data.amount} ${data.ticker}",
+                  "${data.amount} ${data.ticker}",
                   style: AppTheme.display1,
                   overflow: TextOverflow.fade,
                 ),
@@ -208,14 +208,14 @@ class _DepositStatusState extends State<DepositStatus> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-            child: Text(
-              '\$${data.amount}',
-              style: AppTheme.subtitle,
-              overflow: TextOverflow.fade,
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+          //   child: Text(
+          //     '\$${int.parse(data.amount)*data.}',
+          //     style: AppTheme.subtitle,
+          //     overflow: TextOverflow.fade,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -332,6 +332,8 @@ class _DepositStatusState extends State<DepositStatus> {
           subtitle,
           style: AppTheme.title,
           softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ),
         trailing: trailing);
   }

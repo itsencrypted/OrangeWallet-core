@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
@@ -111,9 +112,13 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                 CovalentTokensListEthState>(builder: (context, tokenstate) {
               if (state is DepositDataFinal &&
                   tokenstate is CovalentTokensListEthLoaded) {
+                var token = tokenstate.covalentTokenList.data.items
+                    .where((element) =>
+                        element.contractAddress ==
+                        state.data.token.contractAddress)
+                    .first;
                 var balance = EthConversions.weiToEth(
-                    BigInt.parse(state.data.token.balance),
-                    state.data.token.contractDecimals);
+                    BigInt.parse(token.balance), token.contractDecimals);
                 this.balance = balance;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,7 +145,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                             },
                             padding: EdgeInsets.all(0),
                             child: NftDepositTile(
-                              data: state.data.token.nftData[index],
+                              data: token.nftData[index],
                               selected: index == selectedIndex,
                             ),
                           );
@@ -172,14 +177,12 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                           child: ListTile(
                             leading: FlatButton(
                               onPressed: () {
-                                if (state.data.token.nftData[index]
-                                        .tokenBalance ==
-                                    null) {
+                                if (token.nftData[index].tokenBalance == null) {
                                   return;
                                 }
                                 setState(() {
-                                  tokenCountToSend = int.parse(state
-                                      .data.token.nftData[index].tokenBalance);
+                                  tokenCountToSend = int.parse(
+                                      token.nftData[index].tokenBalance);
                                 });
                               },
                               materialTapTargetSize:
@@ -212,10 +215,9 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                             ),
                             trailing: FlatButton(
                               onPressed: () {
-                                if (state.data.token.nftData[index]
-                                        .tokenBalance ==
-                                    null) {
-                                  _sendDepositTransactionERC721(state, context);
+                                if (token.nftData[index].tokenBalance == null) {
+                                  _sendDepositTransactionERC721(
+                                      state, token, context);
                                 } else {
                                   _sendDepositTransactionERC1155(
                                       state, context);
@@ -250,7 +252,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
   }
 
   _sendDepositTransactionERC721(
-      DepositDataFinal state, BuildContext context) async {
+      DepositDataFinal state, Items tokenState, BuildContext context) async {
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -308,6 +310,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
             to: state.data.token.contractAddress,
             amount: "0",
             trx: trx,
+            token: tokenState,
             type: TransactionType.APPROVE);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
@@ -323,6 +326,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
             to: config.rootChainProxy,
             amount: "0",
             trx: trx,
+            token: tokenState,
             type: TransactionType.DEPOSITPOS);
       } else {
         trx = await EthereumTransactions.erc721DepositPlasma(
@@ -332,6 +336,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
             to: config.depositManager,
             amount: "0",
             trx: trx,
+            token: tokenState,
             type: TransactionType.DEPOSITPLASMA);
       }
     }

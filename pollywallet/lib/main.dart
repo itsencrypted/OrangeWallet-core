@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/deposit/erc1155_deposit.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
 import 'package:pollywallet/screens/new_account_pin_screen.dart';
+import 'package:pollywallet/screens/notifications/notifications_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
 import 'package:pollywallet/screens/send_token/pick_token.dart';
 import 'package:pollywallet/screens/send_token/send_nft.dart';
@@ -170,10 +171,12 @@ class _PollyWalletState extends State<PollyWallet> {
               burnNftRoute: (context) => NftBurn(),
               erc1155DepositRoute: (context) => Erc1155Deposit(),
               erc1155BurnRoute: (context) => Erc1155Burn(),
-              walletConnectRoute: (context) => WalletConnectIos(),
+              walletConnectIosRoute: (context) => WalletConnectIos(),
               pickTokenRoute: (context) => PickTokenList(),
               walletConnectAndroidRoute: (context) => WalletConnectAndroid(),
               transactionDetailsRoute: (context) => TransactionDetails(),
+              notificationsScreenRoute: (context) => NotificationsScreen()
+
             },
             home: current),
       ),

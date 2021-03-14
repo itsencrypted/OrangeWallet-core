@@ -139,20 +139,17 @@ class PinWidgetState extends State<PinWidget> {
       });
       return;
     }
-    print("indecrypt");
     Dialogs.showLoadingDialog(context, _keyLoader);
     String salt = await BoxUtils.getSalt();
     String key = args;
     String decrypted = await Encryptions.decrypt(key, salt, pin);
     if (decrypted == Encryptions.failed) {
-      print(failed);
       setState(() {
         failed = true;
         pin = "";
         _pinPutController.text = "";
       });
       if (_keyLoader.currentContext == null) {
-        print(failed);
       } else {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       }

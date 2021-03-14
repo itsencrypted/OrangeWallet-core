@@ -101,9 +101,7 @@ class _SendNftState extends State<SendNft> {
                                   onPressed: () async {
                                     var qrResult = await BarcodeScanner.scan();
                                     RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-                                    print(qrResult.rawContent);
                                     if (reg.hasMatch(qrResult.rawContent)) {
-                                      print("Regex");
                                       if (qrResult.rawContent.length == 42) {
                                         _address.text = qrResult.rawContent;
                                       } else {

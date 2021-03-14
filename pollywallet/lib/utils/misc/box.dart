@@ -118,7 +118,6 @@ class BoxUtils {
   static Future<int> getNetworkConfig() async {
     Box<int> box = await Hive.openBox<int>(networkBox);
     int id = box.get(networkBox);
-    print(id);
     return id;
   }
 
@@ -150,7 +149,13 @@ class BoxUtils {
   }
 
   static Future<void> addDepositTransaction(
-      String txhash, String name, String amount) async {
+      String txhash,
+      String name,
+      String amount,
+      String time,
+      String imageUrl,
+      String ticker,
+      String fee) async {
     var network = await getNetworkConfig();
     var boxName = depositTransactionDbBox + network.toString();
     Box<DepositTransaction> box =
@@ -159,7 +164,11 @@ class BoxUtils {
       ..txHash = txhash
       ..amount = amount
       ..merged = false
-      ..name = name;
+      ..name = name
+      ..imageUrl = imageUrl
+      ..ticker = ticker
+      ..fee = fee
+      ..timeString = time;
     box.put(txhash, txObj);
     await box.close();
     return;
@@ -178,13 +187,18 @@ class BoxUtils {
     return;
   }
 
-  static Future<Box<DepositTransaction>> getDepositTransactionsList() async {
+  static Future<List<DepositTransaction>> getDepositTransactionsList() async {
     var network = await getNetworkConfig();
     var boxName = depositTransactionDbBox + network.toString();
     Box<DepositTransaction> box =
         await Hive.openBox<DepositTransaction>(boxName);
+    var ls = <DepositTransaction>[];
+    for (int i = 0; i < box.length; i++) {
+      ls.add(box.getAt(i));
+    }
+    await box.close();
 
-    return box;
+    return ls;
   }
 
   static Future<List<TransactionDetails>> getPendingTx(
@@ -193,7 +207,8 @@ class BoxUtils {
     var boxName = pendingTxBox + network.toString();
     Box<TransactionDetails> box =
         await Hive.openBox<TransactionDetails>(boxName);
-    var currentPending = [];
+    var currentPending = <TransactionDetails>[];
+    print(box.length);
     Map<String, TransactionDetails> map = {};
     box.values.forEach((element) {
       bool flag = false;
@@ -213,12 +228,12 @@ class BoxUtils {
       try {
         await EthereumTransactions.getTrx(keys[i]);
       } catch (e) {
-        print(e.toString());
         map.remove(keys[i]);
       }
     }
     await box.clear();
-    box.putAll(map);
+    await box.putAll(map);
+    await box.close();
     return currentPending;
   }
 
@@ -228,8 +243,19 @@ class BoxUtils {
         await Hive.openBox<TransactionDetails>(pendingTxBox + "0");
     Box<TransactionDetails> trx2 =
         await Hive.openBox<TransactionDetails>(pendingTxBox + "1");
+    Box<TransactionDetails> deposits1 =
+        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "0");
+    Box<TransactionDetails> deposits2 =
+        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "1");
     creds.clear();
     trx1.clear();
     trx2.clear();
+    deposits1.clear();
+    deposits2.clear();
+    creds.close();
+    trx1.close();
+    trx2.close();
+    deposits1.close();
+    deposits2.close();
   }
 }

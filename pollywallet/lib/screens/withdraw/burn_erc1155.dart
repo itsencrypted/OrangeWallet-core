@@ -44,7 +44,6 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
     tokenListCubit = context.read<CovalentTokensListMaticCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
-    print(args);
 
     if (args == 3 && bridge == 0) {
       bridge = 1;

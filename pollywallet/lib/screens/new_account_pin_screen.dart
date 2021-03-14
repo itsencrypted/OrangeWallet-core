@@ -138,20 +138,17 @@ class NewAccountPinWidgetState extends State<NewAccountPinWidget> {
       });
       return;
     }
-    print("indecrypt");
     Dialogs.showLoadingDialog(context, _keyLoader);
     String salt = await BoxUtils.getSalt();
     String mnemonic = (await BoxUtils.getCredentialBox()).mnemonic;
     String decrypted = await Encryptions.decrypt(mnemonic, salt, pin);
     if (decrypted == Encryptions.failed) {
-      print(failed);
       setState(() {
         failed = true;
         pin = "";
         _pinPutController.text = "";
       });
       if (_keyLoader.currentContext == null) {
-        print(failed);
       } else {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       }

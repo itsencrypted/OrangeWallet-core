@@ -54,12 +54,8 @@ class TokenListTileBridge extends StatelessWidget {
                 if (plasma) {
                   status == 1 ? status = 3 : status = 2;
                 }
-                print(tokenData.contractAddress.toLowerCase());
-                print(ethAddress);
                 if (tokenData.contractAddress.toLowerCase() ==
                     ethAddress.toLowerCase()) {
-                  print(tokenData.contractAddress.toLowerCase());
-                  print(ethAddress);
                   status = 3;
                 }
                 if (status == 0) {
@@ -96,12 +92,9 @@ class TokenListTileBridge extends StatelessWidget {
                 if (plasma) {
                   status == 1 ? status = 3 : status = 2;
                 }
-                print(tokenData.contractAddress.toLowerCase());
-                print(ethAddress);
+
                 if (tokenData.contractAddress.toLowerCase() ==
                     ethAddress.toLowerCase()) {
-                  print(tokenData.contractAddress.toLowerCase());
-                  print(ethAddress);
                   status = 3;
                 }
                 if (status == 0) {

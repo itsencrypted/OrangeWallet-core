@@ -86,7 +86,7 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 10.0),
                                       child: ListTile(
-                                        isThreeLine: true,
+                                        // isThreeLine: true,
                                         leading: Icon(
                                           Icons.check_circle_outline,
                                           color: Colors.green,

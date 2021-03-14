@@ -17,7 +17,7 @@ class TransactionDetails extends StatefulWidget {
 
 class _TransactionDetailsState extends State<TransactionDetails> {
   bool show = false;
-  Box<DepositTransaction> box;
+  List<DepositTransaction> box;
   BridgeApiData bridgeApiData;
   bool transactionPending = true;
   final List<String> processes = [
@@ -28,9 +28,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   _getBox() async {
     box = await BoxUtils.getDepositTransactionsList();
-    log(box.values.toString());
+    log(box.toString());
     bridgeApiData =
-        await DepositBridgeApi.depositStatusCode(box?.values?.first?.txHash);
+        await DepositBridgeApi.depositStatusCode(box?.first?.txHash);
 
     log(bridgeApiData.toString());
   }
@@ -158,7 +158,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   width: AppTheme.paddingHeight,
                 ),
                 Text(
-                  "\$${box?.values?.first?.amount} ${box?.values?.first?.name}",
+                  "\$${box?.first?.amount} ${box?.first?.name}",
                   style: AppTheme.display1,
                 ),
                 SizedBox(
@@ -170,7 +170,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           Padding(
             padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
             child: Text(
-              '\$${box?.values?.first?.amount}',
+              '\$${box?.first?.amount}',
               style: AppTheme.subtitle,
             ),
           ),

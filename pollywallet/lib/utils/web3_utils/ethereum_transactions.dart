@@ -349,10 +349,24 @@ class EthereumTransactions {
         var credentials = await client.credentialsFromPrivateKey(privateKey);
         var txHash = await client.sendTransaction(credentials, trx,
             chainId: config.ethChainId);
-        if (type == TransactionType.SPEEDUP) {
+        if (type != TransactionType.SPEEDUP) {
           BoxUtils.addPendingTx(txHash, type, trx.to.hex);
         }
-        if (details.type.index == 1 || details.type.index == 2) {}
+        if (details.type.index == 1 || details.type.index == 2) {
+          var strx = await client.getTransactionByHash(txHash);
+          print(strx.gas);
+          print(strx.gasPrice.toString());
+          BoxUtils.addDepositTransaction(
+              txHash,
+              details.token.contractName,
+              details.amount,
+              DateTime.now().toString(),
+              details.token.logoUrl,
+              details.token.contractTickerSymbol,
+              EthConversions.weiToEthUnTrimmed(
+                      (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
+                  .toString());
+        }
         return txHash;
       } catch (e) {
         print(e);

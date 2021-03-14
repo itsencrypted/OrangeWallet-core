@@ -28,7 +28,6 @@ class ValidatorsDataStateFinal extends ValidatorsDataState {
   @override
   int get hashCode => data.hashCode;
   _checkEquality(ValidatorsDataStateFinal o1, ValidatorsDataStateFinal o2) {
-    print("equality");
     for (int i = 0; i < o1.data.result.length; i++) {
       var element1 = o1.data.result[i];
       var ls = o2.data.result.where(

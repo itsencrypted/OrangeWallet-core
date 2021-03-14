@@ -27,7 +27,6 @@ class _EthTransactionConfirmationState
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      args = ModalRoute.of(context).settings.arguments;
       if (args.gas != null) {
         gasPrice = args.gas +
             BigInt.two * BigInt.from((args.gas ~/ BigInt.from(10)).toInt());
@@ -55,6 +54,8 @@ class _EthTransactionConfirmationState
 
   @override
   Widget build(BuildContext context) {
+    args = ModalRoute.of(context).settings.arguments;
+
     double cardWidth = MediaQuery.of(context).size.width * 0.2;
     return Scaffold(
       appBar: AppBar(
@@ -262,6 +263,8 @@ class _EthTransactionConfirmationState
   }
 
   _sendTx() async {
+    args = ModalRoute.of(context).settings.arguments;
+    print(args.amount);
     final GlobalKey<State> _keyLoader = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _keyLoader);
     String hash = await EthereumTransactions.sendTransaction(

@@ -14,4 +14,16 @@ class DepositTransaction extends HiveObject {
 
   @HiveField(3)
   String name;
+
+  @HiveField(4)
+  String timeString;
+
+  @HiveField(5)
+  String ticker;
+
+  @HiveField(6)
+  String imageUrl;
+
+  @HiveField(7)
+  String fee;
 }

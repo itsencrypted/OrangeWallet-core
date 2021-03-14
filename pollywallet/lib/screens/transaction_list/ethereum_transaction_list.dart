@@ -20,7 +20,7 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
   bool _loading = true;
   bool _error = false;
   List<Result> result;
-  List<TransactionDetails> pendingTx = List();
+  List<TransactionDetails> pendingTx = <TransactionDetails>[];
   @override
   void initState() {
     try {

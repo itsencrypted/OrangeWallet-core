@@ -11,7 +11,6 @@ class CoinListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("rebuilding");
     int total;
     List<Widget> ls = List<Widget>();
     total = tokens.where((element) => element.nftData == null).length;

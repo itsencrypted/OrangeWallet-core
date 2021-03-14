@@ -62,7 +62,6 @@ class _HomeAppBar extends State<HomeAppBar> {
           child: FlatButton(
             onPressed: () {
               Clipboard.setData(new ClipboardData(text: fullAddress));
-              print(fullAddress);
               Fluttertoast.showToast(msg: "Address Copied");
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -111,6 +110,7 @@ class _HomeAppBar extends State<HomeAppBar> {
         ),
       ),
       actions: [
+        SizedBox(),
         TextButton(
           child: Icon(
             Icons.notifications_active_outlined,
@@ -129,9 +129,7 @@ class _HomeAppBar extends State<HomeAppBar> {
               return;
             }
             RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-            print(qrResult.rawContent);
             if (reg.hasMatch(qrResult.rawContent)) {
-              print("Regex");
               if (qrResult.rawContent.length == 42) {
                 cubit = context.read<SendTransactionCubit>();
                 cubit.setData(SendTokenData(receiver: qrResult.rawContent));
@@ -175,7 +173,6 @@ class _HomeAppBar extends State<HomeAppBar> {
     var stream = box.watch();
     var bcast = stream.asBroadcastStream();
     bcast.listen((event) {
-      print("event");
       CredentialManager.getAddress().then((value) {
         var start = value.substring(0, 4);
         var end = value.substring(value.length - 3);
@@ -191,7 +188,6 @@ class _HomeAppBar extends State<HomeAppBar> {
     var networkBCast = configBox.watch().asBroadcastStream();
     networkBCast.listen((event) async {
       var id = await BoxUtils.getNetworkConfig();
-      print("changed network");
       setState(() {
         this.id = id;
       });

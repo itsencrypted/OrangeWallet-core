@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
@@ -36,10 +37,10 @@ class _DepositScreenState extends State<DepositScreen>
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
+  var ethCubit;
   @override
   initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      final ethCubit = context.read<CovalentTokensListEthCubit>();
       _refreshLoop(ethCubit);
     });
     super.initState();
@@ -47,6 +48,8 @@ class _DepositScreenState extends State<DepositScreen>
 
   @override
   Widget build(BuildContext context) {
+    ethCubit = context.read<CovalentTokensListEthCubit>();
+
     this.args = ModalRoute.of(context).settings.arguments;
     _controller = TabController(length: 2, vsync: this);
 
@@ -60,14 +63,12 @@ class _DepositScreenState extends State<DepositScreen>
       _controller.addListener(() {
         if (_controller.index == 0) {
           bridge = 1;
-          print(bridge);
         } else {
           bridge = 2;
         }
       });
     }
     this.data = context.read<DepositDataCubit>();
-    print(args);
 
     if (args == 3 && bridge == 0) {
       bridge = 1;
@@ -123,9 +124,13 @@ class _DepositScreenState extends State<DepositScreen>
                     CovalentTokensListEthState>(builder: (context, tokenState) {
                   if (state is DepositDataFinal &&
                       tokenState is CovalentTokensListEthLoaded) {
+                    var token = tokenState.covalentTokenList.data.items
+                        .where((element) =>
+                            element.contractAddress ==
+                            state.data.token.contractAddress)
+                        .first;
                     var balance = EthConversions.weiToEth(
-                        BigInt.parse(state.data.token.balance),
-                        state.data.token.contractDecimals);
+                        BigInt.parse(token.balance), token.contractDecimals);
                     this.balance = balance;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,7 +232,8 @@ class _DepositScreenState extends State<DepositScreen>
                                 ),
                                 trailing: FlatButton(
                                   onPressed: () {
-                                    _sendDepositTransaction(state, context);
+                                    _sendDepositTransaction(
+                                        state, token, context);
                                   },
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
@@ -261,9 +267,13 @@ class _DepositScreenState extends State<DepositScreen>
                     CovalentTokensListEthState>(builder: (context, tokenState) {
                   if (state is DepositDataFinal &&
                       tokenState is CovalentTokensListEthLoaded) {
+                    var token = tokenState.covalentTokenList.data.items
+                        .where((element) =>
+                            element.contractAddress ==
+                            state.data.token.contractAddress)
+                        .first;
                     var balance = EthConversions.weiToEth(
-                        BigInt.parse(state.data.token.balance),
-                        state.data.token.contractDecimals);
+                        BigInt.parse(token.balance), token.contractDecimals);
                     this.balance = balance;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -378,7 +388,8 @@ class _DepositScreenState extends State<DepositScreen>
                                 ),
                                 trailing: FlatButton(
                                   onPressed: () {
-                                    _sendDepositTransaction(state, context);
+                                    _sendDepositTransaction(
+                                        state, token, context);
                                   },
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
@@ -410,7 +421,8 @@ class _DepositScreenState extends State<DepositScreen>
         ));
   }
 
-  _sendDepositTransaction(DepositDataFinal state, BuildContext context) async {
+  _sendDepositTransaction(
+      DepositDataFinal state, Items tokenState, BuildContext context) async {
     if (double.tryParse(_amount.text) == null ||
         double.tryParse(_amount.text) < 0 ||
         double.tryParse(_amount.text) > balance) {
@@ -456,14 +468,16 @@ class _DepositScreenState extends State<DepositScreen>
         transactionData = TransactionData(
             to: config.erc20PredicatePos,
             trx: trx,
-            amount: "0",
+            amount: _amount.text,
+            token: tokenState,
             type: TransactionType.DEPOSITPOS);
       } else {
         trx = await EthereumTransactions.depositEthPlasma(_amount.text);
         transactionData = TransactionData(
             to: config.depositManager,
             trx: trx,
-            amount: "0",
+            amount: _amount.text,
+            token: tokenState,
             type: TransactionType.DEPOSITPLASMA);
       }
     }
@@ -513,7 +527,7 @@ class _DepositScreenState extends State<DepositScreen>
               to: config.erc20PredicatePos,
               amount: _amount.text,
               trx: trx,
-              token: state.data.token,
+              token: tokenState,
               type: TransactionType.DEPOSITPOS);
         } else {
           trx = await EthereumTransactions.depositErc20Plasma(
@@ -522,7 +536,7 @@ class _DepositScreenState extends State<DepositScreen>
               to: config.depositManager,
               amount: _amount.text,
               trx: trx,
-              token: state.data.token,
+              token: tokenState,
               type: TransactionType.DEPOSITPLASMA);
         }
       }

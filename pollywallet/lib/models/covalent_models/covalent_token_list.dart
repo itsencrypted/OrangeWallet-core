@@ -195,8 +195,6 @@ class NftData {
   }
 
   Future<ExternalData> _getExternalData(String url, String name) async {
-    print(url);
-
     if (url == null || url == "") {
       return ExternalData(
           name: name,

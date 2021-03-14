@@ -39,7 +39,6 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
         .then((value) {
       setState(() {
         status = value;
-        print(value);
         _loading = false;
       });
     });

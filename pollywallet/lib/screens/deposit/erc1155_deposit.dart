@@ -57,7 +57,6 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
     ethCubit = context.read<CovalentTokensListEthCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
-    print(args);
 
     if (args == 3 && bridge == 0) {
       bridge = 1;

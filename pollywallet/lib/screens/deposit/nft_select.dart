@@ -60,7 +60,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
     ethCubit = context.read<CovalentTokensListEthCubit>();
     this.data = context.read<DepositDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
-    print(args);
 
     if (args == 3 && bridge == 0) {
       bridge = 1;
@@ -110,8 +109,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
           builder: (BuildContext context, state) {
             return BlocBuilder<CovalentTokensListEthCubit,
                 CovalentTokensListEthState>(builder: (context, tokenstate) {
-              print(tokenstate);
-              print(state);
               if (state is DepositDataFinal &&
                   tokenstate is CovalentTokensListEthLoaded) {
                 var balance = EthConversions.weiToEth(
@@ -245,8 +242,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                   ],
                 );
               } else {
-                print(tokenstate);
-                print(state);
                 return Center(child: Text("Something went Wrong"));
               }
             });

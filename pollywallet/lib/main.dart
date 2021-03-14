@@ -15,6 +15,7 @@ import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dar
 import 'package:pollywallet/screens/token_list/nft_list_full.dart';
 import 'package:pollywallet/screens/token_profile/nft_profile.dart';
 import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
+import 'package:pollywallet/screens/transaction_status/deposit_status.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_details.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
@@ -175,8 +176,8 @@ class _PollyWalletState extends State<PollyWallet> {
               pickTokenRoute: (context) => PickTokenList(),
               walletConnectAndroidRoute: (context) => WalletConnectAndroid(),
               transactionDetailsRoute: (context) => TransactionDetails(),
-              notificationsScreenRoute: (context) => NotificationsScreen()
-
+              notificationsScreenRoute: (context) => NotificationsScreen(),
+              depositStatusRoute: (context) => DepositStatus()
             },
             home: current),
       ),

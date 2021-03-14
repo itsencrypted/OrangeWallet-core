@@ -29,7 +29,6 @@ class CovalentTokensListMaticLoaded extends CovalentTokensListMaticState {
   @override
   int get hashCode => covalentTokenList.hashCode;
   _checkEquality(CovalentTokenList o1, CovalentTokenList o2) {
-    print("equality");
     for (int i = 0; i < o1.data.items.length; i++) {
       var element1 = o1.data.items[i];
       var ls = o2.data.items.where(

@@ -37,7 +37,8 @@ class NetworkManager {
         exitPayloadPlasma: config[exitPayloadPlasma],
         erc20PredicatePlasma: config[erc20PredicatePlasma],
         erc721PredicatePlasma: config[erc721PredicatePlasma],
-        erc1155PredicatePos: config[erc1155PredicatePos]);
+        erc1155PredicatePos: config[erc1155PredicatePos],
+        maticBridgeApi: config[maticBridgeApi]);
 
     return obj;
   }

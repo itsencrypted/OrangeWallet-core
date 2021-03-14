@@ -4,8 +4,13 @@ import 'package:timelines/timelines.dart';
 
 class TransactionDetailsTimeline extends StatelessWidget {
   final List<String> details;
+  final List<String> messages;
   final int doneTillIndex;
-  TransactionDetailsTimeline({this.details, this.doneTillIndex});
+  TransactionDetailsTimeline({
+    this.details,
+    this.messages,
+    this.doneTillIndex,
+  });
   @override
   Widget build(BuildContext context) {
     return FixedTimeline.tileBuilder(
@@ -37,7 +42,7 @@ class TransactionDetailsTimeline extends StatelessWidget {
                   style: AppTheme.label_xsmall,
                 ),
                 Text(
-                  "messages: here",
+                  "${messages[index]}",
                   style: AppTheme.caption_normal,
                 ),
               ],

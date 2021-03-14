@@ -45,8 +45,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
   Widget build(BuildContext context) {
     this.data = context.read<WithdrawBurnDataCubit>();
     this.args = ModalRoute.of(context).settings.arguments;
-    print("args");
-    print(args);
 
     if (args == 3 && bridge == 0) {
       bridge = 1;

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
@@ -362,7 +363,19 @@ class _ValidatorAndDelegationProfileState
                                               children: [
                                                 RaisedButton(
                                                   onPressed: () {
-                                                    _restake(reward, validator);
+                                                    _restake(
+                                                        reward,
+                                                        validator,
+                                                        covalentMaticState
+                                                            .covalentTokenList
+                                                            .data
+                                                            .items
+                                                            .where((element) =>
+                                                                element
+                                                                    .contractName
+                                                                    .toLowerCase() ==
+                                                                "matic")
+                                                            .first);
                                                   },
                                                   color:
                                                       AppTheme.secondaryColor,
@@ -420,7 +433,18 @@ class _ValidatorAndDelegationProfileState
                                                 RaisedButton(
                                                   onPressed: () async {
                                                     _claimRewards(
-                                                        reward, validator);
+                                                        reward,
+                                                        validator,
+                                                        covalentMaticState
+                                                            .covalentTokenList
+                                                            .data
+                                                            .items
+                                                            .where((element) =>
+                                                                element
+                                                                    .contractName
+                                                                    .toLowerCase() ==
+                                                                "matic")
+                                                            .first);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -504,7 +528,7 @@ class _ValidatorAndDelegationProfileState
         ));
   }
 
-  _restake(BigInt reward, ValidatorInfo validator) async {
+  _restake(BigInt reward, ValidatorInfo validator, Items token) async {
     if (reward < BigInt.from(10).pow(18)) {
       Fluttertoast.showToast(
           msg: "Rewards too low to redelegate", toastLength: Toast.LENGTH_LONG);
@@ -515,6 +539,7 @@ class _ValidatorAndDelegationProfileState
     var trx = await StakingTransactions.restake(validator.contractAddress);
     TransactionData data = TransactionData(
         trx: trx,
+        token: token,
         amount: EthConversions.weiToEth(reward, 18).toString(),
         to: validator.contractAddress,
         type: TransactionType.RESTAKE);
@@ -523,7 +548,7 @@ class _ValidatorAndDelegationProfileState
         arguments: data);
   }
 
-  _claimRewards(BigInt reward, ValidatorInfo validator) async {
+  _claimRewards(BigInt reward, ValidatorInfo validator, Items token) async {
     if (reward < BigInt.from(10).pow(18)) {
       Fluttertoast.showToast(
           msg: "Rewards too low to be claimed", toastLength: Toast.LENGTH_LONG);
@@ -535,6 +560,7 @@ class _ValidatorAndDelegationProfileState
         await StakingTransactions.withdrawRewards(validator.contractAddress);
     TransactionData data = TransactionData(
         trx: trx,
+        token: token,
         amount: EthConversions.weiToEth(reward, 18).toString(),
         to: validator.contractAddress,
         type: TransactionType.RESTAKE);

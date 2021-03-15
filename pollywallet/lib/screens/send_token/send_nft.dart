@@ -265,12 +265,14 @@ class _SendNftState extends State<SendNft> {
                                   _sendERC721(
                                       BigInt.parse(args),
                                       state.data.token.contractAddress,
+                                      state.data.token,
                                       context);
                                 } else {
                                   _sendErc1155(
                                       BigInt.parse(args),
                                       BigInt.from(tokenCountToSend),
                                       state.data.token.contractAddress,
+                                      state.data.token,
                                       context);
                                 }
                               },
@@ -302,7 +304,8 @@ class _SendNftState extends State<SendNft> {
         ));
   }
 
-  _sendERC721(BigInt id, String tokenAddress, BuildContext context) async {
+  _sendERC721(
+      BigInt id, String tokenAddress, Items token, BuildContext context) async {
     if (validateAddress(_address.text) != null) {
       Fluttertoast.showToast(
         msg: "Invalid inputs",
@@ -315,7 +318,11 @@ class _SendNftState extends State<SendNft> {
     Transaction trx =
         await MaticTransactions.transferERC721(id, tokenAddress, _address.text);
     TransactionData transactionData = TransactionData(
-        trx: trx, amount: "1", type: TransactionType.SEND, to: _address.text);
+        token: token,
+        trx: trx,
+        amount: "1",
+        type: TransactionType.SEND,
+        to: _address.text);
 
     Navigator.of(context, rootNavigator: true).pop();
 
@@ -323,7 +330,7 @@ class _SendNftState extends State<SendNft> {
         arguments: transactionData);
   }
 
-  _sendErc1155(BigInt id, BigInt amount, String tokenAddress,
+  _sendErc1155(BigInt id, BigInt amount, String tokenAddress, Items token,
       BuildContext context) async {
     try {
       if (validateAddress(_address.text) != null) {
@@ -338,6 +345,7 @@ class _SendNftState extends State<SendNft> {
           id, amount, tokenAddress, _address.text);
       TransactionData transactionData = TransactionData(
           trx: trx,
+          token: token,
           amount: amount.toString(),
           type: TransactionType.SEND,
           to: _address.text);

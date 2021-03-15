@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -250,7 +251,7 @@ class _NftBurnState extends State<NftBurn> {
                           ),
                           trailing: FlatButton(
                             onPressed: () {
-                              _sendWithDrawTransaction(state, context);
+                              _sendWithDrawTransaction(state, token, context);
                             },
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
@@ -280,7 +281,7 @@ class _NftBurnState extends State<NftBurn> {
   }
 
   _sendWithDrawTransaction(
-      WithdrawBurnDataFinal state, BuildContext context) async {
+      WithdrawBurnDataFinal state, Items token, BuildContext context) async {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
@@ -292,6 +293,7 @@ class _NftBurnState extends State<NftBurn> {
           amount: _amount.text,
           to: state.data.token.contractAddress,
           trx: trx,
+          token: token,
           type: TransactionType.WITHDRAW);
       Navigator.of(context, rootNavigator: true).pop();
 

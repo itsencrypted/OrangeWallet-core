@@ -297,6 +297,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                       context);
                                 TransactionData args = TransactionData(
                                     trx: trx,
+                                    token: token,
                                     amount: _amount.text,
                                     to: _address.text,
                                     type: TransactionType.SEND);
@@ -515,6 +516,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                         context);
                                   TransactionData args = TransactionData(
                                       trx: trx,
+                                      token: token,
                                       amount: _amount.text,
                                       to: _address.text,
                                       type: TransactionType.SEND);

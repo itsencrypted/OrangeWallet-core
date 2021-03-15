@@ -310,6 +310,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
         amount: _amount.text,
         to: state.data.token.contractAddress,
         trx: trx,
+        token: state.data.token,
         type: TransactionType.WITHDRAW);
     Navigator.of(context, rootNavigator: true).pop();
 

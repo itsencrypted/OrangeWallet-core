@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
@@ -228,8 +229,16 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
                                   trailing: FlatButton(
                                     onPressed: () {
                                       //print(validator.contractAddress);
-                                      _undelegate(validator.contractAddress,
-                                          delegatorInfo);
+                                      _undelegate(
+                                          validator.contractAddress,
+                                          delegatorInfo,
+                                          covalentMaticState
+                                              .covalentTokenList.data.items
+                                              .where((element) =>
+                                                  element.contractName
+                                                      .toLowerCase() ==
+                                                  "matic")
+                                              .first);
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
@@ -282,7 +291,8 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
         ));
   }
 
-  _undelegate(String validatorContracts, DelegatorInfo delegatorInfo) async {
+  _undelegate(String validatorContracts, DelegatorInfo delegatorInfo,
+      Items token) async {
     if (double.tryParse(_amount.text) == null ||
         double.tryParse(_amount.text) < 0 ||
         double.tryParse(_amount.text) > balance) {
@@ -339,6 +349,7 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
             to: config.maticToken,
             amount: "0",
             trx: trx,
+            token: token,
             type: TransactionType.APPROVE);
       } else {
         Navigator.of(context, rootNavigator: true).pop();
@@ -351,6 +362,7 @@ class _StakeWithdrawAmountState extends State<StakeWithdrawAmount> {
           to: validatorContracts,
           amount: _amount.text,
           trx: trx,
+          token: token,
           type: TransactionType.STAKE);
     }
     Navigator.of(context, rootNavigator: true).pop();

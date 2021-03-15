@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
@@ -273,7 +274,7 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                             ),
                             trailing: FlatButton(
                               onPressed: () {
-                                _burnErc1155(state, context);
+                                _burnErc1155(state, token, context);
                               },
                               materialTapTargetSize:
                                   MaterialTapTargetSize.shrinkWrap,
@@ -303,7 +304,8 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
         ));
   }
 
-  _burnErc1155(WithdrawBurnDataFinal state, BuildContext context) async {
+  _burnErc1155(
+      WithdrawBurnDataFinal state, Items token, BuildContext context) async {
     if (selectedData.isEmpty) {
       Fluttertoast.showToast(
           msg: "Select at least 1 token", toastLength: Toast.LENGTH_LONG);
@@ -325,6 +327,7 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
         to: state.data.token.contractAddress,
         amount: sum.toString(),
         trx: trx,
+        token: token,
         type: TransactionType.WITHDRAW);
 
     GlobalKey<State> _key = new GlobalKey<State>();

@@ -10,8 +10,11 @@ import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/api_wrapper/deposit_bridge_api.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 
 import 'package:pollywallet/widgets/transaction_details_timeline.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DepositStatus extends StatefulWidget {
   @override
@@ -25,6 +28,7 @@ class _DepositStatusState extends State<DepositStatus> {
   bool transactionPending = false;
   String fromAddress = "";
   bool loading = true;
+  String blockExplorer = "";
   _DepositStatusState({this.transactionPending});
   final List<String> processes = [
     'Initialized',
@@ -38,6 +42,9 @@ class _DepositStatusState extends State<DepositStatus> {
   ];
   @override
   void initState() {
+    NetworkManager.getNetworkObject().then((config) {
+      blockExplorer = config.blockExplorerEth;
+    });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() {
         data = ModalRoute.of(context).settings.arguments;
@@ -81,7 +88,9 @@ class _DepositStatusState extends State<DepositStatus> {
           IconButton(
               icon: Icon(Icons.ios_share),
               onPressed: () {
-                //TODO add share logic
+                Share.share(
+                  blockExplorer + "/tx/" + data.txHash,
+                );
               })
         ],
       ),
@@ -169,11 +178,9 @@ class _DepositStatusState extends State<DepositStatus> {
                                   title: 'Transaction Hash',
                                   subtitle: data.txHash,
                                   trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.file_copy,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {}),
+                                    icon: Icon(Icons.open_in_browser),
+                                    onPressed: _launchURL,
+                                  ),
                                 )
                               ],
                             ),
@@ -400,5 +407,14 @@ class _DepositStatusState extends State<DepositStatus> {
         });
       }
     });
+  }
+
+  _launchURL() async {
+    var url = blockExplorer + "/tx/" + data.txHash;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

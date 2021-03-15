@@ -9,9 +9,6 @@ import 'package:pollywallet/theme_data.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-
 class ExportMnemonic extends StatefulWidget {
   @override
   _ExportMnemonicState createState() => _ExportMnemonicState();

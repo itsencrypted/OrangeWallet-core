@@ -18,7 +18,7 @@ import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transaction_status/deposit_status.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_details.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_ethereum.dart';
-import 'package:pollywallet/screens/transaction_status/transaction_status_matic_new.dart';
+import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';

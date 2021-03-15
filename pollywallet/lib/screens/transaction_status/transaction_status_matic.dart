@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -10,6 +11,7 @@ import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/widgets/transaction_details_timeline.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -51,7 +53,7 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
   @override
   void initState() {
     NetworkManager.getNetworkObject().then((config) {
-      blockExplorer = config.blockExplorerEth;
+      blockExplorer = config.blockExplorerMatic;
     });
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -73,7 +75,9 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
           IconButton(
               icon: Icon(Icons.ios_share),
               onPressed: () {
-                //TODO add share logic
+                Share.share(
+                  blockExplorer + "/tx/" + txHash,
+                );
               })
         ],
       ),
@@ -158,9 +162,11 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                   trailing: IconButton(
                                       icon: Icon(
                                         Icons.file_copy,
-                                        color: Colors.black,
                                       ),
-                                      onPressed: () {}),
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                            new ClipboardData(text: txHash));
+                                      }),
                                 ),
                                 Divider(
                                   color: Colors.grey,
@@ -170,11 +176,9 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                   title: 'Transaction Hash',
                                   subtitle: txHash,
                                   trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.file_copy,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {}),
+                                    icon: Icon(Icons.open_in_browser),
+                                    onPressed: _launchURL,
+                                  ),
                                 )
                               ],
                             ),

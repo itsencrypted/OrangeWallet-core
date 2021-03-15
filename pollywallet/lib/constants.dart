@@ -6,6 +6,7 @@ const receiveButtonColor = Color(0xffEABC78);
 const String tokenIcon = "assets/icons/token_icon.png";
 const String profitIcon = "assets/icons/profit.png";
 const String imageNotFoundIcon = "assets/icons/image_not_found.png";
+const String ethIcon = "assets/icons/eth_icon.png";
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
 const depositManagerAbi = "assets/abi/deposit_manager.json";
@@ -23,6 +24,8 @@ const erc721ChildAbi = "assets/abi/childERC721.json";
 const erc1155ChildAbi = "assets/abi/childERC1155.json";
 
 // urls
+const maticIconUrl =
+    "https://logos.covalenthq.com/tokens/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png";
 const tokenIconUrl =
     "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
 // Routes

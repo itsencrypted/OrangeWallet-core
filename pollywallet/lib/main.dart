@@ -18,6 +18,7 @@ import 'package:pollywallet/screens/transaction_list/transactions_screen.dart';
 import 'package:pollywallet/screens/transaction_status/deposit_status.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_details.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_ethereum.dart';
+import 'package:pollywallet/screens/transaction_status/transaction_status_matic_new.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
@@ -41,8 +42,6 @@ import 'package:pollywallet/screens/token_list/token_list.dart';
 import 'package:pollywallet/screens/token_profile/coin_profile.dart';
 import 'package:pollywallet/screens/transaction_confirmation_screen/ethereum_transaction_confirmation.dart';
 import 'package:pollywallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
-import 'package:pollywallet/screens/transaction_status/transaction_status_eth.dart';
-import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
 import 'package:pollywallet/screens/withdraw/withdraw_amount.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -144,7 +143,7 @@ class _PollyWalletState extends State<PollyWallet> {
               confirmMaticTransactionRoute: (context) =>
                   MaticTransactionConfirm(),
               transactionStatusMaticRoute: (context) =>
-                  MaticTransactionStatus(),
+                  TransactionStatusMatic(),
               bridgeActionRoute: (context) => BridgeTransfers(),
               allValidatorsRoute: (context) => AllValidators(),
               depositAmountRoute: (context) => DepositScreen(),

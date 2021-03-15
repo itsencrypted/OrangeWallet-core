@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,6 +8,7 @@ import 'package:pollywallet/models/bridge_api_models/bridge_api_data.dart';
 import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/api_wrapper/deposit_bridge_api.dart';
+import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 
 import 'package:pollywallet/widgets/transaction_details_timeline.dart';
@@ -24,6 +24,7 @@ class _DepositStatusState extends State<DepositStatus> {
   BridgeApiData bridgeApiData;
   bool transactionPending = false;
   String fromAddress = "";
+  bool loading = true;
   _DepositStatusState({this.transactionPending});
   final List<String> processes = [
     'Initialized',
@@ -41,14 +42,26 @@ class _DepositStatusState extends State<DepositStatus> {
       setState(() {
         data = ModalRoute.of(context).settings.arguments;
         transactionPending = !data.merged;
-      });
-      DepositBridgeApi.depositStatusCode(data.txHash).then((value) {
-        setState(() {
-          bridgeApiData = value;
-        });
+        if (!transactionPending) {
+          loading = false;
+        }
       });
       if (!data.merged) {
-        _refreshLoop(data.txHash);
+        DepositBridgeApi.depositStatusCode(data.txHash).then((value) {
+          setState(() {
+            bridgeApiData = value;
+            if (bridgeApiData.message.code == 0) {
+              transactionPending = false;
+              BoxUtils.updateDepositStatus(data.txHash);
+            } else {
+              transactionPending = true;
+            }
+            loading = false;
+          });
+        });
+        if (!data.merged && !transactionPending) {
+          _refreshLoop(data.txHash);
+        }
       }
     });
     CredentialManager.getAddress().then((value) {
@@ -72,95 +85,104 @@ class _DepositStatusState extends State<DepositStatus> {
               })
         ],
       ),
-      body: data == null
+      body: loading
           ? Center(
               child: SpinKitFadingFour(
-                size: 50,
                 color: AppTheme.primaryColor,
+                size: 50,
               ),
             )
-          : SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                child: Column(
-                  children: [
-                    getTopContainer(),
-                    getStatusCard(),
-                    Card(
-                      shape: AppTheme.cardShape,
-                      child: Padding(
-                        padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(AppTheme.cardRadius),
-                                color: AppTheme.stackingGrey,
-                              ),
-                              margin: EdgeInsets.all(AppTheme.paddingHeight),
-                              height: 110,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  detailsArea(
-                                      title: data.fee == null
-                                          ? ""
-                                          : data.fee + " ETH",
-                                      subtitle: 'Transaction Fee',
-                                      topWidget: Icon(Icons.flash_on_outlined)),
-                                  detailsArea(
-                                      title: 'Ethereum Network',
-                                      subtitle: 'Netowrk',
-                                      topWidget: Icon(Icons.settings))
-                                ],
-                              ),
-                            ),
-                            getListTile(
-                              imageUrl: tokenIcon,
-                              title: 'from',
-                              subtitle: fromAddress,
-                              // trailing: IconButton(
-                              //     icon: Icon(
-                              //       Icons.file_copy,
-                              //       color: Colors.black,
-                              //     ),
-                              //     onPressed: () {}),
-                            ),
-                            getListTile(
-                              imageUrl: tokenIcon,
-                              title: 'to',
-                              subtitle: "Matic Network",
-                              // trailing: IconButton(
-                              //     icon: Icon(
-                              //       Icons.file_copy,
-                              //       color: Colors.black,
-                              //     ),
-                              //     onPressed: () {}),
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                            ),
-                            getListTile(
-                              imageUrl: tokenIcon,
-                              title: 'Transaction Hash',
-                              subtitle: data.txHash,
-                              trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.file_copy,
-                                    color: Colors.black,
+          : data == null
+              ? Center(
+                  child: SpinKitFadingFour(
+                    size: 50,
+                    color: AppTheme.primaryColor,
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+                    child: Column(
+                      children: [
+                        getTopContainer(),
+                        getStatusCard(),
+                        Card(
+                          shape: AppTheme.cardShape,
+                          child: Padding(
+                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.cardRadius),
+                                    color: AppTheme.stackingGrey,
                                   ),
-                                  onPressed: () {}),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+                                  margin:
+                                      EdgeInsets.all(AppTheme.paddingHeight),
+                                  height: 110,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      detailsArea(
+                                          title: data.fee == null
+                                              ? ""
+                                              : data.fee + " ETH",
+                                          subtitle: 'Transaction Fee',
+                                          topWidget:
+                                              Icon(Icons.flash_on_outlined)),
+                                      detailsArea(
+                                          title: 'Ethereum Network',
+                                          subtitle: 'Netowrk',
+                                          topWidget: Icon(Icons.settings))
+                                    ],
+                                  ),
+                                ),
+                                getListTile(
+                                  imageUrl: tokenIcon,
+                                  title: 'from',
+                                  subtitle: fromAddress,
+                                  // trailing: IconButton(
+                                  //     icon: Icon(
+                                  //       Icons.file_copy,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     onPressed: () {}),
+                                ),
+                                getListTile(
+                                  imageUrl: tokenIcon,
+                                  title: 'to',
+                                  subtitle: "Matic Network",
+                                  // trailing: IconButton(
+                                  //     icon: Icon(
+                                  //       Icons.file_copy,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     onPressed: () {}),
+                                ),
+                                Divider(
+                                  color: Colors.grey,
+                                ),
+                                getListTile(
+                                  imageUrl: tokenIcon,
+                                  title: 'Transaction Hash',
+                                  subtitle: data.txHash,
+                                  trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.file_copy,
+                                        color: Colors.black,
+                                      ),
+                                      onPressed: () {}),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
     );
   }
 
@@ -202,9 +224,9 @@ class _DepositStatusState extends State<DepositStatus> {
                   style: AppTheme.display1,
                   overflow: TextOverflow.fade,
                 ),
-                SizedBox(
-                  width: AppTheme.paddingHeight20 * 2,
-                ),
+                // SizedBox(
+                //   width: AppTheme.paddingHeight20 * 2,
+                // ),
               ],
             ),
           ),
@@ -372,7 +394,7 @@ class _DepositStatusState extends State<DepositStatus> {
           setState(() {
             bridgeApiData = value;
             if (value.message.code == 4) {
-              transactionPending = true;
+              transactionPending = false;
             }
           });
         });

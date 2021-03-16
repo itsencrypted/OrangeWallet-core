@@ -228,10 +228,12 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
             child: Wrap(
               alignment: WrapAlignment.center,
               children: [
-                Image.network(
-                  maticIconUrl,
-                  height: AppTheme.tokenIconHeight,
-                ),
+                value == 0
+                    ? Container()
+                    : Image.network(
+                        maticIconUrl,
+                        height: AppTheme.tokenIconHeight,
+                      ),
                 SizedBox(
                   width: AppTheme.paddingHeight,
                 ),
@@ -239,7 +241,7 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                   value == 0
                       ? "Contract Interaction"
                       : " ${value.toString()} Matic",
-                  style: AppTheme.display1,
+                  style: value == 0 ? AppTheme.display2 : AppTheme.display1,
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,

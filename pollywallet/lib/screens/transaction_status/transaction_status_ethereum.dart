@@ -248,7 +248,7 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
                       value == 0
                           ? "Contract Interaction"
                           : " ${value.toString()} ETH",
-                      style: AppTheme.display1,
+                      style: value == 0 ? AppTheme.display2 : AppTheme.display1,
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
@@ -487,6 +487,7 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
       });
     }
     tx = await txFuture;
+    print(tx);
     if (tx != null) {
       setState(() {
         if (tx.status) {

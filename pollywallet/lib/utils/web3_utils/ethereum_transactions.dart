@@ -341,6 +341,7 @@ class EthereumTransactions {
       BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
+    final networkId = await BoxUtils.getNetworkConfig();
     String privateKey = await CredentialManager.getPrivateKey(context);
     if (privateKey == null)
       return "failed";
@@ -366,6 +367,9 @@ class EthereumTransactions {
               EthConversions.weiToEthUnTrimmed(
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());
+        } else if (details.type == TransactionType.CONFIRMPLASMA) {
+          if (networkId == 0) {
+          } else if (networkId == 1) {}
         }
         return txHash;
       } catch (e) {

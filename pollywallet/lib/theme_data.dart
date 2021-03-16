@@ -57,6 +57,14 @@ class AppTheme {
     height: 0.9,
     color: darkerText,
   );
+  static const TextStyle display2 = TextStyle(
+    // h4 -> display1
+    fontWeight: FontWeight.bold,
+    fontSize: 24,
+    letterSpacing: 0.4,
+    height: 0.9,
+    color: darkerText,
+  );
 
   static const TextStyle headline = TextStyle(
     // h5 -> headline

@@ -13,6 +13,7 @@ class DepositBridgeApi {
     var baseUrl = config.maticBridgeApi;
     DepositStatusModel model = DepositStatusModel(txHashes: [txHash]);
     var params = model.toJson();
+
     var resp =
         await http.post(baseUrl + "/v1/deposit", body: jsonEncode(params));
     BridgeApiData data = BridgeApiData(

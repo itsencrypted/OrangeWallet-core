@@ -23,7 +23,8 @@ class TransactionData {
     7: "Confirm-Plasma",
     8: "Exit-Plasma",
     9: "Speed Up",
-    10: "Restake"
+    10: "Restake",
+    11: "Unstake"
   };
 }
 
@@ -38,5 +39,6 @@ enum TransactionType {
   CONFIRMPLASMA,
   EXITPLASMA,
   SPEEDUP,
-  RESTAKE
+  RESTAKE,
+  UNSTAKE
 }

@@ -29,6 +29,7 @@ class _DepositStatusState extends State<DepositStatus> {
   String fromAddress = "";
   bool loading = true;
   String blockExplorer = "";
+  var index = 0;
   _DepositStatusState({this.transactionPending});
   final List<String> processes = [
     'Initialized',
@@ -49,26 +50,31 @@ class _DepositStatusState extends State<DepositStatus> {
       setState(() {
         data = ModalRoute.of(context).settings.arguments;
         transactionPending = !data.merged;
-        if (!transactionPending) {
-          loading = false;
-        }
       });
-      if (!data.merged) {
-        DepositBridgeApi.depositStatusCode(data.txHash).then((value) {
-          setState(() {
-            bridgeApiData = value;
-            if (bridgeApiData.message.code == 0) {
-              transactionPending = false;
-              BoxUtils.updateDepositStatus(data.txHash);
-            } else {
-              transactionPending = true;
-            }
-            loading = false;
-          });
+
+      DepositBridgeApi.depositStatusCode(data.txHash).then((value) {
+        setState(() {
+          bridgeApiData = value;
+          if (value.message.code == 4) {
+            transactionPending = true;
+          } else {
+            transactionPending = false;
+          }
+          if (value.message.code == 4) {
+            index = 0;
+          } else if (value.message.code == 1) {
+            index = 1;
+          } else if (value.message.code == 0) {
+            index = 2;
+          }
+          if (value.message.code == 0) {
+            BoxUtils.updateDepositStatus(data.txHash);
+          }
+          loading = false;
         });
-        if (!data.merged && !transactionPending) {
-          _refreshLoop(data.txHash);
-        }
+      });
+      if (!data.merged && transactionPending) {
+        _refreshLoop(data.txHash);
       }
     });
     CredentialManager.getAddress().then((value) {
@@ -251,16 +257,6 @@ class _DepositStatusState extends State<DepositStatus> {
   }
 
   Widget getStatusCard() {
-    var index = 0;
-    if (bridgeApiData != null) {
-      if (bridgeApiData.message.code == 4) {
-        index = 0;
-      } else if (bridgeApiData.message.code == 1) {
-        index = 1;
-      } else if (bridgeApiData.message.code == 0) {
-        index = 2;
-      }
-    }
     return Card(
       shape: AppTheme.cardShape,
       child: Padding(
@@ -400,8 +396,15 @@ class _DepositStatusState extends State<DepositStatus> {
         DepositBridgeApi.depositStatusCode(txhash).then((value) {
           setState(() {
             bridgeApiData = value;
-            if (value.message.code == 4) {
+            if (value.message.code != 4) {
               transactionPending = false;
+            }
+            if (value.message.code == 4) {
+              index = 0;
+            } else if (value.message.code == 1) {
+              index = 1;
+            } else if (value.message.code == 0) {
+              index = 2;
             }
           });
         });

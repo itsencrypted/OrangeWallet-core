@@ -79,7 +79,7 @@ class _DelegationScreenState extends State<DelegationScreen> {
                       itemBuilder: (context, index) {
                         ValidatorInfo validator = validatorState.data.result
                             .where((element) =>
-                                element.id ==
+                                element.id.toString() ==
                                 delegationState
                                     .data.result[index].bondedValidator)
                             .toList()

@@ -83,23 +83,27 @@ class _ValidatorAndDelegationProfileState
                       .where((element) => element.id == id)
                       .toList()
                       .first;
+                  print(1);
                   double qoute = covalentMaticState.covalentTokenList.data.items
                       .where((element) =>
                           element.contractTickerSymbol.toLowerCase() == "matic")
                       .toList()
                       .first
                       .quoteRate;
+                  print(2);
                   DelegatorInfo delegatorInfo;
                   var len = delegationState.data.result
                       .where((element) => element.bondedValidator == id)
                       .toList()
                       .length;
+                  print(3);
                   if (len > 0) {
                     delegatorInfo = delegationState.data.result
                         .where((element) => element.bondedValidator == id)
                         .toList()
                         .first;
                   }
+                  print(4);
                   BigInt reward = BigInt.zero;
                   try {
                     reward = delegatorInfo.shares - delegatorInfo.stake;
@@ -132,7 +136,9 @@ class _ValidatorAndDelegationProfileState
                                     ),
                                     child: Center(
                                       child: Text(
-                                        validator.name.substring(0, 1),
+                                        // TODO: UNCOMMENT NAME
+                                        //  validator.name.substring(0, 1),
+                                        "",
                                         style: TextStyle(
                                             fontSize: 50,
                                             fontWeight: FontWeight.bold),
@@ -168,9 +174,9 @@ class _ValidatorAndDelegationProfileState
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                    validator.uptimePercent
-                                                            .toString() +
-                                                        " %",
+                                                    // validator.uptimePercent
+                                                    //         .toString() +
+                                                    " %",
                                                     style: AppTheme.title),
                                                 Text(
                                                   "Performance",

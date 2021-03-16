@@ -77,9 +77,9 @@ class ValidatorInfo {
   String description;
   String owner;
   String signer;
-  String activationEpoch;
-  String deactivationEpoch;
-  String jailEndEpoch;
+  int activationEpoch;
+  int deactivationEpoch;
+  int jailEndEpoch;
   String url;
   String logoUrl;
   String commissionPercent;
@@ -91,7 +91,7 @@ class ValidatorInfo {
   BigInt claimedReward;
   BigInt signatureMissCount;
   bool isInAuction;
-  String auctionAmount;
+  int auctionAmount;
   String createdAt;
   String updatedAt;
   String contractAddress;
@@ -141,10 +141,12 @@ class ValidatorInfo {
     uptimePercent = json['uptimePercent'];
     selfStake = BigInt.from(json['selfStake']);
     delegatedStake = BigInt.from(json['delegatedStake']);
-    totalReward = BigInt.from(json['totalReward']);
+    totalReward =
+        BigInt.from(json['totalReward'] == null ? 0 : json['totalReward']);
     claimedReward =
         BigInt.from(json['claimedReward'] == null ? 0 : json['claimedReward']);
-    signatureMissCount = BigInt.from(json['signatureMissCount']);
+    signatureMissCount = BigInt.from(
+        json['signatureMissCount'] == null ? 0 : json['signatureMissCount']);
     isInAuction = json['isInAuction'];
     auctionAmount = json['auctionAmount'];
     createdAt = json['createdAt'];

@@ -8,6 +8,9 @@ part 'delegations_data_state.dart';
 class DelegationsDataCubit extends Cubit<DelegationsDataState> {
   DelegationsDataCubit() : super(DelegationsDataStateInitial());
   void setData() async {
+    String address = await CredentialManager.getAddress();
+    DelegationsPerAddress info =
+        await StakingApiWrapper.delegationDetails(address);
     try {
       emit(DelegationsDataStateLoading());
       String address = await CredentialManager.getAddress();
@@ -31,6 +34,9 @@ class DelegationsDataCubit extends Cubit<DelegationsDataState> {
   }
 
   refresh() async {
+    String address = await CredentialManager.getAddress();
+    DelegationsPerAddress info =
+        await StakingApiWrapper.delegationDetails(address);
     try {
       String address = await CredentialManager.getAddress();
       DelegationsPerAddress info =

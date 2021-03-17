@@ -6,6 +6,8 @@ import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
+import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
@@ -267,5 +269,21 @@ class BoxUtils {
     trx2.close();
     deposits1.close();
     deposits2.close();
+  }
+
+  static Future<void> addWithdrawTransaction(
+      String burnTxHash, TransactionType type, String to) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    // WithdrawDataDb txObj = WithdrawDataDb()
+    //   ..burnHash
+    //   ..txType = type.index
+    //   ..network = network
+    //   ..to = to;
+    // box.put(tx, txObj);
+    // await box.close();
+    // return;
   }
 }

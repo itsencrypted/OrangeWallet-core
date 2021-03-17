@@ -110,5 +110,6 @@ const addressString = "address";
 const privateKeyString = "privateKey";
 const wcUri = "walletConnectUri";
 const depositTransactionDbBox = "depositTransactionDbBox";
+const withdrawdbBox = "withdrawDbBox";
 //ENUMS
 enum BridgeType { PLASMA, POS, NONE, BOTH }

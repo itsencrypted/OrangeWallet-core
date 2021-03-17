@@ -30,7 +30,7 @@ class _StakingTabState extends State<StakingTab>
       var delegatorListCubit = context.read<DelegationsDataCubit>();
       var ethListCubit = context.read<CovalentTokensListEthCubit>();
 
-      tokenListCubit.getTokensList();
+      //tokenListCubit.getTokensList();
       _refreshLoop(
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
     });

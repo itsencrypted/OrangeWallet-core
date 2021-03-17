@@ -6,17 +6,17 @@ part of 'withdraw_data_db.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class WithdrawDataAdapter extends TypeAdapter<WithdrawData> {
+class WithdrawDataAdapter extends TypeAdapter<WithdrawDataDb> {
   @override
   final int typeId = 5;
 
   @override
-  WithdrawData read(BinaryReader reader) {
+  WithdrawDataDb read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return WithdrawData()
+    return WithdrawDataDb()
       ..burnHash = fields[0] as String
       ..amount = fields[1] as String
       ..bridge = fields[2] as BridgeType
@@ -31,7 +31,7 @@ class WithdrawDataAdapter extends TypeAdapter<WithdrawData> {
   }
 
   @override
-  void write(BinaryWriter writer, WithdrawData obj) {
+  void write(BinaryWriter writer, WithdrawDataDb obj) {
     writer
       ..writeByte(11)
       ..writeByte(0)

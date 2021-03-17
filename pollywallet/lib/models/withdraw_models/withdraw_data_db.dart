@@ -3,7 +3,7 @@ import 'package:pollywallet/constants.dart';
 part 'withdraw_data_db.g.dart';
 
 @HiveType(typeId: 5)
-class WithdrawData extends HiveObject {
+class WithdrawDataDb extends HiveObject {
   @HiveField(0)
   String burnHash;
 

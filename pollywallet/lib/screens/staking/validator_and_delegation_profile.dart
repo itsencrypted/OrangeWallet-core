@@ -80,7 +80,8 @@ class _ValidatorAndDelegationProfileState
                     validatorState is ValidatorsDataStateFinal &&
                     covalentMaticState is CovalentTokensListMaticLoaded) {
                   ValidatorInfo validator = validatorState.data.result
-                      .where((element) => element.id == id)
+                      .where(
+                          (element) => element.id.toString() == id.toString())
                       .toList()
                       .first;
                   print(1);
@@ -93,13 +94,15 @@ class _ValidatorAndDelegationProfileState
                   print(2);
                   DelegatorInfo delegatorInfo;
                   var len = delegationState.data.result
-                      .where((element) => element.bondedValidator == id)
+                      .where((element) =>
+                          element.bondedValidator.toString() == id.toString())
                       .toList()
                       .length;
                   print(3);
                   if (len > 0) {
                     delegatorInfo = delegationState.data.result
-                        .where((element) => element.bondedValidator == id)
+                        .where((element) =>
+                            element.bondedValidator.toString() == id.toString())
                         .toList()
                         .first;
                   }
@@ -136,9 +139,7 @@ class _ValidatorAndDelegationProfileState
                                     ),
                                     child: Center(
                                       child: Text(
-                                        // TODO: UNCOMMENT NAME
-                                        //  validator.name.substring(0, 1),
-                                        "",
+                                        validator.name.substring(0, 1),
                                         style: TextStyle(
                                             fontSize: 50,
                                             fontWeight: FontWeight.bold),
@@ -174,9 +175,9 @@ class _ValidatorAndDelegationProfileState
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                    // validator.uptimePercent
-                                                    //         .toString() +
-                                                    " %",
+                                                    validator.uptimePercent
+                                                            .toString() +
+                                                        " %",
                                                     style: AppTheme.title),
                                                 Text(
                                                   "Performance",

@@ -274,27 +274,80 @@ class BoxUtils {
   static Future<void> addWithdrawTransaction({
     String burnTxHash,
     TransactionType type,
-    String to,
-    String amount = "",
-    String name = "",
-    String confirmHash = "",
-    String exitHash = "",
-    String timestring = "",
-    String addressRootToken = "",
-    String addressChildToken = "",
-    String fee = "",
+    String userAddress,
+    BridgeType bridge,
+    String amount,
+    String name,
+    String addressRootToken,
+    String addressChildToken,
+    String timestring,
+    String fee,
+    // String confirmHash = "",
+    // String exitHash = "",
   }) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
     var boxName = withdrawdbBox + network.toString() + address;
     Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
-    // WithdrawDataDb txObj = WithdrawDataDb()
-    //   ..burnHash
-    //   ..txType = type.index
-    //   ..network = network
-    //   ..to = to;
-    // box.put(tx, txObj);
-    // await box.close();
-    // return;
+    WithdrawDataDb txObj = WithdrawDataDb()
+      ..burnHash = burnTxHash
+      ..userAddress = userAddress
+      ..addressChild = addressChildToken
+      ..addressRoot = addressRootToken
+      ..bridge = bridge
+      ..amount = amount
+      ..name = name
+      ..timeString = timestring
+      ..fee = fee;
+    box.put(burnTxHash, txObj);
+    await box.close();
+    return;
+  }
+
+  static Future<void> addPosExitHash({
+    String burnTxHash,
+    String exitHash,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var tx = box.get(burnTxHash);
+    tx
+      ..burnHash = burnTxHash
+      ..exitHash = exitHash;
+    await tx.save();
+    await box.close();
+    return;
+  }
+
+  static Future<void> addPlasmaExitHash({
+    String burnTxHash,
+    String exitHash,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var tx = box.get(burnTxHash);
+    tx..exitHash = exitHash;
+    await tx.save();
+    await box.close();
+    return;
+  }
+
+  static Future<void> addPlasmaConfirmHash({
+    String burnTxHash,
+    String confirmHash,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var tx = box.get(burnTxHash);
+    tx..exitHash = confirmHash;
+    await tx.save();
+    await box.close();
+    return;
   }
 }

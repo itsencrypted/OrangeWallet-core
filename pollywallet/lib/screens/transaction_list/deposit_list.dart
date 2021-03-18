@@ -34,17 +34,21 @@ class _DepositStatusListState extends State<DepositStatusList>
             size: 50,
             color: AppTheme.primaryColor,
           )
-        : RefreshIndicator(
-            onRefresh: _refresh,
-            child: ListView.builder(
-              itemCount: box.length,
-              itemBuilder: (context, index) {
-                return DepositListStatusTile(
-                  data: box[index],
-                );
-              },
-            ),
-          );
+        : box.length == 0
+            ? Center(
+                child: Text("No deposit transactions so far."),
+              )
+            : RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemCount: box.length,
+                  itemBuilder: (context, index) {
+                    return DepositListStatusTile(
+                      data: box[index],
+                    );
+                  },
+                ),
+              );
   }
 
   @override

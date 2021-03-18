@@ -271,8 +271,19 @@ class BoxUtils {
     deposits2.close();
   }
 
-  static Future<void> addWithdrawTransaction(
-      String burnTxHash, TransactionType type, String to) async {
+  static Future<void> addWithdrawTransaction({
+    String burnTxHash,
+    TransactionType type,
+    String to,
+    String amount = "",
+    String name = "",
+    String confirmHash = "",
+    String exitHash = "",
+    String timestring = "",
+    String addressRootToken = "",
+    String addressChildToken = "",
+    String fee = "",
+  }) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
     var boxName = withdrawdbBox + network.toString() + address;

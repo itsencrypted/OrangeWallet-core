@@ -286,6 +286,14 @@ class _NftBurnState extends State<NftBurn> {
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
     if (state.data.token.nftData[selectedIndex].tokenBalance == null) {
+      var type;
+      if (bridge == 1) {
+        type = TransactionType.BURNPOS;
+      } else if (bridge == 2) {
+        type = TransactionType.BURNPLASMA;
+      } else {
+        return;
+      }
       var trx = await WithdrawManagerWeb3.burnErc721(
           state.data.token.contractAddress,
           state.data.token.nftData[selectedIndex].tokenId);
@@ -294,7 +302,7 @@ class _NftBurnState extends State<NftBurn> {
           to: state.data.token.contractAddress,
           trx: trx,
           token: token,
-          type: TransactionType.WITHDRAW);
+          type: type);
       Navigator.of(context, rootNavigator: true).pop();
 
       Navigator.pushNamed(context, confirmMaticTransactionRoute,

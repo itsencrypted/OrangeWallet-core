@@ -306,12 +306,21 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
     TransactionData transactionData;
     var trx = await WithdrawManagerWeb3.burnTx(
         _amount.text, state.data.token.contractAddress);
+    var type;
+    if (bridge == 1) {
+      type = TransactionType.BURNPOS;
+    } else if (bridge == 2) {
+      type = TransactionType.BURNPLASMA;
+    } else {
+      return;
+    }
+
     transactionData = TransactionData(
         amount: _amount.text,
         to: state.data.token.contractAddress,
         trx: trx,
         token: state.data.token,
-        type: TransactionType.WITHDRAW);
+        type: type);
     Navigator.of(context, rootNavigator: true).pop();
 
     Navigator.pushNamed(context, confirmMaticTransactionRoute,

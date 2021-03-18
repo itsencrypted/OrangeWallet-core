@@ -16,7 +16,7 @@ class TransactionData {
     0: "Approve",
     1: "Deposit POS",
     2: "Deposit Plasma",
-    3: "Burn Token",
+    3: "Burn Token Plasma",
     4: "Stake",
     5: "Send",
     6: "Exit-POS",
@@ -24,7 +24,7 @@ class TransactionData {
     8: "Exit-Plasma",
     9: "Speed Up",
     10: "Restake",
-    11: "Unstake"
+    11: "Unstake",
   };
 }
 
@@ -32,7 +32,7 @@ enum TransactionType {
   APPROVE,
   DEPOSITPOS,
   DEPOSITPLASMA,
-  WITHDRAW,
+  BURNPLASMA,
   STAKE,
   SEND,
   EXITPOS,
@@ -40,5 +40,6 @@ enum TransactionType {
   EXITPLASMA,
   SPEEDUP,
   RESTAKE,
-  UNSTAKE
+  UNSTAKE,
+  BURNPOS
 }

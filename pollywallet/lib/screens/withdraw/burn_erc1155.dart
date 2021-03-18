@@ -322,13 +322,21 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
     });
     var trx = await WithdrawManagerWeb3.burnERC1155(
         state.data.token.contractAddress, tokenIdList, amountList);
+    var type;
+    if (bridge == 1) {
+      type = TransactionType.BURNPOS;
+    } else if (bridge == 2) {
+      type = TransactionType.BURNPLASMA;
+    } else {
+      return;
+    }
 
     var transactionData = TransactionData(
         to: state.data.token.contractAddress,
         amount: sum.toString(),
         trx: trx,
         token: token,
-        type: TransactionType.WITHDRAW);
+        type: type);
 
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);

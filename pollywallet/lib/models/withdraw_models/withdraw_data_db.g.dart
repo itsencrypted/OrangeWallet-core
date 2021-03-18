@@ -6,7 +6,7 @@ part of 'withdraw_data_db.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class WithdrawDataAdapter extends TypeAdapter<WithdrawDataDb> {
+class WithdrawDataDbAdapter extends TypeAdapter<WithdrawDataDb> {
   @override
   final int typeId = 5;
 
@@ -27,13 +27,14 @@ class WithdrawDataAdapter extends TypeAdapter<WithdrawDataDb> {
       ..fee = fields[7] as String
       ..confirmHash = fields[8] as String
       ..exitHash = fields[9] as String
-      ..userAddress = fields[10] as String;
+      ..userAddress = fields[10] as String
+      ..imageUrl = fields[11] as String;
   }
 
   @override
   void write(BinaryWriter writer, WithdrawDataDb obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.burnHash)
       ..writeByte(1)
@@ -55,7 +56,9 @@ class WithdrawDataAdapter extends TypeAdapter<WithdrawDataDb> {
       ..writeByte(9)
       ..write(obj.exitHash)
       ..writeByte(10)
-      ..write(obj.userAddress);
+      ..write(obj.userAddress)
+      ..writeByte(11)
+      ..write(obj.imageUrl);
   }
 
   @override
@@ -64,7 +67,7 @@ class WithdrawDataAdapter extends TypeAdapter<WithdrawDataDb> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WithdrawDataAdapter &&
+      other is WithdrawDataDbAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

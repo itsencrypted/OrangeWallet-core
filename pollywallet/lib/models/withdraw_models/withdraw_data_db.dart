@@ -36,4 +36,7 @@ class WithdrawDataDb extends HiveObject {
 
   @HiveField(10)
   String userAddress;
+
+  @HiveField(11)
+  String imageUrl;
 }

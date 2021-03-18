@@ -19,6 +19,7 @@ class BoxUtils {
     Hive.registerAdapter(CredentialsListAdapter());
     Hive.registerAdapter(TransactionDetailsAdapter());
     Hive.registerAdapter(DepositTransactionAdapter());
+    Hive.registerAdapter(WithdrawDataAdapter());
   }
 
   static Future<bool> checkLogin() async {

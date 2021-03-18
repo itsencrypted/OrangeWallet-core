@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/transaction_data/transaction_data.dart';
+import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
+import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -83,7 +87,7 @@ class MaticTransactions {
   }
 
   static Future<String> sendTransaction(
-      Transaction trx, BuildContext context) async {
+      Transaction trx, TransactionData data, BuildContext context) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.endpoint, http.Client());
     String privateKey = await CredentialManager.getPrivateKey(context);
@@ -92,9 +96,41 @@ class MaticTransactions {
     else {
       try {
         var credentials = await client.credentialsFromPrivateKey(privateKey);
+        var rootTokenPos = EthereumTransactions.childToRootPosAddress(data.to);
+        var rootTokenPlasma =
+            EthereumTransactions.childToRootPlasmaAddress(data.to);
         var txHash = await client.sendTransaction(credentials, trx,
             chainId: config.chainId);
         print(txHash);
+        if (data.type == TransactionType.BURNPLASMA ||
+            data.type == TransactionType.BURNPOS) {
+          String rootAddress;
+          BridgeType bridge;
+          if (data.type == TransactionType.BURNPLASMA) {
+            rootAddress = await rootTokenPlasma;
+            bridge = BridgeType.PLASMA;
+          }
+          if (data.type == TransactionType.BURNPOS) {
+            rootAddress = await rootTokenPos;
+            bridge = BridgeType.POS;
+          }
+          var userAddres = await CredentialManager.getAddress();
+          var strx = await client.getTransactionByHash(txHash);
+
+          BoxUtils.addWithdrawTransaction(
+              timestring: DateTime.now().toString(),
+              burnTxHash: txHash,
+              type: data.type,
+              addressRootToken: rootAddress,
+              addressChildToken: data.to,
+              amount: data.amount,
+              userAddress: userAddres,
+              name: data.token.contractName,
+              bridge: bridge,
+              fee: EthConversions.weiToEthUnTrimmed(
+                      (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
+                  .toString());
+        }
         return txHash;
       } catch (e) {
         Fluttertoast.showToast(

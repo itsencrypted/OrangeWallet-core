@@ -15,6 +15,7 @@ class MaticTransactionConfirm extends StatefulWidget {
 class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
   TransactionData args;
   bool _loading = true;
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
@@ -108,7 +109,8 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
   _sendTx() async {
     final GlobalKey<State> _keyLoader = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _keyLoader);
-    String hash = await MaticTransactions.sendTransaction(args.trx, context);
+    String hash =
+        await MaticTransactions.sendTransaction(args.trx, args, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     if (hash == null || hash == "failed") {
       return;

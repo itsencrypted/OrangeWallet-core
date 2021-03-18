@@ -597,4 +597,39 @@ class EthereumTransactions {
     );
     return trx;
   }
+
+  static Future<String> childToRootPlasmaAddress(String erc20Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(plasmaRegistryAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "registry"),
+        EthereumAddress.fromHex(config.plasmaRegistry));
+    var func = contract.function('childToRootToken');
+    var addr = await client.call(
+      contract: contract,
+      function: func,
+      params: [EthereumAddress.fromHex(erc20Address)],
+    );
+    print(erc20Address);
+    print(addr);
+    return addr[0].toString();
+  }
+
+  static Future<String> childToRootPosAddress(String erc20Address) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(rootChainProxyAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "proxy"),
+        EthereumAddress.fromHex(config.rootChainProxy));
+    var func = contract.function('childToRootToken');
+    print(erc20Address);
+
+    var addr = await client.call(
+      contract: contract,
+      function: func,
+      params: [EthereumAddress.fromHex(erc20Address)],
+    );
+    print(addr);
+    return addr[0].toString();
+  }
 }

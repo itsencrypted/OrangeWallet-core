@@ -112,27 +112,27 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                         : Container(),
                                     Divider(color: AppTheme.grey),
                                     SizedBox(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Image.asset(boltIcon),
-                                        ),
-                                        Text(
-                                          "${EthConversions.weiToGwei(gasPrice)} Gwei Matic Gas Price",
-                                          style: AppTheme.body2,
-                                        ),
-                                      ],
-                                    ),
+                                    Text(network == 0
+                                        ? "Matic Testnet"
+                                        : "Matic Mainnet"),
                                     Padding(
                                       padding:
                                           const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                      child: Text(network == 0
-                                          ? "Matic Testnet"
-                                          : "Matic Mainnet"),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            child: Image.asset(boltIcon),
+                                          ),
+                                          Text(
+                                            "${EthConversions.weiToGwei(gasPrice)} Gwei Matic Gas Price",
+                                            style: AppTheme.body2,
+                                          ),
+                                        ],
+                                      ),
                                     )
                                   ],
                                 )
@@ -141,52 +141,58 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: 0,
-                        //left: MediaQuery.of(context).size.width * 0.25,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40)),
-                                elevation: 0,
-                                color: AppTheme.somewhatYellow,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(0),
-                                      child: Icon(
-                                        Icons.account_circle_sharp,
-                                        color: AppTheme.darkText,
-                                        size: 35,
+                      args.type == TransactionType.SEND
+                          ? Positioned(
+                              top: 0,
+                              //left: MediaQuery.of(context).size.width * 0.25,
+                              left: 0,
+                              right: 0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 150,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(40)),
+                                      elevation: 0,
+                                      color: AppTheme.somewhatYellow,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(0),
+                                            child: Icon(
+                                              Icons.account_circle_sharp,
+                                              color: AppTheme.darkText,
+                                              size: 35,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 100,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2.0),
+                                              child: Text(
+                                                args.to,
+                                                style: AppTheme.body2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 100,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 2.0),
-                                        child: Text(
-                                          args.to,
-                                          style: AppTheme.body2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
+                          : Container()
                     ],
                   ),
                   SafeArea(

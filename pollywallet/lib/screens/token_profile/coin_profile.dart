@@ -139,7 +139,7 @@ class _CoinProfileState extends State<CoinProfile> {
                     ),
                     FutureBuilder(
                       future: CovalentApiWrapper.maticTokenTransfers(
-                          state.data.token.contractAddress),
+                          token.contractAddress),
                       builder: (context, result) {
                         if (result.connectionState == ConnectionState.waiting) {
                           return Column(

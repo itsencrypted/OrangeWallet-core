@@ -6,7 +6,7 @@ class AppTheme {
   static const Color backgroundWhite = Color(0xffF3F2EF);
   static const Color white = Color(0xFFFFFFFF);
   static const Color somewhatYellow = Color(0xffE3DECF);
-  static const Color primaryColor = Color(0xFFD287FD);
+  static const Color primaryColor = Color(0xFF9663EE);
   static const Color secondaryColor = Color(0xffEABC78);
   static const Color black = Color(0xFF000000);
   static const Color warningCardColor = Color(0xFFD3AA6B);
@@ -32,6 +32,7 @@ class AppTheme {
   static const Color borderColorGreyish = Color(0xFFDCDFE6);
   static const Color buttonColorBlue = Color(0xFF003CB2);
   static const Color red_500 = Color(0xFFDE524C);
+  static const Color warmGrey = Color(0xFFE8E6E1);
   static const String primaryHex = "#D287FD";
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
@@ -155,6 +156,13 @@ class AppTheme {
       fontSize: 16,
       color: black,
       letterSpacing: -0.2 // was lightText
+      );
+  static const TextStyle boldThemeColoredText = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontFamily: fontName,
+      fontSize: 36,
+      color: primaryColor,
+      letterSpacing: -1 // was lightText
       );
   static const TextStyle tabbarTextStyle = TextStyle(
     fontWeight: FontWeight.w600,

@@ -101,6 +101,8 @@ flutter:
     - assets/abi/childERC721.json
     - assets/abi/childERC1155.json
     - assets/icons/eth_icon.png
+    - assets/icons/bolt.png
+    - assets/icons/arrow.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

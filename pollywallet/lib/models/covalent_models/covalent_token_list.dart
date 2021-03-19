@@ -112,7 +112,7 @@ class Items {
         : json['contract_ticker_symbol'];
     contractAddress = json['contract_address'];
 
-    logoUrl = json['logo_url'] != null ? json['logo_url'] : tokenIcon;
+    logoUrl = json['logo_url'] != null ? json['logo_url'] : tokenIconUrl;
     type = json['type'];
     balance = json['balance'];
     quoteRate = json['quote_rate'] != null ? json['quote_rate'] : 0.0;

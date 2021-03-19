@@ -67,7 +67,7 @@ class NftListCard extends StatelessWidget {
       if (index == 5) {
         break;
       }
-      if (token.type == null || token.balance != 0) {
+      if (token.type == null || token.balance != "0") {
         index++;
         var tile = NftListTile(
           tokenData: token,

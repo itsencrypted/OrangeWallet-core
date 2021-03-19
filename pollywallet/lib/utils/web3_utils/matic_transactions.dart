@@ -207,4 +207,11 @@ class MaticTransactions {
     );
     return trx;
   }
+
+  static Future<BigInt> getGasPrice() async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.endpoint, http.Client());
+    var price = await client.getGasPrice();
+    return price.getInWei;
+  }
 }

@@ -7,6 +7,8 @@ const String tokenIcon = "assets/icons/token_icon.png";
 const String profitIcon = "assets/icons/profit.png";
 const String imageNotFoundIcon = "assets/icons/image_not_found.png";
 const String ethIcon = "assets/icons/eth_icon.png";
+const String boltIcon = "assets/icons/bolt.png";
+const String arrowIcon = "assets/icons/arrow.png";
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
 const depositManagerAbi = "assets/abi/deposit_manager.json";

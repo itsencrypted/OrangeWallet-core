@@ -81,7 +81,9 @@ class _EthTransactionConfirmationState
     double cardWidth = MediaQuery.of(context).size.width * 0.2;
     return Scaffold(
         appBar: AppBar(
-          title: Text("Confirm transaction"),
+          title: _loading
+              ? Text("Confirm transaction")
+              : Text(TransactionData.txTypeString[args.type.index]),
         ),
         body: _loading
             ? Column(

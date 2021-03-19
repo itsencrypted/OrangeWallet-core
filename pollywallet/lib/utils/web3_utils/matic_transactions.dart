@@ -126,11 +126,13 @@ class MaticTransactions {
               amount: data.amount,
               userAddress: userAddres,
               name: data.token.contractName,
+              imageUrl: data.token.logoUrl,
               bridge: bridge,
               fee: EthConversions.weiToEthUnTrimmed(
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());
         }
+
         return txHash;
       } catch (e) {
         Fluttertoast.showToast(

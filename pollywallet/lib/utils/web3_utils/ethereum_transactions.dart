@@ -368,9 +368,12 @@ class EthereumTransactions {
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());
         } else if (details.type == TransactionType.CONFIRMPLASMA) {
+          BoxUtils.addPlasmaConfirmHash();
           if (networkId == 0) {
           } else if (networkId == 1) {}
-        }
+        } else if (details.type == TransactionType.EXITPLASMA) {
+          BoxUtils.addPlasmaExitHash();
+        } else if (details.type == TransactionType.EXITPOS) {}
         return txHash;
       } catch (e) {
         print(e);

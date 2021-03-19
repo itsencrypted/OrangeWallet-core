@@ -77,9 +77,9 @@ class ValidatorInfo {
   String description;
   String owner;
   String signer;
-  int activationEpoch;
-  int deactivationEpoch;
-  int jailEndEpoch;
+  String activationEpoch;
+  String deactivationEpoch;
+  String jailEndEpoch;
   String url;
   String logoUrl;
   String commissionPercent;
@@ -131,14 +131,14 @@ class ValidatorInfo {
     description = json['description'];
     owner = json['owner'];
     signer = json['signer'];
-    activationEpoch = json['activationEpoch'];
-    deactivationEpoch = json['deactivationEpoch'];
-    jailEndEpoch = json['jailEndEpoch'];
+    activationEpoch = json['activationEpoch'].toString();
+    deactivationEpoch = json['deactivationEpoch'].toString();
+    jailEndEpoch = json['jailEndEpoch'].toString();
     url = json['url'];
     logoUrl = json['logoUrl'];
     commissionPercent = json['commissionPercent'].toString();
     status = json['status'];
-    uptimePercent = json['uptimePercent'];
+    uptimePercent = json['uptimePercent'].toString();
     selfStake = BigInt.from(json['selfStake']);
     delegatedStake = BigInt.from(json['delegatedStake']);
     totalReward =

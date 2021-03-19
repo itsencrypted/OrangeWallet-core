@@ -7,6 +7,8 @@ part 'validator_data_state.dart';
 class ValidatorsdataCubit extends Cubit<ValidatorsDataState> {
   ValidatorsdataCubit() : super(ValidatorsDataStateInitial());
   void setData() async {
+    Validators info = await StakingApiWrapper.validatorsList();
+
     try {
       emit(ValidatorsDataStateLoading());
       Validators info = await StakingApiWrapper.validatorsList();

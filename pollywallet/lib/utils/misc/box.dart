@@ -19,7 +19,7 @@ class BoxUtils {
     Hive.registerAdapter(CredentialsListAdapter());
     Hive.registerAdapter(TransactionDetailsAdapter());
     Hive.registerAdapter(DepositTransactionAdapter());
-    Hive.registerAdapter(WithdrawDataAdapter());
+    Hive.registerAdapter(WithdrawDataDbAdapter());
   }
 
   static Future<bool> checkLogin() async {
@@ -272,20 +272,21 @@ class BoxUtils {
     deposits2.close();
   }
 
-  static Future<void> addWithdrawTransaction({
-    String burnTxHash,
-    TransactionType type,
-    String userAddress,
-    BridgeType bridge,
-    String amount,
-    String name,
-    String addressRootToken,
-    String addressChildToken,
-    String timestring,
-    String fee,
-    // String confirmHash = "",
-    // String exitHash = "",
-  }) async {
+  static Future<void> addWithdrawTransaction(
+      {String burnTxHash,
+      TransactionType type,
+      String userAddress,
+      BridgeType bridge,
+      String amount,
+      String name,
+      String addressRootToken,
+      String addressChildToken,
+      String timestring,
+      String fee,
+      String imageUrl
+      // String confirmHash = "",
+      // String exitHash = "",
+      }) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
     var boxName = withdrawdbBox + network.toString() + address;
@@ -299,6 +300,7 @@ class BoxUtils {
       ..amount = amount
       ..name = name
       ..timeString = timestring
+      ..imageUrl = imageUrl
       ..fee = fee;
     box.put(burnTxHash, txObj);
     await box.close();

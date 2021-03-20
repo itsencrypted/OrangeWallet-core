@@ -22,6 +22,7 @@ class ValidatorsDataStateFinal extends ValidatorsDataState {
 
     return o is ValidatorsDataStateFinal &&
         o.data.result.length == data.result.length &&
+        o.rewards == rewards &&
         _checkEquality(o, this);
   }
 

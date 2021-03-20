@@ -107,10 +107,7 @@ class _ValidatorAndDelegationProfileState
                         .first;
                   }
                   print(4);
-                  BigInt reward = BigInt.zero;
-                  try {
-                    reward = delegatorInfo.shares - delegatorInfo.stake;
-                  } catch (e) {}
+                  BigInt reward = validator.reward;
 
                   var stake = EthConversions.weiToEth(
                       validator.selfStake + validator.delegatedStake, 18);
@@ -292,8 +289,7 @@ class _ValidatorAndDelegationProfileState
                                                   style: AppTheme.body2),
                                               Text(
                                                   EthConversions.weiToEth(
-                                                              delegatorInfo
-                                                                  .claimedReward,
+                                                              validator.reward,
                                                               18)
                                                           .toString() +
                                                       " Matic",

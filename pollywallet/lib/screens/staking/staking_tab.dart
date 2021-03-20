@@ -121,7 +121,7 @@ class _StakingTabState extends State<StakingTab>
                 var stakeQoute = qouteRate *
                     EthConversions.weiToEth(delegationState.stake, 18);
                 var rateQoute = qouteRate *
-                    EthConversions.weiToEth(delegationState.rewards, 18);
+                    EthConversions.weiToEth(validatorsState.rewards, 18);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -199,7 +199,7 @@ class _StakingTabState extends State<StakingTab>
                                     .toString(),
                                 stakeUSD: stakeQoute.toStringAsFixed(2),
                                 maticRewards: EthConversions.weiToEth(
-                                        delegationState.rewards, 18)
+                                        validatorsState.rewards, 18)
                                     .toString(),
                                 rewardUSD: rateQoute.toStringAsFixed(2)),
                             listTile(

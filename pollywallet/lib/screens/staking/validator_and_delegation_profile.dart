@@ -14,9 +14,12 @@ import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cu
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:web3dart/web3dart.dart';
 
 class ValidatorAndDelegationProfile extends StatefulWidget {
   @override
@@ -470,9 +473,11 @@ class _ValidatorAndDelegationProfileState
                                                 ),
                                                 RaisedButton(
                                                   onPressed: () {
-                                                    Navigator.pushNamed(context,
-                                                        stakeWithDrawAmountRoute,
-                                                        arguments: id);
+                                                    _withdrawStake(
+                                                        delegatorInfo.stake,
+                                                        delegatorInfo.shares,
+                                                        validator
+                                                            .contractAddress);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -570,6 +575,25 @@ class _ValidatorAndDelegationProfileState
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: data);
+  }
+
+  _withdrawStake(BigInt stake, BigInt share, String address) async {
+    GlobalKey<State> _key = new GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    Transaction trx;
+    TransactionData transactionData;
+    trx = await StakingTransactions.sellVoucher(stake, share, address);
+    transactionData = TransactionData(
+        to: address,
+        amount: EthConversions.weiToEth(stake, 18).toString(),
+        trx: trx,
+        token: Items(contractName: "Matic"),
+        type: TransactionType.UNSTAKE);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: transactionData);
   }
 
   _refreshLoop(CovalentTokensListMaticCubit mCubit, ValidatorsdataCubit vCubit,

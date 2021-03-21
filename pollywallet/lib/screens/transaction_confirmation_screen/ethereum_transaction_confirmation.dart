@@ -138,10 +138,13 @@ class _EthTransactionConfirmationState
                                             " ${args.token.contractTickerSymbol}",
                                         style: AppTheme.boldThemeColoredText,
                                       ),
-                                      Text(
-                                        " ${args.token.quoteRate * double.parse(args.amount)} USD",
-                                        style: AppTheme.balanceSub,
-                                      )
+                                      args.token != null ||
+                                              args.token.quoteRate != null
+                                          ? Text(
+                                              " ${args.token.quoteRate * double.parse(args.amount)} USD",
+                                              style: AppTheme.balanceSub,
+                                            )
+                                          : Container()
                                     ],
                                   ),
                                   Column(

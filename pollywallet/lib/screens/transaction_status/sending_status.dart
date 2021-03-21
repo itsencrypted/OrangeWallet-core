@@ -49,6 +49,19 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.close,
+                color: AppTheme.warmGrey,
+              ),
+              onPressed: _closeFn)
+        ],
+        elevation: 0,
+        backgroundColor: AppTheme.purple_600,
+      ),
       backgroundColor: AppTheme.purple_600,
       body: Container(
         child: Center(
@@ -65,15 +78,7 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(AppTheme.buttonRadius))),
-              onPressed: () {
-                isEth
-                    ? Navigator.popAndPushNamed(
-                        context, ethereumTransactionStatusRoute,
-                        arguments: txHash)
-                    : Navigator.popAndPushNamed(
-                        context, transactionStatusMaticRoute,
-                        arguments: txHash);
-              },
+              onPressed: _closeFn,
               child: Text(
                 'Close',
                 style: AppTheme.label_medium.copyWith(color: AppTheme.white),
@@ -123,6 +128,14 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
     } catch (e) {}
 
     super.dispose();
+  }
+
+  void _closeFn() {
+    isEth
+        ? Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
+            arguments: txHash)
+        : Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
+            arguments: txHash);
   }
 
   Future<void> txStatus(String txHash) async {

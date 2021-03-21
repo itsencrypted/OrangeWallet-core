@@ -52,12 +52,12 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
       backgroundColor: AppTheme.purple_600,
       body: Container(
         child: Center(
-          child: index == 2
+          child: !transactionPending
               ? Lottie.asset(sentLottieJson, repeat: false)
               : Lottie.asset(sendingLottieJson),
         ),
       ),
-      floatingActionButton: index == 2
+      floatingActionButton: !transactionPending
           ? TextButton(
               style: TextButton.styleFrom(
                   backgroundColor: AppTheme.purple_600,

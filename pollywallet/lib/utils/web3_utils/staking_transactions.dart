@@ -41,7 +41,7 @@ class StakingTransactions {
         function: buyVoucher,
         maxGas: 425000,
         from: EthereumAddress.fromHex(address),
-        parameters: [stake, shares]);
+        parameters: [stake, stake * BigInt.from(10)]);
 
     return trx;
   }
@@ -97,7 +97,26 @@ class StakingTransactions {
     return reward;
   }
 
-  static Future<BigInt> getUnbondedStakeStatus(String validatorAddress) async {
+  static Future<BigInt> getUnbondedStakeNonce(String validatorAddress) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(stakingContractAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "staking"),
+        EthereumAddress.fromHex(validatorAddress));
+    //var func2 = contract.functions('')
+    var func2 = contract.function('unbondNonces');
+    var address = await CredentialManager.getAddress();
+    var resp = await client.call(
+      contract: contract,
+      function: func2,
+      params: [EthereumAddress.fromHex(address)],
+    );
+    BigInt reward = resp[0];
+    return reward;
+  }
+
+  static Future<BigInt> getUnbondedStakeStatus(
+      String validatorAddress, BigInt nonce) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
     String abi = await rootBundle.loadString(stakingContractAbi);
@@ -105,6 +124,25 @@ class StakingTransactions {
         EthereumAddress.fromHex(validatorAddress));
     //var func2 = contract.functions('')
     var func2 = contract.function('unbonds_new');
+    var address = await CredentialManager.getAddress();
+    var resp = await client.call(
+      contract: contract,
+      function: func2,
+      params: [EthereumAddress.fromHex(address), nonce],
+    );
+    BigInt reward = resp[0];
+    return reward;
+  }
+
+  static Future<BigInt> getUnbondedStakeStatusLegacy(
+      String validatorAddress) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(stakingContractAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "staking"),
+        EthereumAddress.fromHex(validatorAddress));
+    //var func2 = contract.functions('')
+    var func2 = contract.function('unbonds');
     var address = await CredentialManager.getAddress();
     var resp = await client.call(
       contract: contract,

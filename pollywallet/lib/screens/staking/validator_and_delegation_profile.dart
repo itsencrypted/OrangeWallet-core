@@ -580,7 +580,6 @@ class _ValidatorAndDelegationProfileState
   _withdrawStake(BigInt stake, BigInt share, String address) async {
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
     Transaction trx;
     TransactionData transactionData;
     trx = await StakingTransactions.sellVoucher(stake, share, address);
@@ -588,7 +587,7 @@ class _ValidatorAndDelegationProfileState
         to: address,
         amount: EthConversions.weiToEth(stake, 18).toString(),
         trx: trx,
-        token: Items(contractName: "Matic"),
+        token: Items(contractTickerSymbol: "MATIC"),
         type: TransactionType.UNSTAKE);
     Navigator.of(context, rootNavigator: true).pop();
 

@@ -50,6 +50,7 @@ dependencies:
   timelines: ^0.0.2+1
   menu_button: ^1.4.1
   lottie: ^0.7.0+1
+  intl: ^0.17.0
 
   # you may delete the below ones
   # googleapis: ^0.54.0

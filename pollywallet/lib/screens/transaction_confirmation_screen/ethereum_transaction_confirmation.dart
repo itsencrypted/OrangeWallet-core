@@ -351,8 +351,8 @@ class _EthTransactionConfirmationState
       return;
     }
     Navigator.pop(context);
-    Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
-        arguments: hash);
+    Navigator.popAndPushNamed(context, sendingStatusRoute,
+        arguments: [hash, true]);
   }
 }
 // Text(

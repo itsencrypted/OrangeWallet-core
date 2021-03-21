@@ -18,7 +18,10 @@ class AppTheme {
   static const Color warmgray_600 = Color(0xFF605D52);
   static const Color warmgray_900 = Color(0xFF26241E);
 
+  static const Color purple_200 = Color(0xFFE2D7FB);
+  static const Color purple_400 = Color(0xFFB08FF3);
   static const Color purple_600 = Color(0xFF8046E4);
+
   static const Color yellow_500 = Color(0xFFE7B549);
 
   static const Color red_600 = Color(0xFFCB3A31);
@@ -146,6 +149,15 @@ class AppTheme {
     color: warmgray_600,
   );
 
+  static const TextStyle body_xsmall = TextStyle(
+    // body2 -> body1
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 12,
+    letterSpacing: 0.2,
+    color: purple_400,
+  );
+
   static const TextStyle body_medium = TextStyle(
     // body2 -> body1
     fontFamily: fontName,
@@ -229,6 +241,15 @@ class AppTheme {
     fontSize: 16,
     letterSpacing: 0.18,
     color: warmgray_900,
+  );
+
+  static const TextStyle header_H4 = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w700,
+    fontSize: 18,
+    letterSpacing: 0.28,
+    color: purple_200,
   );
 
   static const TextStyle label_medium = TextStyle(

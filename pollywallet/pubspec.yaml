@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^0.19.3
   timelines: ^0.0.2+1
   menu_button: ^1.4.1
+  lottie: ^0.7.0+1
 
   # you may delete the below ones
   # googleapis: ^0.54.0
@@ -105,6 +106,8 @@ flutter:
     - assets/icons/bolt.png
     - assets/icons/arrow.png
     - assets/icons/app_landing.svg
+    - assets/icons/sending_lottie.json
+    - assets/icons/sent_lottie.json
 
     # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

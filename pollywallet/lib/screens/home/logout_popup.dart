@@ -29,7 +29,7 @@ class PopUpDialogLogout {
             toastLength: Toast.LENGTH_LONG);
         await BoxUtils.clear();
         Navigator.of(context).pushNamedAndRemoveUntil(
-            importMnemonicRoute, (Route<dynamic> route) => false);
+            appLandingRoute, (Route<dynamic> route) => false);
       },
     );
 

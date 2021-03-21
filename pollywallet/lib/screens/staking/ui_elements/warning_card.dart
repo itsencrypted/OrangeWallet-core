@@ -3,15 +3,13 @@ import 'package:pollywallet/theme_data.dart';
 
 class WarningCard extends StatelessWidget {
   final Function onClose;
-  WarningCard({this.onClose});
+  final String warningText;
+  WarningCard({this.onClose, this.warningText});
   @override
   Widget build(BuildContext context) {
     return Card(
       color: AppTheme.warningCardColor,
-      elevation: AppTheme.cardElevations,
-      shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.all(Radius.circular(AppTheme.cardRadiusMedium))),
+      shape: AppTheme.cardShape,
       child: Column(
         children: [
           Padding(
@@ -38,7 +36,7 @@ class WarningCard extends StatelessWidget {
                 bottom: AppTheme.paddingHeight,
                 right: 10),
             child: Text(
-              'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
+              warningText,
               style: AppTheme.body2White,
               maxLines: 100,
             ),

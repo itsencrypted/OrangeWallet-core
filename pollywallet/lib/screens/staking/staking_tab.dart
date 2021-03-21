@@ -188,6 +188,8 @@ class _StakingTabState extends State<StakingTab>
                                     showWarning = false;
                                   });
                                 },
+                                warningText:
+                                    'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
                               ),
                             StackingCard(
                                 iconURL:

@@ -10,13 +10,18 @@ class AppTheme {
   static const Color secondaryColor = Color(0xffEABC78);
   static const Color black = Color(0xFF000000);
   static const Color warningCardColor = Color(0xFFD3AA6B);
+  static const Color lightgray_700 = Color(0xFFFFFFFF);
+
+  static const Color warmgray_100 = Color(0xFFE8E6E1);
   static const Color warmgray_200 = Color(0xFFD2CDC5);
   static const Color warmgray_300 = Color(0xFFB6B1A8);
-
+  static const Color warmgray_600 = Color(0xFF605D52);
   static const Color warmgray_900 = Color(0xFF26241E);
 
   static const Color purple_600 = Color(0xFF8046E4);
   static const Color yellow_500 = Color(0xFFE7B549);
+
+  static const Color red_600 = Color(0xFFCB3A31);
 
   static const Color grey = Color(0xFF3A5160);
   static const Color stackingGrey = Color(0xFFF3F2EF);
@@ -34,6 +39,9 @@ class AppTheme {
   static const Color red_500 = Color(0xFFDE524C);
   static const Color warmGrey = Color(0xFFE8E6E1);
   static const String primaryHex = "#D287FD";
+  static const double buttonRadius = 4;
+  static const double buttonHeight_44 = 44;
+
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
@@ -42,6 +50,7 @@ class AppTheme {
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
   static const double paddingHeight = 16;
+  static const double paddingHeight12 = 12;
   static const double paddingHeight20 = 20;
   static const textTheme = TextTheme(
     body1: body1,
@@ -128,6 +137,24 @@ class AppTheme {
     color: darkText,
   );
 
+  static const TextStyle body_small = TextStyle(
+    // body2 -> body1
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    letterSpacing: 0.2,
+    color: warmgray_600,
+  );
+
+  static const TextStyle body_medium = TextStyle(
+    // body2 -> body1
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
+    letterSpacing: 0.24,
+    color: red_600,
+  );
+
   static const TextStyle buttonText = TextStyle(
     // Caption -> caption
     fontFamily: fontName,
@@ -201,6 +228,15 @@ class AppTheme {
     fontWeight: FontWeight.w600,
     fontSize: 16,
     letterSpacing: 0.18,
+    color: warmgray_900,
+  );
+
+  static const TextStyle label_medium = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    letterSpacing: 0.2,
     color: warmgray_900,
   );
 

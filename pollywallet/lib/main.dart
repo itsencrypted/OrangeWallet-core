@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pollywallet/screens/deposit/erc1155_deposit.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
+import 'package:pollywallet/screens/landing/app_landing.dart';
+import 'package:pollywallet/screens/landing/create_wallet.dart';
+import 'package:pollywallet/screens/landing/import_wallet.dart';
+import 'package:pollywallet/screens/landing/landing_set_pin.dart';
 import 'package:pollywallet/screens/new_account_pin_screen.dart';
 import 'package:pollywallet/screens/notifications/notifications_screen.dart';
 import 'package:pollywallet/screens/receive/receive.dart';
@@ -33,7 +37,6 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/bridge_actions.dart';
 import 'package:pollywallet/screens/deposit/deposit_screen.dart';
 import 'package:pollywallet/screens/home/home.dart';
-import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/send_token/token_amount.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/delegation_screen.dart';
@@ -62,7 +65,7 @@ class PollyWallet extends StatefulWidget {
 
 class _PollyWalletState extends State<PollyWallet> {
   SendTransactionCubit data;
-  Widget current = ImportMnemonic();
+  Widget current = AppLandingScreen();
 
   @override
   void initState() {
@@ -84,7 +87,7 @@ class _PollyWalletState extends State<PollyWallet> {
           });
         } else {
           setState(() {
-            current = ImportMnemonic();
+            current = AppLandingScreen();
           });
         }
       });
@@ -134,7 +137,10 @@ class _PollyWalletState extends State<PollyWallet> {
               visualDensity: VisualDensity.adaptivePlatformDensity,
             ),
             routes: {
-              importMnemonicRoute: (context) => ImportMnemonic(),
+              appLandingRoute: (context) => AppLandingScreen(),
+              importWalletRoute: (context) => ImportWalletScreen(),
+              landingSetPinRoute: (context) => LandingSetPinScreen(),
+              createWalletRoute: (context) => CreateWalletScreen(),
               pinWidgetRoute: (context) => PinWidget(),
               homeRoute: (context) => Home(),
               coinListRoute: (context) => TokenList(),

@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
-import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
@@ -634,5 +633,22 @@ class EthereumTransactions {
     );
     print(addr);
     return addr[0].toString();
+  }
+
+  static Future<BigInt> getStakingReward(String validatorAddress) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    final client = Web3Client(config.ethEndpoint, http.Client());
+    String abi = await rootBundle.loadString(stakingContractAbi);
+    final contract = DeployedContract(ContractAbi.fromJson(abi, "staking"),
+        EthereumAddress.fromHex(validatorAddress));
+    var func = contract.function('getLiquidRewards');
+    var address = await CredentialManager.getAddress();
+    var resp = await client.call(
+      contract: contract,
+      function: func,
+      params: [EthereumAddress.fromHex(address)],
+    );
+    BigInt reward = resp[0];
+    return reward;
   }
 }

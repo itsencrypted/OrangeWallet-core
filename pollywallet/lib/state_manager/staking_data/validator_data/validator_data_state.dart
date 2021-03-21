@@ -14,14 +14,15 @@ class ValidatorsDataStateLoading extends ValidatorsDataState {
 
 class ValidatorsDataStateFinal extends ValidatorsDataState {
   final Validators data;
-
-  const ValidatorsDataStateFinal(this.data);
+  final BigInt rewards;
+  const ValidatorsDataStateFinal({this.data, this.rewards});
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
     return o is ValidatorsDataStateFinal &&
         o.data.result.length == data.result.length &&
+        o.rewards == rewards &&
         _checkEquality(o, this);
   }
 

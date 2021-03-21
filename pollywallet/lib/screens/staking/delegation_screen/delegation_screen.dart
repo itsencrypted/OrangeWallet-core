@@ -91,9 +91,7 @@ class _DelegationScreenState extends State<DelegationScreen> {
                             .toList()
                             .first
                             .quoteRate;
-                        BigInt reward =
-                            delegationState.data.result[index].shares -
-                                delegationState.data.result[index].stake;
+                        BigInt reward = validator.reward;
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: DelegationCard(

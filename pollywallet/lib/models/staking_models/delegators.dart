@@ -76,7 +76,7 @@ class Delegations {
   BigInt claimedReward;
   String createdAt;
   String updatedAt;
-
+  BigInt rewards;
   Delegations(
       {this.address,
       this.stake,

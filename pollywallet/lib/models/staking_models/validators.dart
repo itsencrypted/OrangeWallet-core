@@ -94,6 +94,7 @@ class ValidatorInfo {
   int auctionAmount;
   String createdAt;
   String updatedAt;
+  BigInt reward;
   String contractAddress;
   String signerPublicKey;
   bool delegationEnabled;

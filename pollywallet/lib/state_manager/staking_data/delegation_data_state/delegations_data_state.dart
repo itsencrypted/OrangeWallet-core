@@ -15,11 +15,10 @@ class DelegationsDataStateLoading extends DelegationsDataState {
 class DelegationsDataStateFinal extends DelegationsDataState {
   final DelegationsPerAddress data;
   final BigInt stake;
-  final BigInt rewards;
   final BigInt claimedRewards;
   final BigInt shares;
   const DelegationsDataStateFinal(
-      this.data, this.shares, this.stake, this.rewards, this.claimedRewards);
+      this.data, this.shares, this.stake, this.claimedRewards);
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;

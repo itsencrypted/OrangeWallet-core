@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/matic_transactions_list.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -82,64 +83,70 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                 return Card(
                                   shape: AppTheme.cardShape,
                                   elevation: AppTheme.cardElevations,
-                                  child: FlatButton(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: ListTile(
-                                        // isThreeLine: true,
-                                        leading: Icon(
-                                          Icons.check_circle_outline,
-                                          color: Colors.green,
-                                          size: 30,
-                                        ),
-                                        trailing: Column(
+                                  child: InkWell(
+                                    child: ListTile(
+                                      // isThreeLine: true,
+                                      leading: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: AppTheme.paddingHeight12 / 2),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
                                           children: [
-                                            Text(
-                                                EthConversions.weiToEth(
-                                                        BigInt.parse(
-                                                            item.value),
-                                                        18)
-                                                    .toString(),
-                                                style: AppTheme.title),
-                                            Text(
+                                            Icon(
+                                              Icons.check_circle_outline,
+                                              color: Colors.green,
+                                              size: AppTheme.tokenIconHeight,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      trailing: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
                                               item.valueQuote == null
                                                   ? "\$0.0"
                                                   : "\$" +
                                                       item.valueQuote
                                                           .toString(),
-                                              style: AppTheme.subtitle,
-                                            ),
-                                          ],
-                                        ),
-                                        title: Text(
-                                          item.txHash,
-                                          style: AppTheme.title,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        subtitle: item.toAddress == null
-                                            ? Container()
-                                            : Wrap(
-                                                alignment: WrapAlignment.start,
-                                                children: [
-                                                  Icon(Icons.arrow_forward),
-                                                  Text(
-                                                    DateTime.parse(
-                                                            item.blockSignedAt)
-                                                        .toLocal()
-                                                        .toString(),
-                                                    style: AppTheme.subtitle,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
+                                              style: AppTheme.label_medium
+                                                  .copyWith(
+                                                      color:
+                                                          AppTheme.teal_500)),
+                                          Text(
+                                            EthConversions.weiToEth(
+                                                        BigInt.parse(
+                                                            item.value),
+                                                        18)
+                                                    .toString() +
+                                                " KYC",
+                                            style: AppTheme.subtitle,
+                                          ),
+                                        ],
                                       ),
+                                      title: Text(
+                                        item.txHash,
+                                        style: AppTheme.label_medium,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      subtitle: item.toAddress == null
+                                          ? Container()
+                                          : Text(
+                                              DateFormat.yMMMEd()
+                                                  .add_jm()
+                                                  .format(DateTime.parse(
+                                                      item.blockSignedAt)),
+                                              style: AppTheme.body_small,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                     ),
-                                    onPressed: () {
+                                    onTap: () {
                                       Navigator.pushNamed(
                                           context, transactionStatusMaticRoute,
                                           arguments: item.txHash);

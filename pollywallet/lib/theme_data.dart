@@ -24,7 +24,10 @@ class AppTheme {
 
   static const Color yellow_500 = Color(0xFFE7B549);
 
+  static const Color red_500 = Color(0xFFDE524C);
   static const Color red_600 = Color(0xFFCB3A31);
+
+  static const Color teal_500 = Color(0xFF24A8AF);
 
   static const Color grey = Color(0xFF3A5160);
   static const Color stackingGrey = Color(0xFFF3F2EF);
@@ -39,7 +42,6 @@ class AppTheme {
   static const Color tabbarBGColor = Color(0xFFE7E3D8);
   static const Color borderColorGreyish = Color(0xFFDCDFE6);
   static const Color buttonColorBlue = Color(0xFF003CB2);
-  static const Color red_500 = Color(0xFFDE524C);
   static const Color warmGrey = Color(0xFFE8E6E1);
   static const String primaryHex = "#D287FD";
   static const double buttonRadius = 4;

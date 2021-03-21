@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
@@ -160,54 +161,63 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                               return Card(
                                 shape: AppTheme.cardShape,
                                 elevation: AppTheme.cardElevations,
-                                child: FlatButton(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 10.0),
-                                    child: ListTile(
-                                      isThreeLine: true,
-                                      leading: Icon(
-                                        Icons.check_circle_outline,
-                                        color: Colors.green,
-                                        size: 30,
-                                      ),
-                                      trailing: Column(
+                                child: InkWell(
+                                  child: ListTile(
+                                    leading: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: AppTheme.paddingHeight12 / 2),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
                                         children: [
-                                          Text(
-                                              EthConversions.weiToEth(
-                                                          BigInt.parse(
-                                                              item.value),
-                                                          18)
-                                                      .toString() +
-                                                  " ETH",
-                                              style: AppTheme.title),
+                                          Icon(
+                                            Icons.check_circle_outline,
+                                            color: Colors.green,
+                                            size: AppTheme.tokenIconHeight,
+                                          ),
                                         ],
                                       ),
-                                      title: Text(
-                                        item.hash,
-                                        style: AppTheme.title,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      subtitle: item.to == null
-                                          ? Container()
-                                          : Wrap(
-                                              alignment: WrapAlignment.start,
-                                              children: [
-                                                Icon(Icons.arrow_forward),
-                                                Text(
-                                                  item.to,
-                                                  style: AppTheme.subtitle,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
                                     ),
+                                    trailing: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                            item.value == null
+                                                ? "\$0.0"
+                                                : "\$" + item.value.toString(),
+                                            style: AppTheme.label_medium
+                                                .copyWith(
+                                                    color: AppTheme.teal_500)),
+                                        Text(
+                                          EthConversions.weiToEth(
+                                                      BigInt.parse(item.value),
+                                                      18)
+                                                  .toString() +
+                                              " ETH",
+                                          style: AppTheme.subtitle,
+                                        ),
+                                      ],
+                                    ),
+                                    title: Text(
+                                      item.hash,
+                                      style: AppTheme.label_medium,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    subtitle: item.to == null
+                                        ? Container()
+                                        : Text(
+                                            DateFormat.yMMMEd().add_jm().format(
+                                                DateTime.parse(item.timeStamp)),
+                                            style: AppTheme.body_small,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                   ),
-                                  onPressed: () {
+                                  onTap: () {
                                     Navigator.pushNamed(
                                         context, ethereumTransactionStatusRoute,
                                         arguments: item.hash);

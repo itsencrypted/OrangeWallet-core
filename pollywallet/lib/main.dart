@@ -37,7 +37,6 @@ import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/bridge/bridge_actions.dart';
 import 'package:pollywallet/screens/deposit/deposit_screen.dart';
 import 'package:pollywallet/screens/home/home.dart';
-import 'package:pollywallet/screens/landing/landing.dart';
 import 'package:pollywallet/screens/pin_widget.dart';
 import 'package:pollywallet/screens/send_token/token_amount.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/delegation_screen.dart';
@@ -141,7 +140,6 @@ class _PollyWalletState extends State<PollyWallet> {
               appLandingRoute: (context) => AppLandingScreen(),
               importWalletRoute: (context) => ImportWalletScreen(),
               landingSetPinRoute: (context) => LandingSetPinScreen(),
-              importMnemonicRoute: (context) => ImportMnemonic(),
               createWalletRoute: (context) => CreateWalletScreen(),
               pinWidgetRoute: (context) => PinWidget(),
               homeRoute: (context) => Home(),

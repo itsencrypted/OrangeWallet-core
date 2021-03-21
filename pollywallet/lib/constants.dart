@@ -39,7 +39,6 @@ const String importWalletRoute = "importWalletRoute";
 const String landingSetPinRoute = "landingSetPinRoute";
 const String createWalletRoute = 'createWalletRoute';
 const String pinWidgetRoute = "pinWidgetRoute";
-const String importMnemonicRoute = "importMnemonicRoute";
 const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";
 const String coinProfileRoute = "coinProfileRoute";

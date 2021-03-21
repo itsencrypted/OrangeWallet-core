@@ -12,6 +12,9 @@ const String ethIcon = "$_baseIcon/eth_icon.png";
 const String boltIcon = "$_baseIcon/bolt.png";
 const String arrowIcon = "$_baseIcon/arrow.png";
 const String appLandingSvg = "$_baseIcon/app_landing.svg";
+const String sendingLottieJson = "$_baseIcon/sending_lottie.json";
+const String sentLottieJson = "$_baseIcon/sent_lottie.json";
+
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
 const depositManagerAbi = "assets/abi/deposit_manager.json";
@@ -38,6 +41,7 @@ const String appLandingRoute = "appLandingRoute";
 const String importWalletRoute = "importWalletRoute";
 const String landingSetPinRoute = "landingSetPinRoute";
 const String createWalletRoute = 'createWalletRoute';
+const String sendingStatusRoute = 'sendingStatusRoute';
 const String pinWidgetRoute = "pinWidgetRoute";
 const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";

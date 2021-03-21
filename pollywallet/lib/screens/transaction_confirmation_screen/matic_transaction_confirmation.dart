@@ -223,7 +223,7 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
       return;
     }
     Navigator.pop(context);
-    Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
-        arguments: hash);
+    Navigator.popAndPushNamed(context, sendingStatusRoute,
+        arguments: [hash, false]);
   }
 }

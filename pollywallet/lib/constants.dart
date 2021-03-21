@@ -1,14 +1,20 @@
 import 'dart:ui';
 
+const String _baseIcon = "assets/icons";
+
 const String balanceString = "Matic Wallet Balance";
 const sendButtonColor = Color(0xff8248E5);
 const receiveButtonColor = Color(0xffEABC78);
-const String tokenIcon = "assets/icons/token_icon.png";
-const String profitIcon = "assets/icons/profit.png";
-const String imageNotFoundIcon = "assets/icons/image_not_found.png";
-const String ethIcon = "assets/icons/eth_icon.png";
-const String boltIcon = "assets/icons/bolt.png";
-const String arrowIcon = "assets/icons/arrow.png";
+const String tokenIcon = "$_baseIcon/token_icon.png";
+const String profitIcon = "$_baseIcon/profit.png";
+const String imageNotFoundIcon = "$_baseIcon/image_not_found.png";
+const String ethIcon = "$_baseIcon/eth_icon.png";
+const String boltIcon = "$_baseIcon/bolt.png";
+const String arrowIcon = "$_baseIcon/arrow.png";
+const String appLandingSvg = "$_baseIcon/app_landing.svg";
+const String sendingLottieJson = "$_baseIcon/sending_lottie.json";
+const String sentLottieJson = "$_baseIcon/sent_lottie.json";
+
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
 const depositManagerAbi = "assets/abi/deposit_manager.json";
@@ -31,8 +37,12 @@ const maticIconUrl =
 const tokenIconUrl =
     "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
 // Routes
+const String appLandingRoute = "appLandingRoute";
+const String importWalletRoute = "importWalletRoute";
+const String landingSetPinRoute = "landingSetPinRoute";
+const String createWalletRoute = 'createWalletRoute';
+const String sendingStatusRoute = 'sendingStatusRoute';
 const String pinWidgetRoute = "pinWidgetRoute";
-const String importMnemonicRoute = "importMnemonicRoute";
 const String homeRoute = "homeRoute";
 const String coinListRoute = "coinListRoute";
 const String coinProfileRoute = "coinProfileRoute";

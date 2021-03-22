@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
+import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -487,7 +488,8 @@ class _ValidatorAndDelegationProfileState
                                                         delegatorInfo.stake,
                                                         delegatorInfo.shares,
                                                         validator
-                                                            .contractAddress);
+                                                            .contractAddress,
+                                                        validator);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -587,7 +589,8 @@ class _ValidatorAndDelegationProfileState
         arguments: data);
   }
 
-  _withdrawStake(BigInt stake, BigInt share, String address) async {
+  _withdrawStake(BigInt stake, BigInt share, String address,
+      ValidatorInfo validator) async {
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     Transaction trx;
@@ -597,6 +600,7 @@ class _ValidatorAndDelegationProfileState
         to: address,
         amount: EthConversions.weiToEth(stake, 18).toString(),
         trx: trx,
+        validatorData: validator,
         token: Items(contractTickerSymbol: "MATIC"),
         type: TransactionType.UNSTAKE);
     Navigator.of(context, rootNavigator: true).pop();
@@ -664,7 +668,7 @@ class _ValidatorAndDelegationProfileState
                   bottom: AppTheme.paddingHeight,
                 ),
                 child: Text(
-                  "You unbonded stake is ready to be claimed.",
+                  "Your unbonded stake is ready to be claimed.",
                   style: AppTheme.body2White,
                   maxLines: 100,
                 ),

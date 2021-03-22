@@ -342,6 +342,7 @@ class EthereumTransactions {
     final client = Web3Client(config.ethEndpoint, http.Client());
     final networkId = await BoxUtils.getNetworkConfig();
     String privateKey = await CredentialManager.getPrivateKey(context);
+    var address = await CredentialManager.getAddress();
     if (privateKey == null)
       return "failed";
     else {
@@ -372,7 +373,17 @@ class EthereumTransactions {
           } else if (networkId == 1) {}
         } else if (details.type == TransactionType.EXITPLASMA) {
           BoxUtils.addPlasmaExitHash();
-        } else if (details.type == TransactionType.EXITPOS) {}
+        } else if (details.type == TransactionType.EXITPOS) {
+        } else if (details.type == TransactionType.UNSTAKE) {
+          BoxUtils.addUnbondTxData(
+            amount: details.amount,
+            validatorAddress: details.validatorData.contractAddress,
+            userAddress: address,
+            name: details.validatorData.name,
+            timestring:
+                (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+          );
+        }
         return txHash;
       } catch (e) {
         print(e);

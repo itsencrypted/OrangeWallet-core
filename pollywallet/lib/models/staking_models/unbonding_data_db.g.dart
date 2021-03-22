@@ -8,7 +8,7 @@ part of 'unbonding_data_db.dart';
 
 class UnbondingDataDbAdapter extends TypeAdapter<UnbondingDataDb> {
   @override
-  final int typeId = 5;
+  final int typeId = 6;
 
   @override
   UnbondingDataDb read(BinaryReader reader) {
@@ -20,10 +20,10 @@ class UnbondingDataDbAdapter extends TypeAdapter<UnbondingDataDb> {
       ..validatorAddress = fields[0] as String
       ..name = fields[1] as String
       ..timeString = fields[2] as String
-      ..addressChild = fields[3] as String
-      ..userAddress = fields[4] as String
-      ..amount = fields[5] as BigInt
-      ..slippage = fields[6] as BigInt;
+      ..userAddress = fields[3] as String
+      ..amount = fields[4] as BigInt
+      ..slippage = fields[5] as BigInt
+      ..claimed = fields[6] as bool;
   }
 
   @override
@@ -37,13 +37,13 @@ class UnbondingDataDbAdapter extends TypeAdapter<UnbondingDataDb> {
       ..writeByte(2)
       ..write(obj.timeString)
       ..writeByte(3)
-      ..write(obj.addressChild)
-      ..writeByte(4)
       ..write(obj.userAddress)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.amount)
+      ..writeByte(5)
+      ..write(obj.slippage)
       ..writeByte(6)
-      ..write(obj.slippage);
+      ..write(obj.claimed);
   }
 
   @override

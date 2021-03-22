@@ -1,5 +1,6 @@
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
-import 'package:pollywallet/models/transaction_models/transaction_information.dart';
+import 'package:pollywallet/models/staking_models/validator_details.dart';
+import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:web3dart/web3dart.dart';
 
 class TransactionData {
@@ -9,9 +10,16 @@ class TransactionData {
   final TransactionType type;
   final BigInt gas;
   final Items token;
+  final ValidatorInfo validatorData;
 
   TransactionData(
-      {this.trx, this.to, this.amount, this.type, this.gas, this.token});
+      {this.trx,
+      this.to,
+      this.amount,
+      this.type,
+      this.gas,
+      this.token,
+      this.validatorData});
   static Map txTypeString = {
     0: "Approve",
     1: "Deposit  via POS",
@@ -25,7 +33,8 @@ class TransactionData {
     9: "Speed Up",
     10: "Restake",
     11: "Unstake",
-    12: "Burn Token (Plasma)"
+    12: "Burn Token (Plasma)",
+    13: "Claim Stake"
   };
 }
 
@@ -42,5 +51,6 @@ enum TransactionType {
   SPEEDUP,
   RESTAKE,
   UNSTAKE,
-  BURNPOS
+  BURNPOS,
+  CLAIMSTAKE
 }

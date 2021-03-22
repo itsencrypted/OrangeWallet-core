@@ -21,6 +21,8 @@ class StakingApiWrapper {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.stakingEndpoint + '/validators';
     var resp = await http.get(url);
+    //print(resp.body);
+
     if (resp.statusCode != 200) {
       print("Status code vlist: ${resp.statusCode}");
     }
@@ -66,6 +68,8 @@ class StakingApiWrapper {
     String url = config.stakingEndpoint + '/delegators';
 
     var resp = await http.get(url);
+    //print(resp.body);
+
     var json = jsonDecode(resp.body);
     ctl = DelegationsList.fromJson(json);
     return ctl;
@@ -78,6 +82,7 @@ class StakingApiWrapper {
     String url = config.stakingEndpoint + '/delegators/' + address;
     //print(url);
     var resp = await http.get(url);
+    //print(resp.body);
     if (resp.statusCode != 200) {
       print("Status code dlist: ${resp.statusCode}");
     }

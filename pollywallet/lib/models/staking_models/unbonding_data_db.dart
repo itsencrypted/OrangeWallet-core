@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 part 'unbonding_data_db.g.dart';
 
-@HiveType(typeId: 5)
+@HiveType(typeId: 6)
 class UnbondingDataDb extends HiveObject {
   @HiveField(0)
   String validatorAddress;
@@ -13,14 +13,14 @@ class UnbondingDataDb extends HiveObject {
   String timeString;
 
   @HiveField(3)
-  String addressChild;
-
-  @HiveField(4)
   String userAddress;
 
-  @HiveField(5)
+  @HiveField(4)
   BigInt amount;
 
-  @HiveField(6)
+  @HiveField(5)
   BigInt slippage;
+
+  @HiveField(6)
+  bool claimed;
 }

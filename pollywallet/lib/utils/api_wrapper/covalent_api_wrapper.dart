@@ -52,7 +52,6 @@ class CovalentApiWrapper {
           CovalentKey;
     }
     var resp = await http.get(url);
-
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
     if (data != null) ctl.data.items.add(data);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/notifications/staking_notifications_list.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/widgets/colored_tabbar.dart';
@@ -54,7 +55,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 tabbarPadding: AppTheme.paddingHeight / 4,
               )),
           body: TabBarView(
-            children: [Text("ADSa"), Text("Afafa")],
+            children: [Text("ADSa"), StakingNotificationsList()],
           )),
     );
   }

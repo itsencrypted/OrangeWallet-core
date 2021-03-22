@@ -95,11 +95,19 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Icon(
-                                              Icons.check_circle_outline,
-                                              color: Colors.green,
-                                              size: AppTheme.tokenIconHeight,
-                                            ),
+                                            item.successful
+                                                ? Icon(
+                                                    Icons.check_circle_outline,
+                                                    color: Colors.green,
+                                                    size: AppTheme
+                                                        .tokenIconHeight,
+                                                  )
+                                                : Icon(
+                                                    Icons.cancel_outlined,
+                                                    color: Colors.red,
+                                                    size: AppTheme
+                                                        .tokenIconHeight,
+                                                  ),
                                           ],
                                         ),
                                       ),
@@ -125,7 +133,7 @@ class _MaticTransactionListState extends State<MaticTransactionList>
                                                             item.value),
                                                         18)
                                                     .toString() +
-                                                " KYC",
+                                                " MATIC",
                                             style: AppTheme.subtitle,
                                           ),
                                         ],

@@ -93,7 +93,7 @@ class _StakingTabState extends State<StakingTab>
                           .balance),
                       18);
                 } catch (e) {
-                  matic = 0.0;
+                  eth = 0.0;
                 }
                 try {
                   matic = EthConversions.weiToEth(
@@ -106,7 +106,7 @@ class _StakingTabState extends State<StakingTab>
                           .balance),
                       18);
                 } catch (e) {
-                  qouteRate = 0.0;
+                  matic = 0.0;
                 }
                 try {
                   qouteRate = maticTokenListState.covalentTokenList.data.items
@@ -115,9 +115,11 @@ class _StakingTabState extends State<StakingTab>
                       .first
                       .quoteRate;
                 } catch (e) {
-                  eth = 0.0;
+                  qouteRate = 0.0;
                 }
+                print("qouteRate");
 
+                print(qouteRate);
                 var stakeQoute = qouteRate *
                     EthConversions.weiToEth(delegationState.stake, 18);
                 var rateQoute = qouteRate *

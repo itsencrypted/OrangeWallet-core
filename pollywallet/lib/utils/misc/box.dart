@@ -145,6 +145,7 @@ class BoxUtils {
       ..txHash = tx
       ..txType = type.index
       ..network = network
+      ..time = DateTime.now().toString()
       ..to = to;
     box.put(tx, txObj);
     await box.close();

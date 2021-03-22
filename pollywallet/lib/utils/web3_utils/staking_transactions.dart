@@ -115,7 +115,7 @@ class StakingTransactions {
     return reward;
   }
 
-  static Future<BigInt> getUnbondedStakeStatus(
+  static Future<dynamic> getUnbondedStakeStatus(
       String validatorAddress, BigInt nonce) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
@@ -131,10 +131,10 @@ class StakingTransactions {
       params: [EthereumAddress.fromHex(address), nonce],
     );
     BigInt reward = resp[0];
-    return reward;
+    return resp;
   }
 
-  static Future<BigInt> getUnbondedStakeStatusLegacy(
+  static Future<dynamic> getUnbondedStakeStatusLegacy(
       String validatorAddress) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     final client = Web3Client(config.ethEndpoint, http.Client());
@@ -150,6 +150,27 @@ class StakingTransactions {
       params: [EthereumAddress.fromHex(address)],
     );
     BigInt reward = resp[0];
-    return reward;
+    return resp;
+  }
+
+  static Future<dynamic> stakeClaimData(String validatorAddress) async {
+    var nonce = BigInt.zero;
+    try {
+      nonce = await getUnbondedStakeNonce(validatorAddress);
+      print(nonce);
+    } catch (e) {
+      var resp = await getUnbondedStakeStatusLegacy(validatorAddress);
+      print(resp);
+      return;
+    }
+    if (nonce == BigInt.zero) {
+      var resp = await getUnbondedStakeStatusLegacy(validatorAddress);
+      print(resp);
+      return [resp, nonce];
+    } else {
+      var resp = await getUnbondedStakeStatus(validatorAddress, nonce);
+      print(resp);
+      return [resp, nonce];
+    }
   }
 }

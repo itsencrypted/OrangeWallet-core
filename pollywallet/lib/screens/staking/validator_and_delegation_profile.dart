@@ -14,8 +14,6 @@ import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cu
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
-import 'package:pollywallet/utils/network/network_config.dart';
-import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
@@ -29,6 +27,11 @@ class ValidatorAndDelegationProfile extends StatefulWidget {
 
 class _ValidatorAndDelegationProfileState
     extends State<ValidatorAndDelegationProfile> {
+  var withdrawLoaded = false;
+  bool withdrawAvailable = false;
+  BigInt withdrawEpoch = BigInt.zero;
+  BigInt withdrawAmount = BigInt.zero;
+  BigInt nonce = BigInt.zero;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -88,6 +91,10 @@ class _ValidatorAndDelegationProfileState
                       .toList()
                       .first;
                   print(1);
+                  if (!withdrawLoaded) {
+                    _loadWithdrawStatus(validator.contractAddress);
+                  }
+
                   double qoute = covalentMaticState.covalentTokenList.data.items
                       .where((element) =>
                           element.contractTickerSymbol.toLowerCase() == "matic")
@@ -127,6 +134,9 @@ class _ValidatorAndDelegationProfileState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  withdrawAvailable
+                                      ? _withdrawCard()
+                                      : Container(),
                                   Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
@@ -604,5 +614,91 @@ class _ValidatorAndDelegationProfileState
         mCubit.refresh();
       }
     });
+  }
+
+  _loadWithdrawStatus(String validatorAddress) async {
+    var data = await StakingTransactions.stakeClaimData(validatorAddress);
+    setState(() {
+      withdrawLoaded = true;
+
+      if (data[0][0] != BigInt.zero) {
+        withdrawAmount = data[0][0];
+        withdrawEpoch = data[0][1];
+        withdrawAvailable = true;
+        nonce = data[1];
+      }
+    });
+  }
+
+  _withdrawCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Card(
+        color: AppTheme.warningCardColor,
+        shape: AppTheme.cardShape,
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppTheme.paddingHeight,
+                  bottom: AppTheme.paddingHeight,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Attention',
+                      style: AppTheme.titleWhite,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppTheme.paddingHeight,
+                  bottom: AppTheme.paddingHeight,
+                ),
+                child: Text(
+                  "You unbonded stake is ready to be claimed.",
+                  style: AppTheme.body2White,
+                  maxLines: 100,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: AppTheme.paddingHeight,
+                        //bottom: AppTheme.paddingHeight,
+                        right: 10),
+                    child: OutlineButton(
+                      borderSide: BorderSide(color: AppTheme.body2White.color),
+                      onPressed: () {},
+                      color: AppTheme.primaryColor,
+                      child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          child: Center(
+                              child: Text(
+                            "Claim Stake",
+                            textAlign: TextAlign.center,
+                            style: AppTheme.body2White,
+                          ))),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

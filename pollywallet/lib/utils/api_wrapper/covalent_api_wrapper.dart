@@ -40,7 +40,7 @@ class CovalentApiWrapper {
           contractName: "Matic",
           logoUrl: tokenIconUrl,
           quote: 0,
-          quoteRate: 12);
+          quoteRate: 0.2);
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
@@ -52,7 +52,6 @@ class CovalentApiWrapper {
           CovalentKey;
     }
     var resp = await http.get(url);
-
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
     if (data != null) ctl.data.items.add(data);

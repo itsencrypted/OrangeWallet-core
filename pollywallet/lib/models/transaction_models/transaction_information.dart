@@ -14,4 +14,6 @@ class TransactionDetails extends HiveObject {
   @HiveField(3)
   String to; //0 testnet 1 mainnet
 
+  @HiveField(4)
+  String time;
 }

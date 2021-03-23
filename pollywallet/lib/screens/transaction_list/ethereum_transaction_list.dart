@@ -70,47 +70,60 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                     itemBuilder: (context, index) {
                       TransactionDetails item = pendingTx[index];
                       return Card(
-                        color: AppTheme.white,
                         shape: AppTheme.cardShape,
                         elevation: AppTheme.cardElevations,
-                        child: FlatButton(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: ListTile(
-                              isThreeLine: true,
-                              leading: Icon(
-                                Icons.timer,
-                                color: Colors.red,
-                                size: 30,
+                        child: InkWell(
+                          child: ListTile(
+                            leading: Padding(
+                              padding: EdgeInsets.only(
+                                  left: AppTheme.paddingHeight12 / 2),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.timer,
+                                    color: Colors.yellow,
+                                    size: AppTheme.tokenIconHeight,
+                                  ),
+                                ],
                               ),
-                              title: Text(
-                                item.txHash,
-                                style: AppTheme.title,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              trailing: Text(
-                                "Waiting..",
-                                style: AppTheme.title,
-                              ),
-                              subtitle: item.to == null
-                                  ? Container()
-                                  : Wrap(
-                                      alignment: WrapAlignment.start,
-                                      children: [
-                                        Icon(Icons.arrow_forward),
-                                        Text(
-                                          item.to,
-                                          style: AppTheme.subtitle,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
                             ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Waiting..",
+                                    style: AppTheme.label_medium
+                                        .copyWith(color: AppTheme.teal_500)),
+                                // Text(
+                                //   EthConversions.weiToEth(
+                                //               BigInt.parse(item.value),
+                                //               18)
+                                //           .toString() +
+                                //       " ETH",
+                                //   style: AppTheme.subtitle,
+                                // ),
+                              ],
+                            ),
+                            title: Text(
+                              pendingTx[index].txHash,
+                              style: AppTheme.label_medium,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: pendingTx[index].time == null
+                                ? Container()
+                                : Text(
+                                    DateFormat.yMMMEd().add_jm().format(
+                                        DateTime.parse(pendingTx[index].time)),
+                                    style: AppTheme.body_small,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                           ),
-                          onPressed: () {
+                          onTap: () {
                             Navigator.pushNamed(
                                 context, ethereumTransactionStatusRoute,
-                                arguments: item.txHash);
+                                arguments: pendingTx[index].txHash);
                           },
                         ),
                       );
@@ -172,11 +185,19 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Icon(
-                                            Icons.check_circle_outline,
-                                            color: Colors.green,
-                                            size: AppTheme.tokenIconHeight,
-                                          ),
+                                          item.isError == "0"
+                                              ? Icon(
+                                                  Icons.check_circle_outline,
+                                                  color: Colors.green,
+                                                  size:
+                                                      AppTheme.tokenIconHeight,
+                                                )
+                                              : Icon(
+                                                  Icons.cancel_outlined,
+                                                  color: Colors.red,
+                                                  size:
+                                                      AppTheme.tokenIconHeight,
+                                                ),
                                         ],
                                       ),
                                     ),
@@ -187,20 +208,23 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                            item.value == null
-                                                ? "\$0.0"
-                                                : "\$" + item.value.toString(),
+                                            EthConversions.weiToEth(
+                                                        BigInt.parse(
+                                                            item.value),
+                                                        18)
+                                                    .toString() +
+                                                " ETH",
                                             style: AppTheme.label_medium
                                                 .copyWith(
                                                     color: AppTheme.teal_500)),
-                                        Text(
-                                          EthConversions.weiToEth(
-                                                      BigInt.parse(item.value),
-                                                      18)
-                                                  .toString() +
-                                              " ETH",
-                                          style: AppTheme.subtitle,
-                                        ),
+                                        // Text(
+                                        //   EthConversions.weiToEth(
+                                        //               BigInt.parse(item.value),
+                                        //               18)
+                                        //           .toString() +
+                                        //       " ETH",
+                                        //   style: AppTheme.subtitle,
+                                        // ),
                                       ],
                                     ),
                                     title: Text(
@@ -208,14 +232,12 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                                       style: AppTheme.label_medium,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    subtitle: item.to == null
-                                        ? Container()
-                                        : Text(
-                                            DateFormat.yMMMEd().add_jm().format(
-                                                DateTime.parse(item.timeStamp)),
-                                            style: AppTheme.body_small,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                    subtitle: Text(
+                                      DateFormat.yMMMEd().add_jm().format(
+                                          DateTime.parse(item.timeStamp)),
+                                      style: AppTheme.body_small,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                   onTap: () {
                                     Navigator.pushNamed(

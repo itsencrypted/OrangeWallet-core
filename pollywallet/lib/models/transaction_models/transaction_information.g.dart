@@ -20,13 +20,14 @@ class TransactionDetailsAdapter extends TypeAdapter<TransactionDetails> {
       ..txHash = fields[0] as String
       ..txType = fields[1] as int
       ..network = fields[2] as int
-      ..to = fields[3] as String;
+      ..to = fields[3] as String
+      ..time = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, TransactionDetails obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.txHash)
       ..writeByte(1)
@@ -34,7 +35,9 @@ class TransactionDetailsAdapter extends TypeAdapter<TransactionDetails> {
       ..writeByte(2)
       ..write(obj.network)
       ..writeByte(3)
-      ..write(obj.to);
+      ..write(obj.to)
+      ..writeByte(4)
+      ..write(obj.time);
   }
 
   @override

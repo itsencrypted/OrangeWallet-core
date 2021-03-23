@@ -4,6 +4,7 @@ import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pollywallet/models/deposit_models/deposit_transaction_db.dart';
 import 'package:pollywallet/models/etherscan_models/etherescan_tx_list.dart';
+import 'package:pollywallet/models/staking_models/unbonding_data_db.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
@@ -20,6 +21,7 @@ class BoxUtils {
     Hive.registerAdapter(TransactionDetailsAdapter());
     Hive.registerAdapter(DepositTransactionAdapter());
     Hive.registerAdapter(WithdrawDataDbAdapter());
+    Hive.registerAdapter(UnbondingDataDbAdapter());
   }
 
   static Future<bool> checkLogin() async {
@@ -145,6 +147,7 @@ class BoxUtils {
       ..txHash = tx
       ..txType = type.index
       ..network = network
+      ..time = DateTime.now().toString()
       ..to = to;
     box.put(tx, txObj);
     await box.close();
@@ -350,6 +353,57 @@ class BoxUtils {
     var tx = box.get(burnTxHash);
     tx..exitHash = confirmHash;
     await tx.save();
+    await box.close();
+    return;
+  }
+
+  static Future<void> addUnbondTxData(
+      {String validatorAddress,
+      String userAddress,
+      String amount,
+      String name,
+      String timestring,
+      BigInt slippage}) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = unbondDbBox + network.toString() + address;
+    Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
+    UnbondingDataDb txObj = UnbondingDataDb()
+      ..userAddress = userAddress
+      ..amount = BigInt.parse(amount)
+      ..name = name
+      ..timeString = timestring
+      ..claimed = false
+      ..slippage = slippage
+      ..validatorAddress = validatorAddress;
+    box.put(validatorAddress, txObj);
+    await box.close();
+    return;
+  }
+
+  static Future<List<UnbondingDataDb>> getUnbondingList() async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = unbondDbBox + network.toString() + address;
+    var ls = <UnbondingDataDb>[];
+    Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
+    for (int i = 0; i < box.length; i++) {
+      ls.add(box.getAt(i));
+    }
+    return ls;
+  }
+
+  static Future<void> addUnbondTxDataMarkClaimed({
+    String validatorAddress,
+    String userAddress,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = unbondDbBox + network.toString() + address;
+    Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
+    UnbondingDataDb txObj = box.get(validatorAddress);
+    txObj.claimed = true;
+    await txObj.save();
     await box.close();
     return;
   }

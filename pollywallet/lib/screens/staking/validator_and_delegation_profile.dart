@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
+import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -17,6 +18,7 @@ import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
+import 'package:web3dart/web3dart.dart';
 
 class ValidatorAndDelegationProfile extends StatefulWidget {
   @override
@@ -26,6 +28,11 @@ class ValidatorAndDelegationProfile extends StatefulWidget {
 
 class _ValidatorAndDelegationProfileState
     extends State<ValidatorAndDelegationProfile> {
+  var withdrawLoaded = false;
+  bool withdrawAvailable = false;
+  BigInt withdrawEpoch = BigInt.zero;
+  BigInt withdrawAmount = BigInt.zero;
+  BigInt nonce = BigInt.zero;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -85,6 +92,10 @@ class _ValidatorAndDelegationProfileState
                       .toList()
                       .first;
                   print(1);
+                  if (!withdrawLoaded) {
+                    _loadWithdrawStatus(validator.contractAddress);
+                  }
+
                   double qoute = covalentMaticState.covalentTokenList.data.items
                       .where((element) =>
                           element.contractTickerSymbol.toLowerCase() == "matic")
@@ -124,6 +135,9 @@ class _ValidatorAndDelegationProfileState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
+                                  withdrawAvailable
+                                      ? _withdrawCard()
+                                      : Container(),
                                   Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
@@ -470,9 +484,12 @@ class _ValidatorAndDelegationProfileState
                                                 ),
                                                 RaisedButton(
                                                   onPressed: () {
-                                                    Navigator.pushNamed(context,
-                                                        stakeWithDrawAmountRoute,
-                                                        arguments: id);
+                                                    _withdrawStake(
+                                                        delegatorInfo.stake,
+                                                        delegatorInfo.shares,
+                                                        validator
+                                                            .contractAddress,
+                                                        validator);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -572,6 +589,26 @@ class _ValidatorAndDelegationProfileState
         arguments: data);
   }
 
+  _withdrawStake(BigInt stake, BigInt share, String address,
+      ValidatorInfo validator) async {
+    GlobalKey<State> _key = new GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    Transaction trx;
+    TransactionData transactionData;
+    trx = await StakingTransactions.sellVoucher(stake, share, address);
+    transactionData = TransactionData(
+        to: address,
+        amount: EthConversions.weiToEth(stake, 18).toString(),
+        trx: trx,
+        validatorData: validator,
+        token: Items(contractTickerSymbol: "MATIC"),
+        type: TransactionType.UNSTAKE);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: transactionData);
+  }
+
   _refreshLoop(CovalentTokensListMaticCubit mCubit, ValidatorsdataCubit vCubit,
       DelegationsDataCubit dCubit) {
     new Timer.periodic(Duration(seconds: 30), (Timer t) {
@@ -581,5 +618,91 @@ class _ValidatorAndDelegationProfileState
         mCubit.refresh();
       }
     });
+  }
+
+  _loadWithdrawStatus(String validatorAddress) async {
+    var data = await StakingTransactions.stakeClaimData(validatorAddress);
+    setState(() {
+      withdrawLoaded = true;
+
+      if (data[0][0] != BigInt.zero) {
+        withdrawAmount = data[0][0];
+        withdrawEpoch = data[0][1];
+        withdrawAvailable = true;
+        nonce = data[1];
+      }
+    });
+  }
+
+  _withdrawCard() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Card(
+        color: AppTheme.warningCardColor,
+        shape: AppTheme.cardShape,
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppTheme.paddingHeight,
+                  bottom: AppTheme.paddingHeight,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Attention',
+                      style: AppTheme.titleWhite,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppTheme.paddingHeight,
+                  bottom: AppTheme.paddingHeight,
+                ),
+                child: Text(
+                  "Your unbonded stake is ready to be claimed.",
+                  style: AppTheme.body2White,
+                  maxLines: 100,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: AppTheme.paddingHeight,
+                        //bottom: AppTheme.paddingHeight,
+                        right: 10),
+                    child: OutlineButton(
+                      borderSide: BorderSide(color: AppTheme.body2White.color),
+                      onPressed: () {},
+                      color: AppTheme.primaryColor,
+                      child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          child: Center(
+                              child: Text(
+                            "Claim Stake",
+                            textAlign: TextAlign.center,
+                            style: AppTheme.body2White,
+                          ))),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

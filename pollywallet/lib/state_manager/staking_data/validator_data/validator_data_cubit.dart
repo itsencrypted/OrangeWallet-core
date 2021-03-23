@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/utils/api_wrapper/staking_api.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
 
 part 'validator_data_state.dart';
 
@@ -14,7 +15,7 @@ class ValidatorsdataCubit extends Cubit<ValidatorsDataState> {
       BigInt rewards = BigInt.zero;
       List<Future> rewardsFuture = <Future>[];
       for (int i = 0; i < info.result.length; i++) {
-        rewardsFuture.add(EthereumTransactions.getStakingReward(
+        rewardsFuture.add(StakingTransactions.getStakingReward(
             info.result[i].contractAddress));
       }
       for (int i = 0; i < rewardsFuture.length; i++) {
@@ -34,7 +35,7 @@ class ValidatorsdataCubit extends Cubit<ValidatorsDataState> {
       BigInt rewards = BigInt.zero;
       List<Future> rewardsFuture = <Future>[];
       for (int i = 0; i < info.result.length; i++) {
-        rewardsFuture.add(EthereumTransactions.getStakingReward(
+        rewardsFuture.add(StakingTransactions.getStakingReward(
             info.result[i].contractAddress));
       }
       for (int i = 0; i < rewardsFuture.length; i++) {

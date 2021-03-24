@@ -13,6 +13,7 @@ import 'package:pollywallet/screens/send_token/send_nft.dart';
 import 'package:pollywallet/screens/settings_screen/export_mnemonic.dart';
 import 'package:pollywallet/screens/settings_screen/accounts.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
+import 'package:pollywallet/screens/splash.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/delegation_stake_amount.dart';
 import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dart';
 import 'package:pollywallet/screens/token_list/nft_list_full.dart';
@@ -65,7 +66,7 @@ class PollyWallet extends StatefulWidget {
 
 class _PollyWalletState extends State<PollyWallet> {
   SendTransactionCubit data;
-  Widget current = AppLandingScreen();
+  Widget current = Splash();
 
   @override
   void initState() {
@@ -183,7 +184,8 @@ class _PollyWalletState extends State<PollyWallet> {
               walletConnectAndroidRoute: (context) => WalletConnectAndroid(),
               transactionDetailsRoute: (context) => TransactionDetails(),
               notificationsScreenRoute: (context) => NotificationsScreen(),
-              depositStatusRoute: (context) => DepositStatus()
+              depositStatusRoute: (context) => DepositStatus(),
+              splashRoute: (context) => Splash()
             },
             home: current),
       ),

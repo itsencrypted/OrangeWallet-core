@@ -13,28 +13,23 @@ class TransactionTile extends StatelessWidget {
     var value = EthConversions.weiToEth(BigInt.parse(data.value), null)
         .toStringAsFixed(2);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 5),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             ListTile(
-              isThreeLine: true,
-              leading: data.successful
-                  ? Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.green,
-                    )
-                  : Icon(
-                      Icons.close,
-                      color: Colors.redAccent,
-                    ),
+              isThreeLine: false,
               title: sent ? Text("Sent") : Text("Recieved"),
               subtitle: sent
                   ? Text(
-                      "To ${data.transfers[data.transfers.length - 1].toAddress}")
+                      "To ${data.transfers[data.transfers.length - 1].toAddress}",
+                      overflow: TextOverflow.clip,
+                    )
                   : Text(
-                      "From ${data.transfers[data.transfers.length - 1].fromAddress}"),
+                      "From ${data.transfers[data.transfers.length - 1].fromAddress}",
+                      overflow: TextOverflow.clip,
+                    ),
               trailing: sent
                   ? Text(
                       "-${value}",
@@ -47,7 +42,12 @@ class TransactionTile extends StatelessWidget {
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),
             ),
-            Divider(color: AppTheme.darkText)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Divider(
+                color: AppTheme.grey,
+              ),
+            )
           ],
         ),
       ),

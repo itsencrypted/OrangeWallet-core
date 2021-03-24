@@ -84,6 +84,7 @@ const String walletConnectAndroidRoute = "walletConnectAndroidRoute";
 const String transactionDetailsRoute = "transactionDetailsRoute";
 const String notificationsScreenRoute = "notificationsScreenRoute";
 const String depositStatusRoute = "depositStatusRoute";
+const String splashRoute = "splashRoute";
 //strings
 const endpoint = "endpoint";
 const blockExplorerMatic = "blockExplorerMatic";

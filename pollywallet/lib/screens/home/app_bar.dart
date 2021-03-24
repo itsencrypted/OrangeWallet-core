@@ -13,7 +13,6 @@ import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pollywallet/utils/misc/notification_helper.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
@@ -59,7 +58,7 @@ class _HomeAppBar extends State<HomeAppBar> {
           left: 2,
         ),
         child: SizedBox(
-          width: id == 0 ? 210 : 130,
+          width: id == 0 ? 170 : 130,
           child: FlatButton(
             onPressed: () {
               Clipboard.setData(new ClipboardData(text: fullAddress));
@@ -121,7 +120,6 @@ class _HomeAppBar extends State<HomeAppBar> {
                 color: AppTheme.darkerText,
               ),
               onPressed: () {
-                // NotificationHelper.timedNotification("abc", "cde", 1, context);
                 Navigator.pushNamed(context, notificationsScreenRoute);
               },
             ),

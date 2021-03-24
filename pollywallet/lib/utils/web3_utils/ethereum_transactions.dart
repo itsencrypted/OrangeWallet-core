@@ -389,9 +389,14 @@ class EthereumTransactions {
             validatorAddress: details.validatorData.contractAddress,
             userAddress: address,
             name: details.validatorData.name,
+            validatorId: details.validatorData.id,
             timestring:
                 (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
           );
+        } else if (details.type == TransactionType.CLAIMSTAKE) {
+          BoxUtils.addUnbondTxDataMarkClaimed(
+              validatorAddress: details.validatorData.contractAddress,
+              userAddress: address);
         }
         return txHash;
       } catch (e) {

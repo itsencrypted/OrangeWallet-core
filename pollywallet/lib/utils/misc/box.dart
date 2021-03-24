@@ -364,6 +364,7 @@ class BoxUtils {
       String amount,
       String name,
       String timestring,
+      int validatorId,
       BigInt slippage}) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
@@ -374,6 +375,7 @@ class BoxUtils {
       ..userAddress = userAddress
       ..amount = _amt
       ..name = name
+      ..validatorId = validatorId
       ..timeString = timestring
       ..claimed = false
       ..slippage = slippage

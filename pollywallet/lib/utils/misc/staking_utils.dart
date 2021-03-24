@@ -13,6 +13,8 @@ class StakingUtils {
   static bool checkEpoch(int halfEpoch) {
     var unlockTime =
         (StakingUtils.toFullEpoch(halfEpoch.toInt()) + pow(2, 13)) * 1000;
+    print(unlockTime);
+    print(DateTime.now().millisecondsSinceEpoch);
     return DateTime.now().millisecondsSinceEpoch > unlockTime.toInt();
   }
 }

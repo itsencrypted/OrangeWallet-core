@@ -35,6 +35,8 @@ class _ValidatorAndDelegationProfileState
   BigInt nonce = BigInt.zero;
   bool legacyWithdraw = true;
   bool unlockable = false;
+
+  var delegatedStake;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -121,7 +123,7 @@ class _ValidatorAndDelegationProfileState
                   }
                   print(4);
                   BigInt reward = validator.reward;
-
+                  delegatedStake = delegatorInfo.stake;
                   var stake = EthConversions.weiToEth(
                       validator.selfStake + validator.delegatedStake, 18);
                   return Stack(
@@ -137,7 +139,18 @@ class _ValidatorAndDelegationProfileState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  unlockable ? _withdrawCard() : Container(),
+                                  unlockable
+                                      ? _withdrawCard(
+                                          validator,
+                                          covalentMaticState
+                                              .covalentTokenList.data.items
+                                              .where((element) =>
+                                                  element.contractTickerSymbol
+                                                      .toLowerCase() ==
+                                                  "matic")
+                                              .toList()
+                                              .first)
+                                      : Container(),
                                   Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
@@ -380,6 +393,20 @@ class _ValidatorAndDelegationProfileState
                                               children: [
                                                 RaisedButton(
                                                   onPressed: () {
+                                                    if (!withdrawLoaded) {
+                                                      Fluttertoast.showToast(
+                                                          msg: "Please wait..",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT);
+                                                      return;
+                                                    } else if (withdrawAvailable) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Please claim your unbonded stake first",
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                      return;
+                                                    }
                                                     _restake(
                                                         reward,
                                                         validator,
@@ -417,6 +444,20 @@ class _ValidatorAndDelegationProfileState
                                                 ),
                                                 RaisedButton(
                                                   onPressed: () {
+                                                    if (!withdrawLoaded) {
+                                                      Fluttertoast.showToast(
+                                                          msg: "Please wait..",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT);
+                                                      return;
+                                                    } else if (withdrawAvailable) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Please claim your unbonded stake first",
+                                                          toastLength: Toast
+                                                              .LENGTH_LONG);
+                                                      return;
+                                                    }
                                                     Navigator.pushNamed(context,
                                                         delegationAmountRoute,
                                                         arguments: id);
@@ -639,7 +680,7 @@ class _ValidatorAndDelegationProfileState
     });
   }
 
-  _withdrawCard() {
+  _withdrawCard(ValidatorInfo validator, Items token) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Card(
@@ -688,7 +729,9 @@ class _ValidatorAndDelegationProfileState
                         right: 10),
                     child: OutlineButton(
                       borderSide: BorderSide(color: AppTheme.body2White.color),
-                      onPressed: () {},
+                      onPressed: () {
+                        _claimStake(validator, token);
+                      },
                       color: AppTheme.primaryColor,
                       child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.25,
@@ -709,5 +752,27 @@ class _ValidatorAndDelegationProfileState
         ),
       ),
     );
+  }
+
+  _claimStake(ValidatorInfo validator, Items token) async {
+    TransactionData data;
+    Transaction trx;
+    GlobalKey<State> key = GlobalKey();
+    Dialogs.showLoadingDialog(context, key);
+    trx = await StakingTransactions.claimStake(
+        validator.contractAddress, nonce, legacyWithdraw);
+
+    data = TransactionData(
+      amount: EthConversions.weiToEth(delegatedStake, 18).toString(),
+      validatorData: validator,
+      to: validator.contractAddress,
+      token: token,
+      type: TransactionType.CLAIMSTAKE,
+      trx: trx,
+    );
+
+    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        arguments: data);
   }
 }

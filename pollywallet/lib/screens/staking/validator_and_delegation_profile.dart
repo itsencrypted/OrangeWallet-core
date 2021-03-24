@@ -8,13 +8,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
-import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/staking_utils.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
@@ -33,6 +33,8 @@ class _ValidatorAndDelegationProfileState
   BigInt withdrawEpoch = BigInt.zero;
   BigInt withdrawAmount = BigInt.zero;
   BigInt nonce = BigInt.zero;
+  bool legacyWithdraw = true;
+  bool unlockable = false;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -135,9 +137,7 @@ class _ValidatorAndDelegationProfileState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  withdrawAvailable
-                                      ? _withdrawCard()
-                                      : Container(),
+                                  unlockable ? _withdrawCard() : Container(),
                                   Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
@@ -616,6 +616,9 @@ class _ValidatorAndDelegationProfileState
         vCubit.refresh();
         dCubit.refresh();
         mCubit.refresh();
+        if (!unlockable) {
+          unlockable = StakingUtils.checkEpoch(withdrawEpoch.toInt());
+        }
       }
     });
   }
@@ -630,6 +633,8 @@ class _ValidatorAndDelegationProfileState
         withdrawEpoch = data[0][1];
         withdrawAvailable = true;
         nonce = data[1];
+        legacyWithdraw = data[2];
+        unlockable = StakingUtils.checkEpoch(withdrawEpoch.toInt());
       }
     });
   }

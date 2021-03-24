@@ -9,6 +9,7 @@ import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
@@ -367,10 +368,11 @@ class BoxUtils {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
     var boxName = unbondDbBox + network.toString() + address;
+    var _amt = EthConversions.ethToWei(amount);
     Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
     UnbondingDataDb txObj = UnbondingDataDb()
       ..userAddress = userAddress
-      ..amount = BigInt.parse(amount)
+      ..amount = _amt
       ..name = name
       ..timeString = timestring
       ..claimed = false

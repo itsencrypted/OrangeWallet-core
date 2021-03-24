@@ -166,11 +166,11 @@ class StakingTransactions {
     if (nonce == BigInt.zero) {
       var resp = await getUnbondedStakeStatusLegacy(validatorAddress);
       print(resp);
-      return [resp, nonce];
+      return [resp, nonce, true];
     } else {
       var resp = await getUnbondedStakeStatus(validatorAddress, nonce);
       print(resp);
-      return [resp, nonce];
+      return [resp, nonce, false];
     }
   }
 }

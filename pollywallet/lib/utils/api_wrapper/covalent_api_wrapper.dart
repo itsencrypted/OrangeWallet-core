@@ -21,7 +21,6 @@ class CovalentApiWrapper {
     String url;
     CovalentTokenList ctl;
     Future future;
-    var data;
     if (id == 0) {
       url = baseUrl +
           "/80001/address/" +
@@ -29,18 +28,6 @@ class CovalentApiWrapper {
           "/balances_v2/?nft=true&key=" +
           CovalentKey;
       future = MaticTransactions.balanceOf(maticAddress);
-
-      BigInt native = await future;
-
-      data = Items(
-          balance: native.toString(),
-          contractAddress: maticAddress,
-          contractDecimals: 18,
-          contractTickerSymbol: "MATIC",
-          contractName: "Matic",
-          logoUrl: tokenIconUrl,
-          quote: 0,
-          quoteRate: 0.2);
     } else {
       String address = await CredentialManager.getAddress();
       url = baseUrl +
@@ -54,7 +41,6 @@ class CovalentApiWrapper {
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = CovalentTokenList.fromJson(json);
-    if (data != null) ctl.data.items.add(data);
     return ctl;
   }
 

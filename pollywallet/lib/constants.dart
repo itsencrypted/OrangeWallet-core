@@ -14,6 +14,7 @@ const String arrowIcon = "$_baseIcon/arrow.png";
 const String appLandingSvg = "$_baseIcon/app_landing.svg";
 const String sendingLottieJson = "$_baseIcon/sending_lottie.json";
 const String sentLottieJson = "$_baseIcon/sent_lottie.json";
+const String sentFailedLottieJson = "$_baseIcon/sending_failed_lottie.json";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";

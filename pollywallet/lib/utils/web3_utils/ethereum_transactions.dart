@@ -8,6 +8,7 @@ import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/misc/notification_helper.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
@@ -375,6 +376,14 @@ class EthereumTransactions {
           BoxUtils.addPlasmaExitHash();
         } else if (details.type == TransactionType.EXITPOS) {
         } else if (details.type == TransactionType.UNSTAKE) {
+          if (networkId == 1) {
+            NotificationHelper.timedNotification("Claim Stake",
+                "Your Stake is ready to be claimed.", 150, context);
+          } else {
+            NotificationHelper.timedNotification("Claim Stake",
+                "Your Stake is ready to be claimed.", 150, context);
+          }
+
           BoxUtils.addUnbondTxData(
             amount: details.amount,
             validatorAddress: details.validatorData.contractAddress,

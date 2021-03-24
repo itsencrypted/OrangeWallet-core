@@ -243,14 +243,7 @@ class _DelegationAmountState extends State<DelegationAmount> {
                                     onPressed: () {
                                       //print(validator.contractAddress);
                                       _delegate(
-                                          validator.contractAddress,
-                                          covalentMaticState
-                                              .covalentTokenList.data.items
-                                              .where((element) =>
-                                                  element.contractName
-                                                      .toLowerCase() ==
-                                                  "matic")
-                                              .first);
+                                          validator.contractAddress, matic);
                                     },
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,

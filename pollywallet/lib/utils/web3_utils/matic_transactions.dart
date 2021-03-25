@@ -114,6 +114,21 @@ class MaticTransactions {
           if (data.type == TransactionType.BURNPLASMA) {
             rootAddress = await rootTokenPlasma;
             bridge = BridgeType.PLASMA;
+            if (networkId == 0) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for confirmation.",
+                  30,
+                  context);
+            } else if (networkId == 1) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for confirmation.",
+                  45,
+                  context);
+            }
           }
           if (data.type == TransactionType.BURNPOS) {
             if (networkId == 0) {
@@ -121,7 +136,7 @@ class MaticTransactions {
                   notifId,
                   "Ready for exit",
                   "Your ${data.token.contractName} is ready for exit.",
-                  15,
+                  30,
                   context);
             } else if (networkId == 1) {
               NotificationHelper.timedNotification(
@@ -139,7 +154,7 @@ class MaticTransactions {
           var strx = await client.getTransactionByHash(txHash);
 
           BoxUtils.addWithdrawTransaction(
-              timestring: DateTime.now().toString(),
+              timestring: DateTime.now().millisecondsSinceEpoch.toString(),
               burnTxHash: txHash,
               type: data.type,
               addressRootToken: rootAddress,

@@ -68,8 +68,12 @@ class TokenListTileBridge extends StatelessWidget {
                   Navigator.pushNamed(context, depositAmountRoute,
                       arguments: status);
                 } else if (tokenData.nftData.first.tokenBalance != null) {
-                  Navigator.pushNamed(context, erc1155DepositRoute,
-                      arguments: status);
+                  if (int.parse(tokenData.nftData.first.tokenBalance) > 0) {
+                    Navigator.pushNamed(context, erc1155DepositRoute,
+                        arguments: status);
+                  } else {
+                    Fluttertoast.showToast(msg: "Insufficient amount");
+                  }
                 } else {
                   Navigator.pushNamed(context, nftDepoitSelectRoute,
                       arguments: status);

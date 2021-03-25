@@ -370,20 +370,36 @@ class EthereumTransactions {
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());
         } else if (details.type == TransactionType.CONFIRMPLASMA) {
-          BoxUtils.addPlasmaConfirmHash();
+          var rng = new Random();
+          var notifId = rng.nextInt(1000);
           if (networkId == 0) {
+            NotificationHelper.timedNotification(
+                notifId,
+                "Ready for exit",
+                "Your ${details.token.contractTickerSymbol} are ready for exit",
+                10100,
+                context);
             BoxUtils.addPlasmaConfirmHash(
                 burnTxHash: details.extraData[0], confirmHash: txHash);
           } else if (networkId == 1) {
+            NotificationHelper.timedNotification(
+                notifId,
+                "Ready for exit",
+                "Your ${details.token.contractTickerSymbol} are ready for exit",
+                10100,
+                context);
             BoxUtils.addPlasmaConfirmHash(
                 burnTxHash: details.extraData[0], confirmHash: txHash);
           }
         } else if (details.type == TransactionType.EXITPLASMA) {
-          BoxUtils.addPlasmaExitHash(
+          await BoxUtils.addPlasmaExitHash(
               burnTxHash: details.extraData[0], exitHash: txHash);
+          BoxUtils.markWithdrawComplete(burnTxHash: details.extraData[0]);
+          NotificationHelper.cancelNotification(details.extraData[1]);
         } else if (details.type == TransactionType.EXITPOS) {
           BoxUtils.addPosExitHash(
               burnTxHash: details.extraData[0], exitHash: txHash);
+          NotificationHelper.cancelNotification(details.extraData[1]);
         } else if (details.type == TransactionType.UNSTAKE) {
           var rng = new Random();
           var notifId = rng.nextInt(1000);

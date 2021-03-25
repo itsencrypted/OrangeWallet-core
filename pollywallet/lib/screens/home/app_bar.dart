@@ -120,6 +120,7 @@ class _HomeAppBar extends State<HomeAppBar> {
                 color: AppTheme.darkerText,
               ),
               onPressed: () {
+                //BoxUtils.clearWithdraw();
                 Navigator.pushNamed(context, notificationsScreenRoute);
               },
             ),

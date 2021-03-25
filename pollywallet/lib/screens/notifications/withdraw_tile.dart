@@ -25,7 +25,7 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
   @override
   void initState() {
     bridge = widget.withdrawDataDb.bridge;
-    if (bridge == BridgeType.POS) {
+    if (bridge == BridgeType.POS.index) {
       WithdrawManagerApi.posStatusCodes(
               widget.withdrawDataDb.burnHash, widget.withdrawDataDb.exitHash)
           .then((value) {
@@ -34,6 +34,7 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
           loading = false;
         });
       });
+      print(status);
     } else {
       WithdrawManagerApi.plasmaStatusCodes(widget.withdrawDataDb.burnHash,
               widget.withdrawDataDb.confirmHash, widget.withdrawDataDb.exitHash)
@@ -52,8 +53,10 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
             loading = false;
           });
         }
+        print(status);
       });
     }
+    _refreshLoop();
     super.initState();
   }
 
@@ -111,28 +114,39 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
             subtitle: loading
                 ? Text("....")
                 : status == -4
-                    ? Text("Ready for exit to Ethereum")
+                    ? bridge == 1
+                        ? Text("Ready for exit to Ethereum")
+                        : Text("Withdraw needs to be confirmed")
                     : status == -10
                         ? Text("Withdraw Successful")
                         : status == -2 || status == -11
                             ? Text("Withdraw Faild")
                             : Text("Please wait withdraw is under progress..."),
           ),
-          onTap: () {},
+          onTap: () {
+            print(bridge);
+            if (bridge == 1) {
+              Navigator.pushNamed(context, withdrawStatusPosRoute,
+                  arguments: widget.withdrawDataDb);
+            } else {
+              Navigator.pushNamed(context, withdrawStatusPlasmaRoute,
+                  arguments: widget.withdrawDataDb);
+            }
+          },
         ),
       ),
     );
   }
 
   _refreshLoop() {
-    new Timer.periodic(Duration(seconds: 30), (Timer t) {
+    new Timer.periodic(Duration(seconds: 15), (Timer t) {
       if (mounted &&
           status != -4 &&
           status != -10 &&
           status != -2 &&
           status != -11) {
         bridge = widget.withdrawDataDb.bridge;
-        if (bridge == BridgeType.POS) {
+        if (bridge == BridgeType.POS.index) {
           WithdrawManagerApi.posStatusCodes(widget.withdrawDataDb.burnHash,
                   widget.withdrawDataDb.exitHash)
               .then((value) {

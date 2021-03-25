@@ -24,6 +24,8 @@ import 'package:pollywallet/screens/transaction_status/sending_status.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_details.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_ethereum.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
+import 'package:pollywallet/screens/transaction_status/withdraw_status_plasma.dart';
+import 'package:pollywallet/screens/transaction_status/withdraw_status_pos.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
@@ -185,7 +187,9 @@ class _PollyWalletState extends State<PollyWallet> {
               transactionDetailsRoute: (context) => TransactionDetails(),
               notificationsScreenRoute: (context) => NotificationsScreen(),
               depositStatusRoute: (context) => DepositStatus(),
-              splashRoute: (context) => Splash()
+              splashRoute: (context) => Splash(),
+              withdrawStatusPosRoute: (context) => WithdrawStatusPos(),
+              withdrawStatusPlasmaRoute: (context) => WithdrawStatusPlasma()
             },
             home: current),
       ),

@@ -255,25 +255,42 @@ class BoxUtils {
   }
 
   static Future<void> clear() async {
+    var address = await CredentialManager.getAddress();
     var creds = await Hive.openBox<CredentialsList>(credentialBox);
     Box<TransactionDetails> trx1 =
         await Hive.openBox<TransactionDetails>(pendingTxBox + "0");
     Box<TransactionDetails> trx2 =
         await Hive.openBox<TransactionDetails>(pendingTxBox + "1");
-    Box<TransactionDetails> deposits1 =
-        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "0");
-    Box<TransactionDetails> deposits2 =
-        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "1");
+    Box<DepositTransaction> deposits1 =
+        await Hive.openBox<DepositTransaction>(depositTransactionDbBox + "0");
+    Box<DepositTransaction> deposits2 =
+        await Hive.openBox<DepositTransaction>(depositTransactionDbBox + "1");
+    Box<WithdrawDataDb> withdraw1 =
+        await Hive.openBox<WithdrawDataDb>(withdrawdbBox + "0" + address);
+    Box<WithdrawDataDb> withdraw2 =
+        await Hive.openBox<WithdrawDataDb>(withdrawdbBox + "1" + address);
+    Box<UnbondingDataDb> stake1 =
+        await Hive.openBox<UnbondingDataDb>(unbondDbBox + "0" + address);
+    Box<UnbondingDataDb> stake2 =
+        await Hive.openBox<UnbondingDataDb>(unbondDbBox + "1" + address);
     creds.clear();
     trx1.clear();
     trx2.clear();
     deposits1.clear();
     deposits2.clear();
+    withdraw1.clear();
+    withdraw2.clear();
+    stake1.clear();
+    stake2.clear();
     creds.close();
     trx1.close();
     trx2.close();
     deposits1.close();
     deposits2.close();
+    withdraw1.close();
+    withdraw2.close();
+    stake1.close();
+    stake2.close();
   }
 
   static Future<void> addWithdrawTransaction(
@@ -345,6 +362,28 @@ class BoxUtils {
     return;
   }
 
+  static Future<void> markWithdrawComplete({
+    String burnTxHash,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var tx = box.get(burnTxHash);
+    tx..exited = true;
+    await tx.save();
+    await box.close();
+    return;
+  }
+
+  static Future<void> clearWithdraw() async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    box.clear();
+  }
+
   static Future<void> addPlasmaConfirmHash({
     String burnTxHash,
     String confirmHash,
@@ -354,7 +393,7 @@ class BoxUtils {
     var boxName = withdrawdbBox + network.toString() + address;
     Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
     var tx = box.get(burnTxHash);
-    tx..exitHash = confirmHash;
+    tx..confirmHash = confirmHash;
     await tx.save();
     await box.close();
     return;

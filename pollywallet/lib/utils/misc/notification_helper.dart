@@ -1,7 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/utils/misc/box.dart';
+import 'package:pollywallet/utils/misc/staking_utils.dart';
+import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
+import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -65,6 +71,52 @@ class NotificationHelper {
     try {
       await flutterLocalNotificationsPlugin.cancel(id);
     } catch (e) {}
+  }
+
+  static Future<int> checkForActionsCount() async {
+    var counter = 0;
+    var withdraws = await BoxUtils.getWithdrawList();
+    var pendingWithdraws =
+        withdraws.where((element) => element.exited == false).toList();
+
+    List<Future> pendingWithdrawsFutures = <Future>[];
+    for (int i = 0; i < pendingWithdraws.length; i++) {
+      if (pendingWithdraws[i].bridge == 0) {
+        pendingWithdrawsFutures.add(WithdrawManagerApi.plasmaStatusCodes(
+            pendingWithdraws[i].burnHash,
+            pendingWithdraws[i].confirmHash,
+            pendingWithdraws[i].exitHash));
+      } else {
+        pendingWithdrawsFutures.add(WithdrawManagerApi.posStatusCodes(
+          pendingWithdraws[i].burnHash,
+          pendingWithdraws[i].confirmHash,
+        ));
+      }
+    }
+    var pendingStakes = (await BoxUtils.getUnbondingList())
+        .where((element) => element.claimed == false)
+        .toList();
+    List<Future> pendingStakeFuture = <Future>[];
+    for (int i = 0; i < pendingStakes.length; i++) {
+      pendingStakeFuture.add(StakingTransactions.stakeClaimData(
+          pendingStakes[i].validatorAddress));
+    }
+    for (int i = 0; i < pendingWithdrawsFutures.length; i++) {
+      var resp = await pendingWithdrawsFutures[i];
+      if (resp == -4 || resp == -9) {
+        counter++;
+      }
+    }
+    for (int i = 0; i < pendingStakeFuture.length; i++) {
+      var resp = await pendingStakeFuture[i];
+      var epoch = resp[0][1];
+
+      bool unlockable = StakingUtils.checkEpoch(epoch.toInt());
+      if (unlockable) {
+        counter++;
+      }
+    }
+    return counter;
   }
 
   static Future _selectNotification(

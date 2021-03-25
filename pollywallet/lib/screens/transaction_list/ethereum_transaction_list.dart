@@ -234,7 +234,9 @@ class _EthereumTransactionListState extends State<EthereumTransactionList>
                                     ),
                                     subtitle: Text(
                                       DateFormat.yMMMEd().add_jm().format(
-                                          DateTime.parse(item.timeStamp)),
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                              int.parse(item.timeStamp) *
+                                                  1000)),
                                       style: AppTheme.body_small,
                                       overflow: TextOverflow.ellipsis,
                                     ),

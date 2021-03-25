@@ -173,10 +173,14 @@ class WithdrawManagerApi {
     }
   }
 
-  static Future<String> plasmaExitTime(String txHash) async {
+  static Future<String> plasmaExitTime(
+      String burnTxHash, String confirmTxHash) async {
     String confirmUrl = baseUrl + "/v1/plasma-confirm";
+
     var body = {
-      "txHashes": [txHash],
+      "txHashes": [
+        {"burnTxHash": burnTxHash, "confirmTxHash": confirmTxHash},
+      ]
     };
     Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
     var confirmResp = await confirmFuture;

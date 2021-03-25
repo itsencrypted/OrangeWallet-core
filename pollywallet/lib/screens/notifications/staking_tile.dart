@@ -153,13 +153,13 @@ class _StakingNotificationTileState extends State<StakingNotificationTile> {
         validator.contractAddress, nonce, legacyWithdraw);
 
     data = TransactionData(
-      amount: amount,
-      validatorData: validator,
-      to: validator.contractAddress,
-      token: token,
-      type: TransactionType.CLAIMSTAKE,
-      trx: trx,
-    );
+        amount: amount,
+        validatorData: validator,
+        to: validator.contractAddress,
+        token: token,
+        type: TransactionType.CLAIMSTAKE,
+        trx: trx,
+        extraData: [widget.unbondingDataDb.notificationId]);
 
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,

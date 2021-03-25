@@ -11,7 +11,7 @@ class WithdrawDataDb extends HiveObject {
   String amount;
 
   @HiveField(2)
-  BridgeType bridge;
+  int bridge;
 
   @HiveField(3)
   String name;

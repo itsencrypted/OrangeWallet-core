@@ -470,7 +470,8 @@ class _PlasmaWithdrawWidget extends State<PlasmaWithdrawWidget> {
 
   _getExitTime() async {
     int endTime = DateTime.now().millisecondsSinceEpoch +
-        int.parse(await WithdrawManagerApi.plasmaExitTime(widget.txHash));
+        int.parse(await WithdrawManagerApi.plasmaExitTime(
+            widget.txHash, widget.confirmTx));
     setState(() {
       _loading = true;
       this.endTime = endTime;

@@ -8,12 +8,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/staking_models/delegator_details.dart';
+import 'package:pollywallet/models/staking_models/unbonding_data_db.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/staking_utils.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
@@ -765,15 +767,20 @@ class _ValidatorAndDelegationProfileState
     Dialogs.showLoadingDialog(context, key);
     trx = await StakingTransactions.claimStake(
         validator.contractAddress, nonce, legacyWithdraw);
-
+    UnbondingDataDb box;
+    try {
+      box = await BoxUtils.getUnbondingBox(validator.contractAddress);
+    } catch (e) {
+      box = null;
+    }
     data = TransactionData(
-      amount: EthConversions.weiToEth(delegatedStake, 18).toString(),
-      validatorData: validator,
-      to: validator.contractAddress,
-      token: token,
-      type: TransactionType.CLAIMSTAKE,
-      trx: trx,
-    );
+        amount: EthConversions.weiToEth(delegatedStake, 18).toString(),
+        validatorData: validator,
+        to: validator.contractAddress,
+        token: token,
+        type: TransactionType.CLAIMSTAKE,
+        trx: trx,
+        extraData: [box == null ? 0 : box.notificationId]);
 
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushNamed(context, ethereumTransactionConfirmRoute,

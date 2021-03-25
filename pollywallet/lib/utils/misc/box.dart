@@ -301,14 +301,14 @@ class BoxUtils {
       ..userAddress = userAddress
       ..addressChild = addressChildToken
       ..addressRoot = addressRootToken
-      ..bridge = bridge
+      ..bridge = bridge.index
       ..amount = amount
       ..name = name
       ..notificationId = notificationId
       ..timeString = timestring
       ..imageUrl = imageUrl
       ..fee = fee;
-    box.put(burnTxHash, txObj);
+    await box.put(burnTxHash, txObj);
     await box.close();
     return;
   }
@@ -399,6 +399,32 @@ class BoxUtils {
       ls.add(box.getAt(i));
     }
     return ls;
+  }
+
+  static Future<List<WithdrawDataDb>> getWithdrawList() async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var ls = <WithdrawDataDb>[];
+    for (int i = 0; i < box.length; i++) {
+      ls.add(box.getAt(i));
+    }
+    return ls;
+  }
+
+  static Future<UnbondingDataDb> getUnbondingBox(
+      String validatorAddress) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = unbondDbBox + network.toString() + address;
+    Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
+    try {
+      var bx = box.get(validatorAddress);
+      return bx;
+    } catch (e) {
+      return null;
+    }
   }
 
   static Future<void> addUnbondTxDataMarkClaimed({

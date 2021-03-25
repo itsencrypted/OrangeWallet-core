@@ -19,7 +19,7 @@ class WithdrawDataDbAdapter extends TypeAdapter<WithdrawDataDb> {
     return WithdrawDataDb()
       ..burnHash = fields[0] as String
       ..amount = fields[1] as String
-      ..bridge = fields[2] as BridgeType
+      ..bridge = fields[2] as int
       ..name = fields[3] as String
       ..timeString = fields[4] as String
       ..addressRoot = fields[5] as String

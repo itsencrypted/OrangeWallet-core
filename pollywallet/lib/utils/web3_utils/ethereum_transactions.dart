@@ -409,6 +409,9 @@ class EthereumTransactions {
           BoxUtils.addUnbondTxDataMarkClaimed(
               validatorAddress: details.validatorData.contractAddress,
               userAddress: address);
+          try {
+            NotificationHelper.cancelNotification(details.extraData[0]);
+          } catch (e) {}
         }
         return txHash;
       } catch (e) {

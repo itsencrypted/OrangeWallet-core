@@ -55,10 +55,10 @@ class _HomeAppBar extends State<HomeAppBar> {
       leadingWidth: 0,
       title: Padding(
         padding: const EdgeInsets.only(
-          left: 4,
+          left: 2,
         ),
         child: SizedBox(
-          width: id == 0 ? 180 : 130,
+          width: id == 0 ? 170 : 130,
           child: FlatButton(
             onPressed: () {
               Clipboard.setData(new ClipboardData(text: fullAddress));
@@ -84,12 +84,12 @@ class _HomeAppBar extends State<HomeAppBar> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 1.0),
                     child: Text(address, style: AppTheme.body2),
                   ),
                   id == 0
                       ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 7),
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
                           child: Container(
                             alignment: Alignment.center,
                             child: Padding(
@@ -110,59 +110,54 @@ class _HomeAppBar extends State<HomeAppBar> {
         ),
       ),
       actions: [
-        SizedBox(),
-        TextButton(
-          child: Icon(
-            Icons.notifications_active_outlined,
-            color: AppTheme.darkerText,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, notificationsScreenRoute);
-          },
-        ),
-        TextButton(
-          child: Image.asset("assets/icons/qr_icon.png",
-              color: AppTheme.darkerText),
-          onPressed: () async {
-            var qrResult = await BarcodeScanner.scan();
-            if (qrResult.rawContent == null || qrResult.rawContent == "") {
-              return;
-            }
-            RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-            if (reg.hasMatch(qrResult.rawContent)) {
-              if (qrResult.rawContent.length == 42) {
-                cubit = context.read<SendTransactionCubit>();
-                cubit.setData(SendTokenData(receiver: qrResult.rawContent));
-                Navigator.pushNamed(context, pickTokenRoute);
-              } else {
-                Fluttertoast.showToast(
-                  msg: "Invalid QR",
-                );
-              }
-            } else {
-              String privateKey =
-                  await CredentialManager.getPrivateKey(context);
-              if (privateKey == null) {
-                return;
-              }
-              if (Platform.isAndroid) {
-                Navigator.pushNamed(context, walletConnectAndroidRoute,
-                    arguments: [privateKey, qrResult.rawContent]);
-              } else if (Platform.isIOS) {
-                Navigator.pushNamed(context, walletConnectIosRoute,
-                    arguments: [privateKey, qrResult.rawContent]);
-              } else {
-                Fluttertoast.showToast(msg: "Unsupported Platform");
-              }
-            }
-          },
-        ),
-        TextButton(
-          child: Icon(
-            Icons.power_settings_new_outlined,
-            color: AppTheme.darkerText,
-          ),
-          onPressed: _logout,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              child: Image.asset("assets/icons/qr_icon.png",
+                  color: AppTheme.darkerText),
+              onPressed: () async {
+                var qrResult = await BarcodeScanner.scan();
+                if (qrResult.rawContent == null || qrResult.rawContent == "") {
+                  return;
+                }
+                RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
+                if (reg.hasMatch(qrResult.rawContent)) {
+                  if (qrResult.rawContent.length == 42) {
+                    cubit = context.read<SendTransactionCubit>();
+                    cubit.setData(SendTokenData(receiver: qrResult.rawContent));
+                    Navigator.pushNamed(context, pickTokenRoute);
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "Invalid QR",
+                    );
+                  }
+                } else {
+                  String privateKey =
+                      await CredentialManager.getPrivateKey(context);
+                  if (privateKey == null) {
+                    return;
+                  }
+                  if (Platform.isAndroid) {
+                    Navigator.pushNamed(context, walletConnectAndroidRoute,
+                        arguments: [privateKey, qrResult.rawContent]);
+                  } else if (Platform.isIOS) {
+                    Navigator.pushNamed(context, walletConnectIosRoute,
+                        arguments: [privateKey, qrResult.rawContent]);
+                  } else {
+                    Fluttertoast.showToast(msg: "Unsupported Platform");
+                  }
+                }
+              },
+            ),
+            TextButton(
+              child: Icon(
+                Icons.power_settings_new_outlined,
+                color: AppTheme.darkerText,
+              ),
+              onPressed: _logout,
+            )
+          ],
         )
       ],
     );

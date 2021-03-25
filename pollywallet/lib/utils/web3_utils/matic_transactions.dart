@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/screens/transaction_list/ethereum_transaction_list.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/misc/notification_helper.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
@@ -101,16 +103,50 @@ class MaticTransactions {
             EthereumTransactions.childToRootPlasmaAddress(data.to);
         var txHash = await client.sendTransaction(credentials, trx,
             chainId: config.chainId);
+        int networkId = await BoxUtils.getNetworkConfig();
         print(txHash);
         if (data.type == TransactionType.BURNPLASMA ||
             data.type == TransactionType.BURNPOS) {
+          var rng = new Random();
+          var notifId = rng.nextInt(1000);
           String rootAddress;
           BridgeType bridge;
           if (data.type == TransactionType.BURNPLASMA) {
             rootAddress = await rootTokenPlasma;
             bridge = BridgeType.PLASMA;
+            if (networkId == 0) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for confirmation.",
+                  30,
+                  context);
+            } else if (networkId == 1) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for confirmation.",
+                  45,
+                  context);
+            }
           }
           if (data.type == TransactionType.BURNPOS) {
+            if (networkId == 0) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for exit.",
+                  30,
+                  context);
+            } else if (networkId == 1) {
+              NotificationHelper.timedNotification(
+                  notifId,
+                  "Ready for exit",
+                  "Your ${data.token.contractName} is ready for exit.",
+                  45,
+                  context);
+            }
+
             rootAddress = await rootTokenPos;
             bridge = BridgeType.POS;
           }
@@ -118,7 +154,7 @@ class MaticTransactions {
           var strx = await client.getTransactionByHash(txHash);
 
           BoxUtils.addWithdrawTransaction(
-              timestring: DateTime.now().toString(),
+              timestring: DateTime.now().millisecondsSinceEpoch.toString(),
               burnTxHash: txHash,
               type: data.type,
               addressRootToken: rootAddress,
@@ -127,6 +163,7 @@ class MaticTransactions {
               userAddress: userAddres,
               name: data.token.contractName,
               imageUrl: data.token.logoUrl,
+              notificationId: notifId,
               bridge: bridge,
               fee: EthConversions.weiToEthUnTrimmed(
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)

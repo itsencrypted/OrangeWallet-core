@@ -139,7 +139,8 @@ class ValidatorInfo {
     logoUrl = json['logoUrl'];
     commissionPercent = json['commissionPercent'].toString();
     status = json['status'];
-    uptimePercent = json['uptimePercent'].toString();
+    uptimePercent =
+        double.parse(json['uptimePercent'].toString()).toStringAsFixed(2);
     selfStake = BigInt.from(json['selfStake']);
     delegatedStake = BigInt.from(json['delegatedStake']);
     totalReward =

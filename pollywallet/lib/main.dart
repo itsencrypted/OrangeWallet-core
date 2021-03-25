@@ -13,6 +13,7 @@ import 'package:pollywallet/screens/send_token/send_nft.dart';
 import 'package:pollywallet/screens/settings_screen/export_mnemonic.dart';
 import 'package:pollywallet/screens/settings_screen/accounts.dart';
 import 'package:pollywallet/screens/settings_screen/network.dart';
+import 'package:pollywallet/screens/splash.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/delegation_stake_amount.dart';
 import 'package:pollywallet/screens/staking/validator_and_delegation_profile.dart';
 import 'package:pollywallet/screens/token_list/nft_list_full.dart';
@@ -23,12 +24,13 @@ import 'package:pollywallet/screens/transaction_status/sending_status.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_details.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_ethereum.dart';
 import 'package:pollywallet/screens/transaction_status/transaction_status_matic.dart';
+import 'package:pollywallet/screens/transaction_status/withdraw_status_plasma.dart';
+import 'package:pollywallet/screens/transaction_status/withdraw_status_pos.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
 import 'package:pollywallet/screens/withdraw/burn_erc1155.dart';
 import 'package:pollywallet/screens/withdraw/burn_nft.dart';
-import 'package:pollywallet/screens/withdraw/withdraw_status.dart';
 import 'package:pollywallet/state_manager/staking_data/delegation_data_state/delegations_data_cubit.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
@@ -65,7 +67,7 @@ class PollyWallet extends StatefulWidget {
 
 class _PollyWalletState extends State<PollyWallet> {
   SendTransactionCubit data;
-  Widget current = AppLandingScreen();
+  Widget current = Splash();
 
   @override
   void initState() {
@@ -160,7 +162,6 @@ class _PollyWalletState extends State<PollyWallet> {
               ethereumTransactionStatusRoute: (context) =>
                   TransactionStatusEthereum(),
               withdrawAmountRoute: (context) => WithdrawScreen(),
-              withdrawsListRoute: (context) => WithdrawStatus(),
               transactionListRoute: (context) => TransactionList(),
               receivePageRoute: (context) => Receive(),
               networkSettingRoute: (context) => NetworkSetting(),
@@ -183,7 +184,10 @@ class _PollyWalletState extends State<PollyWallet> {
               walletConnectAndroidRoute: (context) => WalletConnectAndroid(),
               transactionDetailsRoute: (context) => TransactionDetails(),
               notificationsScreenRoute: (context) => NotificationsScreen(),
-              depositStatusRoute: (context) => DepositStatus()
+              depositStatusRoute: (context) => DepositStatus(),
+              splashRoute: (context) => Splash(),
+              withdrawStatusPosRoute: (context) => WithdrawStatusPos(),
+              withdrawStatusPlasmaRoute: (context) => WithdrawStatusPlasma()
             },
             home: current),
       ),

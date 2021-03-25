@@ -97,7 +97,7 @@ class _StakingTabState extends State<StakingTab>
                 }
                 try {
                   matic = EthConversions.weiToEth(
-                      BigInt.parse(maticTokenListState
+                      BigInt.parse(ethTokenListState
                           .covalentTokenList.data.items
                           .where((element) =>
                               element.contractTickerSymbol.toLowerCase() ==

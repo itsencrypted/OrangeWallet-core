@@ -63,11 +63,17 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
         backgroundColor: AppTheme.purple_600,
       ),
       backgroundColor: AppTheme.purple_600,
-      body: Container(
-        child: Center(
-          child: !transactionPending
-              ? Lottie.asset(sentLottieJson, repeat: false)
-              : Lottie.asset(sendingLottieJson),
+      body: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 8),
+        child: Container(
+          child: Center(
+            child: failed
+                ? Lottie.asset(sentFailedLottieJson, repeat: false)
+                : !transactionPending
+                    ? Lottie.asset(sentLottieJson, repeat: false)
+                    : Lottie.asset(sendingLottieJson),
+          ),
         ),
       ),
       floatingActionButton: !transactionPending

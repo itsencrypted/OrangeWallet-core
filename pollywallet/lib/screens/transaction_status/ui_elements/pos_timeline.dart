@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
+import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/network/network_config.dart';
+import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
+import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:timelines/timelines.dart';
 import 'package:web3dart/web3dart.dart';
 
-class TransactionDetailsTimeline extends StatelessWidget {
+class PosTimeline extends StatelessWidget {
   final List<String> details;
   final List<String> messages;
   final int doneTillIndex;
   final String txHash;
-  TransactionDetailsTimeline(
-      {this.details, this.messages, this.doneTillIndex, this.txHash});
+  final WithdrawDataDb data;
+  PosTimeline(
+      {this.details,
+      this.messages,
+      this.doneTillIndex,
+      this.txHash,
+      this.data});
   @override
   Widget build(BuildContext context) {
     return FixedTimeline.tileBuilder(
@@ -44,18 +55,22 @@ class TransactionDetailsTimeline extends StatelessWidget {
                   details[index],
                   style: AppTheme.label_xsmall,
                 ),
-                messages[index] == "sup"
+                messages[index] == "exit"
                     ? index == doneTillIndex
-                        ? RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16)),
-                            color: sendButtonColor.withOpacity(0.6),
-                            child: Text("Speedup Transaction"),
-                            onPressed: () {
-                              _speedUp(context, txHash);
-                            })
-                        : Text("Transaction is being mined",
-                            style: AppTheme.caption_normal)
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                color: sendButtonColor.withOpacity(0.6),
+                                child: SizedBox(
+                                    width: 100,
+                                    child: Center(child: Text("Exit POS"))),
+                                onPressed: () {
+                                  _exit(context, data.burnHash, data);
+                                }),
+                          )
+                        : Text("Ready for exit", style: AppTheme.caption_normal)
                     : Text(
                         "${messages[index]}",
                         style: AppTheme.caption_normal,
@@ -87,18 +102,23 @@ class TransactionDetailsTimeline extends StatelessWidget {
     );
   }
 
-  _speedUp(BuildContext context, String txHash) async {
-    GlobalKey<State> key = GlobalKey();
-    Dialogs.showLoadingDialog(context, key);
-    Transaction trx = await EthereumTransactions.speedUpTransaction(txHash);
+  _exit(BuildContext context, String txHash, WithdrawDataDb _data) async {
+    GlobalKey<State> _key = GlobalKey<State>();
+    Dialogs.showLoadingDialog(context, _key);
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    Transaction trx = await WithdrawManagerWeb3.exitPos(txHash);
+    if (trx == null) {
+      Fluttertoast.showToast(msg: "Something Went Wrong");
+    }
     TransactionData data = TransactionData(
-        trx: trx,
-        type: TransactionType.SPEEDUP,
-        to: trx.to.hex,
-        gas: trx.gasPrice.getInWei,
-        amount: trx.value.getInEther.toString());
-    Navigator.of(key.currentContext, rootNavigator: true).pop();
-    Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
+        amount: _data.amount,
+        type: TransactionType.EXITPOS,
+        to: config.rootChainProxy,
+        extraData: [_data.burnHash, _data.notificationId],
+        token: Items(contractTickerSymbol: _data.name),
+        trx: trx);
+    Navigator.of(_key.currentContext, rootNavigator: true).pop();
+    await Navigator.pushNamed(context, ethereumTransactionConfirmRoute,
         arguments: data);
   }
 }

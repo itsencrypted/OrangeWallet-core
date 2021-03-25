@@ -22,11 +22,14 @@ class CoinProfile extends StatefulWidget {
 class _CoinProfileState extends State<CoinProfile> {
   String address = "";
   List<TransferInfo> txList;
+  var future;
+  var futureSet = false;
   @override
   void initState() {
     CredentialManager.getAddress().then((val) => address = val);
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
+
       _refreshLoop(tokenListCubit);
     });
     super.initState();
@@ -49,6 +52,12 @@ class _CoinProfileState extends State<CoinProfile> {
                       state.data.token.contractAddress ==
                       element.contractAddress)
                   .first;
+              if (!futureSet) {
+                future = CovalentApiWrapper.maticTokenTransfers(
+                    token.contractAddress);
+                futureSet = true;
+              }
+
               var balance = EthConversions.weiToEth(
                   BigInt.parse(token.balance.toString()),
                   state.data.token.contractDecimals);
@@ -124,7 +133,9 @@ class _CoinProfileState extends State<CoinProfile> {
                                 ; // Use the component's default.
                               },
                             )),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, bridgeActionRoute);
+                            },
                             child: Container(
                                 width: double.infinity,
                                 child: Center(
@@ -138,8 +149,7 @@ class _CoinProfileState extends State<CoinProfile> {
                       height: 30,
                     ),
                     FutureBuilder(
-                      future: CovalentApiWrapper.maticTokenTransfers(
-                          token.contractAddress),
+                      future: future,
                       builder: (context, result) {
                         if (result.connectionState == ConnectionState.waiting) {
                           return Column(
@@ -157,40 +167,45 @@ class _CoinProfileState extends State<CoinProfile> {
                         } else if (result.connectionState ==
                             ConnectionState.done) {
                           var tx = result.data.data.transferInfo;
-                          return Card(
-                            shape: AppTheme.cardShape,
-                            color: AppTheme.white,
-                            elevation: AppTheme.cardElevations,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: ExpansionTile(
-                                title: Text("Transaction History"),
-                                trailing: Icon(Icons.arrow_forward),
-                                children: [
-                                  Text(
-                                      tx.length != 0
-                                          ? "All transactions"
-                                          : "No transactions",
-                                      style: AppTheme.subtitle),
-                                  Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.45,
-                                    child: ListView.builder(
-                                      itemCount:
-                                          result.data.data.transferInfo.length,
-                                      itemBuilder: (context, index) {
-                                        return TransactionTile(
-                                          data: tx[index],
-                                          address: result.data.data.address,
-                                        );
-                                      },
+                          return tx.length != 0
+                              ? Card(
+                                  shape: AppTheme.cardShape,
+                                  color: AppTheme.white,
+                                  elevation: AppTheme.cardElevations,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: ExpansionTile(
+                                      title: Text("Transaction History"),
+                                      trailing: Icon(Icons.arrow_forward),
+                                      children: [
+                                        Text("All transactions",
+                                            style: AppTheme.subtitle),
+                                        Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.45,
+                                          child: ListView.builder(
+                                            itemCount: result
+                                                .data.data.transferInfo.length,
+                                            itemBuilder: (context, index) {
+                                              return TransactionTile(
+                                                data: tx[index],
+                                                address:
+                                                    result.data.data.address,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          );
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("No Transactions"),
+                                );
                         } else {
                           return Center(
                             child: Text("Something went wrong"),

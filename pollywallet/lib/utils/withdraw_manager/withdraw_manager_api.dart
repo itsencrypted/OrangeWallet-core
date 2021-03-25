@@ -173,10 +173,14 @@ class WithdrawManagerApi {
     }
   }
 
-  static Future<String> plasmaExitTime(String txHash) async {
+  static Future<String> plasmaExitTime(
+      String burnTxHash, String confirmTxHash) async {
     String confirmUrl = baseUrl + "/v1/plasma-confirm";
+
     var body = {
-      "txHashes": [txHash],
+      "txHashes": [
+        {"burnTxHash": burnTxHash, "confirmTxHash": confirmTxHash},
+      ]
     };
     Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body));
     var confirmResp = await confirmFuture;
@@ -230,14 +234,17 @@ class WithdrawManagerApi {
     var body2 = {
       "txHashes": [exitHash],
     };
+    print(body);
     Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
-    Future exitFuture = http.post(exitUrl, body: jsonEncode(body2));
+
     var burnStatus = await burnFuture;
     Map json = jsonDecode(burnStatus.body);
+    print(burnStatus.body);
     BridgeApiData obj = BridgeApiData(
         txHash: txHash, message: BridgeApiMessage.fromJson(json[txHash]));
     if (obj.message.code == -4) {
       if (exitHash != "" && exitHash != null) {
+        Future exitFuture = http.post(exitUrl, body: jsonEncode(body2));
         var exitResp = await exitFuture;
         Map json2 = jsonDecode(exitResp.body);
         BridgeApiData obj2 = BridgeApiData(
@@ -247,14 +254,17 @@ class WithdrawManagerApi {
       } else {
         return obj.message.code;
       }
-    }
+    } else
+      return obj.message.code;
   }
 
   static Future<int> plasmaStatusCodes(
       String txHash, String confirmHash, String exitHash) async {
+    print(confirmHash);
     String burnUrl = baseUrl + "/v1/plasma-burn";
     String confirmUrl = baseUrl + "/v1/plasma-confirm";
     String exitUrl = baseUrl + "/v1/plasma-exit";
+    print(exitUrl);
     var body1 = {
       "txHashes": [txHash],
     };
@@ -277,6 +287,7 @@ class WithdrawManagerApi {
     if (obj.message.code == -4) {
       if (confirmHash != "" && confirmHash != null) {
         var confirmResp = await confirmFuture;
+        print(confirmResp.body);
         Map json2 = jsonDecode(confirmResp.body);
         BridgeApiData obj2 = BridgeApiData(
             txHash: confirmHash,
@@ -294,5 +305,6 @@ class WithdrawManagerApi {
         return obj.message.code;
       }
     }
+    return obj.message.code;
   }
 }

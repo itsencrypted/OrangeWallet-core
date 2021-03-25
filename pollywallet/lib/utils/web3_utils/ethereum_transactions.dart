@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:pollywallet/models/deposit_models/deposit_model.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/misc/notification_helper.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
@@ -368,21 +370,64 @@ class EthereumTransactions {
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());
         } else if (details.type == TransactionType.CONFIRMPLASMA) {
-          BoxUtils.addPlasmaConfirmHash();
+          var rng = new Random();
+          var notifId = rng.nextInt(1000);
           if (networkId == 0) {
-          } else if (networkId == 1) {}
+            NotificationHelper.timedNotification(
+                notifId,
+                "Ready for exit",
+                "Your ${details.token.contractTickerSymbol} are ready for exit",
+                10100,
+                context);
+            BoxUtils.addPlasmaConfirmHash(
+                burnTxHash: details.extraData[0], confirmHash: txHash);
+          } else if (networkId == 1) {
+            NotificationHelper.timedNotification(
+                notifId,
+                "Ready for exit",
+                "Your ${details.token.contractTickerSymbol} are ready for exit",
+                10100,
+                context);
+            BoxUtils.addPlasmaConfirmHash(
+                burnTxHash: details.extraData[0], confirmHash: txHash);
+          }
         } else if (details.type == TransactionType.EXITPLASMA) {
-          BoxUtils.addPlasmaExitHash();
+          await BoxUtils.addPlasmaExitHash(
+              burnTxHash: details.extraData[0], exitHash: txHash);
+          BoxUtils.markWithdrawComplete(burnTxHash: details.extraData[0]);
+          NotificationHelper.cancelNotification(details.extraData[1]);
         } else if (details.type == TransactionType.EXITPOS) {
+          BoxUtils.addPosExitHash(
+              burnTxHash: details.extraData[0], exitHash: txHash);
+          NotificationHelper.cancelNotification(details.extraData[1]);
         } else if (details.type == TransactionType.UNSTAKE) {
+          var rng = new Random();
+          var notifId = rng.nextInt(1000);
+          if (networkId == 1) {
+            NotificationHelper.timedNotification(notifId, "Claim Stake",
+                "Your Stake is ready to be claimed.", 150, context);
+          } else {
+            NotificationHelper.timedNotification(notifId, "Claim Stake",
+                "Your Stake is ready to be claimed.", 150, context);
+          }
+
           BoxUtils.addUnbondTxData(
             amount: details.amount,
             validatorAddress: details.validatorData.contractAddress,
             userAddress: address,
             name: details.validatorData.name,
+            notificationId: notifId,
+            validatorId: details.validatorData.id,
             timestring:
                 (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
           );
+        } else if (details.type == TransactionType.CLAIMSTAKE) {
+          BoxUtils.addUnbondTxDataMarkClaimed(
+              validatorAddress: details.validatorData.contractAddress,
+              userAddress: address);
+          try {
+            NotificationHelper.cancelNotification(details.extraData[0]);
+          } catch (e) {}
         }
         return txHash;
       } catch (e) {

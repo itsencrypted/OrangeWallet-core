@@ -21,10 +21,11 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
         ),
       ),
       backgroundColor: AppTheme.backgroundWhite,
-      body: Container(
-        padding: EdgeInsets.all(AppTheme.paddingHeight12),
-        child: Center(
-          child: Card(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(),
+          Card(
             shape: AppTheme.cardShape,
             child: Padding(
               padding: EdgeInsets.all(AppTheme.paddingHeight),
@@ -77,27 +78,32 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
               ),
             ),
           ),
-        ),
+          SafeArea(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: AppTheme.buttonHeight_44,
+              margin:
+                  EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    backgroundColor: AppTheme.purple_600,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.buttonRadius))),
+                onPressed: _proceed,
+                child: Text(
+                  'Continue',
+                  style: AppTheme.label_medium
+                      .copyWith(color: AppTheme.lightgray_700),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
-      floatingActionButton: Container(
-        width: MediaQuery.of(context).size.width,
-        height: AppTheme.buttonHeight_44,
-        margin: EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
-        child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: AppTheme.purple_600,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppTheme.buttonRadius))),
-          onPressed: _proceed,
-          child: Text(
-            'Continue',
-            style:
-                AppTheme.label_medium.copyWith(color: AppTheme.lightgray_700),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      //floatingActionButton: ,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

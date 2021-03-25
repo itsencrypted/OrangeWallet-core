@@ -9,6 +9,7 @@ import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:pollywallet/models/transaction_models/transaction_information.dart';
 import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 
 import '../../constants.dart';
@@ -254,25 +255,42 @@ class BoxUtils {
   }
 
   static Future<void> clear() async {
+    var address = await CredentialManager.getAddress();
     var creds = await Hive.openBox<CredentialsList>(credentialBox);
     Box<TransactionDetails> trx1 =
         await Hive.openBox<TransactionDetails>(pendingTxBox + "0");
     Box<TransactionDetails> trx2 =
         await Hive.openBox<TransactionDetails>(pendingTxBox + "1");
-    Box<TransactionDetails> deposits1 =
-        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "0");
-    Box<TransactionDetails> deposits2 =
-        await Hive.openBox<TransactionDetails>(depositTransactionDbBox + "1");
+    Box<DepositTransaction> deposits1 =
+        await Hive.openBox<DepositTransaction>(depositTransactionDbBox + "0");
+    Box<DepositTransaction> deposits2 =
+        await Hive.openBox<DepositTransaction>(depositTransactionDbBox + "1");
+    Box<WithdrawDataDb> withdraw1 =
+        await Hive.openBox<WithdrawDataDb>(withdrawdbBox + "0" + address);
+    Box<WithdrawDataDb> withdraw2 =
+        await Hive.openBox<WithdrawDataDb>(withdrawdbBox + "1" + address);
+    Box<UnbondingDataDb> stake1 =
+        await Hive.openBox<UnbondingDataDb>(unbondDbBox + "0" + address);
+    Box<UnbondingDataDb> stake2 =
+        await Hive.openBox<UnbondingDataDb>(unbondDbBox + "1" + address);
     creds.clear();
     trx1.clear();
     trx2.clear();
     deposits1.clear();
     deposits2.clear();
+    withdraw1.clear();
+    withdraw2.clear();
+    stake1.clear();
+    stake2.clear();
     creds.close();
     trx1.close();
     trx2.close();
     deposits1.close();
     deposits2.close();
+    withdraw1.close();
+    withdraw2.close();
+    stake1.close();
+    stake2.close();
   }
 
   static Future<void> addWithdrawTransaction(
@@ -286,6 +304,7 @@ class BoxUtils {
       String addressChildToken,
       String timestring,
       String fee,
+      int notificationId,
       String imageUrl
       // String confirmHash = "",
       // String exitHash = "",
@@ -299,13 +318,14 @@ class BoxUtils {
       ..userAddress = userAddress
       ..addressChild = addressChildToken
       ..addressRoot = addressRootToken
-      ..bridge = bridge
+      ..bridge = bridge.index
       ..amount = amount
       ..name = name
+      ..notificationId = notificationId
       ..timeString = timestring
       ..imageUrl = imageUrl
       ..fee = fee;
-    box.put(burnTxHash, txObj);
+    await box.put(burnTxHash, txObj);
     await box.close();
     return;
   }
@@ -342,6 +362,28 @@ class BoxUtils {
     return;
   }
 
+  static Future<void> markWithdrawComplete({
+    String burnTxHash,
+  }) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var tx = box.get(burnTxHash);
+    tx..exited = true;
+    await tx.save();
+    await box.close();
+    return;
+  }
+
+  static Future<void> clearWithdraw() async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    box.clear();
+  }
+
   static Future<void> addPlasmaConfirmHash({
     String burnTxHash,
     String confirmHash,
@@ -351,7 +393,7 @@ class BoxUtils {
     var boxName = withdrawdbBox + network.toString() + address;
     Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
     var tx = box.get(burnTxHash);
-    tx..exitHash = confirmHash;
+    tx..confirmHash = confirmHash;
     await tx.save();
     await box.close();
     return;
@@ -363,15 +405,20 @@ class BoxUtils {
       String amount,
       String name,
       String timestring,
+      int validatorId,
+      int notificationId,
       BigInt slippage}) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
     var boxName = unbondDbBox + network.toString() + address;
+    var _amt = EthConversions.ethToWei(amount);
     Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
     UnbondingDataDb txObj = UnbondingDataDb()
       ..userAddress = userAddress
-      ..amount = BigInt.parse(amount)
+      ..amount = _amt
       ..name = name
+      ..notificationId = notificationId
+      ..validatorId = validatorId
       ..timeString = timestring
       ..claimed = false
       ..slippage = slippage
@@ -391,6 +438,32 @@ class BoxUtils {
       ls.add(box.getAt(i));
     }
     return ls;
+  }
+
+  static Future<List<WithdrawDataDb>> getWithdrawList() async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = withdrawdbBox + network.toString() + address;
+    Box<WithdrawDataDb> box = await Hive.openBox<WithdrawDataDb>(boxName);
+    var ls = <WithdrawDataDb>[];
+    for (int i = 0; i < box.length; i++) {
+      ls.add(box.getAt(i));
+    }
+    return ls;
+  }
+
+  static Future<UnbondingDataDb> getUnbondingBox(
+      String validatorAddress) async {
+    var network = await getNetworkConfig();
+    var address = await CredentialManager.getAddress();
+    var boxName = unbondDbBox + network.toString() + address;
+    Box<UnbondingDataDb> box = await Hive.openBox<UnbondingDataDb>(boxName);
+    try {
+      var bx = box.get(validatorAddress);
+      return bx;
+    } catch (e) {
+      return null;
+    }
   }
 
   static Future<void> addUnbondTxDataMarkClaimed({

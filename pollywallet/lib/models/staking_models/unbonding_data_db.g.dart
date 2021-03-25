@@ -23,13 +23,15 @@ class UnbondingDataDbAdapter extends TypeAdapter<UnbondingDataDb> {
       ..userAddress = fields[3] as String
       ..amount = fields[4] as BigInt
       ..slippage = fields[5] as BigInt
-      ..claimed = fields[6] as bool;
+      ..claimed = fields[6] as bool
+      ..validatorId = fields[7] as int
+      ..notificationId = fields[8] as int;
   }
 
   @override
   void write(BinaryWriter writer, UnbondingDataDb obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.validatorAddress)
       ..writeByte(1)
@@ -43,7 +45,11 @@ class UnbondingDataDbAdapter extends TypeAdapter<UnbondingDataDb> {
       ..writeByte(5)
       ..write(obj.slippage)
       ..writeByte(6)
-      ..write(obj.claimed);
+      ..write(obj.claimed)
+      ..writeByte(7)
+      ..write(obj.validatorId)
+      ..writeByte(8)
+      ..write(obj.notificationId);
   }
 
   @override

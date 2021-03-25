@@ -68,16 +68,46 @@ class StakingTransactions {
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "stakingContract"),
         EthereumAddress.fromHex(validator));
-    var restake = contract.function('withdrawRewards');
+    var withdraw = contract.function('withdrawRewards');
     var address = await BoxUtils.getAddress();
     var trx = Transaction.callContract(
         contract: contract,
-        function: restake,
+        function: withdraw,
         maxGas: 425000,
         from: EthereumAddress.fromHex(address),
         parameters: []);
 
     return trx;
+  }
+
+  static Future<Transaction> claimStake(
+      String validator, BigInt nonce, bool legacy) async {
+    String abi = await rootBundle.loadString(stakingContractAbi);
+    final contract = DeployedContract(
+        ContractAbi.fromJson(abi, "stakingContract"),
+        EthereumAddress.fromHex(validator));
+    var address = await BoxUtils.getAddress();
+    if (legacy) {
+      var claim = contract.function('unstakeClaimTokens');
+      var trx = Transaction.callContract(
+          contract: contract,
+          function: claim,
+          maxGas: 425000,
+          from: EthereumAddress.fromHex(address),
+          parameters: []);
+
+      return trx;
+    } else {
+      var claim = contract.function('unstakeClaimTokens_new');
+      var trx = Transaction.callContract(
+          contract: contract,
+          function: claim,
+          maxGas: 425000,
+          from: EthereumAddress.fromHex(address),
+          parameters: [nonce]);
+
+      return trx;
+    }
   }
 
   static Future<BigInt> getStakingReward(String validatorAddress) async {
@@ -166,11 +196,11 @@ class StakingTransactions {
     if (nonce == BigInt.zero) {
       var resp = await getUnbondedStakeStatusLegacy(validatorAddress);
       print(resp);
-      return [resp, nonce];
+      return [resp, nonce, true];
     } else {
       var resp = await getUnbondedStakeStatus(validatorAddress, nonce);
       print(resp);
-      return [resp, nonce];
+      return [resp, nonce, false];
     }
   }
 }

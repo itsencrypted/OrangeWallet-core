@@ -12,6 +12,7 @@ import 'package:pollywallet/screens/wallet_tab/transfer_asset_card.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/notification_helper.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab>
     with AutomaticKeepAliveClientMixin<HomeTab> {
+  int counter = 0;
   CovalentTokensListMaticState state;
   @override
   void initState() {
@@ -28,6 +30,11 @@ class _HomeTabState extends State<HomeTab>
       tokenListCubit.getTokensList();
       final ethCubit = context.read<CovalentTokensListEthCubit>();
       ethCubit.getTokensList();
+      NotificationHelper.checkForActionsCount().then((value) {
+        setState(() {
+          counter = value;
+        });
+      });
       _refreshLoop(tokenListCubit);
     });
 
@@ -88,7 +95,7 @@ class _HomeTabState extends State<HomeTab>
                     child: FlatButton(
                       padding: EdgeInsets.all(0),
                       onPressed: () {
-                        Navigator.pushNamed(context, withdrawsListRoute);
+                        Navigator.pushNamed(context, notificationsScreenRoute);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -96,12 +103,31 @@ class _HomeTabState extends State<HomeTab>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Withdraws in Progress",
+                              "Actions",
                               style: AppTheme.body1,
                             ),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: AppTheme.grey,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                counter != 0
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color:
+                                                  AppTheme.borderColorGreyish),
+                                          child: Center(child: Text("1")),
+                                        ),
+                                      )
+                                    : Container(),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color: AppTheme.grey,
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -184,6 +210,11 @@ class _HomeTabState extends State<HomeTab>
     new Timer.periodic(Duration(seconds: 30), (Timer t) {
       if (mounted) {
         cubit.refresh();
+        NotificationHelper.checkForActionsCount().then((value) {
+          setState(() {
+            counter = value;
+          });
+        });
       }
     });
   }

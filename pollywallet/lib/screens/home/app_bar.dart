@@ -113,17 +113,6 @@ class _HomeAppBar extends State<HomeAppBar> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            SizedBox(),
-            TextButton(
-              child: Icon(
-                Icons.notifications_active_outlined,
-                color: AppTheme.darkerText,
-              ),
-              onPressed: () {
-                //BoxUtils.clearWithdraw();
-                Navigator.pushNamed(context, notificationsScreenRoute);
-              },
-            ),
             TextButton(
               child: Image.asset("assets/icons/qr_icon.png",
                   color: AppTheme.darkerText),

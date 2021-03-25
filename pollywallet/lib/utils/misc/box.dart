@@ -287,6 +287,7 @@ class BoxUtils {
       String addressChildToken,
       String timestring,
       String fee,
+      int notificationId,
       String imageUrl
       // String confirmHash = "",
       // String exitHash = "",
@@ -303,6 +304,7 @@ class BoxUtils {
       ..bridge = bridge
       ..amount = amount
       ..name = name
+      ..notificationId = notificationId
       ..timeString = timestring
       ..imageUrl = imageUrl
       ..fee = fee;
@@ -365,6 +367,7 @@ class BoxUtils {
       String name,
       String timestring,
       int validatorId,
+      int notificationId,
       BigInt slippage}) async {
     var network = await getNetworkConfig();
     var address = await CredentialManager.getAddress();
@@ -375,6 +378,7 @@ class BoxUtils {
       ..userAddress = userAddress
       ..amount = _amt
       ..name = name
+      ..notificationId = notificationId
       ..validatorId = validatorId
       ..timeString = timestring
       ..claimed = false

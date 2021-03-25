@@ -123,7 +123,11 @@ class _ValidatorAndDelegationProfileState
                   }
                   print(4);
                   BigInt reward = validator.reward;
-                  delegatedStake = delegatorInfo.stake;
+                  if (delegatorInfo != null) {
+                    delegatedStake = delegatorInfo.stake;
+                  } else {
+                    delegatedStake = 0;
+                  }
                   var stake = EthConversions.weiToEth(
                       validator.selfStake + validator.delegatedStake, 18);
                   return Stack(

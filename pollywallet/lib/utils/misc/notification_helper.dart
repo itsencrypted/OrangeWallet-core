@@ -7,8 +7,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 class NotificationHelper {
-  static void timedNotification(
-      String title, String subtitle, int min, BuildContext context) async {
+  static void timedNotification(int id, String title, String subtitle, int min,
+      BuildContext context) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -28,7 +28,7 @@ class NotificationHelper {
       requestAlertPermission: true,
       onDidReceiveLocalNotification:
           (int id, String title, String body, String payload) =>
-              onDidReceiveLocalNotification(id, title, body, payload, context),
+              _onDidReceiveLocalNotification(id, title, body, payload, context),
     );
     final InitializationSettings initializationSettings =
         InitializationSettings(
@@ -41,7 +41,7 @@ class NotificationHelper {
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (payload) =>
-            selectNotification(payload, context));
+            _selectNotification(payload, context));
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails('1', title, subtitle);
     IOSNotificationDetails iOSPlatformSpecifics =
@@ -58,19 +58,25 @@ class NotificationHelper {
             UILocalNotificationDateInterpretation.absoluteTime,
         androidAllowWhileIdle: true);
   }
-  //(0, title,
-  // subtitle, Sche, platformChannelSpecifics,
-  // androidAllowWhileIdle: true);
 
-  static Future selectNotification(String payload, BuildContext context) async {
+  static void cancelNotification(int id) async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    try {
+      await flutterLocalNotificationsPlugin.cancel(id);
+    } catch (e) {}
+  }
+
+  static Future _selectNotification(
+      String payload, BuildContext context) async {
     if (payload != null) {
       print('notification payload: $payload');
     }
     await Navigator.pushNamed(context, notificationsScreenRoute);
   }
 
-  static Future onDidReceiveLocalNotification(int id, String title, String body,
-      String payload, BuildContext context) async {
+  static Future _onDidReceiveLocalNotification(int id, String title,
+      String body, String payload, BuildContext context) async {
     // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: context,

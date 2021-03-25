@@ -39,4 +39,7 @@ class WithdrawDataDb extends HiveObject {
 
   @HiveField(11)
   String imageUrl;
+
+  @HiveField(12)
+  int notificationId;
 }

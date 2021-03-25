@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -371,16 +372,26 @@ class EthereumTransactions {
         } else if (details.type == TransactionType.CONFIRMPLASMA) {
           BoxUtils.addPlasmaConfirmHash();
           if (networkId == 0) {
-          } else if (networkId == 1) {}
+            BoxUtils.addPlasmaConfirmHash(
+                burnTxHash: details.extraData[0], confirmHash: txHash);
+          } else if (networkId == 1) {
+            BoxUtils.addPlasmaConfirmHash(
+                burnTxHash: details.extraData[0], confirmHash: txHash);
+          }
         } else if (details.type == TransactionType.EXITPLASMA) {
-          BoxUtils.addPlasmaExitHash();
+          BoxUtils.addPlasmaExitHash(
+              burnTxHash: details.extraData[0], exitHash: txHash);
         } else if (details.type == TransactionType.EXITPOS) {
+          BoxUtils.addPosExitHash(
+              burnTxHash: details.extraData[0], exitHash: txHash);
         } else if (details.type == TransactionType.UNSTAKE) {
+          var rng = new Random();
+          var notifId = rng.nextInt(1000);
           if (networkId == 1) {
-            NotificationHelper.timedNotification("Claim Stake",
+            NotificationHelper.timedNotification(notifId, "Claim Stake",
                 "Your Stake is ready to be claimed.", 150, context);
           } else {
-            NotificationHelper.timedNotification("Claim Stake",
+            NotificationHelper.timedNotification(notifId, "Claim Stake",
                 "Your Stake is ready to be claimed.", 150, context);
           }
 
@@ -389,6 +400,7 @@ class EthereumTransactions {
             validatorAddress: details.validatorData.contractAddress,
             userAddress: address,
             name: details.validatorData.name,
+            notificationId: notifId,
             validatorId: details.validatorData.id,
             timestring:
                 (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),

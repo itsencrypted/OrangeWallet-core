@@ -1,5 +1,4 @@
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
-import 'package:pollywallet/models/staking_models/validator_details.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -11,6 +10,7 @@ class TransactionData {
   final BigInt gas;
   final Items token;
   final ValidatorInfo validatorData;
+  final List<dynamic> extraData;
 
   TransactionData(
       {this.trx,
@@ -19,6 +19,7 @@ class TransactionData {
       this.type,
       this.gas,
       this.token,
+      this.extraData,
       this.validatorData});
   static Map txTypeString = {
     0: "Approve",

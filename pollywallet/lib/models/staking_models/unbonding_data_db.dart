@@ -26,4 +26,7 @@ class UnbondingDataDb extends HiveObject {
 
   @HiveField(7)
   int validatorId;
+
+  @HiveField(8)
+  int notificationId;
 }

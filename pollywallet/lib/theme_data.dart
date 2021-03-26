@@ -174,10 +174,18 @@ class AppTheme {
   static const TextStyle buttonText = TextStyle(
     // Caption -> caption
     fontFamily: fontName,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 16,
     letterSpacing: 0.3,
     color: whiteTextColor, // was lightText
+  );
+  static const TextStyle buttonTextPurple = TextStyle(
+    // Caption -> caption
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    letterSpacing: 0.3,
+    color: Color(0xff6F36D1), // was lightText
   );
 
   static const TextStyle balanceMain = TextStyle(

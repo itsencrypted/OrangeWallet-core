@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pollywallet/utils/misc/credential_manager.dart';
-import 'package:pollywallet/utils/network/network_config.dart';
-import 'package:pollywallet/utils/network/network_manager.dart';
+import 'package:pollywallet/models/send_token_model/send_token_data.dart';
+import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../constants.dart';
 import '../../theme_data.dart';
@@ -38,7 +38,35 @@ class TopBalance extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                          width: 110,
+                          width: 98,
+                          height: 44,
+                          child: TextButton(
+                            style: ButtonStyle(shape: MaterialStateProperty
+                                .resolveWith<OutlinedBorder>((_) {
+                              return RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100));
+                            }), backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.pressed))
+                                  return AppTheme.primaryColor.withOpacity(0.2);
+                                return AppTheme.primaryColor.withOpacity(0.3);
+                                ; // Use the component's default.
+                              },
+                            )),
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(receivePageRoute);
+                            },
+                            child: Container(
+                                width: double.infinity,
+                                child: Center(
+                                    child: Text("Receive",
+                                        style: AppTheme.buttonTextPurple))),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 98,
+                          height: 44,
                           child: TextButton(
                             style: ButtonStyle(shape: MaterialStateProperty
                                 .resolveWith<OutlinedBorder>((_) {
@@ -53,50 +81,23 @@ class TopBalance extends StatelessWidget {
                                 ; // Use the component's default.
                               },
                             )),
-                            onPressed: () async {
-                              var address =
-                                  await CredentialManager.getAddress();
-                              NetworkConfigObject config =
-                                  await NetworkManager.getNetworkObject();
-                              String url = config.transakLink + address;
-                              Navigator.pushNamed(context, transakRoute,
-                                  arguments: url);
+                            onPressed: () {
+                              var cubit = context.read<SendTransactionCubit>();
+                              cubit.setData(SendTokenData());
+                              Navigator.pushNamed(
+                                context,
+                                pickTokenRoute,
+                              );
                             },
                             child: Container(
                                 width: double.infinity,
                                 child: Center(
                                     child: Text(
-                                  "Buy",
+                                  "Send",
                                   style: AppTheme.buttonText,
                                 ))),
                           ),
                         ),
-                        SizedBox(
-                          width: 110,
-                          child: TextButton(
-                            style: ButtonStyle(shape: MaterialStateProperty
-                                .resolveWith<OutlinedBorder>((_) {
-                              return RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(100));
-                            }), backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed))
-                                  return receiveButtonColor.withOpacity(0.5);
-                                return receiveButtonColor.withOpacity(0.7);
-                                ; // Use the component's default.
-                              },
-                            )),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(receivePageRoute);
-                            },
-                            child: Container(
-                                width: double.infinity,
-                                child: Center(
-                                    child: Text("Receive",
-                                        style: AppTheme.buttonText))),
-                          ),
-                        )
                       ],
                     ),
                   ),

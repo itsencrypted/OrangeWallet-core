@@ -17,7 +17,7 @@ class _PickTokenListState extends State<PickTokenList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Choose a coin to send"),
+        title: Text("Choose a token to send"),
         actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
       ),
       body: BlocBuilder<CovalentTokensListMaticCubit,

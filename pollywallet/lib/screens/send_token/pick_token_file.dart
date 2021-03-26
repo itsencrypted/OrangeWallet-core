@@ -19,7 +19,6 @@ class PickTokenTile extends StatelessWidget {
             BigInt.parse(tokenData.balance), tokenData.contractDecimals)
         .toString();
     SendTransactionCubit data = context.read<SendTransactionCubit>();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       child: Center(
@@ -29,8 +28,14 @@ class PickTokenTile extends StatelessWidget {
           elevation: AppTheme.cardElevations,
           child: FlatButton(
             onPressed: () {
-              data.setData(SendTokenData(token: tokenData, receiver: address));
-              Navigator.pushNamed(context, payAmountRoute);
+              if (address == null) {
+                data.setData(SendTokenData(token: tokenData));
+                Navigator.pushNamed(context, payAmountRoute);
+              } else {
+                data.setData(
+                    SendTokenData(token: tokenData, receiver: address));
+                Navigator.pushNamed(context, payAmountRoute);
+              }
             },
             child: ListTile(
               leading: FadeInImage.assetNetwork(
@@ -47,7 +52,7 @@ class PickTokenTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "\$${tokenData.quote}",
+                    "\$${tokenData.quote.toStringAsFixed(2)}",
                     style: AppTheme.balanceMain,
                   ),
                   Text(

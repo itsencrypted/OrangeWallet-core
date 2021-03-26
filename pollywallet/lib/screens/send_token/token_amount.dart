@@ -160,7 +160,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                             ),
                                             fillColor: AppTheme.warmgray_100,
                                             hintText:
-                                                "Enter the reciepients address ",
+                                                "Enter the reciepients address",
                                             filled: true,
                                             hintStyle: AppTheme.body_small,
                                             contentPadding: EdgeInsets.zero,

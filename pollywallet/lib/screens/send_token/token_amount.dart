@@ -74,14 +74,15 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                   title: Text("Paying"),
                 ),
                 body: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(),
                     Card(
                       margin: EdgeInsets.all(AppTheme.paddingHeight12),
                       shape: AppTheme.cardShape,
                       child: Container(
-                          padding: EdgeInsets.all(16),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -344,7 +345,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                         : _amount
                                                                             .text),
                                                                 token.quoteRate)
-                                                            .toString(),
+                                                            .toStringAsFixed(2),
                                                     style: AppTheme.body_small,
                                                   )
                                                 : Text(
@@ -356,7 +357,8 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                         ? "0"
                                                                         : _amount
                                                                             .text))
-                                                            .toString() +
+                                                            .toStringAsFixed(
+                                                                2) +
                                                         " " +
                                                         token.contractName,
                                                     style: AppTheme.body_small,
@@ -434,6 +436,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                             ],
                           )),
                     ),
+                    SizedBox(),
                     SizedBox(
                       height: AppTheme.buttonHeight_44,
                     )

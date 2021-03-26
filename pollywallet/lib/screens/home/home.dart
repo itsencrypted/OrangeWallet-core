@@ -47,6 +47,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: Stack(
         children: [
           TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             controller: _tabController,
             children: [
               HomeTab(),

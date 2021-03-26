@@ -43,9 +43,15 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
           WithdrawManagerApi.plasmaExitTime(widget.withdrawDataDb.burnHash,
                   widget.withdrawDataDb.confirmHash)
               .then((time) {
-            int endTime =
-                DateTime.now().millisecondsSinceEpoch + int.parse(time) * 1000;
-            this.endtime = DateTime.fromMillisecondsSinceEpoch(endTime);
+            try {
+              int endTime = DateTime.now().millisecondsSinceEpoch +
+                  int.parse(time) * 1000;
+              this.endtime = DateTime.fromMillisecondsSinceEpoch(endTime);
+            } catch (e) {}
+          });
+          setState(() {
+            status = value;
+            loading = false;
           });
         } else {
           setState(() {
@@ -92,10 +98,9 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                             : status == -10
                                 ? Colors.green
                                 : status == -8
-                                    ? Text(
-                                        "Token will be ready for exit at ${endtime.day} ${endtime.month} ${endtime.year}  ${endtime.hour}: ${endtime.minute}")
+                                    ? Colors.yellow
                                     : status == -9
-                                        ? Text("Token is ready for exit")
+                                        ? Colors.blue
                                         : status == -2 ||
                                                 status == -11 ||
                                                 status == -7
@@ -121,7 +126,14 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                         ? Text("Withdraw Successful")
                         : status == -2 || status == -11
                             ? Text("Withdraw Faild")
-                            : Text("Please wait withdraw is under progress..."),
+                            : status == -8
+                                ? Text(endtime != null
+                                    ? "Token will be ready for exit at ${endtime.day} ${endtime.month} ${endtime.year}  ${endtime.hour}: ${endtime.minute}"
+                                    : "Tokens will be soon ready for exit")
+                                : status == -9
+                                    ? Text("Token is ready for exit")
+                                    : Text(
+                                        "Please wait withdraw is under progress..."),
           ),
           onTap: () {
             print(bridge);
@@ -165,9 +177,15 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
               WithdrawManagerApi.plasmaExitTime(widget.withdrawDataDb.burnHash,
                       widget.withdrawDataDb.confirmHash)
                   .then((time) {
-                int endTime = DateTime.now().millisecondsSinceEpoch +
-                    int.parse(time) * 1000;
-                this.endtime = DateTime.fromMillisecondsSinceEpoch(endTime);
+                try {
+                  int endTime = DateTime.now().millisecondsSinceEpoch +
+                      int.parse(time) * 1000;
+                  this.endtime = DateTime.fromMillisecondsSinceEpoch(endTime);
+                } catch (e) {}
+              });
+              setState(() {
+                status = value;
+                loading = false;
               });
             } else {
               setState(() {

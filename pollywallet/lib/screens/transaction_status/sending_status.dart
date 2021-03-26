@@ -137,11 +137,12 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
   }
 
   void _closeFn() {
-    isEth
-        ? Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
-            arguments: txHash)
-        : Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
-            arguments: txHash);
+    // isEth
+    //     ? Navigator.popAndPushNamed(context, ethereumTransactionStatusRoute,
+    //         arguments: txHash)
+    //     : Navigator.popAndPushNamed(context, transactionStatusMaticRoute,
+    //         arguments: txHash);
+    Navigator.pop(context);
   }
 
   Future<void> txStatus(String txHash) async {

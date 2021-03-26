@@ -56,6 +56,7 @@ class AppTheme {
   static const double cardElevations = 0;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
+  static const double tokenIconSizeBig = 70;
   static const double paddingHeight = 16;
   static const double paddingHeight12 = 12;
   static const double paddingHeight20 = 20;
@@ -91,6 +92,13 @@ class AppTheme {
     letterSpacing: 0.27,
     color: darkerText,
   );
+  static const TextStyle headline_grey = TextStyle(
+      // h5 -> headline
+      fontFamily: fontName,
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      letterSpacing: 0.27,
+      color: warmgray_300);
   static const TextStyle bigLabel = TextStyle(
     // h5 -> headline
     fontFamily: fontName,

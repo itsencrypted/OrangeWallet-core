@@ -43,9 +43,9 @@ class TransactionTile extends StatelessWidget {
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0.0),
               child: Divider(
-                color: AppTheme.grey,
+                color: AppTheme.warmgray_200,
               ),
             )
           ],

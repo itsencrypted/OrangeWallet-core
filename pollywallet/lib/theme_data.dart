@@ -116,7 +116,14 @@ class AppTheme {
     letterSpacing: 0.18,
     color: darkerText,
   );
-
+  static const TextStyle grey_title = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    letterSpacing: 0.18,
+    color: warmgray_600,
+  );
   static const TextStyle subtitle = TextStyle(
     // subtitle2 -> subtitle
     fontFamily: fontName,

@@ -17,6 +17,7 @@ const String sentLottieJson = "$_baseIcon/sent_lottie.json";
 const String sentFailedLottieJson = "$_baseIcon/sending_failed_lottie.json";
 const String posMeterIcon = "$_baseIcon/pos_meter.png";
 const String plasmaLockIcon = "$_baseIcon/plasma_lock.png";
+const String transakIcon = "$_baseIcon/transak.png";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";

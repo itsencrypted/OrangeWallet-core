@@ -106,6 +106,7 @@ flutter:
     - assets/icons/sending_failed_lottie.json
     - assets/icons/pos_meter.png
     - assets/icons/plasma_lock.png
+    - assets/icons/transak.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

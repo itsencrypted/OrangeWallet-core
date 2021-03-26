@@ -15,6 +15,8 @@ const String appLandingSvg = "$_baseIcon/app_landing.svg";
 const String sendingLottieJson = "$_baseIcon/sending_lottie.json";
 const String sentLottieJson = "$_baseIcon/sent_lottie.json";
 const String sentFailedLottieJson = "$_baseIcon/sending_failed_lottie.json";
+const String posMeterIcon = "$_baseIcon/pos_meter.png";
+const String plasmaLockIcon = "$_baseIcon/plasma_lock.png";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";
@@ -87,6 +89,7 @@ const String depositStatusRoute = "depositStatusRoute";
 const String splashRoute = "splashRoute";
 const String withdrawStatusPosRoute = "withdrawStatusPosRoute";
 const String withdrawStatusPlasmaRoute = "withdrawStatusPlasmaRoute";
+const String selectBridgeRoute = "selectBridgeRoute";
 
 //strings
 const endpoint = "endpoint";

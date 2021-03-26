@@ -90,18 +90,22 @@ class _TokenListState extends State<TokenList> {
               ),
             );
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Something went wrong"),
-                RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    color: sendButtonColor.withOpacity(0.6),
-                    child: Text("Refresh"),
-                    onPressed: _initializeAgain()),
-              ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Something went wrong"),
+                  RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      color: sendButtonColor.withOpacity(0.6),
+                      child: Text("Refresh"),
+                      onPressed: () {
+                        _initializeAgain();
+                      }),
+                ],
+              ),
             );
           }
         },

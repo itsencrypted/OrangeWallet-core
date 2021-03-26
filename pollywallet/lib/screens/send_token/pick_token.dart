@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/screens/send_token/pick_token_file.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/state_manager/send_token_state/send_token_cubit.dart';
@@ -13,6 +15,35 @@ class PickTokenList extends StatefulWidget {
 }
 
 class _PickTokenListState extends State<PickTokenList> {
+  TextEditingController controller = TextEditingController();
+  SearchBar searchBar;
+  String searchStr = "";
+  bool showSearch = false;
+  AppBar buildAppBar(BuildContext context) {
+    return new AppBar(
+        title: new Text('All Tokens'),
+        actions: [searchBar.getSearchAction(context)]);
+  }
+
+  _TokenListState() {
+    searchBar = new SearchBar(
+        inBar: showSearch,
+        buildDefaultAppBar: buildAppBar,
+        setState: setState,
+        hintText: "Token Name",
+        controller: controller,
+        showClearButton: true,
+        onSubmitted: onSubmitted,
+        onCleared: onClear,
+        onClosed: onClose);
+  }
+
+  @override
+  void initState() {
+    controller.addListener(_search);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +78,13 @@ class _PickTokenListState extends State<PickTokenList> {
             var ls = listState.covalentTokenList.data.items
                 .where((element) => element.nftData == null)
                 .toList();
+
+            var original = ls;
+            if (searchStr != "") {
+              ls = ls.where(_searchCond).toList();
+            } else {
+              ls = original;
+            }
             return RefreshIndicator(
               onRefresh: _refresh,
               child: ListView.builder(
@@ -61,23 +99,56 @@ class _PickTokenListState extends State<PickTokenList> {
               ),
             );
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("Something went wrong"),
-                RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    color: sendButtonColor.withOpacity(0.6),
-                    child: Text("Refresh"),
-                    onPressed: _initializeAgain()),
-              ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Something went wrong"),
+                  RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
+                      color: sendButtonColor.withOpacity(0.6),
+                      child: Text("Refresh"),
+                      onPressed: () {
+                        _initializeAgain();
+                      }),
+                ],
+              ),
             );
           }
         });
       }),
     );
+  }
+
+  void onSubmitted(String value) {}
+  void onClear() {
+    setState(() {
+      searchStr = "";
+
+      controller.text = "";
+    });
+  }
+
+  _search() {
+    setState(() {
+      searchStr = controller.text;
+    });
+  }
+
+  void onClose() {
+    setState(() {
+      searchStr = "";
+      controller.text = "";
+      showSearch = false;
+    });
+  }
+
+  bool _searchCond(Items item) {
+    var name = item.contractName;
+
+    return name.toLowerCase().contains(searchStr.toLowerCase());
   }
 
   _initializeAgain() async {

@@ -126,7 +126,8 @@ class _HomeTabState extends State<HomeTab>
                                       )
                                     : Container(),
                                 Icon(
-                                  Icons.arrow_forward,
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
                                   color: AppTheme.grey,
                                 ),
                               ],
@@ -157,7 +158,8 @@ class _HomeTabState extends State<HomeTab>
                               style: AppTheme.body1,
                             ),
                             Icon(
-                              Icons.arrow_forward,
+                              Icons.arrow_forward_ios,
+                              size: 15,
                               color: AppTheme.grey,
                             ),
                           ],

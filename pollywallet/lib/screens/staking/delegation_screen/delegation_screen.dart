@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/screens/staking/delegation_screen/ui_elements/delegation_card.dart';
@@ -18,8 +19,33 @@ class DelegationScreen extends StatefulWidget {
 }
 
 class _DelegationScreenState extends State<DelegationScreen> {
+  TextEditingController controller = TextEditingController();
+  SearchBar searchBar;
+  String searchStr = "";
+  bool showSearch = false;
+  AppBar buildAppBar(BuildContext context) {
+    return new AppBar(
+        title: new Text('All Delegations'),
+        actions: [searchBar.getSearchAction(context)]);
+  }
+
+  _DelegationScreenState() {
+    searchBar = new SearchBar(
+        inBar: showSearch,
+        buildDefaultAppBar: buildAppBar,
+        setState: setState,
+        hintText: "Token Name",
+        controller: controller,
+        showClearButton: true,
+        onSubmitted: onSubmitted,
+        onCleared: onClear,
+        onClosed: onClose);
+  }
+
   @override
   void initState() {
+    controller.addListener(_search);
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       var validatorListCubit = context.read<ValidatorsdataCubit>();
@@ -35,14 +61,7 @@ class _DelegationScreenState extends State<DelegationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppTheme.backgroundWhite,
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'All Delegations',
-            style: AppTheme.listTileTitle,
-          ),
-          actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
-        ),
+        appBar: searchBar.build(context),
         body: BlocBuilder<CovalentTokensListMaticCubit,
             CovalentTokensListMaticState>(
           builder: (context, tokenState) {
@@ -92,6 +111,9 @@ class _DelegationScreenState extends State<DelegationScreen> {
                             .first
                             .quoteRate;
                         BigInt reward = validator.reward;
+                        if (!_searchCond(validator)) {
+                          return Container();
+                        }
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: DelegationCard(
@@ -148,6 +170,35 @@ class _DelegationScreenState extends State<DelegationScreen> {
             });
           },
         ));
+  }
+
+  void onSubmitted(String value) {}
+  void onClear() {
+    setState(() {
+      searchStr = "";
+
+      controller.text = "";
+    });
+  }
+
+  _search() {
+    setState(() {
+      searchStr = controller.text;
+    });
+  }
+
+  void onClose() {
+    setState(() {
+      searchStr = "";
+      controller.text = "";
+      showSearch = false;
+    });
+  }
+
+  bool _searchCond(ValidatorInfo validator) {
+    var name = validator.name;
+
+    return name.toLowerCase().contains(searchStr.toLowerCase());
   }
 
   _refreshLoop(CovalentTokensListMaticCubit cubit, DelegationsDataCubit dCubit,

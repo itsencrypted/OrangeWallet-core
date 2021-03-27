@@ -239,7 +239,6 @@ class _CoinProfileState extends State<CoinProfile> {
                                           horizontal: 10.0),
                                       child: ExpansionTile(
                                         title: Text("Transaction History"),
-                                        trailing: Icon(Icons.arrow_forward),
                                         children: [
                                           Text("All transactions",
                                               style: AppTheme.subtitle),

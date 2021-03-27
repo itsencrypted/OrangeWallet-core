@@ -90,21 +90,28 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    ListTile(
-                                      title: Text(
-                                        "Address",
-                                        style: AppTheme.label_medium,
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(showAddress
-                                            ? Icons.arrow_drop_up
-                                            : Icons.arrow_drop_down),
-                                        onPressed: () {
-                                          setState(() {
-                                            showAddress = !showAddress;
-                                          });
-                                        },
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Address",
+                                          style: AppTheme.label_medium,
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            showAddress
+                                                ? Icons.keyboard_arrow_up
+                                                : Icons.keyboard_arrow_down,
+                                            color: AppTheme.warmgray_600,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showAddress = !showAddress;
+                                            });
+                                          },
+                                        ),
+                                      ],
                                     ),
                                     showAddress
                                         ? Container(
@@ -245,21 +252,28 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                       height: 1,
                                       color: AppTheme.warmgray_100,
                                     ),
-                                    ListTile(
-                                      title: Text(
-                                        "Amount",
-                                        style: AppTheme.label_medium,
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(showAmount
-                                            ? Icons.arrow_drop_up
-                                            : Icons.arrow_drop_down),
-                                        onPressed: () {
-                                          setState(() {
-                                            showAmount = !showAmount;
-                                          });
-                                        },
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Amount",
+                                          style: AppTheme.label_medium,
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            showAmount
+                                                ? Icons.keyboard_arrow_up
+                                                : Icons.keyboard_arrow_down,
+                                            color: AppTheme.warmgray_600,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showAmount = !showAmount;
+                                            });
+                                          },
+                                        ),
+                                      ],
                                     ),
                                     showAmount
                                         ? Column(

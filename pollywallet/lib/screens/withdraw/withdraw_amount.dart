@@ -84,21 +84,27 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            ListTile(
-                              title: Text(
-                                "Amount",
-                                style: AppTheme.label_medium,
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(showAmount
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down),
-                                onPressed: () {
-                                  setState(() {
-                                    showAmount = !showAmount;
-                                  });
-                                },
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Amount",
+                                  style: AppTheme.label_medium,
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    showAmount
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: AppTheme.warmgray_600,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      showAmount = !showAmount;
+                                    });
+                                  },
+                                ),
+                              ],
                             ),
                             showAmount
                                 ? Column(
@@ -246,217 +252,6 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                       color: Colors.white,
                     )),
               ),
-            );
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    args == 3
-                        ? CupertinoSegmentedControl<int>(
-                            pressedColor:
-                                AppTheme.somewhatYellow.withOpacity(0.9),
-                            groupValue: index,
-                            selectedColor:
-                                AppTheme.somewhatYellow.withOpacity(0.9),
-                            borderColor:
-                                AppTheme.somewhatYellow.withOpacity(0.01),
-                            unselectedColor:
-                                AppTheme.somewhatYellow.withOpacity(0.9),
-                            padding: EdgeInsets.all(10),
-                            children: {
-                              0: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 3, horizontal: 5),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(3))),
-                                  elevation: index == 0 ? 1 : 0,
-                                  color: index == 0
-                                      ? AppTheme.backgroundWhite
-                                      : AppTheme.somewhatYellow
-                                          .withOpacity(0.01),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    child: Text(
-                                      "POS",
-                                      style: AppTheme.body1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              1: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 3, horizontal: 5),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(3))),
-                                  elevation: index == 1 ? 1 : 0,
-                                  color: index == 1
-                                      ? AppTheme.backgroundWhite
-                                      : AppTheme.somewhatYellow
-                                          .withOpacity(0.01),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10),
-                                    child: Text(
-                                      "PLASMA",
-                                      style: AppTheme.body1,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            },
-                            onValueChanged: (val) {
-                              setState(() {
-                                index = val;
-                                if (val == 0) {
-                                  bridge = 1;
-                                } else {
-                                  bridge = 2;
-                                }
-                              });
-                            })
-                        : args == 1
-                            ? Text("POS Bridge", style: AppTheme.headline)
-                            : args == 2
-                                ? Text(
-                                    "Plasma Bridge",
-                                    style: AppTheme.headline,
-                                  )
-                                : Container(),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: TextFormField(
-                        controller: _amount,
-                        keyboardAppearance: Brightness.dark,
-                        textAlign: TextAlign.center,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (val) => (val == "" || val == null) ||
-                                (double.tryParse(val) == null ||
-                                    (double.tryParse(val) < 0 ||
-                                        double.tryParse(val) > balance))
-                            ? "Invalid Amount"
-                            : null,
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        style: AppTheme.bigLabel,
-                        decoration: InputDecoration(
-                          hintText: "Amount",
-                          hintStyle: AppTheme.body1,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "\$" +
-                          FiatCryptoConversions.cryptoToFiat(
-                                  double.tryParse(
-                                      _amount.text == "" ? "0" : _amount.text),
-                                  token.quoteRate)
-                              .toString(),
-                      style: AppTheme.bigLabel,
-                    )
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    bridge == 2
-                        ? ListTile(
-                            leading: ClipOval(
-                              clipBehavior: Clip.antiAlias,
-                              child: Container(
-                                child: Text("!",
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        color: AppTheme.black,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            title: Text("Note"),
-                            subtitle: Text(
-                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                            isThreeLine: true,
-                          )
-                        : Container(),
-                    SafeArea(
-                      child: ListTile(
-                        leading: FlatButton(
-                          onPressed: () {
-                            if (index == 0) {
-                              setState(() {
-                                _amount.text = balance.toString();
-                              });
-                            } else {
-                              setState(() {
-                                _amount.text =
-                                    FiatCryptoConversions.cryptoToFiat(
-                                            balance, token.quoteRate)
-                                        .toString();
-                              });
-                            }
-                          },
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          child: ClipOval(
-                              child: Material(
-                            color: AppTheme.secondaryColor.withOpacity(0.3),
-                            child: SizedBox(
-                                height: 56,
-                                width: 56,
-                                child: Center(
-                                  child: Text(
-                                    "Max",
-                                    style: AppTheme.title,
-                                  ),
-                                )),
-                          )),
-                        ),
-                        title: Text(
-                          "Balance",
-                          style: AppTheme.subtitle,
-                        ),
-                        subtitle: Text(
-                          balance.toStringAsFixed(2) + " " + token.contractName,
-                          style: AppTheme.title,
-                        ),
-                        trailing: FlatButton(
-                          onPressed: () {
-                            _sendWithDrawTransaction(state, context);
-                          },
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          child: ClipOval(
-                              child: Material(
-                            color: AppTheme.primaryColor,
-                            child: SizedBox(
-                                height: 56,
-                                width: 56,
-                                child: Center(
-                                  child:
-                                      Icon(Icons.check, color: AppTheme.white),
-                                )),
-                          )),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
             );
           } else {
             return Center(child: Text("Something went Wrong"));

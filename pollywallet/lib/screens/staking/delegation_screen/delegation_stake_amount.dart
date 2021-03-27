@@ -166,21 +166,28 @@ class _DelegationAmountState extends State<DelegationAmount> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  ListTile(
-                                    title: Text(
-                                      "Amount",
-                                      style: AppTheme.label_medium,
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(showAmount
-                                          ? Icons.arrow_drop_up
-                                          : Icons.arrow_drop_down),
-                                      onPressed: () {
-                                        setState(() {
-                                          showAmount = !showAmount;
-                                        });
-                                      },
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Amount",
+                                        style: AppTheme.label_medium,
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          showAmount
+                                              ? Icons.keyboard_arrow_up
+                                              : Icons.keyboard_arrow_down,
+                                          color: AppTheme.warmgray_600,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            showAmount = !showAmount;
+                                          });
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   showAmount
                                       ? Column(
@@ -288,118 +295,6 @@ class _DelegationAmountState extends State<DelegationAmount> {
                         SizedBox(),
                         SizedBox(
                           height: AppTheme.buttonHeight_44,
-                        )
-                      ],
-                    );
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          validator.name,
-                          style: AppTheme.title,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: TextFormField(
-                                controller: _amount,
-                                keyboardAppearance: Brightness.dark,
-                                textAlign: TextAlign.center,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (val) => (val == "" ||
-                                            val == null) ||
-                                        (double.tryParse(val) == null ||
-                                            (double.tryParse(val) < 1 ||
-                                                double.tryParse(val) > balance))
-                                    ? "Stake atleast 1 Matic and less than your balance"
-                                    : null,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                style: AppTheme.bigLabel,
-                                decoration: InputDecoration(
-                                  hintText: "Amount",
-                                  hintStyle: AppTheme.body1,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "\$" +
-                                  FiatCryptoConversions.cryptoToFiat(
-                                          double.tryParse(_amount.text == ""
-                                              ? "0"
-                                              : _amount.text),
-                                          matic.quoteRate)
-                                      .toString(),
-                              style: AppTheme.bigLabel,
-                            )
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SafeArea(
-                              child: ListTile(
-                                leading: FlatButton(
-                                  onPressed: () {
-                                    _amount.text = balance.toString();
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.secondaryColor
-                                        .withOpacity(0.3),
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Text(
-                                            "Max",
-                                            style: AppTheme.title,
-                                          ),
-                                        )),
-                                  )),
-                                ),
-                                title: Text(
-                                  "Balance",
-                                  style: AppTheme.subtitle,
-                                ),
-                                subtitle: Text(
-                                  balance.toStringAsFixed(2) +
-                                      " " +
-                                      matic.contractName,
-                                  style: AppTheme.title,
-                                ),
-                                trailing: FlatButton(
-                                  onPressed: () {
-                                    //print(validator.contractAddress);
-                                    _delegate(validator.contractAddress, matic);
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.primaryColor,
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Icon(Icons.check,
-                                              color: AppTheme.white),
-                                        )),
-                                  )),
-                                ),
-                              ),
-                            ),
-                          ],
                         )
                       ],
                     );

@@ -35,7 +35,6 @@ class _DepositScreenState extends State<DepositScreen> {
   double balance;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
-  TabController _controller;
   bool showAmount;
 
   var ethCubit;
@@ -54,23 +53,7 @@ class _DepositScreenState extends State<DepositScreen> {
     ethCubit = context.read<CovalentTokensListEthCubit>();
 
     this.args = ModalRoute.of(context).settings.arguments;
-    // _controller = TabController(length: 2, vsync: this);
 
-    // if (!_isInitialized) {
-    //   if (args == 1) {
-    //     _controller.animateTo(0);
-    //   }
-    //   if (args == 2) {
-    //     _controller.animateTo(1);
-    //   }
-    //   _controller.addListener(() {
-    //     if (_controller.index == 0) {
-    //       bridge = 1;
-    //     } else {
-    //       bridge = 2;
-    //     }
-    //   });
-    // }
     this.data = context.read<DepositDataCubit>();
 
     if (args == 3 && bridge == 0) {
@@ -108,21 +91,27 @@ class _DepositScreenState extends State<DepositScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ListTile(
-                            title: Text(
-                              "Amount",
-                              style: AppTheme.label_medium,
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(showAmount
-                                  ? Icons.arrow_drop_up
-                                  : Icons.arrow_drop_down),
-                              onPressed: () {
-                                setState(() {
-                                  showAmount = !showAmount;
-                                });
-                              },
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Amount",
+                                style: AppTheme.label_medium,
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  showAmount
+                                      ? Icons.keyboard_arrow_up
+                                      : Icons.keyboard_arrow_down,
+                                  color: AppTheme.warmgray_600,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    showAmount = !showAmount;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                           showAmount
                               ? Column(
@@ -268,350 +257,12 @@ class _DepositScreenState extends State<DepositScreen> {
                   )),
             ),
           );
-        }
+        } else
+          return Center(
+            child: Text("Something Went wrong."),
+          );
       });
     });
-
-    return Scaffold(
-        appBar: AppBar(
-            title: Text("Deposit to Matic"),
-            bottom: args == 3
-                ? ColoredTabBar(
-                    tabBar: TabBar(
-                      controller: _controller,
-                      labelStyle: AppTheme.tabbarTextStyle,
-                      unselectedLabelStyle: AppTheme.tabbarTextStyle,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppTheme.white),
-                      tabs: [
-                        Tab(
-                          child: Align(
-                            child: Text(
-                              'POS',
-                              style: AppTheme.tabbarTextStyle,
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Align(
-                            child: Text(
-                              'Plasma',
-                              style: AppTheme.tabbarTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    borderRadius: AppTheme.cardRadius,
-                    color: AppTheme.tabbarBGColor,
-                    tabbarMargin: AppTheme.cardRadius,
-                    tabbarPadding: AppTheme.paddingHeight / 4,
-                  )
-                : null),
-        body: TabBarView(
-          physics: args == 3 ? ScrollPhysics() : NeverScrollableScrollPhysics(),
-          controller: _controller,
-          children: [
-            BlocBuilder<DepositDataCubit, DepositDataState>(
-              builder: (BuildContext context, state) {
-                return BlocBuilder<CovalentTokensListEthCubit,
-                    CovalentTokensListEthState>(builder: (context, tokenState) {
-                  if (state is DepositDataFinal &&
-                      tokenState is CovalentTokensListEthLoaded) {
-                    var token = tokenState.covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractAddress ==
-                            state.data.token.contractAddress)
-                        .first;
-                    var balance = EthConversions.weiToEth(
-                        BigInt.parse(token.balance), token.contractDecimals);
-                    this.balance = balance;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "POS bridge",
-                          style: AppTheme.title,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: TextFormField(
-                                controller: _amount,
-                                keyboardAppearance: Brightness.dark,
-                                textAlign: TextAlign.center,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (val) => (val == "" ||
-                                            val == null) ||
-                                        (double.tryParse(val) == null ||
-                                            (double.tryParse(val) < 0 ||
-                                                double.tryParse(val) > balance))
-                                    ? "Invalid Amount"
-                                    : null,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                style: AppTheme.bigLabel,
-                                decoration: InputDecoration(
-                                  hintText: "Amount",
-                                  hintStyle: AppTheme.body1,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "\$" +
-                                  FiatCryptoConversions.cryptoToFiat(
-                                          double.parse(_amount.text == ""
-                                              ? "0"
-                                              : _amount.text),
-                                          state.data.token.quoteRate)
-                                      .toString(),
-                              style: AppTheme.bigLabel,
-                            )
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SafeArea(
-                              child: ListTile(
-                                leading: FlatButton(
-                                  onPressed: () {
-                                    if (index == 0) {
-                                      setState(() {
-                                        _amount.text = balance.toString();
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _amount.text =
-                                            FiatCryptoConversions.cryptoToFiat(
-                                                    balance,
-                                                    state.data.token.quoteRate)
-                                                .toString();
-                                      });
-                                    }
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.secondaryColor
-                                        .withOpacity(0.3),
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Text(
-                                            "Max",
-                                            style: AppTheme.title,
-                                          ),
-                                        )),
-                                  )),
-                                ),
-                                title: Text(
-                                  "Balance",
-                                  style: AppTheme.subtitle,
-                                ),
-                                subtitle: Text(
-                                  balance.toStringAsFixed(2) +
-                                      " " +
-                                      state.data.token.contractName,
-                                  style: AppTheme.title,
-                                ),
-                                trailing: FlatButton(
-                                  onPressed: () {
-                                    _sendDepositTransaction(
-                                        state, token, context);
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.primaryColor,
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Icon(Icons.check,
-                                              color: AppTheme.white),
-                                        )),
-                                  )),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    );
-                  } else {
-                    return Center(child: Text("Something went Wrong"));
-                  }
-                });
-              },
-            ),
-            BlocBuilder<DepositDataCubit, DepositDataState>(
-              builder: (BuildContext context, state) {
-                return BlocBuilder<CovalentTokensListEthCubit,
-                    CovalentTokensListEthState>(builder: (context, tokenState) {
-                  if (state is DepositDataFinal &&
-                      tokenState is CovalentTokensListEthLoaded) {
-                    var token = tokenState.covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractAddress ==
-                            state.data.token.contractAddress)
-                        .first;
-                    var balance = EthConversions.weiToEth(
-                        BigInt.parse(token.balance), token.contractDecimals);
-                    this.balance = balance;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Plasma Bridge", style: AppTheme.title),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              child: TextFormField(
-                                controller: _amount,
-                                keyboardAppearance: Brightness.dark,
-                                textAlign: TextAlign.center,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (val) => (val == "" ||
-                                            val == null) ||
-                                        (double.tryParse(val) == null ||
-                                            (double.tryParse(val) < 0 ||
-                                                double.tryParse(val) > balance))
-                                    ? "Invalid Amount"
-                                    : null,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                style: AppTheme.bigLabel,
-                                decoration: InputDecoration(
-                                  hintText: "Amount",
-                                  hintStyle: AppTheme.body1,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "\$" +
-                                  FiatCryptoConversions.cryptoToFiat(
-                                          double.parse(_amount.text == ""
-                                              ? "0"
-                                              : _amount.text),
-                                          state.data.token.quoteRate)
-                                      .toString(),
-                              style: AppTheme.bigLabel,
-                            )
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            ),
-                            SafeArea(
-                              child: ListTile(
-                                leading: FlatButton(
-                                  onPressed: () {
-                                    if (index == 0) {
-                                      setState(() {
-                                        _amount.text = balance.toString();
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _amount.text =
-                                            FiatCryptoConversions.cryptoToFiat(
-                                                    balance,
-                                                    state.data.token.quoteRate)
-                                                .toString();
-                                      });
-                                    }
-                                  },
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.secondaryColor
-                                        .withOpacity(0.3),
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Text(
-                                            "Max",
-                                            style: AppTheme.title,
-                                          ),
-                                        )),
-                                  )),
-                                ),
-                                title: Text(
-                                  "Balance",
-                                  style: AppTheme.subtitle,
-                                ),
-                                subtitle: Text(
-                                  balance.toStringAsFixed(2) +
-                                      " " +
-                                      state.data.token.contractName,
-                                  style: AppTheme.title,
-                                ),
-                                trailing: FlatButton(
-                                  onPressed: () {},
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  child: ClipOval(
-                                      child: Material(
-                                    color: AppTheme.primaryColor,
-                                    child: SizedBox(
-                                        height: 56,
-                                        width: 56,
-                                        child: Center(
-                                          child: Icon(Icons.check,
-                                              color: AppTheme.white),
-                                        )),
-                                  )),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    );
-                  } else {
-                    return Center(child: Text("Something went Wrong"));
-                  }
-                });
-              },
-            ),
-          ],
-        ));
   }
 
   _sendDepositTransaction(
@@ -748,5 +399,5 @@ class _DepositScreenState extends State<DepositScreen> {
     });
   }
 }
-  // _sendDepositTransaction(
-  //                                       state, token, context);
+// _sendDepositTransaction(
+//                                       state, token, context);

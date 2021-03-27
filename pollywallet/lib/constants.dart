@@ -5,7 +5,7 @@ const String _baseIcon = "assets/icons";
 const String balanceString = "Matic Wallet Balance";
 const sendButtonColor = Color(0xff8248E5);
 const receiveButtonColor = Color(0xffEABC78);
-const String tokenIcon = "$_baseIcon/token_icon.png";
+const String tokenIcon = "$_baseIcon/icon_default.png";
 const String profitIcon = "$_baseIcon/profit.png";
 const String imageNotFoundIcon = "$_baseIcon/image_not_found.png";
 const String ethIcon = "$_baseIcon/eth_icon.png";
@@ -38,8 +38,7 @@ const erc1155ChildAbi = "assets/abi/childERC1155.json";
 // urls
 const maticIconUrl =
     "https://logos.covalenthq.com/tokens/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png";
-const tokenIconUrl =
-    "https://icon-icons.com/downloadimage.php?id=95510&root=1385/PNG/128/&file=eur-crypto-cryptocurrency-cryptocurrencies-cash-money-bank-payment_95510.png";
+const tokenIconUrl = "https://i.imgur.com/p1fnaM0.png";
 // Routes
 const String appLandingRoute = "appLandingRoute";
 const String importWalletRoute = "importWalletRoute";

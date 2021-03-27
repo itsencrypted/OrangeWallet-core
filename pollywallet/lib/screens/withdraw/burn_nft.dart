@@ -207,65 +207,26 @@ class _NftBurnState extends State<NftBurn> {
                             )
                           : Container(),
                       SafeArea(
-                        child: ListTile(
-                          leading: FlatButton(
-                            onPressed: () {
-                              if (index == 0) {
-                                setState(() {
-                                  _amount.text = balance.toString();
-                                });
-                              } else {
-                                setState(() {
-                                  _amount.text =
-                                      FiatCryptoConversions.cryptoToFiat(
-                                              balance, token.quoteRate)
-                                          .toString();
-                                });
-                              }
-                            },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.secondaryColor.withOpacity(0.3),
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: Text(
-                                      "Max",
-                                      style: AppTheme.title,
-                                    ),
-                                  )),
-                            )),
-                          ),
-                          title: Text(
-                            "Balance",
-                            style: AppTheme.subtitle,
-                          ),
-                          subtitle: Text(
-                            balance.toStringAsFixed(2) +
-                                " " +
-                                token.contractName,
-                            style: AppTheme.title,
-                          ),
-                          trailing: FlatButton(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: AppTheme.buttonHeight_44,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: AppTheme.paddingHeight12),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                backgroundColor: AppTheme.purple_600,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.buttonRadius))),
                             onPressed: () {
                               _sendWithDrawTransaction(state, token, context);
                             },
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            child: ClipOval(
-                                child: Material(
-                              color: AppTheme.primaryColor,
-                              child: SizedBox(
-                                  height: 56,
-                                  width: 56,
-                                  child: Center(
-                                    child: Icon(Icons.check,
-                                        color: AppTheme.white),
-                                  )),
-                            )),
+                            child: Text(
+                              'Withdraw',
+                              style: AppTheme.label_medium
+                                  .copyWith(color: AppTheme.lightgray_700),
+                            ),
                           ),
                         ),
                       ),

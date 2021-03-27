@@ -23,37 +23,42 @@ class NftTile extends StatelessWidget {
       type = "notFound";
     }
 
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.85,
-      height: MediaQuery.of(context).size.height * 0.43,
-      child: Card(
-        shape: AppTheme.cardShape,
-        elevation: AppTheme.cardElevations,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: type == "svg"
-                  ? SvgPicture.network(url)
-                  : type == "notFound"
-                      ? Image.asset(imageNotFoundIcon)
-                      : Image.network(data.externalData.image,
-                          errorBuilder: (context, _, __) {
-                          return Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Image.asset(imageNotFoundIcon),
-                          );
-                        }),
-            ),
-            ListTile(
-              title: Text(data.externalData.name),
-              subtitle: Text(
-                data.externalData.description,
-                overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.43,
+        child: Card(
+          shape: AppTheme.cardShape,
+          elevation: AppTheme.cardElevations,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: type == "svg"
+                      ? SvgPicture.network(url)
+                      : type == "notFound"
+                          ? Image.asset(imageNotFoundIcon)
+                          : Image.network(data.externalData.image,
+                              errorBuilder: (context, _, __) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Image.asset(imageNotFoundIcon),
+                              );
+                            }),
+                ),
               ),
-            )
-          ],
+              ListTile(
+                title: Text(data.externalData.name),
+                subtitle: Text(
+                  data.externalData.description,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

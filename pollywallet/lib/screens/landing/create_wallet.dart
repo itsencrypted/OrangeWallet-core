@@ -186,6 +186,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
       return;
     }
 
-    Navigator.pushNamed(context, landingSetPinRoute, arguments: seed);
+    Navigator.pushNamed(context, landingSetPinRoute,
+        arguments: [seed.trim(), true]);
   }
 }

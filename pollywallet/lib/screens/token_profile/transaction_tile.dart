@@ -23,21 +23,21 @@ class TransactionTile extends StatelessWidget {
               title: sent ? Text("Sent") : Text("Recieved"),
               subtitle: sent
                   ? Text(
-                      "To ${data.transfers[data.transfers.length - 1].toAddress}",
+                      "${data.transfers[data.transfers.length - 1].toAddress}",
                       overflow: TextOverflow.clip,
                     )
                   : Text(
-                      "From ${data.transfers[data.transfers.length - 1].fromAddress}",
+                      "${data.transfers[data.transfers.length - 1].fromAddress}",
                       overflow: TextOverflow.clip,
                     ),
               trailing: sent
                   ? Text(
-                      "-${value}",
+                      "- ${value}",
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
                     )
                   : Text(
-                      "+${value}",
+                      "+ ${value}",
                       style: TextStyle(
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),

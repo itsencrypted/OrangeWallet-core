@@ -480,4 +480,23 @@ class BoxUtils {
     await box.close();
     return;
   }
+
+  static Future<void> setNewMnemonicBox(
+      bool status // true - verified, false not verified
+      ) async {
+    Box<bool> box = await Hive.openBox<bool>(newMnemonicBox);
+    box.add(status);
+    return;
+  }
+
+  static Future<bool> getNewMnemonicBox() async {
+    Box<bool> box = await Hive.openBox<bool>(newMnemonicBox);
+    var status;
+    try {
+      status = box.getAt(0);
+    } catch (e) {
+      return false;
+    }
+    return status;
+  }
 }

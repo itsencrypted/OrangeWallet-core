@@ -19,6 +19,7 @@ class _PickTokenListState extends State<PickTokenList> {
   SearchBar searchBar;
   String searchStr = "";
   bool showSearch = false;
+  bool submitted = false;
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
         title: new Text('All Tokens'),
@@ -123,10 +124,10 @@ class _PickTokenListState extends State<PickTokenList> {
   }
 
   void onSubmitted(String value) {}
+
   void onClear() {
     setState(() {
       searchStr = "";
-
       controller.text = "";
     });
   }

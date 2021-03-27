@@ -76,9 +76,9 @@ class NotificationHelper {
   static Future<int> checkForActionsCount() async {
     var counter = 0;
     var withdraws = await BoxUtils.getWithdrawList();
-    var pendingWithdraws =
-        withdraws.where((element) => element.exited == false).toList();
-
+    var pendingWithdraws = withdraws
+        .where((element) => (element.exited == false || element.exited == null))
+        .toList();
     List<Future> pendingWithdrawsFutures = <Future>[];
     for (int i = 0; i < pendingWithdraws.length; i++) {
       if (pendingWithdraws[i].bridge == 0) {
@@ -103,6 +103,7 @@ class NotificationHelper {
     }
     for (int i = 0; i < pendingWithdrawsFutures.length; i++) {
       var resp = await pendingWithdrawsFutures[i];
+      print(resp);
       if (resp == -4 || resp == -9) {
         counter++;
       }

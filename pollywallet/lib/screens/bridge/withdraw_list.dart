@@ -49,7 +49,7 @@ class _WithdrawTokenListState extends State<WithdrawTokenList> {
               ),
             );
           }
-          var ls = state.covalentTokenList.data.items.reversed.toList();
+          var ls = state.covalentTokenList.data.items.toList();
           return ListView.builder(
             itemCount: ls.length,
             itemBuilder: (context, index) {

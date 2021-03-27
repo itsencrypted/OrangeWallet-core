@@ -8,7 +8,7 @@ class Payload {
   Payload.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     result = json['result'];
-    error = json['error'];
+    error = json['error'].toString();
   }
 
   Map<String, dynamic> toJson() {

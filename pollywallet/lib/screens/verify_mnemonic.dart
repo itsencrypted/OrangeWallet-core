@@ -106,7 +106,7 @@ class _VerifyMnemonicState extends State<VerifyMnemonic> {
                                 width: 1, color: AppTheme.purple_600)),
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: TextFormField(
-                          maxLines: null,
+                          maxLines: 2,
                           controller: seed,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (val) => val.trim().split(" ").length == 12

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsTab extends StatefulWidget {
   @override
@@ -76,7 +77,10 @@ class _SettingsTabState extends State<SettingsTab>
               listTile(
                   title: 'Report a bug',
                   leading: SvgPicture.asset(bugsIconsvg),
-                  onTap: () {}),
+                  onTap: () {
+                    _launchURL(
+                        "https://github.com/PollyWallet/PollyWallet-core/issues/new");
+                  }),
             ]),
           ),
         ],
@@ -110,6 +114,14 @@ class _SettingsTabState extends State<SettingsTab>
         ],
       ),
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override

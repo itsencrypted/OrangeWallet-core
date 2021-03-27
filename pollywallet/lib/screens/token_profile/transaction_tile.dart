@@ -35,12 +35,6 @@ class TransactionTile extends StatelessWidget {
                   Text(sent ? "- $value" : "+ $value",
                       style: AppTheme.label_medium.copyWith(
                           color: sent ? AppTheme.red_500 : AppTheme.teal_500)),
-                  // Text(
-                  //   EthConversions.weiToEth(BigInt.parse(value ?? 0), 18)
-                  //           .toString() +
-                  //       " MATIC",
-                  //   style: AppTheme.subtitle,
-                  // ),
                 ],
               ),
               title: Text(

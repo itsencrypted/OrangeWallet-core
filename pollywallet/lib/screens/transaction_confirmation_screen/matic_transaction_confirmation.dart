@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
+import 'package:pollywallet/screens/token_profile/transaction_tile.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
@@ -107,7 +108,13 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                   children: [
                                     (args.type == TransactionType.BURNPLASMA ||
                                             args.type ==
-                                                TransactionType.BURNPOS)
+                                                TransactionType.BURNPOS ||
+                                            args.type ==
+                                                TransactionType.EXITPLASMA ||
+                                            args.type ==
+                                                TransactionType.EXITPOS ||
+                                            args.type ==
+                                                TransactionType.CONFIRMPLASMA)
                                         ? MaticToEthIndicator()
                                         : Container(),
                                     Divider(color: AppTheme.grey),

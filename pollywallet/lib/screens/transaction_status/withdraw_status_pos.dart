@@ -408,7 +408,7 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
         ),
         subtitle: Text(
           subtitle,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,

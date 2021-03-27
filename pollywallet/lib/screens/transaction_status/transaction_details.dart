@@ -263,7 +263,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         ),
         subtitle: Text(
           subtitle,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
         ),
         trailing: trailing);
   }

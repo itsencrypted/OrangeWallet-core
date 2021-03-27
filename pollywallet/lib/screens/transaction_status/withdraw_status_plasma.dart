@@ -37,7 +37,8 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
     'Checkpointed',
     'Confirm',
     'Challenge period',
-    'Exit',
+    'Ready for Exit',
+    'Exiting',
     'Exited',
   ];
   final List<String> messages = [
@@ -45,8 +46,9 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
     'Tokens burnt',
     'Burn has been Checkpointed',
     'confirm',
+    'Waiting for challenge period to be over',
     'exit',
-    'exiting',
+    'Exit in progress',
     'Withdraw succesful',
   ];
   @override
@@ -89,21 +91,21 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
           } else if (statusCode == -4) {
             index = 3;
           } else if (statusCode == -10) {
-            index = 6;
+            index = 7;
           } else if (statusCode == -5) {
             index = 4;
           } else if (statusCode == -6) {
             index = 5;
             failed = true;
           } else if (statusCode == -7) {
-            index = 5;
+            index = 4;
             failed = true;
           } else if (statusCode == -8) {
-            index = 5;
-          } else if (statusCode == -9) {
             index = 4;
-          } else if (statusCode == -12) {
+          } else if (statusCode == -9) {
             index = 5;
+          } else if (statusCode == -12) {
+            index = 6;
           }
           if (statusCode == -2) {
             failed = true;
@@ -426,7 +428,7 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
         ),
         subtitle: Text(
           subtitle,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,

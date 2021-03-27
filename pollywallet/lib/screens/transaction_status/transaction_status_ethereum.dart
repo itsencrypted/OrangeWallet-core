@@ -406,7 +406,7 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
           subtitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
         ),
         trailing: trailing);
   }

@@ -355,7 +355,7 @@ class _DepositStatusState extends State<DepositStatus> {
         ),
         subtitle: Text(
           subtitle,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,

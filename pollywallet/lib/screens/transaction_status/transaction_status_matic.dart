@@ -397,7 +397,7 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
           subtitle,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: AppTheme.title,
+          style: AppTheme.label_medium,
         ),
         trailing: trailing);
   }

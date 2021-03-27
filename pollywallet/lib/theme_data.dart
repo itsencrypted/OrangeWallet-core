@@ -167,6 +167,14 @@ class AppTheme {
     letterSpacing: 0.2,
     color: warmgray_600,
   );
+  static const TextStyle body_small_bold = TextStyle(
+    // body2 -> body1
+    fontFamily: fontName,
+    fontWeight: FontWeight.w500,
+    fontSize: 13,
+    letterSpacing: 0.2,
+    color: warmgray_600,
+  );
 
   static const TextStyle body_xsmall = TextStyle(
     // body2 -> body1

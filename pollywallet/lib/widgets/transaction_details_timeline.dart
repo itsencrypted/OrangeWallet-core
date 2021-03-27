@@ -42,7 +42,7 @@ class TransactionDetailsTimeline extends StatelessWidget {
               children: [
                 Text(
                   details[index],
-                  style: AppTheme.label_xsmall,
+                  style: AppTheme.body_small_bold,
                 ),
                 messages[index] == "sup"
                     ? index == doneTillIndex

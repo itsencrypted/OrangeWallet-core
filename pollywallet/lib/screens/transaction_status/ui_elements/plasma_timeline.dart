@@ -66,10 +66,7 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  widget.details[index],
-                  style: AppTheme.label_xsmall,
-                ),
+                Text(widget.details[index], style: AppTheme.body_small_bold),
                 widget.messages[index] == "challenge"
                     ? endTime == null
                         ? Text("Waiting for challenge period to be over")

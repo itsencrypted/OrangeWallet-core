@@ -18,7 +18,9 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
   TextEditingController pin = new TextEditingController();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   String seed;
+  List args;
   bool failed = false;
+  bool newMnemonic;
   BoxDecoration get _pinPutDecoration {
     return BoxDecoration(
       color: AppTheme.warmgray_100,
@@ -31,7 +33,9 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    seed = ModalRoute.of(context).settings.arguments;
+    args = (ModalRoute.of(context).settings.arguments);
+    seed = args[0];
+    newMnemonic = args[1];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -209,7 +213,7 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
           encrypted[0], encrypted[1], pkAddr[1], encrypted[2]);
       BoxUtils.setNetworkConfig(0);
     });
-
+    BoxUtils.setNewMnemonicBox(!newMnemonic);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     Navigator.pushNamedAndRemoveUntil(
         context, homeRoute, (Route<dynamic> route) => false);

@@ -13,6 +13,7 @@ import 'package:pollywallet/screens/wallet_tab/transfer_asset_card.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:pollywallet/theme_data.dart';
+import 'package:pollywallet/utils/misc/box.dart';
 import 'package:pollywallet/utils/misc/notification_helper.dart';
 
 class HomeTab extends StatefulWidget {
@@ -24,6 +25,9 @@ class _HomeTabState extends State<HomeTab>
     with AutomaticKeepAliveClientMixin<HomeTab> {
   int counter = 0;
   CovalentTokensListMaticState state;
+  bool verified = true;
+  var pushed = false;
+  var amount = 0.0;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -37,6 +41,15 @@ class _HomeTabState extends State<HomeTab>
         });
       });
       _refreshLoop(tokenListCubit);
+    });
+    BoxUtils.getNewMnemonicBox().then((value) {
+      setState(() {
+        if (value == null) {
+          verified = false;
+        } else {
+          verified = value;
+        }
+      });
     });
 
     super.initState();
@@ -66,6 +79,7 @@ class _HomeTabState extends State<HomeTab>
               amt += element.quote;
             });
           }
+          amount = amt;
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -211,6 +225,12 @@ class _HomeTabState extends State<HomeTab>
   }
 
   _refreshLoop(CovalentTokensListMaticCubit cubit) {
+    Future.delayed(const Duration(milliseconds: 5000), () {
+      if (!verified && amount > 0 && pushed == false) {
+        pushed = true;
+        Navigator.pushNamed(context, verifyMnemonic);
+      }
+    });
     new Timer.periodic(Duration(seconds: 30), (Timer t) {
       if (mounted) {
         cubit.refresh();

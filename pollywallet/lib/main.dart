@@ -28,6 +28,7 @@ import 'package:pollywallet/screens/transaction_status/transaction_status_matic.
 import 'package:pollywallet/screens/transaction_status/withdraw_status_plasma.dart';
 import 'package:pollywallet/screens/transaction_status/withdraw_status_pos.dart';
 import 'package:pollywallet/screens/transak_webview.dart';
+import 'package:pollywallet/screens/verify_mnemonic.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_android.dart';
 import 'package:pollywallet/screens/wallet_connect/wallet_connect_ios.dart';
 import 'package:pollywallet/screens/withdraw/burn_erc1155.dart';
@@ -190,6 +191,7 @@ class _PollyWalletState extends State<PollyWallet> {
               withdrawStatusPosRoute: (context) => WithdrawStatusPos(),
               withdrawStatusPlasmaRoute: (context) => WithdrawStatusPlasma(),
               selectBridgeRoute: (context) => SelectBridge(),
+              verifyMnemonic: (context) => VerifyMnemonic()
             },
             home: current),
       ),

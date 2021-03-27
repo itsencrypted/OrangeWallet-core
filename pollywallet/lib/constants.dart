@@ -91,6 +91,7 @@ const String splashRoute = "splashRoute";
 const String withdrawStatusPosRoute = "withdrawStatusPosRoute";
 const String withdrawStatusPlasmaRoute = "withdrawStatusPlasmaRoute";
 const String selectBridgeRoute = "selectBridgeRoute";
+const String verifyMnemonic = "verifyMnemonic";
 
 //strings
 const endpoint = "endpoint";
@@ -133,6 +134,7 @@ const wcUri = "walletConnectUri";
 const depositTransactionDbBox = "depositTransactionDbBox";
 const withdrawdbBox = "withdrawDbBox";
 const unbondDbBox = "unbondDbBox";
+const newMnemonicBox = "newMnemonicBox";
 
 //ENUMS
 enum BridgeType { PLASMA, POS, NONE, BOTH }

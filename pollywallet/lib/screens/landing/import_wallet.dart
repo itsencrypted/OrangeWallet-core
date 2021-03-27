@@ -120,6 +120,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       return;
     }
 
-    Navigator.pushNamed(context, landingSetPinRoute, arguments: seed.text);
+    Navigator.pushNamed(context, landingSetPinRoute,
+        arguments: [seed.text.trim, false]);
   }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/token_history.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
@@ -19,28 +22,41 @@ class TransactionTile extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              isThreeLine: false,
-              title: sent ? Text("Sent") : Text("Recieved"),
-              subtitle: sent
-                  ? Text(
-                      "${data.transfers[data.transfers.length - 1].toAddress}",
-                      overflow: TextOverflow.clip,
-                    )
-                  : Text(
-                      "${data.transfers[data.transfers.length - 1].fromAddress}",
-                      overflow: TextOverflow.clip,
-                    ),
-              trailing: sent
-                  ? Text(
-                      "- ${value}",
-                      style: TextStyle(
-                          color: Colors.red, fontWeight: FontWeight.bold),
-                    )
-                  : Text(
-                      "+ ${value}",
-                      style: TextStyle(
-                          color: Colors.green, fontWeight: FontWeight.bold),
-                    ),
+              // isThreeLine: true,
+              leading: Image.asset(
+                tokenIcon,
+                height: 32,
+                width: 32,
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(sent ? "- $value" : "+ $value",
+                      style: AppTheme.label_medium.copyWith(
+                          color: sent ? AppTheme.red_500 : AppTheme.teal_500)),
+                  // Text(
+                  //   EthConversions.weiToEth(BigInt.parse(value ?? 0), 18)
+                  //           .toString() +
+                  //       " MATIC",
+                  //   style: AppTheme.subtitle,
+                  // ),
+                ],
+              ),
+              title: Text(
+                sent
+                    ? "${data.transfers[data.transfers.length - 1].toAddress}"
+                    : "${data.transfers[data.transfers.length - 1].fromAddress}",
+                style: AppTheme.label_medium,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                DateFormat.yMMMEd()
+                    .add_jm()
+                    .format(DateTime.parse(data.blockSignedAt)),
+                style: AppTheme.body_small,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(0.0),

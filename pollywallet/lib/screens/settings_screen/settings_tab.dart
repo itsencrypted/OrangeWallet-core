@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/misc/credential_manager.dart';
@@ -12,53 +13,82 @@ class _SettingsTabState extends State<SettingsTab>
     with AutomaticKeepAliveClientMixin<SettingsTab> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ListView(children: [
-        listTile(
-            title: 'Account',
-            showTrailingIcon: false,
-            onTap: () {
-              Navigator.of(context).pushNamed(accountRoute);
-            }),
-        listTile(
-            title: 'Network',
-            showTrailingIcon: false,
-            onTap: () {
-              Navigator.of(context).pushNamed(networkSettingRoute);
-            }),
-        listTile(
-            title: 'Export Mnenomic',
-            showTrailingIcon: false,
-            onTap: () async {
-              final String mnemonic =
-                  await CredentialManager.getMnemonic(context);
-              Navigator.of(context)
-                  .pushNamed(exportMnemonic, arguments: mnemonic);
-            }),
-        listTile(
-            title: 'Privacy',
-            showTrailingIcon: false,
-            onTap: () {
-              print('Privacy');
-            }),
-        listTile(
-            title: 'Terms of Service',
-            showTrailingIcon: false,
-            onTap: () {
-              print('tos');
-            }),
-        listTile(
-            title: 'Report a bug',
-            showTrailingIcon: false,
-            onTap: () {
-              print('tos');
-              Navigator.pushNamed(
-                context,
-                transactionDetailsRoute,
-              );
-            }),
-      ]),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Card(
+            margin: EdgeInsets.all(AppTheme.paddingHeight12),
+            shape: AppTheme.cardShape,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Column(children: [
+              listTile(
+                  title: 'Account',
+                  leading: SvgPicture.asset(accountIconsvg),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(accountRoute);
+                  }),
+              Divider(
+                thickness: 1,
+                height: 1,
+              ),
+              listTile(
+                  title: 'Network',
+                  leading: SvgPicture.asset(networkIconsvg),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(networkSettingRoute);
+                  }),
+              Divider(
+                thickness: 1,
+                height: 1,
+              ),
+              listTile(
+                  title: 'Export Mnenomic',
+                  leading: SvgPicture.asset(exportIconsvg),
+                  onTap: () async {
+                    final String mnemonic =
+                        await CredentialManager.getMnemonic(context);
+                    Navigator.of(context)
+                        .pushNamed(exportMnemonic, arguments: mnemonic);
+                  }),
+              Divider(
+                thickness: 1,
+                height: 1,
+              ),
+              listTile(
+                  title: 'Privacy',
+                  leading: SvgPicture.asset(privacyIconsvg),
+                  onTap: () {
+                    print('Privacy');
+                  }),
+              Divider(
+                thickness: 1,
+                height: 1,
+              ),
+              listTile(
+                  title: 'Terms of Service',
+                  leading: SvgPicture.asset(termOfServiceIconsvg),
+                  onTap: () {
+                    print('tos');
+                  }),
+              Divider(
+                thickness: 1,
+                height: 1,
+              ),
+              listTile(
+                  title: 'Report a bug',
+                  leading: SvgPicture.asset(bugsIconsvg),
+                  onTap: () {
+                    print('tos');
+                    Navigator.pushNamed(
+                      context,
+                      transactionDetailsRoute,
+                    );
+                  }),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -66,25 +96,26 @@ class _SettingsTabState extends State<SettingsTab>
       {String title,
       String trailingText,
       @required Function onTap,
-      bool showTrailingIcon = true}) {
-    return Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(AppTheme.cardRadius))),
-      color: AppTheme.white,
-      elevation: AppTheme.cardElevations,
-      child: ListTile(
-        tileColor: AppTheme.white,
-        onTap: onTap,
-        leading: Icon(Icons.settings),
-        title: Text(title),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (trailingText != null) Text(trailingText),
-            if (showTrailingIcon) Icon(Icons.arrow_forward_ios),
-          ],
-        ),
+      bool showTrailingIcon = true,
+      Widget leading}) {
+    return ListTile(
+      tileColor: AppTheme.white,
+      onTap: onTap,
+      leading: leading != null ? leading : Icon(Icons.settings),
+      title: Text(
+        title,
+        style: AppTheme.label_medium,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (trailingText != null) Text(trailingText),
+          if (showTrailingIcon)
+            Icon(
+              Icons.keyboard_arrow_right,
+              color: Colors.black,
+            ),
+        ],
       ),
     );
   }

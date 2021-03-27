@@ -26,8 +26,7 @@ class DepositScreen extends StatefulWidget {
   _DepositScreenState createState() => _DepositScreenState();
 }
 
-class _DepositScreenState extends State<DepositScreen>
-    with SingleTickerProviderStateMixin {
+class _DepositScreenState extends State<DepositScreen> {
   TextEditingController _amount = TextEditingController();
   DepositDataCubit data;
   BuildContext context;
@@ -37,12 +36,16 @@ class _DepositScreenState extends State<DepositScreen>
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   TabController _controller;
+  bool showAmount;
+
   var ethCubit;
   @override
   initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _refreshLoop(ethCubit);
     });
+    showAmount = true;
+
     super.initState();
   }
 
@@ -51,23 +54,23 @@ class _DepositScreenState extends State<DepositScreen>
     ethCubit = context.read<CovalentTokensListEthCubit>();
 
     this.args = ModalRoute.of(context).settings.arguments;
-    _controller = TabController(length: 2, vsync: this);
+    // _controller = TabController(length: 2, vsync: this);
 
-    if (!_isInitialized) {
-      if (args == 1) {
-        _controller.animateTo(0);
-      }
-      if (args == 2) {
-        _controller.animateTo(1);
-      }
-      _controller.addListener(() {
-        if (_controller.index == 0) {
-          bridge = 1;
-        } else {
-          bridge = 2;
-        }
-      });
-    }
+    // if (!_isInitialized) {
+    //   if (args == 1) {
+    //     _controller.animateTo(0);
+    //   }
+    //   if (args == 2) {
+    //     _controller.animateTo(1);
+    //   }
+    //   _controller.addListener(() {
+    //     if (_controller.index == 0) {
+    //       bridge = 1;
+    //     } else {
+    //       bridge = 2;
+    //     }
+    //   });
+    // }
     this.data = context.read<DepositDataCubit>();
 
     if (args == 3 && bridge == 0) {
@@ -75,6 +78,199 @@ class _DepositScreenState extends State<DepositScreen>
     } else if (args != 3) {
       bridge = args;
     }
+
+    return BlocBuilder<DepositDataCubit, DepositDataState>(
+        builder: (BuildContext context, state) {
+      return BlocBuilder<CovalentTokensListEthCubit,
+          CovalentTokensListEthState>(builder: (context, tokenState) {
+        if (state is DepositDataFinal &&
+            tokenState is CovalentTokensListEthLoaded) {
+          var token = tokenState.covalentTokenList.data.items
+              .where((element) =>
+                  element.contractAddress == state.data.token.contractAddress)
+              .first;
+          var balance = EthConversions.weiToEth(
+              BigInt.parse(token.balance), token.contractDecimals);
+          this.balance = balance;
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Deposit to Matic"),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(),
+                Card(
+                  margin: EdgeInsets.all(AppTheme.paddingHeight12),
+                  shape: AppTheme.cardShape,
+                  child: Container(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            title: Text(
+                              "Amount",
+                              style: AppTheme.label_medium,
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(showAmount
+                                  ? Icons.arrow_drop_up
+                                  : Icons.arrow_drop_down),
+                              onPressed: () {
+                                setState(() {
+                                  showAmount = !showAmount;
+                                });
+                              },
+                            ),
+                          ),
+                          showAmount
+                              ? Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      child: TextFormField(
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        controller: _amount,
+                                        keyboardAppearance: Brightness.dark,
+                                        textAlign: TextAlign.center,
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        validator: (val) => (val == "" ||
+                                                    val == null) ||
+                                                (double.tryParse(val) == null ||
+                                                    (double.tryParse(val) < 0 ||
+                                                        double.tryParse(val) >
+                                                            balance))
+                                            ? "Invalid Amount"
+                                            : null,
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal: true),
+                                        style: AppTheme.bigLabel,
+                                        decoration: InputDecoration(
+                                            hintText: "Amount",
+                                            fillColor: AppTheme.warmgray_100,
+                                            filled: true,
+                                            hintStyle: AppTheme.body_small,
+                                            contentPadding: EdgeInsets.zero,
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide.none,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        AppTheme.cardRadius))),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppTheme.paddingHeight,
+                                    ),
+                                    Text(
+                                      "\$" +
+                                          FiatCryptoConversions.cryptoToFiat(
+                                                  double.parse(
+                                                      _amount.text == ""
+                                                          ? "0"
+                                                          : _amount.text),
+                                                  token.quoteRate)
+                                              .toString(),
+                                      style: AppTheme.body_small,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: AppTheme.paddingHeight,
+                          ),
+                          Divider(
+                            thickness: 1,
+                            height: 1,
+                            color: AppTheme.warmgray_100,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                balance.toStringAsFixed(2) +
+                                    " " +
+                                    token.contractName,
+                                style: AppTheme.body_small,
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _amount.text = balance.toString();
+                                    });
+                                  },
+                                  child: Text(
+                                    "MAX",
+                                    style:
+                                        TextStyle(color: AppTheme.purple_700),
+                                  ))
+                            ],
+                          ),
+                        ],
+                      )),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    args == 2
+                        ? ListTile(
+                            leading: ClipOval(
+                              clipBehavior: Clip.antiAlias,
+                              child: Container(
+                                child: Text("!",
+                                    style: TextStyle(
+                                        fontSize: 50,
+                                        color: AppTheme.black,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            title: Text("Note"),
+                            subtitle: Text(
+                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                            isThreeLine: true,
+                          )
+                        : SizedBox(
+                            height: AppTheme.buttonHeight_44,
+                          ),
+                    SizedBox(
+                      height: AppTheme.paddingHeight,
+                    ),
+                    SizedBox(
+                      height: AppTheme.buttonHeight_44,
+                    ),
+                  ],
+                )
+              ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Container(
+              width: MediaQuery.of(context).size.width,
+              height: AppTheme.buttonHeight_44,
+              margin:
+                  EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppTheme.purple_600,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.buttonRadius))),
+                  onPressed: () {
+                    _sendDepositTransaction(state, token, context);
+                  },
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  )),
+            ),
+          );
+        }
+      });
+    });
 
     return Scaffold(
         appBar: AppBar(

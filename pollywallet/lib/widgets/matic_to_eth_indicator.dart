@@ -5,44 +5,63 @@ import 'package:pollywallet/theme_data.dart';
 class MaticToEthIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 100,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: AppTheme.primaryColor),
-            child: Center(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Matic",
-                  style: TextStyle(color: AppTheme.whiteTextColor)),
-            )),
-          ),
-        ),
-        Image.asset(arrowIcon),
-        Image.asset(arrowIcon),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: 100,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: AppTheme.black),
-            child: Center(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "Ethereum",
-                style: TextStyle(color: AppTheme.whiteTextColor),
+    return Card(
+      shape: AppTheme.cardShape,
+      elevation: AppTheme.cardElevations + 1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                    child: Text(
+                  "Matic Network",
+                  style: AppTheme.subtitle,
+                  textAlign: TextAlign.center,
+                )),
               ),
-            )),
+            ),
           ),
-        ),
-      ],
+          Container(
+            height: 25,
+            width: 25,
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: AppTheme.warmGrey_900),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  arrowIcon,
+                  color: AppTheme.white,
+                ),
+                Image.asset(
+                  arrowIcon,
+                  color: AppTheme.white,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                width: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "Ethereum Network",
+                      style: AppTheme.subtitle,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )),
+          ),
+        ],
+      ),
     );
   }
 }

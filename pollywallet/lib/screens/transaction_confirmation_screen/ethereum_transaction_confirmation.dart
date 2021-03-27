@@ -104,204 +104,218 @@ class _EthTransactionConfirmationState
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                     ),
-                    Stack(
-                      alignment: Alignment.topCenter,
+                    Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Container(
-                            height: 273,
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            decoration: BoxDecoration(
-                                color: AppTheme.warmGrey,
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(AppTheme.cardRadius))),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Card(
-                            shape: AppTheme.cardShape,
-                            //elevation: AppTheme.cardElevations,
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              height: 263,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  SizedBox(),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        args.amount +
-                                            " ${args.token.contractTickerSymbol}",
-                                        style: AppTheme.boldThemeColoredText,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      args.token != null &&
-                                              args.token.quoteRate != null
-                                          ? Text(
-                                              " ${args.token.quoteRate * double.parse(args.amount)} USD",
-                                              style: AppTheme.balanceSub,
-                                            )
-                                          : Container()
-                                    ],
-                                  ),
-                                  Column(
+                        (args.type == TransactionType.DEPOSITPLASMA ||
+                                args.type == TransactionType.DEPOSITPOS)
+                            ? Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.09),
+                                child: EthToMaticIndicator(),
+                              )
+                            : Container(),
+                        Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Container(
+                                height: 273,
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                decoration: BoxDecoration(
+                                    color: AppTheme.warmGrey,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(AppTheme.cardRadius))),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Card(
+                                shape: AppTheme.cardShape,
+                                //elevation: AppTheme.cardElevations,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  height: 263,
+                                  child: Column(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceAround,
                                     children: [
-                                      (args.type ==
-                                                  TransactionType
-                                                      .DEPOSITPLASMA ||
-                                              args.type ==
-                                                  TransactionType.DEPOSITPOS)
-                                          ? EthToMaticIndicator()
-                                          : Container(),
-                                      Divider(color: AppTheme.grey),
                                       SizedBox(),
-                                      Text(network == 0
-                                          ? "Goerli Testnet"
-                                          : "Ethereum Mainnet"),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 8, 0, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8),
-                                              child: Image.asset(boltIcon),
-                                            ),
-                                            MenuButton(
-                                                divider: Divider(
-                                                  color: AppTheme.white,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            args.amount +
+                                                " ${args.token.contractTickerSymbol}",
+                                            style:
+                                                AppTheme.boldThemeColoredText,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          args.token != null &&
+                                                  args.token.quoteRate != null
+                                              ? Text(
+                                                  " ${args.token.quoteRate * double.parse(args.amount)} USD",
+                                                  style: AppTheme.balanceSub,
+                                                )
+                                              : Container()
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Divider(color: AppTheme.grey),
+                                          SizedBox(),
+                                          Text(network == 0
+                                              ? "Goerli Testnet"
+                                              : "Ethereum Mainnet"),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 8, 0, 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 8),
+                                                  child: Image.asset(boltIcon),
                                                 ),
-                                                child: Row(
-                                                  children: [
-                                                    Padding(
+                                                MenuButton(
+                                                    divider: Divider(
+                                                      color: AppTheme.white,
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Text(EthConversions.weiToGwei(
+                                                                      BigInt.parse(
+                                                                          gasPrice
+                                                                              .toString()))
+                                                                  .toString() +
+                                                              " Gwei Gas Price"),
+                                                        ),
+                                                        Icon(Icons
+                                                            .arrow_drop_down_circle_outlined),
+                                                      ],
+                                                    ),
+                                                    items: items,
+                                                    itemBuilder:
+                                                        (String value) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(EthConversions
+                                                                    .weiToGwei(
+                                                                        BigInt.parse(
+                                                                            value))
+                                                                .toString() +
+                                                            " Gwei"),
+                                                      );
+                                                    },
+                                                    onMenuButtonToggle:
+                                                        (bool isToggle) {
+                                                      print(isToggle);
+                                                    },
+                                                    toggledChild: Padding(
                                                       padding:
                                                           const EdgeInsets.all(
                                                               8.0),
-                                                      child: Text(EthConversions
-                                                                  .weiToGwei(BigInt
-                                                                      .parse(gasPrice
-                                                                          .toString()))
-                                                              .toString() +
-                                                          " Gwei Gas Price"),
+                                                      child: Row(
+                                                        children: [
+                                                          Text(EthConversions.weiToGwei(
+                                                                      BigInt.parse(
+                                                                          gasPrice
+                                                                              .toString()))
+                                                                  .toString() +
+                                                              " Gwei Gas Price"),
+                                                          Icon(Icons
+                                                              .arrow_drop_down_circle_outlined),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    Icon(Icons
-                                                        .arrow_drop_down_circle_outlined),
-                                                  ],
-                                                ),
-                                                items: items,
-                                                itemBuilder: (String value) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(EthConversions
-                                                                .weiToGwei(
-                                                                    BigInt.parse(
-                                                                        value))
-                                                            .toString() +
-                                                        " Gwei"),
-                                                  );
-                                                },
-                                                onMenuButtonToggle:
-                                                    (bool isToggle) {
-                                                  print(isToggle);
-                                                },
-                                                toggledChild: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    children: [
-                                                      Text(EthConversions.weiToGwei(
-                                                                  BigInt.parse(
-                                                                      gasPrice
-                                                                          .toString()))
-                                                              .toString() +
-                                                          " Gwei Gas Price"),
-                                                      Icon(Icons
-                                                          .arrow_drop_down_circle_outlined),
-                                                    ],
-                                                  ),
-                                                ),
-                                                onItemSelected: (String value) {
-                                                  setState(() {
-                                                    gasPrice =
-                                                        BigInt.parse(value);
-                                                  });
-                                                }),
-                                          ],
-                                        ),
+                                                    onItemSelected:
+                                                        (String value) {
+                                                      setState(() {
+                                                        gasPrice =
+                                                            BigInt.parse(value);
+                                                      });
+                                                    }),
+                                              ],
+                                            ),
+                                          )
+                                        ],
                                       )
                                     ],
-                                  )
-                                ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                        args.type == TransactionType.SEND
-                            ? Positioned(
-                                top: 0,
-                                //left: MediaQuery.of(context).size.width * 0.25,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 150,
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                        elevation: 0,
-                                        color: AppTheme.somewhatYellow,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(0),
-                                              child: Icon(
-                                                Icons.account_circle_sharp,
-                                                color: AppTheme.darkText,
-                                                size: 35,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 100,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 2.0),
-                                                child: Text(
-                                                  args.to,
-                                                  style: AppTheme.body2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                            args.type == TransactionType.SEND
+                                ? Positioned(
+                                    top: 0,
+                                    //left: MediaQuery.of(context).size.width * 0.25,
+                                    left: 0,
+                                    right: 0,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 150,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(40)),
+                                            elevation: 0,
+                                            color: AppTheme.somewhatYellow,
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  child: Icon(
+                                                    Icons.account_circle_sharp,
+                                                    color: AppTheme.darkText,
+                                                    size: 35,
+                                                  ),
                                                 ),
-                                              ),
+                                                SizedBox(
+                                                  width: 100,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 2.0),
+                                                    child: Text(
+                                                      args.to,
+                                                      style: AppTheme.body2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Container()
+                                  )
+                                : Container()
+                          ],
+                        ),
                       ],
                     ),
                     SafeArea(

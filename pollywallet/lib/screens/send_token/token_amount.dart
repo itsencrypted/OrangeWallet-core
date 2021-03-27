@@ -417,6 +417,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                       color: Colors
                                                                           .black),
                                                             ),
+<<<<<<< HEAD
                                                           ),
                                                         )
                                                       ],
@@ -424,6 +425,75 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                         setState(() {
                                                           index = value;
                                                         });
+=======
+                                                          )
+                                                        ],
+                                                        onTap: (value) {
+                                                          setState(() {
+                                                            index = value;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: AppTheme.paddingHeight,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  (index == 0)
+                                                      ? Text(
+                                                          "\$" +
+                                                              FiatCryptoConversions.cryptoToFiat(
+                                                                      double.parse(_amount.text ==
+                                                                              ""
+                                                                          ? "0"
+                                                                          : _amount
+                                                                              .text),
+                                                                      token
+                                                                          .quoteRate)
+                                                                  .toStringAsFixed(
+                                                                      3),
+                                                          style: AppTheme
+                                                              .body_small,
+                                                        )
+                                                      : Text(
+                                                          FiatCryptoConversions.fiatToCrypto(
+                                                                      token
+                                                                          .quoteRate,
+                                                                      double.tryParse(_amount.text ==
+                                                                              ""
+                                                                          ? "0"
+                                                                          : _amount
+                                                                              .text))
+                                                                  .toStringAsFixed(
+                                                                      3) +
+                                                              " " +
+                                                              token
+                                                                  .contractName,
+                                                          style: AppTheme
+                                                              .body_small,
+                                                        ),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        if (index == 0)
+                                                          setState(() {
+                                                            index = 1;
+                                                            _tabController
+                                                                .animateTo(1);
+                                                          });
+                                                        else
+                                                          setState(() {
+                                                            index = 0;
+                                                            _tabController
+                                                                .animateTo(0);
+                                                          });
+>>>>>>> 3fad7ab52f119b03aed13f8b45382babd11cdef2
                                                       },
                                                     ),
                                                   ),

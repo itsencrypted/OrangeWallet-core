@@ -21,6 +21,7 @@ import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/web3_utils/eth_conversions.dart';
 import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/web3_utils/staking_transactions.dart';
+import 'package:pollywallet/widgets/colored_tabbar.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -29,14 +30,17 @@ class DelegationAmount extends StatefulWidget {
   _DelegationAmountState createState() => _DelegationAmountState();
 }
 
-class _DelegationAmountState extends State<DelegationAmount> {
+class _DelegationAmountState extends State<DelegationAmount>
+    with SingleTickerProviderStateMixin<DelegationAmount> {
   double balance = 0;
+  int index = 0;
   bool showAmount;
   ValidatorInfo validator;
   var matic;
+  TabController _tabController;
 
   TextEditingController _amount = TextEditingController();
-  @override
+
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -59,31 +63,33 @@ class _DelegationAmountState extends State<DelegationAmount> {
 
   @override
   Widget build(BuildContext context) {
+    _tabController ??= TabController(length: 2, vsync: this);
+
     var id = ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          'Amount to Delegate',
-          style: AppTheme.listTileTitle,
-        ),
-      ),
-      body: BlocBuilder<CovalentTokensListEthCubit, CovalentTokensListEthState>(
-        builder: (context, covalentEthState) {
-          return BlocBuilder<CovalentTokensListMaticCubit,
-              CovalentTokensListMaticState>(
-            builder: (context, covalentMaticState) {
-              return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
-                  builder: (context, delegationState) {
-                return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
-                    builder: (context, validatorState) {
-                  if (validatorState is ValidatorsDataStateLoading ||
-                      validatorState is ValidatorsDataStateInitial ||
-                      delegationState is DelegationsDataStateInitial ||
-                      delegationState is DelegationsDataStateLoading ||
-                      covalentMaticState is CovalentTokensListMaticLoading ||
-                      covalentEthState is CovalentTokensListMaticLoading) {
-                    return Center(
+    return BlocBuilder<CovalentTokensListEthCubit, CovalentTokensListEthState>(
+      builder: (context, covalentEthState) {
+        return BlocBuilder<CovalentTokensListMaticCubit,
+            CovalentTokensListMaticState>(
+          builder: (context, covalentMaticState) {
+            return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
+                builder: (context, delegationState) {
+              return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
+                  builder: (context, validatorState) {
+                if (validatorState is ValidatorsDataStateLoading ||
+                    validatorState is ValidatorsDataStateInitial ||
+                    delegationState is DelegationsDataStateInitial ||
+                    delegationState is DelegationsDataStateLoading ||
+                    covalentMaticState is CovalentTokensListMaticLoading ||
+                    covalentEthState is CovalentTokensListMaticLoading) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      elevation: 0,
+                      title: Text(
+                        'Amount to Delegate',
+                        style: AppTheme.listTileTitle,
+                      ),
+                    ),
+                    body: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -98,63 +104,69 @@ class _DelegationAmountState extends State<DelegationAmount> {
                           ),
                         ],
                       ),
-                    );
-                  } else if (delegationState is DelegationsDataStateFinal &&
-                      validatorState is ValidatorsDataStateFinal &&
-                      covalentMaticState is CovalentTokensListMaticLoaded &&
-                      covalentEthState is CovalentTokensListEthLoaded) {
-                    if (covalentEthState.covalentTokenList.data.items
+                    ),
+                  );
+                } else if (delegationState is DelegationsDataStateFinal &&
+                    validatorState is ValidatorsDataStateFinal &&
+                    covalentMaticState is CovalentTokensListMaticLoaded &&
+                    covalentEthState is CovalentTokensListEthLoaded) {
+                  if (covalentEthState.covalentTokenList.data.items
+                          .where((element) =>
+                              element.contractTickerSymbol.toLowerCase() ==
+                              "matic")
+                          .toList()
+                          .length >
+                      0) {
+                    balance = EthConversions.weiToEth(
+                        BigInt.parse(covalentEthState
+                            .covalentTokenList.data.items
                             .where((element) =>
                                 element.contractTickerSymbol.toLowerCase() ==
                                 "matic")
-                            .toList()
-                            .length >
-                        0) {
-                      balance = EthConversions.weiToEth(
-                          BigInt.parse(covalentEthState
-                              .covalentTokenList.data.items
-                              .where((element) =>
-                                  element.contractTickerSymbol.toLowerCase() ==
-                                  "matic")
-                              .first
-                              .balance),
-                          18);
-                    }
+                            .first
+                            .balance),
+                        18);
+                  }
 
-                    var matic = covalentMaticState.covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractTickerSymbol.toLowerCase() ==
-                            "matic")
-                        .first;
-                    print("id");
-                    print(validatorState.data.result
-                        .where((element) => element.id == id)
-                        .toList()[0]
-                        .contractAddress);
-                    ValidatorInfo validator = validatorState.data.result
-                        .where((element) => element.id == id)
-                        .toList()
-                        .first;
-                    double qoute = covalentMaticState
-                        .covalentTokenList.data.items
-                        .where((element) =>
-                            element.contractTickerSymbol.toLowerCase() ==
-                            "matic")
-                        .toList()
-                        .first
-                        .quoteRate;
-                    DelegatorInfo delegatorInfo;
-                    var len = delegationState.data.result
+                  var matic = covalentMaticState.covalentTokenList.data.items
+                      .where((element) =>
+                          element.contractTickerSymbol.toLowerCase() == "matic")
+                      .first;
+                  print("id");
+                  print(validatorState.data.result
+                      .where((element) => element.id == id)
+                      .toList()[0]
+                      .contractAddress);
+                  ValidatorInfo validator = validatorState.data.result
+                      .where((element) => element.id == id)
+                      .toList()
+                      .first;
+                  double qoute = covalentMaticState.covalentTokenList.data.items
+                      .where((element) =>
+                          element.contractTickerSymbol.toLowerCase() == "matic")
+                      .toList()
+                      .first
+                      .quoteRate;
+                  DelegatorInfo delegatorInfo;
+                  var len = delegationState.data.result
+                      .where((element) => element.bondedValidator == id)
+                      .toList()
+                      .length;
+                  if (len > 0) {
+                    delegatorInfo = delegationState.data.result
                         .where((element) => element.bondedValidator == id)
                         .toList()
-                        .length;
-                    if (len > 0) {
-                      delegatorInfo = delegationState.data.result
-                          .where((element) => element.bondedValidator == id)
-                          .toList()
-                          .first;
-                    }
-                    return Column(
+                        .first;
+                  }
+                  return Scaffold(
+                    appBar: AppBar(
+                      elevation: 0,
+                      title: Text(
+                        'Amount to Delegate',
+                        style: AppTheme.listTileTitle,
+                      ),
+                    ),
+                    body: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(),
@@ -193,67 +205,226 @@ class _DelegationAmountState extends State<DelegationAmount> {
                                       ? Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Container(
-                                              child: TextFormField(
-                                                textAlignVertical:
-                                                    TextAlignVertical.center,
-                                                controller: _amount,
-                                                keyboardAppearance:
-                                                    Brightness.dark,
-                                                textAlign: TextAlign.center,
-                                                autovalidateMode:
-                                                    AutovalidateMode
-                                                        .onUserInteraction,
-                                                validator: (val) => (val ==
-                                                                "" ||
-                                                            val == null) ||
-                                                        (double.tryParse(val) ==
-                                                                null ||
-                                                            (double.tryParse(
-                                                                        val) <
-                                                                    1 ||
-                                                                double.tryParse(
-                                                                        val) >
-                                                                    balance))
-                                                    ? "Stake atleast 1 Matic and less than your balance"
-                                                    : null,
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
-                                                style: AppTheme.bigLabel,
-                                                decoration: InputDecoration(
-                                                    hintText: "Amount",
-                                                    fillColor:
-                                                        AppTheme.warmgray_100,
-                                                    filled: true,
-                                                    hintStyle:
-                                                        AppTheme.body_small,
-                                                    contentPadding:
-                                                        EdgeInsets.zero,
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide.none,
-                                                        borderRadius: BorderRadius
-                                                            .circular(AppTheme
-                                                                .cardRadius))),
-                                              ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    child: TextFormField(
+                                                      textAlignVertical:
+                                                          TextAlignVertical
+                                                              .center,
+                                                      controller: _amount,
+                                                      keyboardAppearance:
+                                                          Brightness.dark,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator: (val) {
+                                                        if (index == 0) {
+                                                          if ((val == "" ||
+                                                                  val ==
+                                                                      null) ||
+                                                              (double.tryParse(
+                                                                          val) ==
+                                                                      null ||
+                                                                  (double.tryParse(
+                                                                              val) <
+                                                                          0 ||
+                                                                      double.tryParse(
+                                                                              val) >
+                                                                          balance)))
+                                                            return "Invalid Amount";
+                                                          else
+                                                            return null;
+                                                        } else {
+                                                          if ((val == "" ||
+                                                                  val ==
+                                                                      null) ||
+                                                              (double.tryParse(
+                                                                          val) ==
+                                                                      null ||
+                                                                  (double.tryParse(
+                                                                              val) <
+                                                                          0 ||
+                                                                      double.tryParse(
+                                                                              val) >
+                                                                          FiatCryptoConversions.cryptoToFiat(
+                                                                              balance,
+                                                                              matic.quoteRate))))
+                                                            return "Invalid Amount";
+                                                          else
+                                                            return null;
+                                                        }
+                                                      },
+                                                      keyboardType: TextInputType
+                                                          .numberWithOptions(
+                                                              decimal: true),
+                                                      style: AppTheme.bigLabel,
+                                                      decoration: InputDecoration(
+                                                          hintText: "Amount",
+                                                          fillColor: AppTheme
+                                                              .warmgray_100,
+                                                          filled: true,
+                                                          hintStyle: AppTheme
+                                                              .body_small,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          border: OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide
+                                                                      .none,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          AppTheme
+                                                                              .cardRadius))),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      AppTheme.paddingHeight /
+                                                          2,
+                                                ),
+                                                Container(
+                                                  width: 150,
+                                                  height: 50,
+                                                  child: ColoredTabBar(
+                                                    borderRadius:
+                                                        AppTheme.cardRadius,
+                                                    color:
+                                                        AppTheme.tabbarBGColor,
+                                                    tabbarMargin: 0,
+                                                    tabbarPadding: AppTheme
+                                                            .paddingHeight12 /
+                                                        4,
+                                                    tabBar: TabBar(
+                                                      controller:
+                                                          _tabController,
+                                                      labelStyle: AppTheme
+                                                          .tabbarTextStyle,
+                                                      unselectedLabelStyle:
+                                                          AppTheme
+                                                              .tabbarTextStyle,
+                                                      indicatorSize:
+                                                          TabBarIndicatorSize
+                                                              .tab,
+                                                      indicator: BoxDecoration(
+                                                          //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                                                          borderRadius: BorderRadius
+                                                              .circular(AppTheme
+                                                                      .cardRadiusBig /
+                                                                  2),
+                                                          color:
+                                                              AppTheme.white),
+                                                      tabs: [
+                                                        Tab(
+                                                          child: Align(
+                                                            child: Text(
+                                                              'Matic',
+                                                              style: AppTheme
+                                                                  .body_xsmall
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Tab(
+                                                          child: Align(
+                                                            child: Text(
+                                                              'USD',
+                                                              style: AppTheme
+                                                                  .body_xsmall
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                      onTap: (value) {
+                                                        setState(() {
+                                                          index = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             SizedBox(
                                               height: AppTheme.paddingHeight,
                                             ),
-                                            Text(
-                                              "\$" +
-                                                  FiatCryptoConversions
-                                                          .cryptoToFiat(
-                                                              double.parse(
-                                                                  _amount.text ==
-                                                                          ""
-                                                                      ? "0"
-                                                                      : _amount
-                                                                          .text),
-                                                              matic.quoteRate)
-                                                      .toString(),
-                                              style: AppTheme.body_small,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                (index == 0)
+                                                    ? Text(
+                                                        "\$" +
+                                                            FiatCryptoConversions.cryptoToFiat(
+                                                                    double.parse(_amount.text ==
+                                                                            ""
+                                                                        ? "0"
+                                                                        : _amount
+                                                                            .text),
+                                                                    matic
+                                                                        .quoteRate)
+                                                                .toStringAsFixed(
+                                                                    3),
+                                                        style:
+                                                            AppTheme.body_small,
+                                                      )
+                                                    : Text(
+                                                        FiatCryptoConversions.fiatToCrypto(
+                                                                    matic
+                                                                        .quoteRate,
+                                                                    double.tryParse(_amount.text ==
+                                                                            ""
+                                                                        ? "0"
+                                                                        : _amount
+                                                                            .text))
+                                                                .toStringAsFixed(
+                                                                    3) +
+                                                            " " +
+                                                            matic.contractName,
+                                                        style:
+                                                            AppTheme.body_small,
+                                                      ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      if (index == 0)
+                                                        setState(() {
+                                                          index = 1;
+                                                          _tabController
+                                                              .animateTo(1);
+                                                        });
+                                                      else
+                                                        setState(() {
+                                                          index = 0;
+                                                          _tabController
+                                                              .animateTo(0);
+                                                        });
+                                                    },
+                                                    child: Text(
+                                                      (index == 0)
+                                                          ? "Enter amount in USD"
+                                                          : "Enter amount in MATIC",
+                                                      style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          color: AppTheme
+                                                              .purple_400),
+                                                    ))
+                                              ],
                                             ),
                                           ],
                                         )
@@ -297,9 +468,40 @@ class _DelegationAmountState extends State<DelegationAmount> {
                           height: AppTheme.buttonHeight_44,
                         )
                       ],
-                    );
-                  } else {
-                    return Center(
+                    ),
+                    floatingActionButtonLocation:
+                        FloatingActionButtonLocation.centerFloat,
+                    floatingActionButton: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: AppTheme.buttonHeight_44,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: AppTheme.paddingHeight12),
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: AppTheme.purple_600,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppTheme.buttonRadius))),
+                          onPressed: () {
+                            _delegate(validator.contractAddress, matic);
+                          },
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          )),
+                    ),
+                  );
+                } else {
+                  return Scaffold(
+                    appBar: AppBar(
+                      elevation: 0,
+                      title: Text(
+                        'Amount to Delegate',
+                        style: AppTheme.listTileTitle,
+                      ),
+                    ),
+                    body: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,34 +519,14 @@ class _DelegationAmountState extends State<DelegationAmount> {
                           ),
                         ],
                       ),
-                    );
-                  }
-                });
+                    ),
+                  );
+                }
               });
-            },
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        width: MediaQuery.of(context).size.width,
-        height: AppTheme.buttonHeight_44,
-        margin: EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
-        child: TextButton(
-            style: TextButton.styleFrom(
-                backgroundColor: AppTheme.purple_600,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppTheme.buttonRadius))),
-            onPressed: () {
-              _delegate(validator.contractAddress, matic);
-            },
-            child: Icon(
-              Icons.check,
-              color: Colors.white,
-            )),
-      ),
+            });
+          },
+        );
+      },
     );
   }
 

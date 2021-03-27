@@ -223,7 +223,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                               height: AppTheme.buttonHeight_44,
                             ),
                       SizedBox(
-                        height: AppTheme.paddingHeight,
+                        height: AppTheme.paddingHeight * 2,
                       ),
                       SizedBox(
                         height: AppTheme.buttonHeight_44,

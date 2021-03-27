@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/credential_models/credentials_model.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
@@ -57,70 +58,146 @@ class _AccountSelectionState extends State<AccountSelection> {
                 ),
               )
             : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () async {
-                              await BoxUtils.setAccount(index);
-                              context
-                                  .read<CovalentTokensListEthCubit>()
-                                  .getTokensList();
-                              context
-                                  .read<CovalentTokensListMaticCubit>()
-                                  .getTokensList();
-                              context.read<DelegationsDataCubit>().setData();
-                              context.read<ValidatorsdataCubit>().setData();
+                child: Padding(
+                  padding: EdgeInsets.all(AppTheme.paddingHeight12),
+                  child: Card(
+                    shape: AppTheme.cardShape,
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await BoxUtils.setAccount(index);
+                                  context
+                                      .read<CovalentTokensListEthCubit>()
+                                      .getTokensList();
+                                  context
+                                      .read<CovalentTokensListMaticCubit>()
+                                      .getTokensList();
+                                  context
+                                      .read<DelegationsDataCubit>()
+                                      .setData();
+                                  context.read<ValidatorsdataCubit>().setData();
+                                  _refresh();
+                                },
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(
+                                          AppTheme.paddingHeight),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                          accountIconsvg),
+                                                      SizedBox(
+                                                        width: AppTheme
+                                                            .paddingHeight,
+                                                      ),
+                                                      Text("Account $index",
+                                                          style: AppTheme.title)
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height:
+                                                        AppTheme.paddingHeight,
+                                                  ),
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.7,
+                                                    child: Text(
+                                                      list[index].address,
+                                                      style:
+                                                          AppTheme.body_small,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: AppTheme.paddingHeight,
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius
+                                                        .circular(AppTheme
+                                                                .cardRadiusBig /
+                                                            2),
+                                                    color: index == active
+                                                        ? AppTheme.purple_600
+                                                        : AppTheme.white),
+                                                child: index == active
+                                                    ? Icon(
+                                                        Icons.check,
+                                                        size: 24.0,
+                                                        color: Colors.white,
+                                                      )
+                                                    : Icon(
+                                                        Icons.circle,
+                                                        size: 24.0,
+                                                        color: Colors.white,
+                                                      ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Divider(
+                                      thickness: 1,
+                                      height: 1,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        TextButton(
+                            style: TextButton.styleFrom(
+                                padding:
+                                    EdgeInsets.all(AppTheme.paddingHeight12),
+                                backgroundColor: AppTheme.purple_600,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100))),
+                            onPressed: () async {
+                              await Navigator.pushNamed(
+                                  context, pinForNewAccountRoute);
                               _refresh();
                             },
-                            child: Card(
-                              shape: AppTheme.cardShape,
-                              elevation: AppTheme.cardElevations,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: ListTile(
-                                    title: Text("Account $index",
-                                        style: AppTheme.title),
-                                    subtitle: Text(list[index].address),
-                                    trailing: Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Colors.blue),
-                                      child: index == active
-                                          ? Icon(
-                                              Icons.check,
-                                              size: 24.0,
-                                              color: Colors.white,
-                                            )
-                                          : Icon(
-                                              Icons.circle,
-                                              size: 24.0,
-                                              color: Colors.white,
-                                            ),
-                                    )),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                            child: Text("Add new account",
+                                style: AppTheme.label_medium
+                                    .copyWith(color: AppTheme.white)))
+                      ],
                     ),
-                    FlatButton(
-                        onPressed: () async {
-                          await Navigator.pushNamed(
-                              context, pinForNewAccountRoute);
-                          _refresh();
-                        },
-                        child: Text(
-                          "Add new account",
-                          style: TextStyle(color: Colors.blue),
-                        ))
-                  ],
+                  ),
                 ),
               ));
   }

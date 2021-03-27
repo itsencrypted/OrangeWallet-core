@@ -18,6 +18,12 @@ const String sentFailedLottieJson = "$_baseIcon/sending_failed_lottie.json";
 const String posMeterIcon = "$_baseIcon/pos_meter.png";
 const String plasmaLockIcon = "$_baseIcon/plasma_lock.png";
 const String transakIcon = "$_baseIcon/transak.png";
+const String accountIconsvg = "$_baseIcon/account.svg";
+const String bugsIconsvg = "$_baseIcon/bugs.svg";
+const String exportIconsvg = "$_baseIcon/export.svg";
+const String networkIconsvg = "$_baseIcon/network.svg";
+const String privacyIconsvg = "$_baseIcon/privacy.svg";
+const String termOfServiceIconsvg = "$_baseIcon/term_of_service.svg";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";

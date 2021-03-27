@@ -227,7 +227,7 @@ class _DepositScreenState extends State<DepositScreen> {
                             height: AppTheme.buttonHeight_44,
                           ),
                     SizedBox(
-                      height: AppTheme.paddingHeight,
+                      height: AppTheme.paddingHeight * 2,
                     ),
                     SizedBox(
                       height: AppTheme.buttonHeight_44,

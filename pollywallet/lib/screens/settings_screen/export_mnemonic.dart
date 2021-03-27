@@ -114,7 +114,7 @@ class _ExportMnemonicState extends State<ExportMnemonic> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
-                                    width: 86,
+                                    width: 97,
                                     height: AppTheme.buttonHeight_44,
                                     child: TextButton(
                                       style: TextButton.styleFrom(

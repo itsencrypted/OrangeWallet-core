@@ -31,6 +31,10 @@ class DelegationAmount extends StatefulWidget {
 
 class _DelegationAmountState extends State<DelegationAmount> {
   double balance = 0;
+  bool showAmount;
+  ValidatorInfo validator;
+  var matic;
+
   TextEditingController _amount = TextEditingController();
   @override
   @override
@@ -45,6 +49,8 @@ class _DelegationAmountState extends State<DelegationAmount> {
       _refreshLoop(
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
     });
+    showAmount = true;
+
     super.initState();
     _amount.addListener(() {
       setState(() {});
@@ -55,245 +61,396 @@ class _DelegationAmountState extends State<DelegationAmount> {
   Widget build(BuildContext context) {
     var id = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            'Amount to Delegate',
-            style: AppTheme.listTileTitle,
-          ),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          'Amount to Delegate',
+          style: AppTheme.listTileTitle,
         ),
-        body:
-            BlocBuilder<CovalentTokensListEthCubit, CovalentTokensListEthState>(
-          builder: (context, covalentEthState) {
-            return BlocBuilder<CovalentTokensListMaticCubit,
-                CovalentTokensListMaticState>(
-              builder: (context, covalentMaticState) {
-                return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
-                    builder: (context, delegationState) {
-                  return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
-                      builder: (context, validatorState) {
-                    if (validatorState is ValidatorsDataStateLoading ||
-                        validatorState is ValidatorsDataStateInitial ||
-                        delegationState is DelegationsDataStateInitial ||
-                        delegationState is DelegationsDataStateLoading ||
-                        covalentMaticState is CovalentTokensListMaticLoading ||
-                        covalentEthState is CovalentTokensListMaticLoading) {
-                      return Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SpinKitFadingFour(
-                              size: 50,
-                              color: AppTheme.primaryColor,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Text("Loading .."),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (delegationState is DelegationsDataStateFinal &&
-                        validatorState is ValidatorsDataStateFinal &&
-                        covalentMaticState is CovalentTokensListMaticLoaded &&
-                        covalentEthState is CovalentTokensListEthLoaded) {
-                      if (covalentEthState.covalentTokenList.data.items
+      ),
+      body: BlocBuilder<CovalentTokensListEthCubit, CovalentTokensListEthState>(
+        builder: (context, covalentEthState) {
+          return BlocBuilder<CovalentTokensListMaticCubit,
+              CovalentTokensListMaticState>(
+            builder: (context, covalentMaticState) {
+              return BlocBuilder<DelegationsDataCubit, DelegationsDataState>(
+                  builder: (context, delegationState) {
+                return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
+                    builder: (context, validatorState) {
+                  if (validatorState is ValidatorsDataStateLoading ||
+                      validatorState is ValidatorsDataStateInitial ||
+                      delegationState is DelegationsDataStateInitial ||
+                      delegationState is DelegationsDataStateLoading ||
+                      covalentMaticState is CovalentTokensListMaticLoading ||
+                      covalentEthState is CovalentTokensListMaticLoading) {
+                    return Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SpinKitFadingFour(
+                            size: 50,
+                            color: AppTheme.primaryColor,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text("Loading .."),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (delegationState is DelegationsDataStateFinal &&
+                      validatorState is ValidatorsDataStateFinal &&
+                      covalentMaticState is CovalentTokensListMaticLoaded &&
+                      covalentEthState is CovalentTokensListEthLoaded) {
+                    if (covalentEthState.covalentTokenList.data.items
+                            .where((element) =>
+                                element.contractTickerSymbol.toLowerCase() ==
+                                "matic")
+                            .toList()
+                            .length >
+                        0) {
+                      balance = EthConversions.weiToEth(
+                          BigInt.parse(covalentEthState
+                              .covalentTokenList.data.items
                               .where((element) =>
                                   element.contractTickerSymbol.toLowerCase() ==
                                   "matic")
-                              .toList()
-                              .length >
-                          0) {
-                        balance = EthConversions.weiToEth(
-                            BigInt.parse(covalentEthState
-                                .covalentTokenList.data.items
-                                .where((element) =>
-                                    element.contractTickerSymbol
-                                        .toLowerCase() ==
-                                    "matic")
-                                .first
-                                .balance),
-                            18);
-                      }
+                              .first
+                              .balance),
+                          18);
+                    }
 
-                      var matic = covalentMaticState
-                          .covalentTokenList.data.items
-                          .where((element) =>
-                              element.contractTickerSymbol.toLowerCase() ==
-                              "matic")
-                          .first;
-                      print("id");
-                      print(validatorState.data.result
-                          .where((element) => element.id == id)
-                          .toList()[0]
-                          .contractAddress);
-                      ValidatorInfo validator = validatorState.data.result
-                          .where((element) => element.id == id)
-                          .toList()
-                          .first;
-                      double qoute = covalentMaticState
-                          .covalentTokenList.data.items
-                          .where((element) =>
-                              element.contractTickerSymbol.toLowerCase() ==
-                              "matic")
-                          .toList()
-                          .first
-                          .quoteRate;
-                      DelegatorInfo delegatorInfo;
-                      var len = delegationState.data.result
+                    var matic = covalentMaticState.covalentTokenList.data.items
+                        .where((element) =>
+                            element.contractTickerSymbol.toLowerCase() ==
+                            "matic")
+                        .first;
+                    print("id");
+                    print(validatorState.data.result
+                        .where((element) => element.id == id)
+                        .toList()[0]
+                        .contractAddress);
+                    ValidatorInfo validator = validatorState.data.result
+                        .where((element) => element.id == id)
+                        .toList()
+                        .first;
+                    double qoute = covalentMaticState
+                        .covalentTokenList.data.items
+                        .where((element) =>
+                            element.contractTickerSymbol.toLowerCase() ==
+                            "matic")
+                        .toList()
+                        .first
+                        .quoteRate;
+                    DelegatorInfo delegatorInfo;
+                    var len = delegationState.data.result
+                        .where((element) => element.bondedValidator == id)
+                        .toList()
+                        .length;
+                    if (len > 0) {
+                      delegatorInfo = delegationState.data.result
                           .where((element) => element.bondedValidator == id)
                           .toList()
-                          .length;
-                      if (len > 0) {
-                        delegatorInfo = delegationState.data.result
-                            .where((element) => element.bondedValidator == id)
-                            .toList()
-                            .first;
-                      }
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            validator.name,
-                            style: AppTheme.title,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                child: TextFormField(
-                                  controller: _amount,
-                                  keyboardAppearance: Brightness.dark,
-                                  textAlign: TextAlign.center,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  validator: (val) => (val == "" ||
-                                              val == null) ||
-                                          (double.tryParse(val) == null ||
-                                              (double.tryParse(val) < 1 ||
-                                                  double.tryParse(val) >
-                                                      balance))
-                                      ? "Stake atleast 1 Matic and less than your balance"
-                                      : null,
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  style: AppTheme.bigLabel,
-                                  decoration: InputDecoration(
-                                    hintText: "Amount",
-                                    hintStyle: AppTheme.body1,
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
+                          .first;
+                    }
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(),
+                        Card(
+                          margin: EdgeInsets.all(AppTheme.paddingHeight12),
+                          shape: AppTheme.cardShape,
+                          child: Container(
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      "Amount",
+                                      style: AppTheme.label_medium,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(showAmount
+                                          ? Icons.arrow_drop_up
+                                          : Icons.arrow_drop_down),
+                                      onPressed: () {
+                                        setState(() {
+                                          showAmount = !showAmount;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Text(
-                                "\$" +
-                                    FiatCryptoConversions.cryptoToFiat(
-                                            double.tryParse(_amount.text == ""
-                                                ? "0"
-                                                : _amount.text),
-                                            matic.quoteRate)
-                                        .toString(),
-                                style: AppTheme.bigLabel,
-                              )
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SafeArea(
-                                child: ListTile(
-                                  leading: FlatButton(
-                                    onPressed: () {
-                                      _amount.text = balance.toString();
-                                    },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    child: ClipOval(
-                                        child: Material(
-                                      color: AppTheme.secondaryColor
-                                          .withOpacity(0.3),
-                                      child: SizedBox(
-                                          height: 56,
-                                          width: 56,
-                                          child: Center(
-                                            child: Text(
-                                              "Max",
-                                              style: AppTheme.title,
+                                  showAmount
+                                      ? Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              child: TextFormField(
+                                                textAlignVertical:
+                                                    TextAlignVertical.center,
+                                                controller: _amount,
+                                                keyboardAppearance:
+                                                    Brightness.dark,
+                                                textAlign: TextAlign.center,
+                                                autovalidateMode:
+                                                    AutovalidateMode
+                                                        .onUserInteraction,
+                                                validator: (val) => (val ==
+                                                                "" ||
+                                                            val == null) ||
+                                                        (double.tryParse(val) ==
+                                                                null ||
+                                                            (double.tryParse(
+                                                                        val) <
+                                                                    1 ||
+                                                                double.tryParse(
+                                                                        val) >
+                                                                    balance))
+                                                    ? "Stake atleast 1 Matic and less than your balance"
+                                                    : null,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
+                                                style: AppTheme.bigLabel,
+                                                decoration: InputDecoration(
+                                                    hintText: "Amount",
+                                                    fillColor:
+                                                        AppTheme.warmgray_100,
+                                                    filled: true,
+                                                    hintStyle:
+                                                        AppTheme.body_small,
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    border: OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide.none,
+                                                        borderRadius: BorderRadius
+                                                            .circular(AppTheme
+                                                                .cardRadius))),
+                                              ),
                                             ),
-                                          )),
-                                    )),
+                                            SizedBox(
+                                              height: AppTheme.paddingHeight,
+                                            ),
+                                            Text(
+                                              "\$" +
+                                                  FiatCryptoConversions
+                                                          .cryptoToFiat(
+                                                              double.parse(
+                                                                  _amount.text ==
+                                                                          ""
+                                                                      ? "0"
+                                                                      : _amount
+                                                                          .text),
+                                                              matic.quoteRate)
+                                                      .toString(),
+                                              style: AppTheme.body_small,
+                                            ),
+                                          ],
+                                        )
+                                      : Container(),
+                                  SizedBox(
+                                    height: AppTheme.paddingHeight,
                                   ),
-                                  title: Text(
-                                    "Balance",
-                                    style: AppTheme.subtitle,
+                                  Divider(
+                                    thickness: 1,
+                                    height: 1,
+                                    color: AppTheme.warmgray_100,
                                   ),
-                                  subtitle: Text(
-                                    balance.toStringAsFixed(2) +
-                                        " " +
-                                        matic.contractName,
-                                    style: AppTheme.title,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        balance.toStringAsFixed(2) +
+                                            " " +
+                                            matic.contractName,
+                                        style: AppTheme.body_small,
+                                      ),
+                                      TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _amount.text = balance.toString();
+                                            });
+                                          },
+                                          child: Text(
+                                            "MAX",
+                                            style: TextStyle(
+                                                color: AppTheme.purple_700),
+                                          ))
+                                    ],
                                   ),
-                                  trailing: FlatButton(
-                                    onPressed: () {
-                                      //print(validator.contractAddress);
-                                      _delegate(
-                                          validator.contractAddress, matic);
-                                    },
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    child: ClipOval(
-                                        child: Material(
-                                      color: AppTheme.primaryColor,
-                                      child: SizedBox(
-                                          height: 56,
-                                          width: 56,
-                                          child: Center(
-                                            child: Icon(Icons.check,
-                                                color: AppTheme.white),
-                                          )),
-                                    )),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      );
-                    } else {
-                      return Center(
-                        child: Column(
+                                ],
+                              )),
+                        ),
+                        SizedBox(),
+                        SizedBox(
+                          height: AppTheme.buttonHeight_44,
+                        )
+                      ],
+                    );
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          validator.name,
+                          style: AppTheme.title,
+                        ),
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            IconButton(
-                                icon: Icon(Icons.refresh),
-                                color: AppTheme.grey,
-                                onPressed: () {
-                                  context
-                                      .read<DelegationsDataCubit>()
-                                      .setData();
-                                  context.read<ValidatorsdataCubit>().setData();
-                                }),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Something Went wrong."),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: TextFormField(
+                                controller: _amount,
+                                keyboardAppearance: Brightness.dark,
+                                textAlign: TextAlign.center,
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (val) => (val == "" ||
+                                            val == null) ||
+                                        (double.tryParse(val) == null ||
+                                            (double.tryParse(val) < 1 ||
+                                                double.tryParse(val) > balance))
+                                    ? "Stake atleast 1 Matic and less than your balance"
+                                    : null,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                style: AppTheme.bigLabel,
+                                decoration: InputDecoration(
+                                  hintText: "Amount",
+                                  hintStyle: AppTheme.body1,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                ),
+                              ),
                             ),
+                            Text(
+                              "\$" +
+                                  FiatCryptoConversions.cryptoToFiat(
+                                          double.tryParse(_amount.text == ""
+                                              ? "0"
+                                              : _amount.text),
+                                          matic.quoteRate)
+                                      .toString(),
+                              style: AppTheme.bigLabel,
+                            )
                           ],
                         ),
-                      );
-                    }
-                  });
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SafeArea(
+                              child: ListTile(
+                                leading: FlatButton(
+                                  onPressed: () {
+                                    _amount.text = balance.toString();
+                                  },
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  child: ClipOval(
+                                      child: Material(
+                                    color: AppTheme.secondaryColor
+                                        .withOpacity(0.3),
+                                    child: SizedBox(
+                                        height: 56,
+                                        width: 56,
+                                        child: Center(
+                                          child: Text(
+                                            "Max",
+                                            style: AppTheme.title,
+                                          ),
+                                        )),
+                                  )),
+                                ),
+                                title: Text(
+                                  "Balance",
+                                  style: AppTheme.subtitle,
+                                ),
+                                subtitle: Text(
+                                  balance.toStringAsFixed(2) +
+                                      " " +
+                                      matic.contractName,
+                                  style: AppTheme.title,
+                                ),
+                                trailing: FlatButton(
+                                  onPressed: () {
+                                    //print(validator.contractAddress);
+                                    _delegate(validator.contractAddress, matic);
+                                  },
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  child: ClipOval(
+                                      child: Material(
+                                    color: AppTheme.primaryColor,
+                                    child: SizedBox(
+                                        height: 56,
+                                        width: 56,
+                                        child: Center(
+                                          child: Icon(Icons.check,
+                                              color: AppTheme.white),
+                                        )),
+                                  )),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
+                  } else {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                              icon: Icon(Icons.refresh),
+                              color: AppTheme.grey,
+                              onPressed: () {
+                                context.read<DelegationsDataCubit>().setData();
+                                context.read<ValidatorsdataCubit>().setData();
+                              }),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Something Went wrong."),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 });
-              },
-            );
-          },
-        ));
+              });
+            },
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Container(
+        width: MediaQuery.of(context).size.width,
+        height: AppTheme.buttonHeight_44,
+        margin: EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: AppTheme.purple_600,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppTheme.buttonRadius))),
+            onPressed: () {
+              _delegate(validator.contractAddress, matic);
+            },
+            child: Icon(
+              Icons.check,
+              color: Colors.white,
+            )),
+      ),
+    );
   }
 
   _delegate(String spender, Items token) async {

@@ -21,35 +21,42 @@ class TransactionTile extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            ListTile(
-              // isThreeLine: true,
-              leading: Image.asset(
-                tokenIcon,
-                height: 32,
-                width: 32,
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(sent ? "- $value" : "+ $value",
-                      style: AppTheme.label_medium.copyWith(
-                          color: sent ? AppTheme.red_500 : AppTheme.teal_500)),
-                ],
-              ),
-              title: Text(
-                sent
-                    ? "${data.transfers[data.transfers.length - 1].toAddress}"
-                    : "${data.transfers[data.transfers.length - 1].fromAddress}",
-                style: AppTheme.label_medium,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(
-                DateFormat.yMMMEd()
-                    .add_jm()
-                    .format(DateTime.parse(data.blockSignedAt)),
-                style: AppTheme.body_small,
-                overflow: TextOverflow.ellipsis,
+            FlatButton(
+              padding: EdgeInsets.all(0),
+              onPressed: () {
+                Navigator.pushNamed(context, transactionStatusMaticRoute,
+                    arguments: data.txHash);
+              },
+              child: ListTile(
+                // isThreeLine: true,
+                leading: Image.asset(
+                  tokenIcon,
+                  height: 32,
+                  width: 32,
+                ),
+                trailing: sent
+                    ? Icon(
+                        Icons.upload_outlined,
+                        color: Colors.redAccent,
+                      )
+                    : Icon(
+                        Icons.download_outlined,
+                        color: Colors.teal,
+                      ),
+                title: Text(
+                  sent
+                      ? "${data.transfers[data.transfers.length - 1].toAddress}"
+                      : "${data.transfers[data.transfers.length - 1].fromAddress}",
+                  style: AppTheme.label_medium,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                subtitle: Text(
+                  DateFormat.yMMMEd()
+                      .add_jm()
+                      .format(DateTime.parse(data.blockSignedAt)),
+                  style: AppTheme.body_small,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             Padding(

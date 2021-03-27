@@ -77,8 +77,9 @@ class _EthTransactionConfirmationState
   Widget build(BuildContext context) {
     print(items);
     args = ModalRoute.of(context).settings.arguments;
-
-    double cardWidth = MediaQuery.of(context).size.width * 0.2;
+    if (args.trx == null) {
+      Navigator.pop(context);
+    }
     return Scaffold(
         appBar: AppBar(
           title: _loading

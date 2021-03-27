@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
@@ -59,6 +60,10 @@ class WithdrawManagerWeb3 {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String exitPayload =
         await WithdrawManagerApi.getPayloadForExitPos(burnTxHash);
+    if (exitPayload == null) {
+      Fluttertoast.showToast(msg: "Something went wrong");
+      return null;
+    }
 
     var uint8List = RlpEncode.encodeHex(exitPayload);
     if (exitPayload == null) {
@@ -84,6 +89,8 @@ class WithdrawManagerWeb3 {
 
     var uint8List = RlpEncode.encodeHex(exitPayload);
     if (exitPayload == null) {
+      Fluttertoast.showToast(msg: "Something went wrong");
+
       return null;
     }
     final contract = DeployedContract(

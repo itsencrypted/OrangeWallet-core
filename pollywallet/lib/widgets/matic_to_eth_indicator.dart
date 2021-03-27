@@ -11,19 +11,15 @@ class MaticToEthIndicator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 100,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                    child: Text(
-                  "Matic Network",
-                  style: AppTheme.subtitle,
-                  textAlign: TextAlign.center,
-                )),
-              ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(AppTheme.paddingHeight),
+              child: Center(
+                  child: Text(
+                "Matic Network",
+                style: AppTheme.subtitle,
+                textAlign: TextAlign.center,
+              )),
             ),
           ),
           Container(
@@ -45,20 +41,17 @@ class MaticToEthIndicator extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-                width: 100,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      "Ethereum Network",
-                      style: AppTheme.subtitle,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(AppTheme.paddingHeight),
+              child: Center(
+                child: Text(
+                  "Ethereum Network",
+                  style: AppTheme.subtitle,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           ),
         ],
       ),

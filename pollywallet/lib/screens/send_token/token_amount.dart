@@ -448,7 +448,8 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                               .text),
                                                                       token
                                                                           .quoteRate)
-                                                                  .toString(),
+                                                                  .toStringAsFixed(
+                                                                      3),
                                                           style: AppTheme
                                                               .body_small,
                                                         )
@@ -461,7 +462,8 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                           ? "0"
                                                                           : _amount
                                                                               .text))
-                                                                  .toString() +
+                                                                  .toStringAsFixed(
+                                                                      3) +
                                                               " " +
                                                               token
                                                                   .contractName,

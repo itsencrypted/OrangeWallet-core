@@ -27,7 +27,8 @@ class DepositScreen extends StatefulWidget {
   _DepositScreenState createState() => _DepositScreenState();
 }
 
-class _DepositScreenState extends State<DepositScreen> {
+class _DepositScreenState extends State<DepositScreen>
+    with SingleTickerProviderStateMixin<DepositScreen> {
   TextEditingController _amount = TextEditingController();
   DepositDataCubit data;
   BuildContext context;
@@ -37,6 +38,7 @@ class _DepositScreenState extends State<DepositScreen> {
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
   bool showAmount;
+  TabController _tabController;
 
   var ethCubit;
   @override
@@ -53,6 +55,8 @@ class _DepositScreenState extends State<DepositScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _tabController ??= TabController(length: 2, vsync: this);
+
     ethCubit = context.read<CovalentTokensListEthCubit>();
 
     this.args = ModalRoute.of(context).settings.arguments;
@@ -131,100 +135,230 @@ class _DepositScreenState extends State<DepositScreen> {
                                       ? Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Container(
-                                              child: TextFormField(
-                                                textAlignVertical:
-                                                    TextAlignVertical.center,
-                                                controller: _amount,
-                                                keyboardAppearance:
-                                                    Brightness.dark,
-                                                textAlign: TextAlign.center,
-                                                autovalidateMode:
-                                                    AutovalidateMode
-                                                        .onUserInteraction,
-                                                validator: (val) => (val ==
-                                                                "" ||
-                                                            val == null) ||
-                                                        (double.tryParse(val) ==
-                                                                null ||
-                                                            (double.tryParse(
-                                                                        val) <
-                                                                    0 ||
-                                                                double.tryParse(
-                                                                        val) >
-                                                                    balance))
-                                                    ? "Invalid Amount"
-                                                    : null,
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
-                                                style: AppTheme.bigLabel,
-                                                decoration: InputDecoration(
-                                                    hintText: "Amount",
-                                                    fillColor:
-                                                        AppTheme.warmgray_100,
-                                                    filled: true,
-                                                    hintStyle:
-                                                        AppTheme.body_small,
-                                                    contentPadding:
-                                                        EdgeInsets.zero,
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide.none,
-                                                        borderRadius: BorderRadius
-                                                            .circular(AppTheme
-                                                                .cardRadius))),
-                                              ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    child: TextFormField(
+                                                      textAlignVertical:
+                                                          TextAlignVertical
+                                                              .center,
+                                                      controller: _amount,
+                                                      keyboardAppearance:
+                                                          Brightness.dark,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      autovalidateMode:
+                                                          AutovalidateMode
+                                                              .onUserInteraction,
+                                                      validator: (val) {
+                                                        if (index == 0) {
+                                                          if ((val == "" ||
+                                                                  val ==
+                                                                      null) ||
+                                                              (double.tryParse(
+                                                                          val) ==
+                                                                      null ||
+                                                                  (double.tryParse(
+                                                                              val) <
+                                                                          0 ||
+                                                                      double.tryParse(
+                                                                              val) >
+                                                                          balance)))
+                                                            return "Invalid Amount";
+                                                          else
+                                                            return null;
+                                                        } else {
+                                                          if ((val == "" ||
+                                                                  val ==
+                                                                      null) ||
+                                                              (double.tryParse(
+                                                                          val) ==
+                                                                      null ||
+                                                                  (double.tryParse(
+                                                                              val) <
+                                                                          0 ||
+                                                                      double.tryParse(
+                                                                              val) >
+                                                                          FiatCryptoConversions.cryptoToFiat(
+                                                                              balance,
+                                                                              token.quoteRate))))
+                                                            return "Invalid Amount";
+                                                          else
+                                                            return null;
+                                                        }
+                                                      },
+                                                      keyboardType: TextInputType
+                                                          .numberWithOptions(
+                                                              decimal: true),
+                                                      style: AppTheme.bigLabel,
+                                                      decoration: InputDecoration(
+                                                          hintText: "Amount",
+                                                          fillColor: AppTheme
+                                                              .warmgray_100,
+                                                          filled: true,
+                                                          hintStyle: AppTheme
+                                                              .body_small,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          border: OutlineInputBorder(
+                                                              borderSide:
+                                                                  BorderSide
+                                                                      .none,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          AppTheme
+                                                                              .cardRadius))),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width:
+                                                      AppTheme.paddingHeight /
+                                                          2,
+                                                ),
+                                                Container(
+                                                  width: 150,
+                                                  height: 50,
+                                                  child: ColoredTabBar(
+                                                    borderRadius:
+                                                        AppTheme.cardRadius,
+                                                    color:
+                                                        AppTheme.tabbarBGColor,
+                                                    tabbarMargin: 0,
+                                                    tabbarPadding: AppTheme
+                                                            .paddingHeight12 /
+                                                        4,
+                                                    tabBar: TabBar(
+                                                      controller:
+                                                          _tabController,
+                                                      labelStyle: AppTheme
+                                                          .tabbarTextStyle,
+                                                      unselectedLabelStyle:
+                                                          AppTheme
+                                                              .tabbarTextStyle,
+                                                      indicatorSize:
+                                                          TabBarIndicatorSize
+                                                              .tab,
+                                                      indicator: BoxDecoration(
+                                                          //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+                                                          borderRadius: BorderRadius
+                                                              .circular(AppTheme
+                                                                      .cardRadiusBig /
+                                                                  2),
+                                                          color:
+                                                              AppTheme.white),
+                                                      tabs: [
+                                                        Tab(
+                                                          child: Align(
+                                                            child: Text(
+                                                              'Matic',
+                                                              style: AppTheme
+                                                                  .body_xsmall
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Tab(
+                                                          child: Align(
+                                                            child: Text(
+                                                              'USD',
+                                                              style: AppTheme
+                                                                  .body_xsmall
+                                                                  .copyWith(
+                                                                      color: Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                      onTap: (value) {
+                                                        setState(() {
+                                                          index = value;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             SizedBox(
                                               height: AppTheme.paddingHeight,
                                             ),
-                                            Text(
-                                              FiatCryptoConversions.cryptoToFiat(
-                                                          double.parse(
-                                                              _amount.text == ""
-                                                                  ? "0"
-                                                                  : _amount
-                                                                      .text),
-                                                          token.quoteRate)
-                                                      .toString() +
-                                                  " USD",
-                                              style: AppTheme.body_small,
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                (index == 0)
+                                                    ? Text(
+                                                        "\$" +
+                                                            FiatCryptoConversions.cryptoToFiat(
+                                                                    double.parse(_amount.text ==
+                                                                            ""
+                                                                        ? "0"
+                                                                        : _amount
+                                                                            .text),
+                                                                    token
+                                                                        .quoteRate)
+                                                                .toStringAsFixed(
+                                                                    3),
+                                                        style:
+                                                            AppTheme.body_small,
+                                                      )
+                                                    : Text(
+                                                        FiatCryptoConversions.fiatToCrypto(
+                                                                    token
+                                                                        .quoteRate,
+                                                                    double.tryParse(_amount.text ==
+                                                                            ""
+                                                                        ? "0"
+                                                                        : _amount
+                                                                            .text))
+                                                                .toStringAsFixed(
+                                                                    3) +
+                                                            " " +
+                                                            token.contractName,
+                                                        style:
+                                                            AppTheme.body_small,
+                                                      ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      if (index == 0)
+                                                        setState(() {
+                                                          index = 1;
+                                                          _tabController
+                                                              .animateTo(1);
+                                                        });
+                                                      else
+                                                        setState(() {
+                                                          index = 0;
+                                                          _tabController
+                                                              .animateTo(0);
+                                                        });
+                                                    },
+                                                    child: Text(
+                                                      (index == 0)
+                                                          ? "Enter amount in USD"
+                                                          : "Enter amount in MATIC",
+                                                      style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          color: AppTheme
+                                                              .purple_400),
+                                                    ))
+                                              ],
                                             ),
                                           ],
                                         )
                                       : Container(),
-                                  SizedBox(
-                                    height: AppTheme.paddingHeight,
-                                  ),
-                                  Divider(
-                                    thickness: 1,
-                                    height: 1,
-                                    color: AppTheme.warmgray_100,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        balance.toStringAsFixed(2) +
-                                            " " +
-                                            token.contractName,
-                                        style: AppTheme.body_small,
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _amount.text = balance.toString();
-                                            });
-                                          },
-                                          child: Text(
-                                            "MAX",
-                                            style: TextStyle(
-                                                color: AppTheme.purple_700),
-                                          ))
-                                    ],
-                                  ),
                                 ],
                               )),
                         ),

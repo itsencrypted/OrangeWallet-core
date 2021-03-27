@@ -39,7 +39,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
       _refreshLoop(tokenListCubit);
     });
     showAmount = true;
-
+    _amount.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 

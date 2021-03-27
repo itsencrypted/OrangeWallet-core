@@ -1,3 +1,5 @@
+import 'package:url_launcher/url_launcher.dart';
+
 class FiatCryptoConversions {
   static double fiatToCrypto(double qoute, double amount) {
     if (qoute == 0) {
@@ -10,6 +12,7 @@ class FiatCryptoConversions {
     if (amount == null) {
       amount = 0;
     }
+
     return amount * qoute;
   }
 }

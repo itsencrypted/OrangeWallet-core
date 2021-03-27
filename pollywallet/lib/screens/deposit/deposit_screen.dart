@@ -44,7 +44,9 @@ class _DepositScreenState extends State<DepositScreen> {
       _refreshLoop(ethCubit);
     });
     showAmount = true;
-
+    _amount.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -155,14 +157,14 @@ class _DepositScreenState extends State<DepositScreen> {
                                       height: AppTheme.paddingHeight,
                                     ),
                                     Text(
-                                      "\$" +
-                                          FiatCryptoConversions.cryptoToFiat(
+                                      FiatCryptoConversions.cryptoToFiat(
                                                   double.parse(
                                                       _amount.text == ""
                                                           ? "0"
                                                           : _amount.text),
                                                   token.quoteRate)
-                                              .toString(),
+                                              .toString() +
+                                          " USD",
                                       style: AppTheme.body_small,
                                     ),
                                   ],

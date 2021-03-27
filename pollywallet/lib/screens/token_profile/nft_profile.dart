@@ -48,20 +48,15 @@ class _NftProfileState extends State<NftProfile> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Wrap(
-                    alignment: WrapAlignment.start,
-                    direction: Axis.horizontal,
-                    children: ls,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  direction: Axis.horizontal,
+                  children: ls,
+                ),
+              ],
             ),
           ),
         ));

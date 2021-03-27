@@ -47,7 +47,7 @@ class AppTheme {
   static const Color warmGrey_900 = Color(0xff26241E);
   static const String primaryHex = "#D287FD";
   static const double buttonRadius = 4;
-  static const double buttonHeight_44 = 44;
+  static const double buttonHeight_44 = 54;
 
   static const double cardRadius = 12;
   static const double cardRadiusMedium = 14;

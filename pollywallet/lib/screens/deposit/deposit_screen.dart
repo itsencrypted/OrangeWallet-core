@@ -387,10 +387,7 @@ class _DepositScreenState extends State<DepositScreen>
                                   style: AppTheme.title,
                                 ),
                                 trailing: FlatButton(
-                                  onPressed: () {
-                                    _sendDepositTransaction(
-                                        state, token, context);
-                                  },
+                                  onPressed: () {},
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                   child: ClipOval(
@@ -555,3 +552,5 @@ class _DepositScreenState extends State<DepositScreen>
     });
   }
 }
+  // _sendDepositTransaction(
+  //                                       state, token, context);

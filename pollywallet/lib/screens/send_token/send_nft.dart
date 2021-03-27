@@ -25,6 +25,7 @@ class SendNft extends StatefulWidget {
 }
 
 class _SendNftState extends State<SendNft> {
+  bool showAddress = true;
   SendTransactionCubit data;
   BuildContext context;
   double balance;
@@ -44,7 +45,7 @@ class _SendNftState extends State<SendNft> {
     var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
     _refreshLoop(tokenListCubit);
     return Scaffold(
-        appBar: AppBar(title: Text("Send Token")),
+        appBar: AppBar(title: Text("Send NFT")),
         body: BlocBuilder<SendTransactionCubit, SendTransactionState>(
           builder: (BuildContext context, state) {
             return BlocBuilder<CovalentTokensListMaticCubit,
@@ -65,64 +66,247 @@ class _SendNftState extends State<SendNft> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(),
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: Center(
-                              child: SendNftTile(
-                                data: token,
+                        Container(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.43,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0, vertical: 8),
+                                    child: SendNftTile(
+                                      data: token,
+                                    ),
+                                  )),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 30,
+                                    child: FlatButton(
+                                      padding: EdgeInsets.all(0),
+                                      onPressed: () {
+                                        if (tokenCountToSend > 1) {
+                                          setState(() {
+                                            tokenCountToSend--;
+                                          });
+                                        }
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      child: ClipOval(
+                                          child: Material(
+                                        color: AppTheme.white,
+                                        child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: Center(child: Text("-"))),
+                                      )),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    child: Text(tokenCountToSend.toString()),
+                                  ),
+                                  SizedBox(
+                                    width: 30,
+                                    child: FlatButton(
+                                      padding: EdgeInsets.all(0),
+                                      onPressed: () {
+                                        if (tokenCountToSend <
+                                            int.parse(state.data.token
+                                                .nftData[index].tokenBalance)) {
+                                          setState(() {
+                                            tokenCountToSend++;
+                                          });
+                                        }
+                                      },
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      child: ClipOval(
+                                          child: Material(
+                                        color: AppTheme.white,
+                                        child: SizedBox(
+                                            height: 30,
+                                            width: 30,
+                                            child: Center(child: Text("+"))),
+                                      )),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            controller: _address,
-                            keyboardAppearance: Brightness.dark,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (val) =>
-                                reg.hasMatch(val) ? null : "Invalid addresss",
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.text,
-                            style: AppTheme.bigLabel,
-                            decoration: InputDecoration(
-                                prefix: FlatButton(
-                                  child: Icon(Icons.paste),
-                                  onPressed: () async {
-                                    ClipboardData data =
-                                        await Clipboard.getData('text/plain');
-                                    _address.text = data.text;
-                                  },
-                                ),
-                                suffix: FlatButton(
-                                  child: Icon(Icons.qr_code),
-                                  onPressed: () async {
-                                    var qrResult = await BarcodeScanner.scan();
-                                    RegExp reg = RegExp(r'^0x[0-9a-fA-F]{40}$');
-                                    if (reg.hasMatch(qrResult.rawContent)) {
-                                      if (qrResult.rawContent.length == 42) {
-                                        _address.text = qrResult.rawContent;
-                                      } else {
-                                        Fluttertoast.showToast(
-                                          msg: "Invalid QR",
-                                        );
-                                      }
-                                    } else {
-                                      Fluttertoast.showToast(
-                                        msg: "Invalid QR",
-                                      );
-                                    }
-                                  },
-                                ),
-                                hintText: "Address",
-                                hintStyle: AppTheme.body1,
-                                focusColor: AppTheme.secondaryColor
-                                //focusedBorder: InputBorder.none,
-                                //enabledBorder: InputBorder.none,
-                                ),
+                            ],
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 15),
+                          child: Card(
+                              shape: AppTheme.cardShape,
+                              elevation: AppTheme.cardElevations,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      "Address",
+                                      style: AppTheme.label_medium,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(showAddress
+                                          ? Icons.arrow_drop_up
+                                          : Icons.arrow_drop_down),
+                                      onPressed: () {
+                                        setState(() {
+                                          showAddress = !showAddress;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  showAddress
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0, vertical: 8),
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 16),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        AppTheme.cardRadius)),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextButton(
+                                                  child: Icon(
+                                                    Icons.paste,
+                                                    color: Colors.black,
+                                                  ),
+                                                  onPressed: () async {
+                                                    ClipboardData data =
+                                                        await Clipboard.getData(
+                                                            'text/plain');
+                                                    _address.text = data.text;
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          AppTheme.warmgray_100,
+                                                      elevation: 0,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 12),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(AppTheme
+                                                                      .cardRadius),
+                                                              bottomLeft: Radius
+                                                                  .circular(AppTheme
+                                                                      .cardRadius)))),
+                                                ),
+                                                Expanded(
+                                                  child: TextFormField(
+                                                    controller: _address,
+                                                    keyboardAppearance:
+                                                        Brightness.dark,
+                                                    autovalidateMode:
+                                                        AutovalidateMode
+                                                            .onUserInteraction,
+                                                    validator: (val) => reg
+                                                            .hasMatch(val)
+                                                        ? null
+                                                        : "Invalid addresss",
+                                                    textAlign: TextAlign.center,
+                                                    textAlignVertical:
+                                                        TextAlignVertical
+                                                            .center,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    style: AppTheme.body_small,
+                                                    decoration: InputDecoration(
+                                                        fillColor: AppTheme
+                                                            .warmgray_100,
+                                                        hintText:
+                                                            "Enter the reciepients address ",
+                                                        filled: true,
+                                                        hintStyle:
+                                                            AppTheme.body_small,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide
+                                                                        .none,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .zero)
+
+                                                        //focusedBorder: InputBorder.none,
+                                                        //enabledBorder: InputBorder.none,
+                                                        ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  child: Icon(
+                                                    Icons.qr_code,
+                                                    color: Colors.black,
+                                                  ),
+                                                  onPressed: () async {
+                                                    var qrResult =
+                                                        await BarcodeScanner
+                                                            .scan();
+                                                    RegExp reg = RegExp(
+                                                        r'^0x[0-9a-fA-F]{40}$');
+                                                    print(qrResult.rawContent);
+                                                    if (reg.hasMatch(
+                                                        qrResult.rawContent)) {
+                                                      print("Regex");
+                                                      if (qrResult.rawContent
+                                                              .length ==
+                                                          42) {
+                                                        _address.text =
+                                                            qrResult.rawContent;
+                                                      } else {
+                                                        Fluttertoast.showToast(
+                                                          msg: "Invalid QR",
+                                                        );
+                                                      }
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                        msg: "Invalid QR",
+                                                      );
+                                                    }
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                      backgroundColor:
+                                                          AppTheme.warmgray_100,
+                                                      elevation: 0,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 12),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.only(
+                                                              topRight: Radius
+                                                                  .circular(AppTheme
+                                                                      .cardRadius),
+                                                              bottomRight: Radius
+                                                                  .circular(AppTheme
+                                                                      .cardRadius)))),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Container()
+                                ],
+                              )),
                         ),
                       ],
                     ),
@@ -130,168 +314,42 @@ class _SendNftState extends State<SendNft> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         SafeArea(
-                          child: ListTile(
-                            leading: FlatButton(
-                              onPressed: () {
-                                if (tokenBalance == null) {
-                                  return;
-                                }
-                                setState(() {
-                                  tokenCountToSend = int.parse(state
-                                      .data.token.nftData[index].tokenBalance);
-                                });
-                              },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              child: ClipOval(
-                                  child: Material(
-                                color: AppTheme.secondaryColor.withOpacity(0.3),
-                                child: SizedBox(
-                                    height: 56,
-                                    width: 56,
-                                    child: Center(
-                                      child: tokenBalance == null
-                                          ? Text(
-                                              state.data.token.contractName
-                                                  .substring(0, 1)
-                                                  .toUpperCase(),
-                                              style: AppTheme.title,
-                                            )
-                                          : Text(
-                                              "Max",
-                                              style: AppTheme.title,
-                                            ),
-                                    )),
-                              )),
-                            ),
-                            contentPadding: EdgeInsets.all(0),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                state.data.token.nftData[index].tokenBalance ==
-                                        null
-                                    ? Text(
-                                        "NFTs",
-                                        style: AppTheme.subtitle,
-                                      )
-                                    : Text(
-                                        "NFTs to send",
-                                        style: AppTheme.subtitle,
-                                      ),
-                                state.data.token.nftData[index].tokenBalance ==
-                                        null
-                                    ? Text(
-                                        state.data.token.nftData.length
-                                                .toString() +
-                                            " " +
-                                            state.data.token.contractName,
-                                        style: AppTheme.title,
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: 30,
-                                            child: FlatButton(
-                                              padding: EdgeInsets.all(0),
-                                              onPressed: () {
-                                                if (tokenCountToSend > 1) {
-                                                  setState(() {
-                                                    tokenCountToSend--;
-                                                  });
-                                                }
-                                              },
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              child: ClipOval(
-                                                  child: Material(
-                                                color: AppTheme.white,
-                                                child: SizedBox(
-                                                    height: 30,
-                                                    width: 30,
-                                                    child: Center(
-                                                        child: Text("-"))),
-                                              )),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12),
-                                            child: Text(
-                                                tokenCountToSend.toString()),
-                                          ),
-                                          SizedBox(
-                                            width: 30,
-                                            child: FlatButton(
-                                              padding: EdgeInsets.all(0),
-                                              onPressed: () {
-                                                if (tokenCountToSend <
-                                                    int.parse(state
-                                                        .data
-                                                        .token
-                                                        .nftData[index]
-                                                        .tokenBalance)) {
-                                                  setState(() {
-                                                    tokenCountToSend++;
-                                                  });
-                                                }
-                                              },
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              child: ClipOval(
-                                                  child: Material(
-                                                color: AppTheme.white,
-                                                child: SizedBox(
-                                                    height: 30,
-                                                    width: 30,
-                                                    child: Center(
-                                                        child: Text("+"))),
-                                              )),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                              ],
-                            ),
-                            trailing: FlatButton(
-                              onPressed: () {
-                                if (state.data.token.nftData.first
-                                        .tokenBalance ==
-                                    null) {
-                                  _sendERC721(
-                                      BigInt.parse(args),
-                                      state.data.token.contractAddress,
-                                      state.data.token,
-                                      context);
-                                } else {
-                                  _sendErc1155(
-                                      BigInt.parse(args),
-                                      BigInt.from(tokenCountToSend),
-                                      state.data.token.contractAddress,
-                                      state.data.token,
-                                      context);
-                                }
-                              },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              child: ClipOval(
-                                  child: Material(
-                                color: AppTheme.primaryColor,
-                                child: SizedBox(
-                                    height: 56,
-                                    width: 56,
-                                    child: Center(
-                                      child: Icon(Icons.check,
-                                          color: AppTheme.white),
-                                    )),
-                              )),
+                            child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: AppTheme.buttonHeight_44,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: AppTheme.paddingHeight12),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                backgroundColor: AppTheme.purple_600,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        AppTheme.buttonRadius))),
+                            onPressed: () {
+                              if (state.data.token.nftData.first.tokenBalance ==
+                                  null) {
+                                _sendERC721(
+                                    BigInt.parse(args),
+                                    state.data.token.contractAddress,
+                                    state.data.token,
+                                    context);
+                              } else {
+                                _sendErc1155(
+                                    BigInt.parse(args),
+                                    BigInt.from(tokenCountToSend),
+                                    state.data.token.contractAddress,
+                                    state.data.token,
+                                    context);
+                              }
+                            },
+                            child: Text(
+                              'Send',
+                              style: AppTheme.label_medium
+                                  .copyWith(color: AppTheme.lightgray_700),
                             ),
                           ),
-                        ),
+                        )),
                       ],
                     )
                   ],

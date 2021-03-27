@@ -118,7 +118,7 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                                           (element) => element.index == index)
                                       .isNotEmpty
                                   ? Text(
-                                      "Amount to depoist",
+                                      "Amount to withdraw",
                                       style: AppTheme.subtitle,
                                     )
                                   : Container(),
@@ -250,45 +250,26 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                               )
                             : Container(),
                         SafeArea(
-                          child: ListTile(
-                            leading: FlatButton(
-                              child: ClipOval(
-                                  child: Material(
-                                color: AppTheme.secondaryColor.withOpacity(0.3),
-                                child: SizedBox(
-                                    height: 56,
-                                    width: 56,
-                                    child: Center(
-                                        child: Text(
-                                      token.contractName
-                                          .substring(0, 1)
-                                          .toUpperCase(),
-                                      style: AppTheme.title,
-                                    ))),
-                              )),
-                            ),
-                            contentPadding: EdgeInsets.all(0),
-                            title: Text(
-                              token.contractName,
-                              textAlign: TextAlign.center,
-                            ),
-                            trailing: FlatButton(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: AppTheme.buttonHeight_44,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingHeight12),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.purple_600,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppTheme.buttonRadius))),
                               onPressed: () {
                                 _burnErc1155(state, token, context);
                               },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              child: ClipOval(
-                                  child: Material(
-                                color: AppTheme.primaryColor,
-                                child: SizedBox(
-                                    height: 56,
-                                    width: 56,
-                                    child: Center(
-                                      child: Icon(Icons.check,
-                                          color: AppTheme.white),
-                                    )),
-                              )),
+                              child: Text(
+                                'Withdraw',
+                                style: AppTheme.label_medium
+                                    .copyWith(color: AppTheme.lightgray_700),
+                              ),
                             ),
                           ),
                         ),

@@ -68,9 +68,7 @@ class _SettingsTabState extends State<SettingsTab>
               listTile(
                   title: 'Terms of Service',
                   leading: SvgPicture.asset(termOfServiceIconsvg),
-                  onTap: () {
-                    print('tos');
-                  }),
+                  onTap: () {}),
               Divider(
                 thickness: 1,
                 height: 1,
@@ -78,13 +76,7 @@ class _SettingsTabState extends State<SettingsTab>
               listTile(
                   title: 'Report a bug',
                   leading: SvgPicture.asset(bugsIconsvg),
-                  onTap: () {
-                    print('tos');
-                    Navigator.pushNamed(
-                      context,
-                      transactionDetailsRoute,
-                    );
-                  }),
+                  onTap: () {}),
             ]),
           ),
         ],

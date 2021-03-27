@@ -63,6 +63,7 @@ class _AccountSelectionState extends State<AccountSelection> {
                   child: Card(
                     shape: AppTheme.cardShape,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
@@ -180,21 +181,25 @@ class _AccountSelectionState extends State<AccountSelection> {
                             );
                           },
                         ),
-                        TextButton(
-                            style: TextButton.styleFrom(
-                                padding:
-                                    EdgeInsets.all(AppTheme.paddingHeight12),
-                                backgroundColor: AppTheme.purple_600,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100))),
-                            onPressed: () async {
-                              await Navigator.pushNamed(
-                                  context, pinForNewAccountRoute);
-                              _refresh();
-                            },
-                            child: Text("Add new account",
-                                style: AppTheme.label_medium
-                                    .copyWith(color: AppTheme.white)))
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0.0, bottom: 15),
+                          child: TextButton(
+                              style: TextButton.styleFrom(
+                                  padding:
+                                      EdgeInsets.all(AppTheme.paddingHeight12),
+                                  backgroundColor: AppTheme.purple_600,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(100))),
+                              onPressed: () async {
+                                await Navigator.pushNamed(
+                                    context, pinForNewAccountRoute);
+                                _refresh();
+                              },
+                              child: Text("Add new account",
+                                  style: AppTheme.label_medium
+                                      .copyWith(color: AppTheme.white))),
+                        )
                       ],
                     ),
                   ),

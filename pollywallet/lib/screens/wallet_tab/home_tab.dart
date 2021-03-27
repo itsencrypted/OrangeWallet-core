@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/screens/wallet_tab/coin_list.dart';
+import 'package:pollywallet/screens/wallet_tab/fiat_on_ramp_card.dart';
 import 'package:pollywallet/screens/wallet_tab/nft_list.dart';
 import 'package:pollywallet/screens/wallet_tab/top_balance.dart';
 import 'package:pollywallet/screens/wallet_tab/transfer_asset_card.dart';
@@ -75,6 +76,7 @@ class _HomeTabState extends State<HomeTab>
                   padding: const EdgeInsets.only(top: 30, bottom: 50),
                   child: TopBalance(amt.toStringAsFixed(2)),
                 ),
+                FiatOnRampCard(),
                 TransferAssetCard(),
                 CoinListCard(
                   tokens: state.covalentTokenList.data.items,
@@ -124,7 +126,8 @@ class _HomeTabState extends State<HomeTab>
                                       )
                                     : Container(),
                                 Icon(
-                                  Icons.arrow_forward,
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
                                   color: AppTheme.grey,
                                 ),
                               ],
@@ -155,7 +158,8 @@ class _HomeTabState extends State<HomeTab>
                               style: AppTheme.body1,
                             ),
                             Icon(
-                              Icons.arrow_forward,
+                              Icons.arrow_forward_ios,
+                              size: 15,
                               color: AppTheme.grey,
                             ),
                           ],

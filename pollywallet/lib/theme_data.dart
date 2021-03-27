@@ -44,6 +44,7 @@ class AppTheme {
   static const Color borderColorGreyish = Color(0xFFDCDFE6);
   static const Color buttonColorBlue = Color(0xFF003CB2);
   static const Color warmGrey = Color(0xFFE8E6E1);
+  static const Color warmGrey_900 = Color(0xff26241E);
   static const String primaryHex = "#D287FD";
   static const double buttonRadius = 4;
   static const double buttonHeight_44 = 44;
@@ -55,6 +56,7 @@ class AppTheme {
   static const double cardElevations = 0;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
+  static const double tokenIconSizeBig = 70;
   static const double paddingHeight = 16;
   static const double paddingHeight12 = 12;
   static const double paddingHeight20 = 20;
@@ -90,6 +92,13 @@ class AppTheme {
     letterSpacing: 0.27,
     color: darkerText,
   );
+  static const TextStyle headline_grey = TextStyle(
+      // h5 -> headline
+      fontFamily: fontName,
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      letterSpacing: 0.27,
+      color: warmgray_300);
   static const TextStyle bigLabel = TextStyle(
     // h5 -> headline
     fontFamily: fontName,
@@ -107,7 +116,14 @@ class AppTheme {
     letterSpacing: 0.18,
     color: darkerText,
   );
-
+  static const TextStyle grey_title = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    letterSpacing: 0.18,
+    color: warmgray_600,
+  );
   static const TextStyle subtitle = TextStyle(
     // subtitle2 -> subtitle
     fontFamily: fontName,
@@ -173,10 +189,18 @@ class AppTheme {
   static const TextStyle buttonText = TextStyle(
     // Caption -> caption
     fontFamily: fontName,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w600,
     fontSize: 16,
     letterSpacing: 0.3,
     color: whiteTextColor, // was lightText
+  );
+  static const TextStyle buttonTextPurple = TextStyle(
+    // Caption -> caption
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 16,
+    letterSpacing: 0.3,
+    color: Color(0xff6F36D1), // was lightText
   );
 
   static const TextStyle balanceMain = TextStyle(
@@ -245,7 +269,14 @@ class AppTheme {
     letterSpacing: 0.18,
     color: warmgray_900,
   );
-
+  static const TextStyle header_H4_Black = TextStyle(
+    // h6 -> title
+    fontFamily: fontName,
+    fontWeight: FontWeight.w600,
+    fontSize: 18,
+    letterSpacing: 0.28,
+    color: warmGrey_900,
+  );
   static const TextStyle header_H4 = TextStyle(
     // h6 -> title
     fontFamily: fontName,
@@ -280,6 +311,14 @@ class AppTheme {
     fontSize: 12,
     letterSpacing: 0.16,
     color: warmgray_300,
+  );
+  static const TextStyle subtitle_primary_color = TextStyle(
+    // subtitle2 -> subtitle
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    letterSpacing: -0.04,
+    color: primaryColor,
   );
   static const cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(cardRadius)));

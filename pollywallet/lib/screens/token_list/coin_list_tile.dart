@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:pollywallet/constants.dart';
 import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/send_token_model/send_token_data.dart';
@@ -45,7 +46,7 @@ class CoinListTileWithCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "\$${tokenData.quote}",
+                    "\$${tokenData.quote.toStringAsFixed(2)}",
                     style: AppTheme.balanceMain,
                   ),
                   Text(

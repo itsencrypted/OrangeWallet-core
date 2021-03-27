@@ -28,7 +28,11 @@ class NftListCard extends StatelessWidget {
       color: AppTheme.white,
       child: ExpansionTile(
         title: Text("$total Collectibles"),
-        trailing: Icon(Icons.arrow_forward),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 15,
+          color: AppTheme.grey,
+        ),
         children: [
           Padding(
             padding: EdgeInsets.only(

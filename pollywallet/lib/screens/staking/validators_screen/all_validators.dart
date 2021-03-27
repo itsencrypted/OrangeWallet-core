@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/staking_models/validators.dart';
 import 'package:pollywallet/screens/staking/validators_screen/ui_elements/validator_staked_card.dart';
 import 'package:pollywallet/state_manager/staking_data/validator_data/validator_data_cubit.dart';
 import 'package:pollywallet/theme_data.dart';
@@ -17,8 +19,74 @@ class AllValidators extends StatefulWidget {
 }
 
 class _AllValidatorsState extends State<AllValidators> {
+  TextEditingController controller = TextEditingController();
+  SearchBar searchBar;
+  String searchStr = "";
+  bool showSearch = false;
+  AppBar buildAppBar(BuildContext context) {
+    return new AppBar(
+      title: new Text('All Delegations'),
+      actions: [searchBar.getSearchAction(context)],
+      bottom: ColoredTabBar(
+        tabBar: TabBar(
+          labelStyle: AppTheme.tabbarTextStyle,
+          unselectedLabelStyle: AppTheme.tabbarTextStyle,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: BoxDecoration(
+              //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
+              borderRadius: BorderRadius.circular(12),
+              color: AppTheme.white),
+          tabs: [
+            Tab(
+              child: Align(
+                child: Text(
+                  'Stake',
+                  style: AppTheme.tabbarTextStyle,
+                ),
+              ),
+            ),
+            Tab(
+              child: Align(
+                child: Text(
+                  'Performance',
+                  style: AppTheme.tabbarTextStyle,
+                ),
+              ),
+            ),
+            Tab(
+              child: Align(
+                child: Text(
+                  'Commission',
+                  style: AppTheme.tabbarTextStyle,
+                ),
+              ),
+            )
+          ],
+        ),
+        borderRadius: AppTheme.cardRadius,
+        color: AppTheme.tabbarBGColor,
+        tabbarMargin: AppTheme.cardRadius,
+        tabbarPadding: AppTheme.paddingHeight / 4,
+      ),
+    );
+  }
+
+  _AllValidatorsState() {
+    searchBar = new SearchBar(
+        inBar: showSearch,
+        buildDefaultAppBar: buildAppBar,
+        setState: setState,
+        hintText: "Token Name",
+        controller: controller,
+        showClearButton: true,
+        onSubmitted: onSubmitted,
+        onCleared: onClear,
+        onClosed: onClose);
+  }
   @override
   void initState() {
+    controller.addListener(_search);
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var vCubit = context.read<ValidatorsdataCubit>();
       _refreshLoop(vCubit);
@@ -60,10 +128,10 @@ class _AllValidatorsState extends State<AllValidators> {
             .where((element) => element.status != "inactive")
             .toList();
 
-        // sorted.sort((a, b) =>
-        //     double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
-        //         ? 1
-        //         : 0);
+        sorted.sort((a, b) =>
+            double.parse(a.uptimePercent) < double.parse(b.uptimePercent)
+                ? 1
+                : 0);
         var commission = state.data.result
             .where((element) => element.status != "inactive")
             .toList();
@@ -76,55 +144,7 @@ class _AllValidatorsState extends State<AllValidators> {
           length: 3,
           child: Scaffold(
             backgroundColor: AppTheme.backgroundWhite,
-            appBar: AppBar(
-                title: Text(
-                  'All Validators',
-                  style: AppTheme.listTileTitle,
-                ),
-                actions: [
-                  IconButton(icon: Icon(Icons.search), onPressed: () {})
-                ],
-                bottom: ColoredTabBar(
-                  tabBar: TabBar(
-                    labelStyle: AppTheme.tabbarTextStyle,
-                    unselectedLabelStyle: AppTheme.tabbarTextStyle,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                        //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
-                        borderRadius: BorderRadius.circular(12),
-                        color: AppTheme.white),
-                    tabs: [
-                      Tab(
-                        child: Align(
-                          child: Text(
-                            'Stake',
-                            style: AppTheme.tabbarTextStyle,
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Align(
-                          child: Text(
-                            'Performance',
-                            style: AppTheme.tabbarTextStyle,
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Align(
-                          child: Text(
-                            'Commission',
-                            style: AppTheme.tabbarTextStyle,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  borderRadius: AppTheme.cardRadius,
-                  color: AppTheme.tabbarBGColor,
-                  tabbarMargin: AppTheme.cardRadius,
-                  tabbarPadding: AppTheme.paddingHeight / 4,
-                )),
+            appBar: searchBar.build(context),
             body: TabBarView(children: [
               ListView.builder(
                 itemBuilder: (context, index) {
@@ -135,6 +155,9 @@ class _AllValidatorsState extends State<AllValidators> {
                     name = stakedAmount[index].name;
                   } else {
                     name = "Validator " + stakedAmount[index].id.toString();
+                  }
+                  if (!_searchCond(stakedAmount[index])) {
+                    return Container();
                   }
                   return FlatButton(
                     padding: EdgeInsets.all(0),
@@ -163,6 +186,9 @@ class _AllValidatorsState extends State<AllValidators> {
                   } else {
                     name = "Validator " + sorted[index].id.toString();
                   }
+                  if (!_searchCond(sorted[index])) {
+                    return Container();
+                  }
                   return FlatButton(
                     padding: EdgeInsets.all(0),
                     onPressed: () {
@@ -189,6 +215,9 @@ class _AllValidatorsState extends State<AllValidators> {
                     name = commission[index].name;
                   } else {
                     name = "Validator " + commission[index].id.toString();
+                  }
+                  if (!_searchCond(commission[index])) {
+                    return Container();
                   }
                   return FlatButton(
                     padding: EdgeInsets.all(0),
@@ -236,6 +265,35 @@ class _AllValidatorsState extends State<AllValidators> {
         );
       }
     });
+  }
+
+  void onSubmitted(String value) {}
+  void onClear() {
+    setState(() {
+      searchStr = "";
+
+      controller.text = "";
+    });
+  }
+
+  _search() {
+    setState(() {
+      searchStr = controller.text;
+    });
+  }
+
+  void onClose() {
+    setState(() {
+      searchStr = "";
+      controller.text = "";
+      showSearch = false;
+    });
+  }
+
+  bool _searchCond(ValidatorInfo validator) {
+    var name = validator.name;
+
+    return name.toLowerCase().contains(searchStr.toLowerCase());
   }
 
   _refreshLoop(ValidatorsdataCubit cubit) {

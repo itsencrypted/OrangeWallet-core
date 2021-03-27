@@ -15,9 +15,10 @@ class SendTransactionFinal extends SendTransactionState {
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
-
+   
     return o is SendTransactionFinal &&
-        o.data.token.balance == data.token.balance &&
+        (o.data.token == null ? 0 : o.data.token.balance) ==
+            (data.token == null ? 0 : data.token.balance) &&
         data.amount == o.data.amount;
   }
 

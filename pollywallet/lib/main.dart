@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pollywallet/screens/bridge/select_deposit_bridge.dart';
 import 'package:pollywallet/screens/deposit/erc1155_deposit.dart';
 import 'package:pollywallet/screens/deposit/nft_select.dart';
 import 'package:pollywallet/screens/landing/app_landing.dart';
@@ -187,7 +188,8 @@ class _PollyWalletState extends State<PollyWallet> {
               depositStatusRoute: (context) => DepositStatus(),
               splashRoute: (context) => Splash(),
               withdrawStatusPosRoute: (context) => WithdrawStatusPos(),
-              withdrawStatusPlasmaRoute: (context) => WithdrawStatusPlasma()
+              withdrawStatusPlasmaRoute: (context) => WithdrawStatusPlasma(),
+              selectBridgeRoute: (context) => SelectBridge(),
             },
             home: current),
       ),

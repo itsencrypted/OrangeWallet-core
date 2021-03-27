@@ -76,7 +76,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                 body: SingleChildScrollView(
                   child: Container(
                     height: MediaQuery.of(context).size.height -
-                        AppBar().preferredSize.height * 2,
+                        AppBar().preferredSize.height,
                     child: Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -532,6 +532,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                   ],
                                 )),
                           ),
+                          SizedBox(),
                           SizedBox(
                             height: AppTheme.buttonHeight_44,
                           )

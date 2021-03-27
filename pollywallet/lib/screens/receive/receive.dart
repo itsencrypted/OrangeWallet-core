@@ -43,93 +43,106 @@ class _ReceiveState extends State<Receive> {
                 color: AppTheme.primaryColor,
               ),
             )
-          : Center(
+          : SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "Scan QR to send ETH, ERC-20 pr ERC-721",
-                    style: AppTheme.title,
-                  ),
                   Padding(
-                    padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                    child: QrImage(
-                      data: address,
-                      version: QrVersions.auto,
-                      size: 200.0,
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: SizedBox(
+                      height: 470,
+                      child: Card(
+                        shape: AppTheme.cardShape,
+                        elevation: AppTheme.cardElevations + 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Scan QR to send ETH, ERC-20, ERC-721",
+                                style: AppTheme.title,
+                              ),
+                            ),
+                            Divider(
+                              color: AppTheme.warmgray_200,
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.all(AppTheme.paddingHeight / 2),
+                              child: QrImage(
+                                data: address,
+                                version: QrVersions.auto,
+                                size: 200.0,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(AppTheme.paddingHeight20),
+                              child: Text(
+                                address,
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                                style: AppTheme.grey_title,
+                              ),
+                            ),
+                            Divider(
+                              color: AppTheme.warmgray_200,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    height: 44,
+                                    width: 101,
+                                    child: RawMaterialButton(
+                                      fillColor: AppTheme.warmGrey_900,
+                                      elevation: 1,
+                                      child: Text("Copy",
+                                          style: AppTheme.body2White),
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                            new ClipboardData(text: address));
+                                        Fluttertoast.showToast(
+                                          msg: "Address copied",
+                                        );
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 44,
+                                    width: 101,
+                                    child: RawMaterialButton(
+                                      fillColor: AppTheme.warmGrey_900,
+                                      elevation: 1,
+                                      child: Text("Share",
+                                          style: AppTheme.body2White),
+                                      onPressed: () async {
+                                        Share.share(
+                                            'Hey my wallet address is : $address',
+                                            subject:
+                                                'This is my wallet address');
+                                      },
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(AppTheme.paddingHeight20),
-                    child: Text(
-                      address,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: AppTheme.title,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                            child: RawMaterialButton(
-                              fillColor: AppTheme.primaryColor,
-                              elevation: 1,
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.all(AppTheme.paddingHeight20),
-                                child: Icon(Icons.file_copy_outlined),
-                              ),
-                              onPressed: () {
-                                Clipboard.setData(
-                                    new ClipboardData(text: address));
-                                Fluttertoast.showToast(
-                                  msg: "Address copied",
-                                );
-                              },
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                          Text(
-                            "Copy",
-                            style: AppTheme.body1,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(AppTheme.paddingHeight),
-                            child: RawMaterialButton(
-                              fillColor: AppTheme.primaryColor,
-                              elevation: 1,
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.all(AppTheme.paddingHeight20),
-                                child: Icon(Icons.share),
-                              ),
-                              onPressed: () async {
-                                //TODO change the sharing data here
-
-                                Share.share(
-                                    'Hey my wallet address is : $address',
-                                    subject: 'This is my wallet address');
-                              },
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                          Text(
-                            "Share",
-                            style: AppTheme.body1,
-                          ),
-                        ],
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),

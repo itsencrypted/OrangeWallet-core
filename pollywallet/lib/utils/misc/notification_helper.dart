@@ -116,6 +116,7 @@ class NotificationHelper {
         counter++;
       }
     }
+    print("counter: ${counter.toString()}");
     return counter;
   }
 

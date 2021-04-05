@@ -38,7 +38,7 @@ class _WithdrawListState extends State<WithdrawList>
           )
         : box.length == 0
             ? Center(
-                child: Text("No withdraw notifications so far."),
+                child: Text("No actions needed at the moment."),
               )
             : RefreshIndicator(
                 onRefresh: _refresh,

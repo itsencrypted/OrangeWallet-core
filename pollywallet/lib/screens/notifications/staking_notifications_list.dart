@@ -41,7 +41,7 @@ class _StakingNotificationsListState extends State<StakingNotificationsList>
           )
         : box.length == 0
             ? Center(
-                child: Text("No staking notifications so far."),
+                child: Text("No actions needed at the moment."),
               )
             : RefreshIndicator(
                 onRefresh: _refresh,

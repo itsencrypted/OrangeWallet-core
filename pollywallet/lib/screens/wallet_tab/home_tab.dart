@@ -119,7 +119,7 @@ class _HomeTabState extends State<HomeTab>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Actions",
+                              "Pending Actions",
                               style: AppTheme.body1,
                             ),
                             Row(

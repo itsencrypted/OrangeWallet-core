@@ -21,7 +21,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-              title: Text("Notfications"),
+              title: Text("Pending Actions"),
               bottom: ColoredTabBar(
                 tabBar: TabBar(
                   labelStyle: AppTheme.tabbarTextStyle,

@@ -469,6 +469,8 @@ class _DelegationAmountState extends State<DelegationAmount>
                         )
                       ],
                     ),
+                    floatingActionButtonAnimator:
+                        FloatingActionButtonAnimator.scaling,
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
                     floatingActionButton: Container(
@@ -531,9 +533,22 @@ class _DelegationAmountState extends State<DelegationAmount>
   }
 
   _delegate(String spender, Items token) async {
-    if (double.tryParse(_amount.text) == null ||
-        double.tryParse(_amount.text) < 1 ||
-        double.tryParse(_amount.text) > balance) {
+    if (double.tryParse(_amount.text) == null) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    var amount;
+    if (index == 1) {
+      amount = FiatCryptoConversions.fiatToCrypto(
+              token.quoteRate, double.tryParse(_amount.text))
+          .toString();
+    } else {
+      amount = _amount.text;
+    }
+    if (double.tryParse(amount) == null ||
+        double.tryParse(amount) < 1 ||
+        double.tryParse(amount) > balance) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
       return;
@@ -570,7 +585,7 @@ class _DelegationAmountState extends State<DelegationAmount>
     TransactionData transactionData;
     BigInt approval = await EthereumTransactions.allowance(
         config.stakeManagerProxy, config.maticToken);
-    var wei = EthConversions.ethToWei(_amount.text);
+    var wei = EthConversions.ethToWei(amount);
     print(approval);
     if (approval < wei) {
       bool appr = await showDialog(
@@ -595,10 +610,10 @@ class _DelegationAmountState extends State<DelegationAmount>
         return;
       }
     } else {
-      trx = await StakingTransactions.buyVoucher(_amount.text, spender);
+      trx = await StakingTransactions.buyVoucher(amount, spender);
       transactionData = TransactionData(
           to: spender,
-          amount: _amount.text,
+          amount: amount,
           trx: trx,
           token: token,
           type: TransactionType.STAKE);

@@ -179,13 +179,8 @@ class _DepositScreenState extends State<DepositScreen>
                                                                           val) ==
                                                                       null ||
                                                                   (double.tryParse(
-                                                                              val) <
-                                                                          0 ||
-                                                                      double.tryParse(
-                                                                              val) >
-                                                                          FiatCryptoConversions.cryptoToFiat(
-                                                                              balance,
-                                                                              token.quoteRate))))
+                                                                          val) <
+                                                                      0)))
                                                             return "Invalid Amount";
                                                           else
                                                             return null;
@@ -432,9 +427,22 @@ class _DepositScreenState extends State<DepositScreen>
 
   _sendDepositTransaction(
       DepositDataFinal state, Items tokenState, BuildContext context) async {
-    if (double.tryParse(_amount.text) == null ||
-        double.tryParse(_amount.text) < 0 ||
-        double.tryParse(_amount.text) > balance) {
+    var amount;
+    if (double.tryParse(_amount.text) == null) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    if (index == 1) {
+      amount = FiatCryptoConversions.fiatToCrypto(
+              tokenState.quoteRate, double.tryParse(_amount.text))
+          .toString();
+    } else {
+      amount = _amount.text;
+    }
+    if (double.tryParse(amount) == null ||
+        double.tryParse(amount) < 0 ||
+        double.tryParse(amount) > balance) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
       return;
@@ -473,19 +481,19 @@ class _DepositScreenState extends State<DepositScreen>
       data.setData(DepositModel(
           token: state.data.token, amount: _amount.toString(), isEth: true));
       if (bridge == 1) {
-        trx = await EthereumTransactions.depositEthPos(_amount.text);
+        trx = await EthereumTransactions.depositEthPos(amount);
         transactionData = TransactionData(
             to: config.erc20PredicatePos,
             trx: trx,
-            amount: _amount.text,
+            amount: amount,
             token: tokenState,
             type: TransactionType.DEPOSITPOS);
       } else {
-        trx = await EthereumTransactions.depositEthPlasma(_amount.text);
+        trx = await EthereumTransactions.depositEthPlasma(amount);
         transactionData = TransactionData(
             to: config.depositManager,
             trx: trx,
-            amount: _amount.text,
+            amount: amount,
             token: tokenState,
             type: TransactionType.DEPOSITPLASMA);
       }
@@ -499,7 +507,7 @@ class _DepositScreenState extends State<DepositScreen>
         brd = Bridge.PLASMA;
       BigInt approval = await EthereumTransactions.bridgeAllowanceERC20(
           state.data.token.contractAddress, brd);
-      var wei = EthConversions.ethToWei(_amount.text);
+      var wei = EthConversions.ethToWei(amount);
       if (approval < wei) {
         bool appr = await showDialog(
           context: context,
@@ -531,19 +539,19 @@ class _DepositScreenState extends State<DepositScreen>
       } else {
         if (bridge == 1) {
           trx = await EthereumTransactions.depositErc20Pos(
-              _amount.text, state.data.token.contractAddress);
+              amount, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.erc20PredicatePos,
-              amount: _amount.text,
+              amount: amount,
               trx: trx,
               token: tokenState,
               type: TransactionType.DEPOSITPOS);
         } else {
           trx = await EthereumTransactions.depositErc20Plasma(
-              _amount.text, state.data.token.contractAddress);
+              amount, state.data.token.contractAddress);
           transactionData = TransactionData(
               to: config.depositManager,
-              amount: _amount.text,
+              amount: amount,
               trx: trx,
               token: tokenState,
               type: TransactionType.DEPOSITPLASMA);

@@ -108,7 +108,8 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          args.amount +
+                                          double.tryParse(args.amount)
+                                                  .toStringAsFixed(3) +
                                               " ${args.token.contractTickerSymbol}",
                                           style: AppTheme.boldThemeColoredText,
                                         ),

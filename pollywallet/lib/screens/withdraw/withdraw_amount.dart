@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pollywallet/constants.dart';
+import 'package:pollywallet/models/covalent_models/covalent_token_list.dart';
 import 'package:pollywallet/models/transaction_data/transaction_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pollywallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
@@ -407,7 +408,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                             borderRadius:
                                 BorderRadius.circular(AppTheme.buttonRadius))),
                     onPressed: () {
-                      _sendWithDrawTransaction(state, context);
+                      _sendWithDrawTransaction(state, token, context);
                     },
                     child: Icon(
                       Icons.check,
@@ -424,10 +425,23 @@ class _WithdrawScreenState extends State<WithdrawScreen>
   }
 
   _sendWithDrawTransaction(
-      WithdrawBurnDataFinal state, BuildContext context) async {
-    if (double.tryParse(_amount.text) == null ||
-        double.tryParse(_amount.text) < 0 ||
-        double.tryParse(_amount.text) > balance) {
+      WithdrawBurnDataFinal state, Items token, BuildContext context) async {
+    if (double.tryParse(_amount.text) == null) {
+      Fluttertoast.showToast(
+          msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    var amount;
+    if (index == 1) {
+      amount = FiatCryptoConversions.fiatToCrypto(
+              token.quoteRate, double.tryParse(_amount.text))
+          .toString();
+    } else {
+      amount = _amount.text;
+    }
+    if (double.tryParse(amount) == null ||
+        double.tryParse(amount) < 0 ||
+        double.tryParse(amount) > balance) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
       return;
@@ -436,7 +450,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
     var trx = await WithdrawManagerWeb3.burnTx(
-        _amount.text, state.data.token.contractAddress);
+        amount, state.data.token.contractAddress);
     var type;
     if (bridge == 1) {
       type = TransactionType.BURNPOS;
@@ -447,7 +461,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
     }
 
     transactionData = TransactionData(
-        amount: _amount.text,
+        amount: amount,
         to: state.data.token.contractAddress,
         trx: trx,
         token: state.data.token,

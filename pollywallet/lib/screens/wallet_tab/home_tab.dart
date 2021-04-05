@@ -125,20 +125,17 @@ class _HomeTabState extends State<HomeTab>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                counter != 0
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          height: 30,
-                                          width: 30,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color:
-                                                  AppTheme.borderColorGreyish),
-                                          child: Center(child: Text("1")),
-                                        ),
-                                      )
-                                    : Container(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 30,
+                                    width: 30,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppTheme.borderColorGreyish),
+                                    child: Center(child: Text("1")),
+                                  ),
+                                ),
                                 Icon(
                                   Icons.arrow_forward_ios,
                                   size: 15,

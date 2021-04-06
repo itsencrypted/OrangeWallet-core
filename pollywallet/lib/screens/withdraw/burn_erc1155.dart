@@ -70,212 +70,215 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                 var balance = EthConversions.weiToEth(
                     BigInt.parse(token.balance), token.contractDecimals);
                 this.balance = balance;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    bridge == 1
-                        ? Text(
-                            "POS bridge",
-                            style: AppTheme.title,
-                          )
-                        : bridge == 2
-                            ? Text("Plasma Bridge", style: AppTheme.title)
-                            : SizedBox(),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: ListView.builder(
-                        itemCount: token.nftData.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    selectedData
-                                            .where((element) =>
-                                                element.index == index)
-                                            .isNotEmpty
-                                        ? selectedData.removeWhere(
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      bridge == 1
+                          ? Text(
+                              "POS bridge",
+                              style: AppTheme.title,
+                            )
+                          : bridge == 2
+                              ? Text("Plasma Bridge", style: AppTheme.title)
+                              : SizedBox(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.73,
+                        child: ListView.builder(
+                          itemCount: token.nftData.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                FlatButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedData
+                                              .where((element) =>
+                                                  element.index == index)
+                                              .isNotEmpty
+                                          ? selectedData.removeWhere(
+                                              (element) =>
+                                                  element.index == index)
+                                          : selectedData
+                                              .add(_Erc1155BrunData(1, index));
+                                    });
+                                  },
+                                  padding: EdgeInsets.all(0),
+                                  child: NftDepositTile(
+                                    data: token.nftData[index],
+                                    selected: selectedData
+                                        .where(
                                             (element) => element.index == index)
-                                        : selectedData
-                                            .add(_Erc1155BrunData(1, index));
-                                  });
-                                },
-                                padding: EdgeInsets.all(0),
-                                child: NftDepositTile(
-                                  data: token.nftData[index],
-                                  selected: selectedData
-                                      .where(
-                                          (element) => element.index == index)
-                                      .isNotEmpty,
-                                ),
-                              ),
-                              selectedData
-                                      .where(
-                                          (element) => element.index == index)
-                                      .isNotEmpty
-                                  ? Text(
-                                      "Amount to withdraw",
-                                      style: AppTheme.subtitle,
-                                    )
-                                  : Container(),
-                              selectedData
-                                      .where(
-                                          (element) => element.index == index)
-                                      .isNotEmpty
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          width: 30,
-                                          child: FlatButton(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              if (selectedData
-                                                      .where((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .first
-                                                      .count >
-                                                  1) {
-                                                setState(() {
-                                                  selectedData
-                                                      .where((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .first
-                                                      .count--;
-                                                });
-                                              }
-                                            },
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            child: ClipOval(
-                                                child: Material(
-                                              color: AppTheme.white,
-                                              child: SizedBox(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      Center(child: Text("-"))),
-                                            )),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          child: Text(selectedData.isEmpty ||
-                                                  selectedData
-                                                      .where((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .isEmpty
-                                              ? "0"
-                                              : selectedData[index]
-                                                  .count
-                                                  .toString()),
-                                        ),
-                                        SizedBox(
-                                          width: 30,
-                                          child: FlatButton(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: () {
-                                              if (selectedData
-                                                      .where((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .first
-                                                      .count <
-                                                  int.parse(state
-                                                      .data
-                                                      .token
-                                                      .nftData[index]
-                                                      .tokenBalance)) {
-                                                setState(() {
-                                                  selectedData
-                                                      .where((element) =>
-                                                          element.index ==
-                                                          index)
-                                                      .first
-                                                      .count++;
-                                                });
-                                              }
-                                            },
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            child: ClipOval(
-                                                child: Material(
-                                              color: AppTheme.white,
-                                              child: SizedBox(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      Center(child: Text("+"))),
-                                            )),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Container(),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        bridge == 2
-                            ? ListTile(
-                                leading: ClipOval(
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Container(
-                                    child: Text("!",
-                                        style: TextStyle(
-                                            fontSize: 50,
-                                            color: AppTheme.black,
-                                            fontWeight: FontWeight.bold)),
+                                        .isNotEmpty,
                                   ),
                                 ),
-                                title: Text("Note"),
-                                subtitle: Text(
-                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                                isThreeLine: true,
-                              )
-                            : Container(),
-                        SafeArea(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: AppTheme.buttonHeight_44,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingHeight12),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: AppTheme.purple_600,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          AppTheme.buttonRadius))),
-                              onPressed: () {
-                                _burnErc1155(state, token, context);
-                              },
-                              child: Text(
-                                'Withdraw',
-                                style: AppTheme.label_medium
-                                    .copyWith(color: AppTheme.lightgray_700),
+                                selectedData
+                                        .where(
+                                            (element) => element.index == index)
+                                        .isNotEmpty
+                                    ? Text(
+                                        "Amount to withdraw",
+                                        style: AppTheme.subtitle,
+                                      )
+                                    : Container(),
+                                selectedData
+                                        .where(
+                                            (element) => element.index == index)
+                                        .isNotEmpty
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                            child: FlatButton(
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                if (selectedData
+                                                        .where((element) =>
+                                                            element.index ==
+                                                            index)
+                                                        .first
+                                                        .count >
+                                                    1) {
+                                                  setState(() {
+                                                    selectedData
+                                                        .where((element) =>
+                                                            element.index ==
+                                                            index)
+                                                        .first
+                                                        .count--;
+                                                  });
+                                                }
+                                              },
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: AppTheme.white,
+                                                child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: Center(
+                                                        child: Text("-"))),
+                                              )),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12),
+                                            child: Text(selectedData.isEmpty ||
+                                                    selectedData
+                                                        .where((element) =>
+                                                            element.index ==
+                                                            index)
+                                                        .isEmpty
+                                                ? "0"
+                                                : selectedData[index]
+                                                    .count
+                                                    .toString()),
+                                          ),
+                                          SizedBox(
+                                            width: 30,
+                                            child: FlatButton(
+                                              padding: EdgeInsets.all(0),
+                                              onPressed: () {
+                                                if (selectedData
+                                                        .where((element) =>
+                                                            element.index ==
+                                                            index)
+                                                        .first
+                                                        .count <
+                                                    int.parse(state
+                                                        .data
+                                                        .token
+                                                        .nftData[index]
+                                                        .tokenBalance)) {
+                                                  setState(() {
+                                                    selectedData
+                                                        .where((element) =>
+                                                            element.index ==
+                                                            index)
+                                                        .first
+                                                        .count++;
+                                                  });
+                                                }
+                                              },
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              child: ClipOval(
+                                                  child: Material(
+                                                color: AppTheme.white,
+                                                child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child: Center(
+                                                        child: Text("+"))),
+                                              )),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Container(),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          bridge == 2
+                              ? ListTile(
+                                  leading: ClipOval(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Container(
+                                      child: Text("!",
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              color: AppTheme.black,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                                  title: Text("Note"),
+                                  subtitle: Text(
+                                      "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                  isThreeLine: true,
+                                )
+                              : Container(),
+                          SafeArea(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: AppTheme.buttonHeight_44,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: AppTheme.paddingHeight12),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: AppTheme.purple_600,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.buttonRadius))),
+                                onPressed: () {
+                                  _burnErc1155(state, token, context);
+                                },
+                                child: Text(
+                                  'Withdraw',
+                                  style: AppTheme.label_medium
+                                      .copyWith(color: AppTheme.lightgray_700),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 );
               } else {
                 return Center(child: Text("Something went Wrong"));

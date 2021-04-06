@@ -74,165 +74,167 @@ class _NftBurnState extends State<NftBurn> {
               var balance = EthConversions.weiToEth(
                   BigInt.parse(token.balance), token.contractDecimals);
               this.balance = balance;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      args == 3
-                          ? CupertinoSegmentedControl<int>(
-                              pressedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              groupValue: index,
-                              selectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              borderColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.01),
-                              unselectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              padding: EdgeInsets.all(10),
-                              children: {
-                                0: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 0 ? 1 : 0,
-                                    color: index == 0
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      child: Text(
-                                        "POS",
-                                        style: AppTheme.body1,
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        args == 3
+                            ? CupertinoSegmentedControl<int>(
+                                pressedColor:
+                                    AppTheme.somewhatYellow.withOpacity(0.9),
+                                groupValue: index,
+                                selectedColor:
+                                    AppTheme.somewhatYellow.withOpacity(0.9),
+                                borderColor:
+                                    AppTheme.somewhatYellow.withOpacity(0.01),
+                                unselectedColor:
+                                    AppTheme.somewhatYellow.withOpacity(0.9),
+                                padding: EdgeInsets.all(10),
+                                children: {
+                                  0: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 3, horizontal: 5),
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(3))),
+                                      elevation: index == 0 ? 1 : 0,
+                                      color: index == 0
+                                          ? AppTheme.backgroundWhite
+                                          : AppTheme.somewhatYellow
+                                              .withOpacity(0.01),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        child: Text(
+                                          "POS",
+                                          style: AppTheme.body1,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                1: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 1 ? 1 : 0,
-                                    color: index == 1
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10),
-                                      child: Text(
-                                        "PLASMA",
-                                        style: AppTheme.body1,
+                                  1: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 3, horizontal: 5),
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(3))),
+                                      elevation: index == 1 ? 1 : 0,
+                                      color: index == 1
+                                          ? AppTheme.backgroundWhite
+                                          : AppTheme.somewhatYellow
+                                              .withOpacity(0.01),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10),
+                                        child: Text(
+                                          "PLASMA",
+                                          style: AppTheme.body1,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              },
-                              onValueChanged: (val) {
-                                setState(() {
-                                  index = val;
-                                  if (val == 0) {
-                                    bridge = 1;
-                                  } else {
-                                    bridge = 2;
-                                  }
-                                });
-                              })
-                          : args == 1
-                              ? Text("POS Bridge", style: AppTheme.headline)
-                              : args == 2
-                                  ? Text(
-                                      "Plasma Bridge",
-                                      style: AppTheme.headline,
-                                    )
-                                  : Container(),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: ListView.builder(
-                          itemCount: token.nftData.length,
-                          itemBuilder: (context, index) {
-                            return FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                              },
-                              padding: EdgeInsets.all(0),
-                              child: NftDepositTile(
-                                data: token.nftData[index],
-                                selected: index == selectedIndex,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      bridge == 2
-                          ? ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
+                                  )
+                                },
+                                onValueChanged: (val) {
+                                  setState(() {
+                                    index = val;
+                                    if (val == 0) {
+                                      bridge = 1;
+                                    } else {
+                                      bridge = 2;
+                                    }
+                                  });
+                                })
+                            : args == 1
+                                ? Text("POS Bridge", style: AppTheme.headline)
+                                : args == 2
+                                    ? Text(
+                                        "Plasma Bridge",
+                                        style: AppTheme.headline,
+                                      )
+                                    : Container(),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.73,
+                          child: ListView.builder(
+                            itemCount: token.nftData.length,
+                            itemBuilder: (context, index) {
+                              return FlatButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selectedIndex = index;
+                                  });
+                                },
+                                padding: EdgeInsets.all(0),
+                                child: NftDepositTile(
+                                  data: token.nftData[index],
+                                  selected: index == selectedIndex,
                                 ),
-                              ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            )
-                          : Container(),
-                      SafeArea(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: AppTheme.buttonHeight_44,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: AppTheme.paddingHeight12),
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                                backgroundColor: AppTheme.purple_600,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        AppTheme.buttonRadius))),
-                            onPressed: () {
-                              _sendWithDrawTransaction(state, token, context);
+                              );
                             },
-                            child: Text(
-                              'Withdraw',
-                              style: AppTheme.label_medium
-                                  .copyWith(color: AppTheme.lightgray_700),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        bridge == 2
+                            ? ListTile(
+                                leading: ClipOval(
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Container(
+                                    child: Text("!",
+                                        style: TextStyle(
+                                            fontSize: 50,
+                                            color: AppTheme.black,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ),
+                                title: Text("Note"),
+                                subtitle: Text(
+                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                isThreeLine: true,
+                              )
+                            : Container(),
+                        SafeArea(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: AppTheme.buttonHeight_44,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingHeight12),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.purple_600,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppTheme.buttonRadius))),
+                              onPressed: () {
+                                _sendWithDrawTransaction(state, token, context);
+                              },
+                              child: Text(
+                                'Withdraw',
+                                style: AppTheme.label_medium
+                                    .copyWith(color: AppTheme.lightgray_700),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                      ],
+                    )
+                  ],
+                ),
               );
             } else {
               return Center(child: Text("Something went Wrong"));

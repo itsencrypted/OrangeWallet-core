@@ -25,7 +25,7 @@ class _AllValidatorsState extends State<AllValidators> {
   bool showSearch = false;
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
-      title: new Text('All Delegations'),
+      title: new Text('All Validators'),
       actions: [searchBar.getSearchAction(context)],
       bottom: ColoredTabBar(
         tabBar: TabBar(
@@ -49,6 +49,7 @@ class _AllValidatorsState extends State<AllValidators> {
               child: Align(
                 child: Text(
                   'Performance',
+                  textAlign: TextAlign.center,
                   style: AppTheme.tabbarTextStyle,
                 ),
               ),
@@ -57,6 +58,7 @@ class _AllValidatorsState extends State<AllValidators> {
               child: Align(
                 child: Text(
                   'Commission',
+                  textAlign: TextAlign.center,
                   style: AppTheme.tabbarTextStyle,
                 ),
               ),

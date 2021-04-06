@@ -273,15 +273,15 @@ class BoxUtils {
         await Hive.openBox<UnbondingDataDb>(unbondDbBox + "0" + address);
     Box<UnbondingDataDb> stake2 =
         await Hive.openBox<UnbondingDataDb>(unbondDbBox + "1" + address);
-    creds.clear();
-    trx1.clear();
-    trx2.clear();
-    deposits1.clear();
-    deposits2.clear();
-    withdraw1.clear();
-    withdraw2.clear();
-    stake1.clear();
-    stake2.clear();
+    await creds.clear();
+    await trx1.clear();
+    await trx2.clear();
+    await deposits1.clear();
+    await deposits2.clear();
+    await withdraw1.clear();
+    await withdraw2.clear();
+    await stake1.clear();
+    await stake2.clear();
     creds.close();
     trx1.close();
     trx2.close();

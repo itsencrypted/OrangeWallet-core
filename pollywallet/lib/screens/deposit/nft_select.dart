@@ -120,87 +120,89 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                 var balance = EthConversions.weiToEth(
                     BigInt.parse(token.balance), token.contractDecimals);
                 this.balance = balance;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    bridge == 1
-                        ? Text(
-                            "POS bridge",
-                            style: AppTheme.title,
-                          )
-                        : bridge == 2
-                            ? Text("Plasma Bridge", style: AppTheme.title)
-                            : SizedBox(),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: ListView.builder(
-                        itemCount: state.data.token.nftData.length,
-                        itemBuilder: (context, index) {
-                          return FlatButton(
-                            onPressed: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                            },
-                            padding: EdgeInsets.all(0),
-                            child: NftDepositTile(
-                              data: token.nftData[index],
-                              selected: index == selectedIndex,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        bridge == 2
-                            ? ListTile(
-                                leading: ClipOval(
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Container(
-                                    child: Text("!",
-                                        style: TextStyle(
-                                            fontSize: 50,
-                                            color: AppTheme.black,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                                title: Text("Note"),
-                                subtitle: Text(
-                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                                isThreeLine: true,
-                              )
-                            : Container(),
-                        SafeArea(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: AppTheme.buttonHeight_44,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingHeight12),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: AppTheme.purple_600,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          AppTheme.buttonRadius))),
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      bridge == 1
+                          ? Text(
+                              "POS bridge",
+                              style: AppTheme.title,
+                            )
+                          : bridge == 2
+                              ? Text("Plasma Bridge", style: AppTheme.title)
+                              : SizedBox(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        child: ListView.builder(
+                          itemCount: state.data.token.nftData.length,
+                          itemBuilder: (context, index) {
+                            return FlatButton(
                               onPressed: () {
-                                _sendDepositTransactionERC721(
-                                    state, token, context);
+                                setState(() {
+                                  selectedIndex = index;
+                                });
                               },
-                              child: Text(
-                                'Deposit',
-                                style: AppTheme.label_medium
-                                    .copyWith(color: AppTheme.lightgray_700),
+                              padding: EdgeInsets.all(0),
+                              child: NftDepositTile(
+                                data: token.nftData[index],
+                                selected: index == selectedIndex,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          bridge == 2
+                              ? ListTile(
+                                  leading: ClipOval(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Container(
+                                      child: Text("!",
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              color: AppTheme.black,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
+                                  title: Text("Note"),
+                                  subtitle: Text(
+                                      "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                                  isThreeLine: true,
+                                )
+                              : Container(),
+                          SafeArea(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: AppTheme.buttonHeight_44,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: AppTheme.paddingHeight12),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: AppTheme.purple_600,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.buttonRadius))),
+                                onPressed: () {
+                                  _sendDepositTransactionERC721(
+                                      state, token, context);
+                                },
+                                child: Text(
+                                  'Deposit',
+                                  style: AppTheme.label_medium
+                                      .copyWith(color: AppTheme.lightgray_700),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 );
               } else {
                 return Center(child: Text("Something went Wrong"));

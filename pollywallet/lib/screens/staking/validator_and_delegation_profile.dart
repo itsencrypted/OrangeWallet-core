@@ -102,12 +102,11 @@ class _ValidatorAndDelegationProfileState
                     _loadWithdrawStatus(validator.contractAddress);
                   }
 
-                  double qoute = covalentMaticState.covalentTokenList.data.items
+                  var matic = covalentMaticState.covalentTokenList.data.items
                       .where((element) =>
                           element.contractTickerSymbol.toLowerCase() == "matic")
                       .toList()
-                      .first
-                      .quoteRate;
+                      .first;
                   print(2);
                   DelegatorInfo delegatorInfo;
                   var len = delegationState.data.result
@@ -146,16 +145,7 @@ class _ValidatorAndDelegationProfileState
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   unlockable
-                                      ? _withdrawCard(
-                                          validator,
-                                          covalentMaticState
-                                              .covalentTokenList.data.items
-                                              .where((element) =>
-                                                  element.contractTickerSymbol
-                                                      .toLowerCase() ==
-                                                  "matic")
-                                              .toList()
-                                              .first)
+                                      ? _withdrawCard(validator, matic)
                                       : Container(),
                                   Container(
                                     width:
@@ -413,19 +403,8 @@ class _ValidatorAndDelegationProfileState
                                                               .LENGTH_LONG);
                                                       return;
                                                     }
-                                                    _restake(
-                                                        reward,
-                                                        validator,
-                                                        covalentMaticState
-                                                            .covalentTokenList
-                                                            .data
-                                                            .items
-                                                            .where((element) =>
-                                                                element
-                                                                    .contractName
-                                                                    .toLowerCase() ==
-                                                                "matic")
-                                                            .first);
+                                                    _restake(reward, validator,
+                                                        matic);
                                                   },
                                                   color:
                                                       AppTheme.secondaryColor,
@@ -496,19 +475,8 @@ class _ValidatorAndDelegationProfileState
                                               children: [
                                                 RaisedButton(
                                                   onPressed: () async {
-                                                    _claimRewards(
-                                                        reward,
-                                                        validator,
-                                                        covalentMaticState
-                                                            .covalentTokenList
-                                                            .data
-                                                            .items
-                                                            .where((element) =>
-                                                                element
-                                                                    .contractName
-                                                                    .toLowerCase() ==
-                                                                "matic")
-                                                            .first);
+                                                    _claimRewards(reward,
+                                                        validator, matic);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -536,7 +504,8 @@ class _ValidatorAndDelegationProfileState
                                                         delegatorInfo.shares,
                                                         validator
                                                             .contractAddress,
-                                                        validator);
+                                                        validator,
+                                                        matic);
                                                   },
                                                   color: AppTheme.primaryColor,
                                                   child: SizedBox(
@@ -636,8 +605,13 @@ class _ValidatorAndDelegationProfileState
         arguments: data);
   }
 
-  _withdrawStake(BigInt stake, BigInt share, String address,
-      ValidatorInfo validator) async {
+  _withdrawStake(
+    BigInt stake,
+    BigInt share,
+    String address,
+    ValidatorInfo validator,
+    Items token,
+  ) async {
     GlobalKey<State> _key = new GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     Transaction trx;
@@ -648,7 +622,7 @@ class _ValidatorAndDelegationProfileState
         amount: EthConversions.weiToEth(stake, 18).toString(),
         trx: trx,
         validatorData: validator,
-        token: Items(contractTickerSymbol: "MATIC"),
+        token: token,
         type: TransactionType.UNSTAKE);
     Navigator.of(context, rootNavigator: true).pop();
 

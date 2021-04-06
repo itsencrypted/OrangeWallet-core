@@ -133,7 +133,8 @@ class _HomeTabState extends State<HomeTab>
                                     decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: AppTheme.borderColorGreyish),
-                                    child: Center(child: Text("1")),
+                                    child:
+                                        Center(child: Text(counter.toString())),
                                   ),
                                 ),
                                 Icon(

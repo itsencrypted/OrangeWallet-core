@@ -114,7 +114,7 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                           style: AppTheme.boldThemeColoredText,
                                         ),
                                         Text(
-                                          " ${args.token.quoteRate * double.parse(args.amount)} USD",
+                                          "  ${(args.token.quoteRate * double.parse(args.amount)).toStringAsFixed(3)}  USD",
                                           style: AppTheme.balanceSub,
                                         )
                                       ],
@@ -218,13 +218,16 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SafeArea(
-                          child: ConfirmationSlider(
-                              backgroundShape: BorderRadius.all(
-                                  Radius.circular(AppTheme.cardRadius)),
-                              foregroundShape: BorderRadius.all(
-                                  Radius.circular(AppTheme.cardRadius)),
-                              foregroundColor: AppTheme.primaryColor,
-                              onConfirmation: () => _sendTx()))
+                          child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ConfirmationSlider(
+                            backgroundShape: BorderRadius.all(
+                                Radius.circular(AppTheme.cardRadius)),
+                            foregroundShape: BorderRadius.all(
+                                Radius.circular(AppTheme.cardRadius)),
+                            foregroundColor: AppTheme.primaryColor,
+                            onConfirmation: () => _sendTx()),
+                      ))
                     ],
                   ))
                 ],

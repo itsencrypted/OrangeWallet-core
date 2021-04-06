@@ -130,7 +130,7 @@ class _AccountSelectionState extends State<AccountSelection> {
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .width *
-                                                            0.7,
+                                                            0.65,
                                                     child: Text(
                                                       list[index].address,
                                                       style:

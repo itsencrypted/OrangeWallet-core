@@ -109,6 +109,8 @@ class PosTimeline extends StatelessWidget {
     Transaction trx = await WithdrawManagerWeb3.exitPos(txHash);
     if (trx == null) {
       Fluttertoast.showToast(msg: "Something Went Wrong");
+      Navigator.of(_key.currentContext, rootNavigator: true).pop();
+      return;
     }
     TransactionData data = TransactionData(
         amount: _data.amount,

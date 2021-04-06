@@ -204,7 +204,7 @@ class WithdrawManagerApi {
     var json = jsonDecode(resp.body);
     print(resp.body);
     var payload = Payload.fromJson(json);
-    if ((payload.error == null || payload.error == "false")) {
+    if (payload.result != null) {
       return payload.result;
     } else {
       return null;
@@ -218,7 +218,8 @@ class WithdrawManagerApi {
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     var payload = Payload.fromJson(json);
-    if (payload.error == null) {
+    print(payload.result);
+    if (payload.result != null) {
       return payload.result;
     } else {
       return null;

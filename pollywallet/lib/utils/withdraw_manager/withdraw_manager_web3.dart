@@ -66,9 +66,7 @@ class WithdrawManagerWeb3 {
     }
 
     var uint8List = RlpEncode.encodeHex(exitPayload);
-    if (exitPayload == null) {
-      return null;
-    }
+
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "rootchainproxy"),
         EthereumAddress.fromHex(config.rootChainProxy));
@@ -86,13 +84,13 @@ class WithdrawManagerWeb3 {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String exitPayload =
         await WithdrawManagerApi.getPayloadForExitPlasma(burnTxHash);
-
-    var uint8List = RlpEncode.encodeHex(exitPayload);
     if (exitPayload == null) {
       Fluttertoast.showToast(msg: "Something went wrong");
 
       return null;
     }
+    var uint8List = RlpEncode.encodeHex(exitPayload);
+
     final contract = DeployedContract(
         ContractAbi.fromJson(abi, "erc20predicate"),
         EthereumAddress.fromHex(config.erc20PredicatePlasma));

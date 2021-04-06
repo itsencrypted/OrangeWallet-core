@@ -163,6 +163,8 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
         await WithdrawManagerWeb3.exitPlasma(widget.data.addressRoot);
     if (trx == null) {
       Fluttertoast.showToast(msg: "Something Went Wrong");
+      Navigator.of(_key.currentContext, rootNavigator: true).pop();
+
       return;
     }
     TransactionData data = TransactionData(
@@ -185,6 +187,8 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
         await WithdrawManagerWeb3.initiateExitPlasma(widget.data.burnHash);
     if (trx == null) {
       Fluttertoast.showToast(msg: "Something Went Wrong");
+      Navigator.of(_key.currentContext, rootNavigator: true).pop();
+
       return;
     }
     TransactionData data = TransactionData(

@@ -178,9 +178,16 @@ class _DepositScreenState extends State<DepositScreen>
                                                               (double.tryParse(
                                                                           val) ==
                                                                       null ||
-                                                                  (double.tryParse(
-                                                                          val) <
-                                                                      0)))
+                                                                  (double.tryParse(val) <
+                                                                              0 ||
+                                                                          token.quoteRate ==
+                                                                              0
+                                                                      ? true
+                                                                      : double.tryParse(
+                                                                              val) >
+                                                                          FiatCryptoConversions.cryptoToFiat(
+                                                                              balance,
+                                                                              token.quoteRate))))
                                                             return "Invalid Amount";
                                                           else
                                                             return null;

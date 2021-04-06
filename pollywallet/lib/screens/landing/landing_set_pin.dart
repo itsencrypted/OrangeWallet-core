@@ -34,7 +34,7 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
   @override
   Widget build(BuildContext context) {
     args = (ModalRoute.of(context).settings.arguments);
-    seed = args[0];
+    seed = args[0].toString();
     newMnemonic = args[1];
     return Scaffold(
       appBar: AppBar(

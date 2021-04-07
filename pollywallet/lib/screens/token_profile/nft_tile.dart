@@ -36,7 +36,7 @@ class NftTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.28,
                   child: type == "svg"
                       ? SvgPicture.network(url)
                       : type == "notFound"

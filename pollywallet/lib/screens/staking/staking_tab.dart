@@ -184,50 +184,52 @@ class _StakingTabState extends State<StakingTab>
                               ],
                             ),
                           )
-                        : ListView(children: [
-                            if (showWarning)
-                              WarningCard(
-                                onClose: () {
-                                  setState(() {
-                                    showWarning = false;
-                                  });
-                                },
-                                warningText:
-                                    'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
-                              ),
-                            StackingCard(
-                                iconURL:
-                                    'https://cdn.iconscout.com/icon/free/png-256/matic-2709185-2249231.png',
-                                maticWalletBalance: matic.toString(),
-                                etcWalletBalance: eth.toString(),
-                                maticStake: EthConversions.weiToEth(
-                                        delegationState.stake, 18)
-                                    .toString(),
-                                stakeUSD: stakeQoute.toStringAsFixed(2),
-                                maticRewards: EthConversions.weiToEth(
-                                        validatorsState.rewards, 18)
-                                    .toString(),
-                                rewardUSD: rateQoute.toStringAsFixed(2)),
-                            listTile(
-                                title:
-                                    '${delegationState.data.result.length} Delegation',
-                                onTap: () {
-                                  print('Delegation');
-                                  Navigator.of(context)
-                                      .pushNamed(delegationRoute);
-                                }),
-                            listTile(
-                                title:
-                                    '${validatorsState.data.result.length} Validators',
-                                onTap: () {
-                                  print('Validators');
-                                  Navigator.of(context)
-                                      .pushNamed(allValidatorsRoute);
-                                }),
-                            SizedBox(
-                              height: 10,
-                            )
-                          ]),
+                        : SingleChildScrollView(
+                            child: Column(children: [
+                              if (showWarning)
+                                WarningCard(
+                                  onClose: () {
+                                    setState(() {
+                                      showWarning = false;
+                                    });
+                                  },
+                                  warningText:
+                                      'Staking works on Ethereum Mainnet. There will be high transaction fee and slow transaction speed.',
+                                ),
+                              StackingCard(
+                                  iconURL:
+                                      'https://cdn.iconscout.com/icon/free/png-256/matic-2709185-2249231.png',
+                                  maticWalletBalance: matic.toString(),
+                                  etcWalletBalance: eth.toString(),
+                                  maticStake: EthConversions.weiToEth(
+                                          delegationState.stake, 18)
+                                      .toString(),
+                                  stakeUSD: stakeQoute.toStringAsFixed(2),
+                                  maticRewards: EthConversions.weiToEth(
+                                          validatorsState.rewards, 18)
+                                      .toString(),
+                                  rewardUSD: rateQoute.toStringAsFixed(2)),
+                              listTile(
+                                  title:
+                                      '${delegationState.data.result.length} Delegation',
+                                  onTap: () {
+                                    print('Delegation');
+                                    Navigator.of(context)
+                                        .pushNamed(delegationRoute);
+                                  }),
+                              listTile(
+                                  title:
+                                      '${validatorsState.data.result.length} Validators',
+                                  onTap: () {
+                                    print('Validators');
+                                    Navigator.of(context)
+                                        .pushNamed(allValidatorsRoute);
+                                  }),
+                              SizedBox(
+                                height: 150,
+                              )
+                            ]),
+                          ),
                   ),
                 );
               } else {

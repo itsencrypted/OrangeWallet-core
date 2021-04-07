@@ -164,7 +164,8 @@ class _ItemWidget extends StatelessWidget {
       container: true,
       selected: isSelected,
       child: AnimatedContainer(
-        width: 110,
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width * 0.29,
         height: double.maxFinite,
         duration: animationDuration,
         curve: curve,
@@ -173,41 +174,42 @@ class _ItemWidget extends StatelessWidget {
               isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
           borderRadius: BorderRadius.circular(itemCornerRadius),
         ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: NeverScrollableScrollPhysics(),
+        child: Center(
           child: Container(
-            width: 100,
+            width: MediaQuery.of(context).size.width * 0.29,
             padding: EdgeInsets.symmetric(horizontal: 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconTheme(
-                  data: IconThemeData(
-                    size: iconSize,
-                    color: isSelected
-                        ? item.activeColor.withOpacity(1)
-                        : item.inactiveColor,
-                  ),
-                  child: item.icon,
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: DefaultTextStyle.merge(
-                    style: TextStyle(
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  IconTheme(
+                    data: IconThemeData(
+                      size: iconSize,
                       color: isSelected
                           ? item.activeColor.withOpacity(1)
                           : item.inactiveColor,
-                      fontWeight: FontWeight.bold,
                     ),
-                    maxLines: 1,
-                    textAlign: item.textAlign,
-                    child: item.title,
+                    child: item.icon,
                   ),
-                ),
-              ],
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    child: DefaultTextStyle.merge(
+                      style: TextStyle(
+                        color: isSelected
+                            ? item.activeColor.withOpacity(1)
+                            : item.inactiveColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      textAlign: item.textAlign,
+                      child: item.title,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

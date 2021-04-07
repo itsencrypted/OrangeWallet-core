@@ -96,15 +96,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             icon: ImageIcon(
                               AssetImage("assets/icons/staking_icon.png"),
                             ),
-                            title: Text("Staking")),
+                            title: Text(
+                              "Staking",
+                              softWrap: true,
+                            ),
+                            textAlign: TextAlign.center),
                         BottomNavBarItem(
                             icon: ImageIcon(
                               AssetImage("assets/icons/settings_icon.png"),
                             ),
-                            title: Text(
-                              "Settings",
-                              overflow: TextOverflow.clip,
-                            )),
+                            title: Text("Settings",
+                                softWrap: true,
+                                overflow: TextOverflow.clip,
+                                textAlign: TextAlign.center),
+                            textAlign: TextAlign.center),
                       ],
                     ),
                   ],

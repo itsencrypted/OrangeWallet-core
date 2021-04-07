@@ -30,7 +30,7 @@ class _HomeAppBar extends State<HomeAppBar> {
   void initState() {
     CredentialManager.getAddress().then((value) {
       var start = value.substring(0, 4);
-      var end = value.substring(value.length - 3);
+      var end = value.substring(value.length - 2);
       setState(() {
         address = start + ".." + end;
         fullAddress = value;

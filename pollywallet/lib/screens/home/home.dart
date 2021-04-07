@@ -101,7 +101,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             icon: ImageIcon(
                               AssetImage("assets/icons/settings_icon.png"),
                             ),
-                            title: Text("Settings")),
+                            title: Text(
+                              "Settings",
+                              overflow: TextOverflow.clip,
+                            )),
                       ],
                     ),
                   ],

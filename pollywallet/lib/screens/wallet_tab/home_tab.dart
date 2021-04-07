@@ -30,6 +30,16 @@ class _HomeTabState extends State<HomeTab>
   var amount = 0.0;
   @override
   void initState() {
+    BoxUtils.getNewMnemonicBox().then((value) {
+      print(value);
+      setState(() {
+        if (value == null) {
+          verified = false;
+        } else {
+          verified = value;
+        }
+      });
+    });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       tokenListCubit.getTokensList();
@@ -41,15 +51,6 @@ class _HomeTabState extends State<HomeTab>
         });
       });
       _refreshLoop(tokenListCubit);
-    });
-    BoxUtils.getNewMnemonicBox().then((value) {
-      setState(() {
-        if (value == null) {
-          verified = false;
-        } else {
-          verified = value;
-        }
-      });
     });
 
     super.initState();

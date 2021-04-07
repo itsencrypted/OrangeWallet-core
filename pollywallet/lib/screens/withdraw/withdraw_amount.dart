@@ -358,62 +358,63 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                           ),
                         ],
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          bridge == 2
-                              ? ListTile(
-                                  leading: ClipOval(
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Container(
-                                      child: Text("!",
-                                          style: TextStyle(
-                                              fontSize: 50,
-                                              color: AppTheme.black,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                  title: Text("Note"),
-                                  subtitle: Text(
-                                      "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                                  isThreeLine: true,
-                                )
-                              : SizedBox(
-                                  height: AppTheme.buttonHeight_44,
-                                ),
-                          SizedBox(
-                            height: AppTheme.paddingHeight * 2,
-                          ),
-                          SizedBox(
-                            height: AppTheme.buttonHeight_44 * 2,
-                          ),
-                        ],
-                      ),
+                      SizedBox(
+                        height: AppTheme.buttonHeight_44 + 23,
+                      )
                     ],
                   ),
                 ),
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: Container(
-                width: MediaQuery.of(context).size.width,
-                height: AppTheme.buttonHeight_44,
-                margin:
-                    EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: AppTheme.purple_600,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppTheme.buttonRadius))),
-                    onPressed: () {
-                      _sendWithDrawTransaction(state, token, context);
-                    },
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    )),
+              floatingActionButton: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  bridge == 2
+                      ? MediaQuery.of(context).viewInsets.bottom == 0
+                          ? ListTile(
+                              leading: ClipOval(
+                                clipBehavior: Clip.antiAlias,
+                                child: Container(
+                                  child: Text("!",
+                                      style: TextStyle(
+                                          fontSize: 50,
+                                          color: AppTheme.black,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ),
+                              title: Text("Note"),
+                              subtitle: Text(
+                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
+                              isThreeLine: true,
+                            )
+                          : SizedBox(
+                              height: AppTheme.buttonHeight_44,
+                            )
+                      : SizedBox(
+                          height: AppTheme.buttonHeight_44,
+                        ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: AppTheme.buttonHeight_44,
+                    margin: EdgeInsets.symmetric(
+                        horizontal: AppTheme.paddingHeight12),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                            backgroundColor: AppTheme.purple_600,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    AppTheme.buttonRadius))),
+                        onPressed: () {
+                          _sendWithDrawTransaction(state, token, context);
+                        },
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
               ),
             );
           } else {

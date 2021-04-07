@@ -37,7 +37,7 @@ class NftDepositTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.27,
               width: MediaQuery.of(context).size.width * 0.78,
               child: type == "svg"
                   ? SvgPicture.network(url)

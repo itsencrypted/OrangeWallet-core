@@ -485,7 +485,7 @@ class BoxUtils {
       bool status // true - verified, false not verified
       ) async {
     Box<bool> box = await Hive.openBox<bool>(newMnemonicBox);
-    box.add(status);
+    box.putAt(0, status);
     return;
   }
 
@@ -495,6 +495,7 @@ class BoxUtils {
     try {
       status = box.getAt(0);
     } catch (e) {
+      print(e.toString());
       return false;
     }
     return status;

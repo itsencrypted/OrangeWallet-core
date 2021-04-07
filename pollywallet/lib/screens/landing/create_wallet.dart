@@ -37,120 +37,129 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
         ),
       ),
       backgroundColor: AppTheme.backgroundWhite,
-      body: Container(
-        padding: EdgeInsets.all(AppTheme.paddingHeight12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(),
-            Container(
-              child: Card(
-                shape: AppTheme.cardShape,
-                child: Padding(
-                  padding: EdgeInsets.all(AppTheme.paddingHeight),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(AppTheme.paddingHeight12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(),
+                Container(
+                  child: Card(
+                    shape: AppTheme.cardShape,
+                    child: Padding(
+                      padding: EdgeInsets.all(AppTheme.paddingHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Mnemonic',
+                            style: AppTheme.label_medium,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12 / 3,
+                          ),
+                          Text(
+                            "Write down the exact sequence of these words and store them somewhere safe",
+                            style: AppTheme.body_small,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12 / 2,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12 / 2,
+                          ),
+                          Wrap(
+                            spacing: AppTheme.paddingHeight / 4,
+                            children: _chips(),
+                            runSpacing: AppTheme.paddingHeight / 4,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12,
+                          ),
+                          Container(
+                            width: 86,
+                            height: AppTheme.buttonHeight_44,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.warmgray_900,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          AppTheme.buttonRadius))),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    new ClipboardData(text: seed));
+                                Fluttertoast.showToast(
+                                  msg: "Mnemonic copied",
+                                );
+                              },
+                              child: Text(
+                                'Copy',
+                                style: AppTheme.label_medium
+                                    .copyWith(color: AppTheme.lightgray_700),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SafeArea(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Mnemonic',
-                        style: AppTheme.label_medium,
-                      ),
-                      SizedBox(
-                        height: AppTheme.paddingHeight12 / 3,
-                      ),
-                      Text(
-                        "Write down the exact sequence of these words and store them somewhere safe",
-                        style: AppTheme.body_small,
-                      ),
-                      SizedBox(
-                        height: AppTheme.paddingHeight12 / 2,
-                      ),
-                      Divider(),
-                      SizedBox(
-                        height: AppTheme.paddingHeight12 / 2,
-                      ),
-                      Wrap(
-                        spacing: AppTheme.paddingHeight / 4,
-                        children: _chips(),
-                        runSpacing: AppTheme.paddingHeight / 4,
-                      ),
-                      SizedBox(
-                        height: AppTheme.paddingHeight12,
-                      ),
-                      Container(
-                        width: 86,
-                        height: AppTheme.buttonHeight_44,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: AppTheme.warmgray_900,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      AppTheme.buttonRadius))),
-                          onPressed: () {
-                            Clipboard.setData(new ClipboardData(text: seed));
-                            Fluttertoast.showToast(
-                              msg: "Mnemonic copied",
-                            );
-                          },
-                          child: Text(
-                            'Copy',
-                            style: AppTheme.label_medium
-                                .copyWith(color: AppTheme.lightgray_700),
+                      if (showWarning)
+                        Container(
+                          margin: EdgeInsets.all(AppTheme.paddingHeight12 - 2),
+                          child: WarningCard(
+                            warningText:
+                                "Do not share your mnemonic with anybody, Store it securely",
+                            onClose: () {
+                              setState(() {
+                                showWarning = false;
+                              });
+                            },
                           ),
                         ),
-                      ),
+                      SizedBox(
+                        height: AppTheme.buttonHeight_44,
+                      )
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
-            SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (showWarning)
-                    Container(
-                      margin: EdgeInsets.all(AppTheme.paddingHeight12 - 2),
-                      child: WarningCard(
-                        warningText:
-                            "Do not share your mnemonic with anybody, Store it securely",
-                        onClose: () {
-                          setState(() {
-                            showWarning = false;
-                          });
-                        },
-                      ),
-                    ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: AppTheme.buttonHeight_44,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: AppTheme.paddingHeight12),
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                          backgroundColor: AppTheme.purple_600,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  AppTheme.buttonRadius))),
-                      onPressed: _proceed,
-                      child: Text(
-                        'Continue',
-                        style: AppTheme.label_medium
-                            .copyWith(color: AppTheme.lightgray_700),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
-      // floatingActionButton:
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: AppTheme.buttonHeight_44,
+          margin: EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+          child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: AppTheme.purple_600,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppTheme.buttonRadius))),
+            onPressed: _proceed,
+            child: Text(
+              'Continue',
+              style:
+                  AppTheme.label_medium.copyWith(color: AppTheme.lightgray_700),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

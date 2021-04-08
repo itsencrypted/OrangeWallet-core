@@ -440,11 +440,14 @@ class _WithdrawScreenState extends State<WithdrawScreen>
     } else {
       amount = _amount.text;
     }
-    if (double.tryParse(amount) == null ||
-        double.tryParse(amount) < 0 ||
-        double.tryParse(amount) > balance) {
+    if (double.tryParse(amount) > balance) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    if (double.tryParse(amount) > balance) {
+      Fluttertoast.showToast(
+          msg: "Insufficent balance", toastLength: Toast.LENGTH_LONG);
       return;
     }
     GlobalKey<State> _key = GlobalKey<State>();

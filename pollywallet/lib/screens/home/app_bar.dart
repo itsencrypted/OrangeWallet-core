@@ -34,6 +34,7 @@ class _HomeAppBar extends State<HomeAppBar> {
       setState(() {
         address = start + ".." + end;
         fullAddress = value;
+        print(fullAddress);
       });
     });
     BoxUtils.getNetworkConfig().then((value) {

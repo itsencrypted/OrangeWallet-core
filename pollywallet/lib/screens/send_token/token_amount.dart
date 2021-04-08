@@ -30,7 +30,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
   int index = 0;
   TextEditingController _amount = TextEditingController();
   TextEditingController _address =
-      TextEditingController(text: "0x97F5aE30eEdd5C3c531C97E41386618b1831Cb7b");
+      TextEditingController(text: "0x9dba0d4072fa279ceab88ac01f72f1d1d63ddb13");
   RegExp reg = RegExp(r'^0x[a-fA-F0-9]{40}$');
   bool showAddress;
   bool showAmount;
@@ -305,14 +305,17 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                                           val) ==
                                                                       null ||
                                                                   (double.tryParse(
-                                                                              val) <
-                                                                          0 ||
-                                                                      double.tryParse(
-                                                                              val) >
-                                                                          balance)))
+                                                                          val) <
+                                                                      0)))
                                                             return "Invalid Amount";
-                                                          else
+                                                          else if (double
+                                                                  .tryParse(
+                                                                      val) >
+                                                              balance) {
+                                                            return "Insufficient balance";
+                                                          } else {
                                                             return null;
+                                                          }
                                                         } else {
                                                           if ((val == "" ||
                                                                   val ==
@@ -585,10 +588,15 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                 token.quoteRate, double.parse(_amount.text));
                           }
                           if (validateAddress(_address.text) != null ||
-                              amount < 0 ||
-                              amount > balance) {
+                              amount < 0) {
                             Fluttertoast.showToast(
                               msg: "Invalid inputs",
+                            );
+                            return;
+                          }
+                          if (amount > balance) {
+                            Fluttertoast.showToast(
+                              msg: "Insufficient balance",
                             );
                             return;
                           }
@@ -628,7 +636,11 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                 ),
               );
             } else {
-              return Center(child: Text("Something went Wrong"));
+              return Scaffold(
+                  appBar: AppBar(
+                    title: Text("Send token"),
+                  ),
+                  body: Center(child: Text("Something went Wrong")));
             }
           },
         );

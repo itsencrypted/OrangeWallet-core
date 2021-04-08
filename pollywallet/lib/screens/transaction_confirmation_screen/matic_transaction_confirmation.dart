@@ -241,6 +241,7 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
         await MaticTransactions.sendTransaction(args.trx, args, context);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     if (hash == null || hash == "failed") {
+      Navigator.pop(context);
       return;
     }
     Navigator.pop(context);

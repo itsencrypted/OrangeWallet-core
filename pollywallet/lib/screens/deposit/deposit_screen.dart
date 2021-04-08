@@ -446,11 +446,14 @@ class _DepositScreenState extends State<DepositScreen>
     } else {
       amount = _amount.text;
     }
-    if (double.tryParse(amount) == null ||
-        double.tryParse(amount) < 0 ||
-        double.tryParse(amount) > balance) {
+    if (double.tryParse(amount) == null || double.tryParse(amount) < 0) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    if (double.tryParse(amount) > balance) {
+      Fluttertoast.showToast(
+          msg: "Insufficient balance", toastLength: Toast.LENGTH_LONG);
       return;
     }
     Widget cancelButton = FlatButton(
@@ -503,9 +506,7 @@ class _DepositScreenState extends State<DepositScreen>
             token: tokenState,
             type: TransactionType.DEPOSITPLASMA);
       }
-    }
-    //Todo: Deposit Eth
-    else {
+    } else {
       Bridge brd;
       if (bridge == 1)
         brd = Bridge.POS;
@@ -578,5 +579,3 @@ class _DepositScreenState extends State<DepositScreen>
     });
   }
 }
-// _sendDepositTransaction(
-//                                       state, token, context);

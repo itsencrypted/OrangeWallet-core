@@ -544,11 +544,14 @@ class _DelegationAmountState extends State<DelegationAmount>
     } else {
       amount = _amount.text;
     }
-    if (double.tryParse(amount) == null ||
-        double.tryParse(amount) < 1 ||
-        double.tryParse(amount) > balance) {
+    if (double.tryParse(amount) == null || double.tryParse(amount) < 1) {
       Fluttertoast.showToast(
           msg: "Invalid amount", toastLength: Toast.LENGTH_LONG);
+      return;
+    }
+    if (double.tryParse(amount) > balance) {
+      Fluttertoast.showToast(
+          msg: "Insufficient balance", toastLength: Toast.LENGTH_LONG);
       return;
     }
     print(spender);

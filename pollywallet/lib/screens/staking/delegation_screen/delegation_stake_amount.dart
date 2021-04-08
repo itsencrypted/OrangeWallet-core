@@ -469,8 +469,6 @@ class _DelegationAmountState extends State<DelegationAmount>
                         )
                       ],
                     ),
-                    floatingActionButtonAnimator:
-                        FloatingActionButtonAnimator.scaling,
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
                     floatingActionButton: Container(

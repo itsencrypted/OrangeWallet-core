@@ -25,7 +25,7 @@ class _DepositStatusState extends State<DepositStatus> {
   DepositTransaction data;
   bool show = false;
   BridgeApiData bridgeApiData;
-  bool transactionPending = false;
+  bool transactionPending = true;
   String fromAddress = "";
   bool loading = true;
   String blockExplorer = "";
@@ -69,6 +69,7 @@ class _DepositStatusState extends State<DepositStatus> {
           }
           if (value.message.code == 0) {
             BoxUtils.updateDepositStatus(data.txHash);
+            transactionPending = false;
           }
           loading = false;
         });
@@ -395,6 +396,7 @@ class _DepositStatusState extends State<DepositStatus> {
           (bridgeApiData == null || bridgeApiData.message.code != 0)) {
         DepositBridgeApi.depositStatusCode(txhash).then((value) {
           setState(() {
+            print(value);
             bridgeApiData = value;
             if (value.message.code != 4) {
               transactionPending = false;

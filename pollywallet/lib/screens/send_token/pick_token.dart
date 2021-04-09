@@ -26,7 +26,7 @@ class _PickTokenListState extends State<PickTokenList> {
         actions: [searchBar.getSearchAction(context)]);
   }
 
-  _TokenListState() {
+  _PickTokenListState() {
     searchBar = new SearchBar(
         inBar: showSearch,
         buildDefaultAppBar: buildAppBar,
@@ -48,10 +48,7 @@ class _PickTokenListState extends State<PickTokenList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Choose a token to send"),
-        actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
-      ),
+      appBar: searchBar.build(context),
       body: BlocBuilder<CovalentTokensListMaticCubit,
           CovalentTokensListMaticState>(builder: (context, listState) {
         return BlocBuilder<SendTransactionCubit, SendTransactionState>(

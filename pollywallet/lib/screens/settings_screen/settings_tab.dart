@@ -49,8 +49,10 @@ class _SettingsTabState extends State<SettingsTab>
                   onTap: () async {
                     final String mnemonic =
                         await CredentialManager.getMnemonic(context);
-                    Navigator.of(context)
-                        .pushNamed(exportMnemonic, arguments: mnemonic);
+                    if (mnemonic != null) {
+                      Navigator.of(context)
+                          .pushNamed(exportMnemonic, arguments: mnemonic);
+                    }
                   }),
               Divider(
                 thickness: 1,

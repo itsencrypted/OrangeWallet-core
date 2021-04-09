@@ -87,6 +87,9 @@ class _DepositScreenState extends State<DepositScreen>
               title: Text("Deposit to Matic"),
             ),
             body: SingleChildScrollView(
+              physics: MediaQuery.of(context).viewInsets.bottom == 0
+                  ? NeverScrollableScrollPhysics()
+                  : null,
               child: Container(
                 height: MediaQuery.of(context).size.height -
                     AppBar().preferredSize.height,

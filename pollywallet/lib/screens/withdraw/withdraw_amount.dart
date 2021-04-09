@@ -82,6 +82,9 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                 title: Text("Withdraw from Matic"),
               ),
               body: SingleChildScrollView(
+                physics: MediaQuery.of(context).viewInsets.bottom == 0
+                    ? NeverScrollableScrollPhysics()
+                    : null,
                 child: Container(
                   height: MediaQuery.of(context).size.height -
                       AppBar().preferredSize.height,

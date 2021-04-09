@@ -63,6 +63,9 @@ class _SendNftState extends State<SendNft> {
             return Scaffold(
               appBar: AppBar(title: Text("Send NFT")),
               body: SingleChildScrollView(
+                physics: MediaQuery.of(context).viewInsets.bottom == 0
+                    ? NeverScrollableScrollPhysics()
+                    : null,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

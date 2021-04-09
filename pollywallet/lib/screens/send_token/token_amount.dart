@@ -74,6 +74,9 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                   title: Text("Paying"),
                 ),
                 body: SingleChildScrollView(
+                  physics: MediaQuery.of(context).viewInsets.bottom == 0
+                      ? NeverScrollableScrollPhysics()
+                      : null,
                   child: Container(
                     height: MediaQuery.of(context).size.height -
                         AppBar().preferredSize.height,

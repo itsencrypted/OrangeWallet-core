@@ -1,46 +1,30 @@
-# PollyWallet-core
+# Orange Wallet
+
+Layer 2 simplified.
+
 ## Requirements
 
-1. Rebrand 
-    - New logo and Ui Scheme
-2. Overview in design perspective.
-3. List of features
+1. A computer running Mac OS.
+2. Latest flutter SDK.
+3. Install CocoaPods by running `sudo gem install cocoapods`.
+4. Install XCode.
 
-    ### Phase 1
+## Run the project
 
-    1. Balances
-        - ETH, Matic, ERC20
-        - Prices of tokens (USD/INR)
-    2. Deposit and withdraw
-        - Status of withdraw.
-    3. Login and stuff
-        - Import mnemonic/Create new mnemonic.
-    4. Listing ERC20
-        - Will need indexer for this.
-    5. Password encryption for Mnemonic.
-    6. Transfer ERC20 and ETH/MATIC
+1. Clone the project.
+2. Set api keys in api_keys.dart file.
+3. Run `flutter pub get`.
+4. In iOS folder run `pod install`.
+5. Open XCode in iOS folder and migrate SCrypto library to swift 5.
+6. Run `flutter run` in the base folder.
 
-    ### Phase 2
+## Get release build files
 
-    1. Staking delegation
+1. Follow till step 5 on above instructions.
+2. For android builds run `flutter build apk --split-per-abi`.
+3. For iOS build:
 
-    - Endpoints for validator list and extra data.
-
-    2. Wallet Connect
-
-    3. ERC721 and 1155
-
-    - Will need indexer for these.
-
-    ### Phase 3
-
-    1. Fiat on ramp
-
-    - Transak APIs(Not js sdk).
-
-    2. Backup seedphrase on gCloud, iCloud.
-    
-    ## Design Reference
-    |![Imgur](https://i.imgur.com/i7PnchD.png)|![Imgur](https://i.imgur.com/gqm7mnx.png)|
-    |![Imgur](https://i.imgur.com/yYuCIQQ.png)| ![Imgur](https://i.imgur.com/jOwYM1o.png)|
-    |![Imgur](https://i.imgur.com/aC8s0Mn.png)| 
+   - Open XCode in iOS dir.
+   - Select `Any iOS device` for runner.
+   - Select product>build.
+   - Once build is done, click on product>archive.

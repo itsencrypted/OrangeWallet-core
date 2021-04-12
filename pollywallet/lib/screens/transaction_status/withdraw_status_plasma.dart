@@ -468,6 +468,7 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
         WithdrawManagerApi.plasmaStatusCodes(
                 data.burnHash, data.confirmHash, data.exitHash)
             .then((value) {
+          print(value);
           statusCode = value;
           if (statusCode == -10) {
             transactionPending = false;

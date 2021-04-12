@@ -12,7 +12,6 @@ import 'package:pollywallet/utils/misc/credential_manager.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
 import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_api.dart';
 
-import 'package:pollywallet/widgets/transaction_details_timeline.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -68,7 +67,7 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
         print(value);
         setState(() {
           statusCode = value;
-          if (statusCode == -10) {
+          if (statusCode == -10 || statusCode == -5) {
             transactionPending = false;
           } else {
             transactionPending = true;
@@ -86,12 +85,14 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
             index = 2;
           } else if (statusCode == -10) {
             index = 4;
+          } else if (statusCode == -5) {
+            index = 4;
           }
           if (statusCode == -2) {
             failed = true;
             show = false;
           }
-          if (statusCode == -10) {
+          if (statusCode == -5 || statusCode == -10) {
             BoxUtils.markWithdrawComplete(burnTxHash: data.burnHash);
           }
           if (statusCode == -11) {
@@ -444,12 +445,12 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
 
   _refreshLoop(String txhash) {
     new Timer.periodic(Duration(seconds: 15), (Timer t) {
-      if (mounted && (statusCode != -10)) {
+      if (mounted && (statusCode != -10 || statusCode != -5)) {
         WithdrawManagerApi.posStatusCodes(data.burnHash, data.exitHash)
             .then((value) {
           setState(() {
             statusCode = value;
-            if (statusCode == -10) {
+            if (statusCode == -10 || statusCode == 5) {
               transactionPending = false;
             } else {
               transactionPending = true;
@@ -465,13 +466,13 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
               index = 1;
             } else if (statusCode == -4) {
               index = 2;
-            } else if (statusCode == -10) {
+            } else if (statusCode == -10 || statusCode == -5) {
               index = 4;
             }
             if (statusCode == -11) {
               failed = true;
             }
-            if (statusCode == -10) {
+            if (statusCode == -5 || statusCode == -10) {
               BoxUtils.markWithdrawComplete(burnTxHash: data.burnHash);
             }
           });

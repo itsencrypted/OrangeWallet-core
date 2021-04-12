@@ -86,7 +86,7 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                         ? Icons.timer
                         : status == -4
                             ? Icons.pending_actions_outlined
-                            : status == -10
+                            : status == -10 || status == -5
                                 ? Icons.check_outlined
                                 : status == -2 || status == -11 || status == -7
                                     ? Icons.cancel_outlined
@@ -95,7 +95,7 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                         ? Colors.yellow
                         : status == -4
                             ? Colors.blue
-                            : status == -10
+                            : status == -10 || status == -5
                                 ? Colors.green
                                 : status == -8
                                     ? Colors.yellow
@@ -156,7 +156,8 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
           status != -4 &&
           status != -10 &&
           status != -2 &&
-          status != -11) {
+          status != -11 &&
+          status != -5) {
         bridge = widget.withdrawDataDb.bridge;
         if (bridge == BridgeType.POS.index) {
           WithdrawManagerApi.posStatusCodes(widget.withdrawDataDb.burnHash,

@@ -59,8 +59,10 @@ class _WithdrawListState extends State<WithdrawList>
     await BoxUtils.getWithdrawList().then((box) {
       setState(() {
         box.sort((a, b) {
-          return DateTime.parse(b.timeString)
-              .compareTo(DateTime.parse(a.timeString));
+          return DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(b.timeString) * 1000)
+              .compareTo(DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(a.timeString) * 1000));
         });
         this.box = box;
       });

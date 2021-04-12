@@ -54,7 +54,6 @@ class WithdrawManagerApi {
     BridgeApiData exitStatus;
     if (obj.message.code == -4) {
       var resp2 = await exitFuture;
-      print(resp2.body);
       Map json2 = jsonDecode(resp2.body);
       json2.forEach((key, value) {
         exitStatus = new BridgeApiData(
@@ -102,8 +101,7 @@ class WithdrawManagerApi {
     Future exitFuture = http.post(exitUrl, body: jsonEncode(body3));
     var burnResp = await burnFuture;
     Map burnJson = jsonDecode(burnResp.body);
-    print(burnJson);
-    print(burnResp.body);
+
     BridgeApiData burnObj;
     burnJson.forEach((key, value) {
       burnObj = new BridgeApiData(
@@ -120,14 +118,11 @@ class WithdrawManagerApi {
         return PlasmaState.CHECKPOINTED;
       }
       var confirmResp = await confirmFuture;
-      print(confirmUrl);
-      print(exitUrl);
+
       Map confirmJson = jsonDecode(confirmResp.body);
-      print(confirmJson);
       BridgeApiData confirmObj;
       bool badPayload = false;
       confirmJson.forEach((key, value) {
-        print(value);
         if (value == "Bad Payload") {
           badPayload = true;
           return PlasmaState.BADEXITHASH;
@@ -154,7 +149,6 @@ class WithdrawManagerApi {
         Map exitJson = jsonDecode(exitResp.body);
         BridgeApiData exitObj;
         exitJson.forEach((key, value) {
-          print(value);
           exitObj = new BridgeApiData(
               txHash: key, message: BridgeApiMessage.fromJson(value));
         });
@@ -202,7 +196,6 @@ class WithdrawManagerApi {
     String url = config.exitPayloadPos + burnTxHash;
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
-    print(resp.body);
     var payload = Payload.fromJson(json);
     if (payload.result != null) {
       return payload.result;
@@ -214,11 +207,9 @@ class WithdrawManagerApi {
   static Future<String> getPayloadForExitPlasma(String burnTxHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String url = config.exitPayloadPlasma + burnTxHash;
-    print(url);
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     var payload = Payload.fromJson(json);
-    print(payload.result);
     if (payload.result != null) {
       return payload.result;
     } else {
@@ -235,12 +226,11 @@ class WithdrawManagerApi {
     var body2 = {
       "txHashes": [exitHash],
     };
-    print(body);
+
     Future burnFuture = http.post(burnUrl, body: jsonEncode(body));
 
     var burnStatus = await burnFuture;
     Map json = jsonDecode(burnStatus.body);
-    print(burnStatus.body);
     BridgeApiData obj = BridgeApiData(
         txHash: txHash, message: BridgeApiMessage.fromJson(json[txHash]));
     if (obj.message.code == -4) {
@@ -261,11 +251,9 @@ class WithdrawManagerApi {
 
   static Future<int> plasmaStatusCodes(
       String txHash, String confirmHash, String exitHash) async {
-    print(confirmHash);
     String burnUrl = baseUrl + "/v1/plasma-burn";
     String confirmUrl = baseUrl + "/v1/plasma-confirm";
     String exitUrl = baseUrl + "/v1/plasma-exit";
-    print(exitUrl);
     var body1 = {
       "txHashes": [txHash],
     };
@@ -278,6 +266,10 @@ class WithdrawManagerApi {
     var body3 = {
       "txHashes": [exitHash],
     };
+    print("plasma");
+    print(body1);
+    print(body2);
+
     Future burnFuture = http.post(burnUrl, body: jsonEncode(body1));
     Future confirmFuture = http.post(confirmUrl, body: jsonEncode(body2));
     Future exitFuture = http.post(exitUrl, body: jsonEncode(body3));

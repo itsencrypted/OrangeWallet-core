@@ -349,7 +349,10 @@ class _ValidatorAndDelegationProfileState
                                                     .width *
                                                 0.85,
                                             child: Center(
-                                                child: Text("Delegate Now"))),
+                                                child: Text(
+                                              "Delegate Now",
+                                              style: AppTheme.body2White,
+                                            ))),
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(50))),
@@ -419,6 +422,8 @@ class _ValidatorAndDelegationProfileState
                                                           "Delegate Reward",
                                                           textAlign:
                                                               TextAlign.center,
+                                                          style: AppTheme
+                                                              .body2White,
                                                         ),
                                                       )),
                                                   shape: RoundedRectangleBorder(
@@ -460,6 +465,8 @@ class _ValidatorAndDelegationProfileState
                                                         "Delegate More",
                                                         textAlign:
                                                             TextAlign.center,
+                                                        style:
+                                                            AppTheme.body2White,
                                                       ))),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:

@@ -49,8 +49,9 @@ class TopBalance extends StatelessWidget {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return AppTheme.primaryColor.withOpacity(0.2);
-                                return AppTheme.primaryColor.withOpacity(0.3);
+                                  return AppTheme.secondaryColor
+                                      .withOpacity(0.2);
+                                return AppTheme.secondaryColor.withOpacity(1);
                                 ; // Use the component's default.
                               },
                             )),
@@ -61,7 +62,7 @@ class TopBalance extends StatelessWidget {
                                 width: double.infinity,
                                 child: Center(
                                     child: Text("Receive",
-                                        style: AppTheme.buttonTextPurple))),
+                                        style: AppTheme.buttonTextSecondary))),
                           ),
                         ),
                         SizedBox(
@@ -76,8 +77,8 @@ class TopBalance extends StatelessWidget {
                                 MaterialStateProperty.resolveWith<Color>(
                               (Set<MaterialState> states) {
                                 if (states.contains(MaterialState.pressed))
-                                  return sendButtonColor.withOpacity(0.5);
-                                return sendButtonColor.withOpacity(0.7);
+                                  return AppTheme.primaryColor.withOpacity(0.5);
+                                return AppTheme.primaryColor.withOpacity(1);
                                 ; // Use the component's default.
                               },
                             )),

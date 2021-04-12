@@ -6,8 +6,8 @@ class AppTheme {
   static const Color backgroundWhite = Color(0xffF3F2EF);
   static const Color white = Color(0xFFFFFFFF);
   static const Color somewhatYellow = Color(0xffE3DECF);
-  static const Color primaryColor = Color(0xFF9663EE);
-  static const Color secondaryColor = Color(0xffEABC78);
+  static const Color primaryColor = Color(0xFFEB5B56);
+  static const Color secondaryColor = Color(0xff26241E);
   static const Color black = Color(0xFF000000);
   static const Color warningCardColor = Color(0xFFD3AA6B);
   static const Color lightgray_700 = Color(0xFFFFFFFF);
@@ -202,13 +202,13 @@ class AppTheme {
     letterSpacing: 0.3,
     color: whiteTextColor, // was lightText
   );
-  static const TextStyle buttonTextPurple = TextStyle(
+  static const TextStyle buttonTextSecondary = TextStyle(
     // Caption -> caption
     fontFamily: fontName,
     fontWeight: FontWeight.w600,
     fontSize: 16,
     letterSpacing: 0.3,
-    color: Color(0xff6F36D1), // was lightText
+    color: Colors.white, // was lightText
   );
 
   static const TextStyle balanceMain = TextStyle(

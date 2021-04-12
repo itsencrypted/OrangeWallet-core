@@ -96,7 +96,10 @@ class _HomeAppBar extends State<HomeAppBar> {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 2),
-                              child: Text("TEST"),
+                              child: Text(
+                                "TEST",
+                                style: AppTheme.body2White,
+                              ),
                             ),
                             decoration: BoxDecoration(
                                 color: AppTheme.secondaryColor,

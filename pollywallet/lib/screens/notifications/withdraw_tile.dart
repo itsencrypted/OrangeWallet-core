@@ -88,7 +88,10 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                             ? Icons.pending_actions_outlined
                             : status == -10 || status == -5
                                 ? Icons.check_outlined
-                                : status == -2 || status == -11 || status == -7
+                                : status == -2 ||
+                                        status == -11 ||
+                                        status == -7 ||
+                                        status == -6
                                     ? Icons.cancel_outlined
                                     : Icons.timer,
                     color: loading
@@ -103,7 +106,8 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                                         ? Colors.blue
                                         : status == -2 ||
                                                 status == -11 ||
-                                                status == -7
+                                                status == -7 ||
+                                                status == -6
                                             ? Colors.red
                                             : Colors.yellow,
                     size: AppTheme.tokenIconHeight,

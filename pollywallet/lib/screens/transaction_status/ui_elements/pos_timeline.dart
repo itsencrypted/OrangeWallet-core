@@ -7,7 +7,6 @@ import 'package:pollywallet/models/withdraw_models/withdraw_data_db.dart';
 import 'package:pollywallet/theme_data.dart';
 import 'package:pollywallet/utils/network/network_config.dart';
 import 'package:pollywallet/utils/network/network_manager.dart';
-import 'package:pollywallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:pollywallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:pollywallet/widgets/loading_indicator.dart';
 import 'package:timelines/timelines.dart';
@@ -62,10 +61,15 @@ class PosTimeline extends StatelessWidget {
                             child: RaisedButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16)),
-                                color: sendButtonColor.withOpacity(0.6),
+                                color: AppTheme.primaryColor.withOpacity(1),
                                 child: SizedBox(
                                     width: 100,
-                                    child: Center(child: Text("Exit POS"))),
+                                    child: Center(
+                                      child: Text(
+                                        "Exit POS",
+                                        style: AppTheme.body2White,
+                                      ),
+                                    )),
                                 onPressed: () {
                                   _exit(context, data.burnHash, data);
                                 }),
@@ -82,7 +86,7 @@ class PosTimeline extends StatelessWidget {
         indicatorBuilder: (_, index) {
           if (index <= doneTillIndex) {
             return DotIndicator(
-              color: AppTheme.purple_600,
+              color: AppTheme.primaryColor,
               child: Icon(
                 Icons.check,
                 color: Colors.white,
@@ -96,7 +100,7 @@ class PosTimeline extends StatelessWidget {
           }
         },
         connectorBuilder: (_, index, ___) => SolidLineConnector(
-          color: index <= doneTillIndex ? AppTheme.purple_600 : null,
+          color: index <= doneTillIndex ? AppTheme.primaryColor : null,
         ),
       ),
     );

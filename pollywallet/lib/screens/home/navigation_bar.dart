@@ -170,8 +170,7 @@ class _ItemWidget extends StatelessWidget {
         duration: animationDuration,
         curve: curve,
         decoration: BoxDecoration(
-          color:
-              isSelected ? item.activeColor.withOpacity(0.2) : backgroundColor,
+          color: isSelected ? item.activeColor.withOpacity(1) : backgroundColor,
           borderRadius: BorderRadius.circular(itemCornerRadius),
         ),
         child: Center(
@@ -187,9 +186,7 @@ class _ItemWidget extends StatelessWidget {
                   IconTheme(
                     data: IconThemeData(
                       size: iconSize,
-                      color: isSelected
-                          ? item.activeColor.withOpacity(1)
-                          : item.inactiveColor,
+                      color: isSelected ? AppTheme.white : item.inactiveColor,
                     ),
                     child: item.icon,
                   ),
@@ -197,9 +194,7 @@ class _ItemWidget extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     child: DefaultTextStyle.merge(
                       style: TextStyle(
-                        color: isSelected
-                            ? item.activeColor.withOpacity(1)
-                            : item.inactiveColor,
+                        color: isSelected ? AppTheme.white : item.inactiveColor,
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2,
@@ -223,7 +218,7 @@ class BottomNavBarItem {
   BottomNavBarItem({
     @required this.icon,
     @required this.title,
-    this.activeColor = AppTheme.purpleSelected,
+    this.activeColor = AppTheme.primaryColor,
     this.textAlign,
     this.inactiveColor = Colors.black,
   })  : assert(icon != null),

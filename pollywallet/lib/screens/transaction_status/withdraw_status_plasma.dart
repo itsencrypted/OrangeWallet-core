@@ -107,7 +107,7 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
           } else if (statusCode == -12) {
             index = 6;
           }
-          if (statusCode == -2) {
+          if (statusCode == -2 || statusCode == -6) {
             failed = true;
             show = false;
           }
@@ -503,7 +503,7 @@ class _WithdrawStatusPlasmaState extends State<WithdrawStatusPlasma> {
           } else if (statusCode == -12) {
             index = 5;
           }
-          if (statusCode == -2) {
+          if (statusCode == -2 || statusCode == -6) {
             failed = true;
             show = false;
           }

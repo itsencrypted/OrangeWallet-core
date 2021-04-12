@@ -500,7 +500,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                               TextDecoration
                                                                   .underline,
                                                           color: AppTheme
-                                                              .purple_400),
+                                                              .orange_500),
                                                     ))
                                               ],
                                             ),
@@ -546,7 +546,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                           child: Text(
                                             "MAX",
                                             style: TextStyle(
-                                                color: AppTheme.purple_700),
+                                                color: AppTheme.orange_500),
                                           ))
                                     ],
                                   ),
@@ -570,7 +570,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                       horizontal: AppTheme.paddingHeight12),
                   child: TextButton(
                       style: TextButton.styleFrom(
-                          backgroundColor: AppTheme.purple_600,
+                          backgroundColor: AppTheme.orange_500,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(

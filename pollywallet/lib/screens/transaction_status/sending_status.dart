@@ -60,9 +60,9 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
               onPressed: _closeFn)
         ],
         elevation: 0,
-        backgroundColor: AppTheme.purple_600,
+        backgroundColor: AppTheme.orange_500,
       ),
-      backgroundColor: AppTheme.purple_600,
+      backgroundColor: AppTheme.orange_500,
       body: Padding(
         padding:
             EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 8),
@@ -79,7 +79,7 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
       floatingActionButton: !transactionPending
           ? TextButton(
               style: TextButton.styleFrom(
-                  backgroundColor: AppTheme.purple_600,
+                  backgroundColor: AppTheme.orange_500,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius:
@@ -98,7 +98,7 @@ class _SendingStatusScreenState extends State<SendingStatusScreen> {
                 children: [
                   Icon(
                     Icons.info_outline,
-                    color: AppTheme.purple_200,
+                    color: AppTheme.orange_500,
                   ),
                   Container(
                     child: Text(

@@ -105,7 +105,7 @@ class _VerifyMnemonicState extends State<VerifyMnemonic> {
                               color: AppTheme.warmgray_100,
                               shape: BoxShape.rectangle,
                               border: Border.all(
-                                  width: 1, color: AppTheme.purple_600)),
+                                  width: 1, color: AppTheme.orange_500)),
                           padding: EdgeInsets.symmetric(horizontal: 8),
                           child: TextFormField(
                             maxLines: 2,
@@ -136,7 +136,7 @@ class _VerifyMnemonicState extends State<VerifyMnemonic> {
                             //     horizontal: AppTheme.paddingHeight12),
                             child: TextButton(
                               style: TextButton.styleFrom(
-                                  backgroundColor: AppTheme.purple_600,
+                                  backgroundColor: AppTheme.orange_500,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(

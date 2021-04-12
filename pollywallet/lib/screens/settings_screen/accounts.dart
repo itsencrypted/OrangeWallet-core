@@ -152,7 +152,7 @@ class _AccountSelectionState extends State<AccountSelection> {
                                                                 .cardRadiusBig /
                                                             2),
                                                     color: index == active
-                                                        ? AppTheme.purple_600
+                                                        ? AppTheme.orange_500
                                                         : AppTheme.white),
                                                 child: index == active
                                                     ? Icon(
@@ -187,7 +187,7 @@ class _AccountSelectionState extends State<AccountSelection> {
                               style: TextButton.styleFrom(
                                   padding:
                                       EdgeInsets.all(AppTheme.paddingHeight12),
-                                  backgroundColor: AppTheme.purple_600,
+                                  backgroundColor: AppTheme.orange_500,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(100))),

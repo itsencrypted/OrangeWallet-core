@@ -125,7 +125,7 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
         indicatorBuilder: (_, index) {
           if (index <= widget.doneTillIndex) {
             return DotIndicator(
-              color: AppTheme.purple_600,
+              color: AppTheme.orange_500,
               child: Icon(
                 Icons.check,
                 color: Colors.white,
@@ -139,7 +139,7 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
           }
         },
         connectorBuilder: (_, index, ___) => SolidLineConnector(
-          color: index <= widget.doneTillIndex ? AppTheme.purple_600 : null,
+          color: index <= widget.doneTillIndex ? AppTheme.orange_500 : null,
         ),
       ),
     );

@@ -257,7 +257,7 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                                 horizontal: AppTheme.paddingHeight12),
                             child: TextButton(
                               style: TextButton.styleFrom(
-                                  backgroundColor: AppTheme.purple_600,
+                                  backgroundColor: AppTheme.orange_500,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(

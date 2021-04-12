@@ -35,6 +35,7 @@ class _DelegationAmountState extends State<DelegationAmount>
   double balance = 0;
   int index = 0;
   bool showAmount;
+  bool show = false;
   ValidatorInfo validator;
   var matic;
   TabController _tabController;
@@ -48,7 +49,11 @@ class _DelegationAmountState extends State<DelegationAmount>
       var validatorListCubit = context.read<ValidatorsdataCubit>();
       var delegatorListCubit = context.read<DelegationsDataCubit>();
       var ethListCubit = context.read<CovalentTokensListEthCubit>();
-
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {
+          show = true;
+        });
+      });
       tokenListCubit.getTokensList();
       _refreshLoop(
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
@@ -429,7 +434,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                                   TextDecoration
                                                                       .underline,
                                                               color: AppTheme
-                                                                  .purple_400),
+                                                                  .orange_500),
                                                         ))
                                                   ],
                                                 ),
@@ -464,7 +469,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                               child: Text(
                                                 "MAX",
                                                 style: TextStyle(
-                                                    color: AppTheme.purple_700),
+                                                    color: AppTheme.orange_500),
                                               ))
                                         ],
                                       ),
@@ -481,26 +486,28 @@ class _DelegationAmountState extends State<DelegationAmount>
                     ),
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
-                    floatingActionButton: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: AppTheme.buttonHeight_44,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: AppTheme.paddingHeight12),
-                      child: TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: AppTheme.purple_600,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      AppTheme.buttonRadius))),
-                          onPressed: () {
-                            _delegate(validator.contractAddress, matic);
-                          },
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.white,
-                          )),
-                    ),
+                    floatingActionButton: show
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: AppTheme.buttonHeight_44,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingHeight12),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: AppTheme.orange_500,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.buttonRadius))),
+                                onPressed: () {
+                                  _delegate(validator.contractAddress, matic);
+                                },
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                )),
+                          )
+                        : Container(),
                   );
                 } else {
                   return Scaffold(

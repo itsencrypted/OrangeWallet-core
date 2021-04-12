@@ -15,26 +15,37 @@ class FiatOnRampCard extends StatelessWidget {
                 BorderRadius.all(Radius.circular(AppTheme.cardRadius))),
         borderOnForeground: true,
         elevation: AppTheme.cardElevations,
-        color: AppTheme.white,
-        child: SizedBox(
-          height: 91,
-          child: Center(
-            child: FlatButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () async {
-                var address = await CredentialManager.getAddress();
-                NetworkConfigObject config =
-                    await NetworkManager.getNetworkObject();
-                String url = config.transakLink + address;
-                Navigator.pushNamed(context, transakRoute, arguments: url);
-              },
-              child: ListTile(
-                leading: Image.asset(transakIcon),
-                title:
-                    Text("Buy Tokens with Bank Cards", style: AppTheme.title),
-                subtitle: Text(
-                  "Directly buy Crypto tokens with Credit/Debit Card",
-                  style: AppTheme.subtitle,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.all(Radius.circular(AppTheme.cardRadius)),
+            gradient: LinearGradient(colors: [
+              AppTheme.orangeGradientStart,
+              AppTheme.orangeGradientEnd
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          ),
+          child: SizedBox(
+            height: 91,
+            child: Center(
+              child: FlatButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () async {
+                  var address = await CredentialManager.getAddress();
+                  NetworkConfigObject config =
+                      await NetworkManager.getNetworkObject();
+                  String url = config.transakLink + address;
+                  Navigator.pushNamed(context, transakRoute, arguments: url);
+                },
+                child: ListTile(
+                  leading: Image.asset(
+                    transakIcon,
+                  ),
+                  title: Text("Buy Tokens with Bank Cards",
+                      style: AppTheme.titleWhite),
+                  subtitle: Text(
+                    "Directly buy Crypto tokens with Credit/Debit Card",
+                    style: AppTheme.body2White,
+                  ),
                 ),
               ),
             ),

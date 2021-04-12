@@ -129,7 +129,7 @@ class _NetworkSettingState extends State<NetworkSetting> {
                         borderRadius:
                             BorderRadius.circular(AppTheme.cardRadiusBig / 2),
                         color: value == val
-                            ? AppTheme.purple_600
+                            ? AppTheme.orange_500
                             : AppTheme.white),
                     child: value == val
                         ? Icon(

@@ -349,7 +349,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                                                                 TextDecoration
                                                                     .underline,
                                                             color: AppTheme
-                                                                .purple_400),
+                                                                .orange_500),
                                                       ))
                                                 ],
                                               ),
@@ -404,7 +404,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                         horizontal: AppTheme.paddingHeight12),
                     child: TextButton(
                         style: TextButton.styleFrom(
-                            backgroundColor: AppTheme.purple_600,
+                            backgroundColor: AppTheme.orange_500,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(

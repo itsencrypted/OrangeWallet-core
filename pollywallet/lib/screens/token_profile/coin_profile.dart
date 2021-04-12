@@ -143,9 +143,9 @@ class _CoinProfileState extends State<CoinProfile> {
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.pressed))
-                                                    return sendButtonColor
+                                                    return AppTheme.primaryColor
                                                         .withOpacity(0.5);
-                                                  return sendButtonColor
+                                                  return AppTheme.primaryColor
                                                       .withOpacity(1);
                                                   ; // Use the component's default.
                                                 },
@@ -180,9 +180,10 @@ class _CoinProfileState extends State<CoinProfile> {
                                                 (Set<MaterialState> states) {
                                                   if (states.contains(
                                                       MaterialState.pressed))
-                                                    return receiveButtonColor
+                                                    return AppTheme
+                                                        .secondaryColor
                                                         .withOpacity(0.5);
-                                                  return receiveButtonColor
+                                                  return AppTheme.secondaryColor
                                                       .withOpacity(1);
                                                   ; // Use the component's default.
                                                 },
@@ -196,7 +197,7 @@ class _CoinProfileState extends State<CoinProfile> {
                                                   child: Center(
                                                       child: Text("Bridge",
                                                           style: AppTheme
-                                                              .buttonText))),
+                                                              .buttonTextSecondary))),
                                             ),
                                           ),
                                         ],

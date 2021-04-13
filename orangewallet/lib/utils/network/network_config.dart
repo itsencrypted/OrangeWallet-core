@@ -47,7 +47,7 @@ class NetworkConfig {
     ethEndpoint:
         "https://mainnet.infura.io/v3/311ef590f7e5472a90edfa1316248cff",
     ethChainId: 1,
-    maticBridgeApi: "https://bridge-api.matic.today",
+    maticBridgeApi: "https://bridge-api.matic.network",
     maticWebsocket: "wss://ws-mainnet.matic.network",
     ethWebsocket:
         "wss://mainnet.infura.io/ws/v3/311ef590f7e5472a90edfa1316248cff",

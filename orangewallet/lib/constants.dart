@@ -44,7 +44,7 @@ const erc1155ChildAbi = "assets/abi/childERC1155.json";
 // urls
 const maticIconUrl =
     "https://logos.covalenthq.com/tokens/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png";
-const tokenIconUrl = "https://i.imgur.com/p1fnaM0.png";
+const tokenIconUrl = "https://i.imgur.com/DzRd7Fh.png";
 // Routes
 const String appLandingRoute = "appLandingRoute";
 const String importWalletRoute = "importWalletRoute";

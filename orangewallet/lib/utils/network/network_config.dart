@@ -53,12 +53,12 @@ class NetworkConfig {
         "wss://mainnet.infura.io/ws/v3/311ef590f7e5472a90edfa1316248cff",
     rootChainProxy: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77", //proxy
     rootChainMatic: "0xD4888faB8bd39A663B63161F5eE1Eae31a25B653",
-    erc20PredicatePos: "0x886e02327cAd4E1E29688C7Db0c9d28879ac44Da",
-    erc721PredicatePos: "0xe4924d8708D6646C0A6B2985DCFe2855211f4ddD",
+    erc20PredicatePos: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    erc721PredicatePos: "0xE6F45376f64e1F568BD1404C155e5fFD2F80F7AD",
     etherscanEndpoint: "https://api.etherscan.io/api",
     withdrawManagerProxy: "0x2A88696e0fFA76bAA1338F2C74497cC013495922",
     plasmaRegistry: "0x33a02E6cC863D393d6Bf231B697b82F6e499cA71",
-    depositManager: "0xd505C3822C787D51d5C2B1ae9aDB943B2304eB23",
+    depositManager: "0x401F6c983eA34274ec46f84D70b31C151321188b",
     exitPayloadPlasma:
         "https://apis.matic.network/api/v1/matic/plasma-exit-payload/",
     exitPayloadPos: "http://apis.matic.network/api/v1/matic/pos-exit-payload/",

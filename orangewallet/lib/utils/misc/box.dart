@@ -485,7 +485,11 @@ class BoxUtils {
       bool status // true - verified, false not verified
       ) async {
     Box<bool> box = await Hive.openBox<bool>(newMnemonicBox);
-    box.putAt(0, status);
+    if (box.isEmpty) {
+      box.add(status);
+    } else {
+      box.putAt(0, status);
+    }
     return;
   }
 

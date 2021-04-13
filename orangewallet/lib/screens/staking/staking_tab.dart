@@ -50,7 +50,6 @@ class _StakingTabState extends State<StakingTab>
               builder: (context, maticTokenListState) {
             return BlocBuilder<ValidatorsdataCubit, ValidatorsDataState>(
                 builder: (context, validatorsState) {
-              print(validatorsState);
               if (delegationState is DelegationsDataStateInitial ||
                   delegationState is DelegationsDataStateLoading ||
                   validatorsState is ValidatorsDataStateInitial ||
@@ -59,7 +58,6 @@ class _StakingTabState extends State<StakingTab>
                   ethTokenListState is CovalentTokensListEthLoading ||
                   maticTokenListState is CovalentTokensListMaticInitial ||
                   maticTokenListState is CovalentTokensListMaticLoading) {
-                print(validatorsState);
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -76,9 +74,6 @@ class _StakingTabState extends State<StakingTab>
                   validatorsState is ValidatorsDataStateFinal &&
                   ethTokenListState is CovalentTokensListEthLoaded &&
                   maticTokenListState is CovalentTokensListMaticLoaded) {
-                print("here");
-                print(ethTokenListState
-                    .covalentTokenList.data.items.first.contractTickerSymbol);
                 var eth = 0.0;
                 var matic = 0.0;
                 var qouteRate = 0.0;

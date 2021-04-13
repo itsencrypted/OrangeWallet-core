@@ -4,7 +4,6 @@ import 'package:pinput/pin_put/pin_put.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/utils/misc/box.dart';
-import 'package:orangewallet/utils/misc/disable_keyboard.dart';
 import 'package:orangewallet/utils/misc/encryptions.dart';
 import 'package:orangewallet/utils/misc/hd_key.dart';
 import 'package:orangewallet/widgets/loading_indicator.dart';

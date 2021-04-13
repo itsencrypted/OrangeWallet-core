@@ -9,7 +9,7 @@ class AppTheme {
   static const Color primaryColor = Color(0xFFEB5B56);
   static const Color secondaryColor = Color(0xff26241E);
   static const Color black = Color(0xFF000000);
-  static const Color warningCardColor = Color(0xFFD3AA6B);
+  static const Color warningCardColor = Color(0xFFD38A6B);
   static const Color lightgray_700 = Color(0xFFFFFFFF);
 
   static const Color warmgray_100 = Color(0xFFE8E6E1);

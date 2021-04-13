@@ -158,7 +158,8 @@ class _StakingTabState extends State<StakingTab>
                                             ),
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: AppTheme.secondaryColor),
+                                                color:
+                                                    AppTheme.warningCardColor),
                                           ),
                                         ),
                                         Text(
@@ -191,6 +192,7 @@ class _StakingTabState extends State<StakingTab>
                             ),
                           )
                         : SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
                             child: Column(children: [
                               if (showWarning)
                                 WarningCard(

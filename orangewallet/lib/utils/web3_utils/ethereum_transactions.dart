@@ -431,7 +431,14 @@ class EthereumTransactions {
         }
         return txHash;
       } catch (e) {
-        print(e);
+        print(e.toString());
+        if (e.toString() ==
+            "RPCError: got code -32000 with msg \"insufficient funds for gas * price + value\".") {
+          Fluttertoast.showToast(
+              msg: "You don't have sufficient ETH to make transaction",
+              toastLength: Toast.LENGTH_LONG);
+          return null;
+        }
         Fluttertoast.showToast(
             msg: e.toString(), toastLength: Toast.LENGTH_LONG);
         return null;

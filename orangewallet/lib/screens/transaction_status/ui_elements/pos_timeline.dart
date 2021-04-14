@@ -86,7 +86,7 @@ class PosTimeline extends StatelessWidget {
         indicatorBuilder: (_, index) {
           if (index <= doneTillIndex) {
             return DotIndicator(
-              color: AppTheme.primaryColor,
+              color: AppTheme.warningCardColor,
               child: Icon(
                 Icons.check,
                 color: Colors.white,
@@ -100,7 +100,7 @@ class PosTimeline extends StatelessWidget {
           }
         },
         connectorBuilder: (_, index, ___) => SolidLineConnector(
-          color: index <= doneTillIndex ? AppTheme.primaryColor : null,
+          color: index <= doneTillIndex ? AppTheme.warningCardColor : null,
         ),
       ),
     );

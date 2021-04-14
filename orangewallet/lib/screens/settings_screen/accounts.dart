@@ -70,23 +70,21 @@ class _AccountSelectionState extends State<AccountSelection> {
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: list.length,
                           itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await BoxUtils.setAccount(index);
-                                  context
-                                      .read<CovalentTokensListEthCubit>()
-                                      .getTokensList();
-                                  context
-                                      .read<CovalentTokensListMaticCubit>()
-                                      .getTokensList();
-                                  context
-                                      .read<DelegationsDataCubit>()
-                                      .setData();
-                                  context.read<ValidatorsdataCubit>().setData();
-                                  _refresh();
-                                },
+                            return GestureDetector(
+                              onTap: () async {
+                                await BoxUtils.setAccount(index);
+                                context
+                                    .read<CovalentTokensListEthCubit>()
+                                    .getTokensList();
+                                context
+                                    .read<CovalentTokensListMaticCubit>()
+                                    .getTokensList();
+                                context.read<DelegationsDataCubit>().setData();
+                                context.read<ValidatorsdataCubit>().setData();
+                                _refresh();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
                                     Padding(

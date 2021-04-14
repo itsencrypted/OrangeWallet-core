@@ -29,6 +29,7 @@ class _DepositStatusState extends State<DepositStatus> {
   String fromAddress = "";
   bool loading = true;
   String blockExplorer = "";
+  bool failed = false;
   var index = 0;
   _DepositStatusState({this.transactionPending});
   final List<String> processes = [
@@ -55,10 +56,10 @@ class _DepositStatusState extends State<DepositStatus> {
       DepositBridgeApi.depositStatusCode(data.txHash).then((value) {
         setState(() {
           bridgeApiData = value;
-          if (value.message.code == 4) {
-            transactionPending = true;
-          } else {
+          if (value.message.code == 0) {
             transactionPending = false;
+          } else {
+            transactionPending = true;
           }
           if (value.message.code == 4) {
             index = 0;
@@ -66,6 +67,10 @@ class _DepositStatusState extends State<DepositStatus> {
             index = 1;
           } else if (value.message.code == 0) {
             index = 2;
+          } else if (value.message.code == 2) {
+            index = 0;
+            transactionPending = false;
+            failed = true;
           }
           if (value.message.code == 0) {
             BoxUtils.updateDepositStatus(data.txHash);
@@ -150,7 +155,7 @@ class _DepositStatusState extends State<DepositStatus> {
                                               Icon(Icons.flash_on_outlined)),
                                       detailsArea(
                                           title: 'Ethereum Network',
-                                          subtitle: 'Netowrk',
+                                          subtitle: 'Network',
                                           topWidget: Icon(Icons.settings))
                                     ],
                                   ),
@@ -210,13 +215,19 @@ class _DepositStatusState extends State<DepositStatus> {
             child: Container(
               padding: EdgeInsets.all(AppTheme.paddingHeight / 4),
               decoration: BoxDecoration(
-                  color: transactionPending ? Colors.red : Colors.green,
+                  color: failed
+                      ? Colors.red
+                      : transactionPending
+                          ? Colors.orange
+                          : Colors.green,
                   borderRadius:
                       BorderRadius.circular(AppTheme.cardRadiusSmall)),
               child: Text(
-                transactionPending
-                    ? "Transaction Pending"
-                    : "Transaction Successful",
+                failed
+                    ? "Deposit failed"
+                    : transactionPending
+                        ? "Deposit in progress"
+                        : "Deposit Successful",
                 style: AppTheme.body2White,
               ),
             ),
@@ -270,15 +281,17 @@ class _DepositStatusState extends State<DepositStatus> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
-                transactionPending
-                    ? Icon(
-                        Icons.timer,
-                        color: AppTheme.yellow_500,
-                      )
-                    : Icon(
-                        Icons.check,
-                        color: Colors.teal[500],
-                      ),
+                failed
+                    ? Icon(Icons.cancel, color: Colors.red)
+                    : transactionPending
+                        ? Icon(
+                            Icons.timer,
+                            color: AppTheme.yellow_500,
+                          )
+                        : Icon(
+                            Icons.check,
+                            color: Colors.teal[500],
+                          ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(left: AppTheme.paddingHeight / 2),
@@ -286,36 +299,47 @@ class _DepositStatusState extends State<DepositStatus> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          transactionPending
-                              ? 'Sending Transaction'
-                              : "Transaction Successful",
+                          failed
+                              ? "Deposit Failed"
+                              : transactionPending
+                                  ? 'Processing Deposit'
+                                  : "Deposit Successful",
                           style: AppTheme.header_H5,
                         ),
                         Text(
-                          transactionPending
-                              ? 'Transaction may take a few moments to complete.'
-                              : "Transaction Finished Successfully",
+                          failed
+                              ? "Your deposit failed"
+                              : transactionPending
+                                  ? 'Deposit may take a few moments to complete.'
+                                  : "Deposit Finished Successfully",
                           maxLines: 4,
                           style: AppTheme.body2,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              bridgeApiData == null
-                                  ? ""
-                                  : '${bridgeApiData?.message?.msg}',
-                              style: AppTheme.body2,
-                            ),
-                            IconButton(
-                                icon: Icon(Icons.keyboard_arrow_down_outlined),
-                                onPressed: () {
-                                  setState(() {
-                                    show = !show;
-                                  });
-                                }),
-                          ],
-                        ),
+                        !failed
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    bridgeApiData == null
+                                        ? ""
+                                        : bridgeApiData?.message?.msg ==
+                                                "En Route"
+                                            ? "Your deposit is on it's way"
+                                            : '${bridgeApiData?.message?.msg}',
+                                    style: AppTheme.body2,
+                                  ),
+                                  IconButton(
+                                      icon: Icon(
+                                          Icons.keyboard_arrow_down_outlined),
+                                      onPressed: () {
+                                        setState(() {
+                                          show = !show;
+                                        });
+                                      }),
+                                ],
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -398,8 +422,10 @@ class _DepositStatusState extends State<DepositStatus> {
           setState(() {
             print(value);
             bridgeApiData = value;
-            if (value.message.code != 4) {
+            if (value.message.code == 0) {
               transactionPending = false;
+            } else {
+              transactionPending = true;
             }
             if (value.message.code == 4) {
               index = 0;
@@ -407,6 +433,10 @@ class _DepositStatusState extends State<DepositStatus> {
               index = 1;
             } else if (value.message.code == 0) {
               index = 2;
+            } else if (value.message.code == 2) {
+              index = 0;
+              transactionPending = false;
+              failed = true;
             }
           });
         });

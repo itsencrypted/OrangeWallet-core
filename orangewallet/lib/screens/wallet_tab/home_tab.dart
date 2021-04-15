@@ -58,7 +58,6 @@ class _HomeTabState extends State<HomeTab>
 
   @override
   Widget build(BuildContext context) {
-    print("building");
     return BlocBuilder<CovalentTokensListMaticCubit,
         CovalentTokensListMaticState>(
       builder: (context, state) {
@@ -77,7 +76,7 @@ class _HomeTabState extends State<HomeTab>
           var amt = 0.0;
           if (state.covalentTokenList.data.items.length > 0) {
             state.covalentTokenList.data.items.forEach((element) {
-              amt += element.quote;
+              amt += element.quote == null ? 0 : element.quote;
             });
           }
           amount = amt;

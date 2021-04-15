@@ -174,7 +174,7 @@ class MaticTransactions {
         if (e.toString() ==
             "RPCError: got code -32000 with msg \"insufficient funds for gas * price + value\".") {
           Fluttertoast.showToast(
-              msg: "You dont have sufficient MATIC to make transaction",
+              msg: "You don't have sufficient MATIC to make transaction",
               toastLength: Toast.LENGTH_LONG);
           return null;
         }

@@ -81,7 +81,7 @@ extension FLNativeView {
         _verticalStack.addArrangedSubview(networkLabel)
         
         //Disconnect button
-        disconnectButton.backgroundColor = UIColor(red: 130/255, green: 72/255, blue: 229/255, alpha: 1)
+        disconnectButton.backgroundColor = UIColor(red: 235/255, green: 91/255, blue: 86/255, alpha: 1)
         disconnectButton.setTitle("Disconnect", for: UIControl.State.normal)
         disconnectButton.layer.cornerRadius = 10
         disconnectButton.titleEdgeInsets = UIEdgeInsets.init(top: 10, left: 10,bottom: 10,right: 10)

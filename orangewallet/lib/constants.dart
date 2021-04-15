@@ -24,6 +24,7 @@ const String exportIconsvg = "$_baseIcon/export.svg";
 const String networkIconsvg = "$_baseIcon/network.svg";
 const String privacyIconsvg = "$_baseIcon/privacy.svg";
 const String termOfServiceIconsvg = "$_baseIcon/term_of_service.svg";
+const String orangeIcon = "$_baseIcon/orangeicon.png";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";

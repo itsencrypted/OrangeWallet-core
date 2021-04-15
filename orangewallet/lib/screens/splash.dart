@@ -17,7 +17,7 @@ class Splash extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: SvgPicture.asset(appLandingSvg),
+                    child: Image.asset(orangeIcon),
                   ),
                 ],
               ),

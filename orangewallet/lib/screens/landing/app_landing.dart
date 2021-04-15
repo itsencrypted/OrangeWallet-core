@@ -14,7 +14,7 @@ class AppLandingScreen extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: SvgPicture.asset(appLandingSvg),
+                  child: Image.asset(orangeIcon),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,

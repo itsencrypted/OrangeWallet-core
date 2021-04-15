@@ -206,7 +206,7 @@ internal class WalletConnectView(context: Context, id: Int, creationParams: List
         networkLabel.textSize = 16.0.toFloat()
         val shape = GradientDrawable()
         shape.cornerRadius = 25.toFloat()
-        shape.setColor(Color.parseColor("#FF8248E5"))
+        shape.setColor(Color.parseColor("#EB5B56"))
         button.text = "Disconnect"
         button.width = ViewGroup.LayoutParams.MATCH_PARENT
         button.height = ViewGroup.LayoutParams.WRAP_CONTENT

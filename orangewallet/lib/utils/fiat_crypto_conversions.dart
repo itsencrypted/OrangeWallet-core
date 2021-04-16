@@ -3,6 +3,9 @@ class FiatCryptoConversions {
     if (qoute == 0) {
       return amount;
     }
+    if (amount == null) {
+      return 0;
+    }
     return amount / qoute;
   }
 

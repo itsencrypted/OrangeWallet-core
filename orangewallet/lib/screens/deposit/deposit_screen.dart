@@ -305,7 +305,7 @@ class _DepositScreenState extends State<DepositScreen>
                                                     ? Text(
                                                         "\$" +
                                                             FiatCryptoConversions.cryptoToFiat(
-                                                                    double.parse(_amount.text ==
+                                                                    double.tryParse(_amount.text ==
                                                                             ""
                                                                         ? "0"
                                                                         : _amount
@@ -474,7 +474,7 @@ class _DepositScreenState extends State<DepositScreen>
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
+      title: Text("Insufficient approval"),
       shape: AppTheme.cardShape,
       content: Text(
           "You haven't given sufficient approval, would you like to approve now?"),
@@ -540,6 +540,7 @@ class _DepositScreenState extends State<DepositScreen>
           transactionData = TransactionData(
               to: state.data.token.contractAddress,
               amount: "0",
+              token: tokenState,
               trx: trx,
               type: TransactionType.APPROVE);
         } else {

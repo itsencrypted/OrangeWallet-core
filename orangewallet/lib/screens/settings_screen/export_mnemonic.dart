@@ -24,6 +24,7 @@ class _ExportMnemonicState extends State<ExportMnemonic> {
   @override
   Widget build(BuildContext context) {
     mnemonic = ModalRoute.of(context).settings.arguments as String;
+    print(mnemonic);
     chipsText = mnemonic.split(' ');
     return Scaffold(
         backgroundColor: AppTheme.backgroundWhite,

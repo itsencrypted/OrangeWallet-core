@@ -148,21 +148,35 @@ class _EthTransactionConfirmationState
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            double.tryParse(args.amount)
-                                                    .toStringAsFixed(3) +
-                                                " ${args.token.contractTickerSymbol}",
-                                            style:
-                                                AppTheme.boldThemeColoredText,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          args.token != null &&
-                                                  args.token.quoteRate != null
+                                          args.type == TransactionType.APPROVE
                                               ? Text(
-                                                  " ${(args.token.quoteRate * double.parse(args.amount)).toStringAsFixed(3)} USD",
+                                                  " ${args.token.contractTickerSymbol}",
+                                                  style: AppTheme
+                                                      .boldThemeColoredText,
+                                                  textAlign: TextAlign.center,
+                                                )
+                                              : Text(
+                                                  double.tryParse(args.amount)
+                                                          .toStringAsFixed(3) +
+                                                      " ${args.token.contractTickerSymbol}",
+                                                  style: AppTheme
+                                                      .boldThemeColoredText,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                          args.type == TransactionType.APPROVE
+                                              ? Text(
+                                                  "Approve",
                                                   style: AppTheme.balanceSub,
                                                 )
-                                              : Container()
+                                              : args.token != null &&
+                                                      args.token.quoteRate !=
+                                                          null
+                                                  ? Text(
+                                                      " ${(args.token.quoteRate * double.parse(args.amount)).toStringAsFixed(3)} USD",
+                                                      style:
+                                                          AppTheme.balanceSub,
+                                                    )
+                                                  : Container()
                                         ],
                                       ),
                                       Column(

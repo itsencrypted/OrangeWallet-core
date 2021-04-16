@@ -448,7 +448,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                     ? Text(
                                                         "\$" +
                                                             FiatCryptoConversions.cryptoToFiat(
-                                                                    double.parse(_amount.text ==
+                                                                    double.tryParse(_amount.text ==
                                                                             ""
                                                                         ? "0"
                                                                         : _amount
@@ -585,10 +585,10 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                             return;
                           }
                           if (index == 0) {
-                            amount = double.parse(_amount.text);
+                            amount = double.tryParse(_amount.text);
                           } else {
                             amount = FiatCryptoConversions.fiatToCrypto(
-                                token.quoteRate, double.parse(_amount.text));
+                                token.quoteRate, double.tryParse(_amount.text));
                           }
                           if (validateAddress(_address.text) != null ||
                               amount < 0) {

@@ -381,7 +381,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                         ? Text(
                                                             "\$" +
                                                                 FiatCryptoConversions.cryptoToFiat(
-                                                                        double.parse(_amount.text ==
+                                                                        double.tryParse(_amount.text ==
                                                                                 ""
                                                                             ? "0"
                                                                             : _amount
@@ -587,7 +587,7 @@ class _DelegationAmountState extends State<DelegationAmount>
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("AlertDialog"),
+      title: Text("Insufficient approval"),
       shape: AppTheme.cardShape,
       content: Text(
           "You haven't given sufficient approval, would you like to approve now?"),
@@ -615,7 +615,7 @@ class _DelegationAmountState extends State<DelegationAmount>
       if (appr) {
         trx = await EthereumTransactions.approveErc20(
           config.maticToken,
-          spender,
+          config.stakeManagerProxy,
         );
         transactionData = TransactionData(
             to: config.maticToken,

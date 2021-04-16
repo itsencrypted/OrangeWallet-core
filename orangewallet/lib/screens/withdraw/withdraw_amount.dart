@@ -296,7 +296,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                                                       ? Text(
                                                           "\$" +
                                                               FiatCryptoConversions.cryptoToFiat(
-                                                                      double.parse(_amount.text ==
+                                                                      double.tryParse(_amount.text ==
                                                                               ""
                                                                           ? "0"
                                                                           : _amount

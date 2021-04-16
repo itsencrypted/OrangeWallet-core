@@ -34,6 +34,7 @@ class FiatOnRampCard extends StatelessWidget {
                   NetworkConfigObject config =
                       await NetworkManager.getNetworkObject();
                   String url = config.transakLink + address;
+                  print(url);
                   Navigator.pushNamed(context, transakRoute, arguments: url);
                 },
                 child: ListTile(

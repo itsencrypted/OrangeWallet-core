@@ -62,16 +62,9 @@ class _SettingsTabState extends State<SettingsTab>
                   title: 'Privacy',
                   leading: SvgPicture.asset(privacyIconsvg),
                   onTap: () {
-                    print('Privacy');
+                    _launchURL(
+                        "https://www.freeprivacypolicy.com/live/0e44d599-16e8-436b-a727-13b43c676454");
                   }),
-              Divider(
-                thickness: 1,
-                height: 1,
-              ),
-              listTile(
-                  title: 'Terms of Service',
-                  leading: SvgPicture.asset(termOfServiceIconsvg),
-                  onTap: () {}),
               Divider(
                 thickness: 1,
                 height: 1,

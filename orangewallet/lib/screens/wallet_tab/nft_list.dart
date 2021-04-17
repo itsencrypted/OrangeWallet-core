@@ -19,41 +19,47 @@ class NftListCard extends StatelessWidget {
     ls.add(_disclaimer);
     ls.addAll(_tiles());
     ls.add(_divider);
-    if (total < 5) {
+    if (total > 5) {
       ls.add(_raisedButton(context));
     }
     return Card(
       elevation: AppTheme.cardElevations,
       shape: AppTheme.cardShape,
       color: AppTheme.white,
-      child: ExpansionTile(
-        title: Text("$total Collectibles"),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 15,
-          color: AppTheme.grey,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          title: Text(
+            "$total Coins",
+            style: AppTheme.label_medium,
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+            color: AppTheme.grey,
+          ),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                bottom: 8.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: ls,
+              ),
+            )
+          ],
         ),
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: 8.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: ls,
-            ),
-          )
-        ],
       ),
     );
   }
 
   Widget _divider = Padding(
     padding: EdgeInsets.symmetric(
-      horizontal: 15,
+      horizontal: 0,
     ),
-    child: Divider(color: AppTheme.lightText),
+    child: Divider(thickness: 1, color: AppTheme.lightDividerColor),
   );
   Widget _disclaimer = Container(
       margin: EdgeInsets.symmetric(

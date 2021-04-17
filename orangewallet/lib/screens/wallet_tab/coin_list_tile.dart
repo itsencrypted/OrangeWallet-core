@@ -19,7 +19,7 @@ class CoinListTile extends StatelessWidget {
     SendTransactionCubit data = context.read<SendTransactionCubit>();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Center(
         child: FlatButton(
           onPressed: () {

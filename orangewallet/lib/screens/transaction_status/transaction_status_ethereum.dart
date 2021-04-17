@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:orangewallet/constants.dart';
+import 'package:orangewallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:orangewallet/theme_data.dart';
+import 'package:orangewallet/utils/fiat_crypto_conversions.dart';
 import 'package:orangewallet/utils/misc/box.dart';
 import 'package:orangewallet/utils/network/network_config.dart';
 import 'package:orangewallet/utils/network/network_manager.dart';
@@ -70,131 +73,152 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Details"),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.ios_share),
-              onPressed: () {
-                Share.share(
-                  blockExplorer + "/tx/" + txHash,
-                );
-              })
-        ],
-      ),
-      body: loading
-          ? Center(
-              child: SpinKitFadingFour(
-                color: AppTheme.primaryColor,
-                size: 50,
-              ),
-            )
-          : unmerged
-              ? Center(
-                  child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClipOval(
-                      clipBehavior: Clip.antiAlias,
-                      child: Container(
-                        child: Text("!",
-                            style: TextStyle(
-                                fontSize: 50,
-                                color: AppTheme.black,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    Text("Another transaction with same nonce got merged."),
-                  ],
-                ))
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                    child: Column(
-                      children: [
-                        getTopContainer(),
-                        getStatusCard(),
-                        Card(
-                          shape: AppTheme.cardShape,
-                          child: Padding(
-                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        AppTheme.cardRadius),
-                                    color: AppTheme.stackingGrey,
-                                  ),
-                                  margin:
-                                      EdgeInsets.all(AppTheme.paddingHeight),
-                                  height: 110,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      detailsArea(
-                                          title: gas.toString() + " ETH",
-                                          subtitle: 'Transaction Fee',
-                                          topWidget:
-                                              Icon(Icons.flash_on_outlined)),
-                                      detailsArea(
-                                          title: 'Ethereum Network',
-                                          subtitle: 'Netowrk',
-                                          topWidget: Icon(Icons.settings))
-                                    ],
-                                  ),
-                                ),
-                                getListTile(
-                                    imageUrl: tokenIcon,
-                                    title: "From",
-                                    subtitle: from
-                                    // trailing: IconButton(
-                                    //     icon: Icon(
-                                    //       Icons.file_copy,
-                                    //       color: Colors.black,
-                                    //     ),
-                                    //     onPressed: () {}),
-                                    ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'To',
-                                  subtitle: to,
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.file_copy,
-                                      // color: Colors.black,
-                                    ),
-                                    onPressed: () {
-                                      Clipboard.setData(
-                                          new ClipboardData(text: txHash));
-                                    },
-                                  ),
-                                ),
-                                Divider(
-                                  color: Colors.grey,
-                                ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'Transaction Hash',
-                                  subtitle: txHash,
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.open_in_browser),
-                                    onPressed: _launchURL,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+        appBar: AppBar(
+          title: Text("Details"),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.ios_share),
+                onPressed: () {
+                  Share.share(
+                    blockExplorer + "/tx/" + txHash,
+                  );
+                })
+          ],
+        ),
+        body: loading
+            ? Center(
+                child: SpinKitFadingFour(
+                  color: AppTheme.primaryColor,
+                  size: 50,
                 ),
-    );
+              )
+            : unmerged
+                ? Center(
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipOval(
+                        clipBehavior: Clip.antiAlias,
+                        child: Container(
+                          child: Text("!",
+                              style: TextStyle(
+                                  fontSize: 50,
+                                  color: AppTheme.black,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      Text("Another transaction with same nonce got merged."),
+                    ],
+                  ))
+                : BlocBuilder<CovalentTokensListEthCubit,
+                        CovalentTokensListEthState>(
+                    builder: (BuildContext context,
+                        CovalentTokensListEthState state) {
+                    var ethQouteRate = 0.0;
+                    if (state is CovalentTokensListEthLoaded) {
+                      var list = state.covalentTokenList.data.items.where(
+                          (element) =>
+                              element.contractTickerSymbol.toLowerCase() ==
+                              "eth");
+                      if (list.isNotEmpty) {
+                        ethQouteRate = list.first.quoteRate;
+                        print(ethQouteRate);
+                      }
+                    }
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
+                        child: Column(
+                          children: [
+                            getTopContainer(ethQouteRate),
+                            getStatusCard(),
+                            Card(
+                              shape: AppTheme.cardShape,
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.all(AppTheme.paddingHeight / 2),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.cardRadius),
+                                        color: AppTheme.stackingGrey,
+                                      ),
+                                      margin: EdgeInsets.all(
+                                          AppTheme.paddingHeight),
+                                      height: 110,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          detailsArea(
+                                              title: gas.toString() + " ETH",
+                                              subtitle: 'Transaction Fee',
+                                              topWidget: Icon(
+                                                  Icons.flash_on_outlined)),
+                                          detailsArea(
+                                              title: 'Ethereum Network',
+                                              subtitle: 'Netowrk',
+                                              topWidget: Icon(Icons.settings))
+                                        ],
+                                      ),
+                                    ),
+                                    getListTile(
+                                        imageUrl: tokenIcon,
+                                        title: "From",
+                                        subtitle: from
+                                        // trailing: IconButton(
+                                        //     icon: Icon(
+                                        //       Icons.file_copy,
+                                        //       color: Colors.black,
+                                        //     ),
+                                        //     onPressed: () {}),
+                                        ),
+                                    getListTile(
+                                      imageUrl: tokenIcon,
+                                      title: 'To',
+                                      subtitle: to,
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.file_copy,
+                                          // color: Colors.black,
+                                        ),
+                                        onPressed: () {
+                                          Clipboard.setData(
+                                              new ClipboardData(text: txHash));
+                                        },
+                                      ),
+                                    ),
+                                    Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    getListTile(
+                                      imageUrl: tokenIcon,
+                                      title: 'Transaction Hash',
+                                      subtitle: txHash,
+                                      trailing: IconButton(
+                                        icon: Icon(Icons.open_in_browser),
+                                        onPressed: _launchURL,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }));
   }
 
-  Widget getTopContainer() {
+  Widget getTopContainer(double qouteRate) {
+    var fiat = 0.0;
+    if (qouteRate != 0) {
+      print(value);
+      fiat = FiatCryptoConversions.cryptoToFiat(value, qouteRate);
+    }
     return Container(
       padding: EdgeInsets.symmetric(vertical: AppTheme.paddingHeight20 * 2),
       child: Column(
@@ -242,18 +266,26 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
                   // SizedBox(
                   //   width: AppTheme.paddingHeight,
                   // ),
-                  SizedBox(
-                    //width: MediaQuery.of(context).size.width * 0.75,
-                    child: Text(
-                      value == 0
-                          ? "Contract Interaction"
-                          : " ${value.toString()} ETH",
-                      style: value == 0 ? AppTheme.display2 : AppTheme.display1,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Text(
+                    value == 0
+                        ? "Contract Interaction"
+                        : " ${value.toString()} ETH",
+                    style: value == 0 ? AppTheme.display2 : AppTheme.display1,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  fiat != 0
+                      ? Text(
+                          value == 0
+                              ? "Contract Interaction"
+                              : " ${fiat.toStringAsPrecision(3)} USD",
+                          style: AppTheme.body_medium_grey,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Container(),
                   // SizedBox(
                   //   width: AppTheme.paddingHeight20 * 2,
                   // ),

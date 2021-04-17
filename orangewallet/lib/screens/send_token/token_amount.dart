@@ -81,9 +81,16 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                     height: MediaQuery.of(context).size.height -
                         AppBar().preferredSize.height,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment:
+                          MediaQuery.of(context).viewInsets.bottom == 0
+                              ? MainAxisAlignment.spaceBetween
+                              : MainAxisAlignment.start,
                       children: [
-                        SizedBox(),
+                        SizedBox(
+                          height: MediaQuery.of(context).viewInsets.bottom == 0
+                              ? 0
+                              : MediaQuery.of(context).size.height * 0.07,
+                        ),
                         Card(
                           margin: EdgeInsets.all(AppTheme.paddingHeight12),
                           shape: AppTheme.cardShape,

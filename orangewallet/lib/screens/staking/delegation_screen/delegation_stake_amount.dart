@@ -23,6 +23,7 @@ import 'package:orangewallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:orangewallet/utils/web3_utils/staking_transactions.dart';
 import 'package:orangewallet/widgets/colored_tabbar.dart';
 import 'package:orangewallet/widgets/loading_indicator.dart';
+import 'package:orangewallet/widgets/no_scaling_animation_fab.dart';
 import 'package:web3dart/web3dart.dart';
 
 class DelegationAmount extends StatefulWidget {
@@ -38,7 +39,7 @@ class _DelegationAmountState extends State<DelegationAmount>
   ValidatorInfo validator;
   var matic;
   TabController _tabController;
-
+  bool showFab = false;
   TextEditingController _amount = TextEditingController();
 
   @override
@@ -53,7 +54,11 @@ class _DelegationAmountState extends State<DelegationAmount>
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
     });
     showAmount = true;
-
+    Future.delayed(Duration(seconds: 1), () {
+      setState(() {
+        showFab = true;
+      });
+    });
     super.initState();
     _amount.addListener(() {
       setState(() {});
@@ -171,9 +176,18 @@ class _DelegationAmountState extends State<DelegationAmount>
                             ? NeverScrollableScrollPhysics()
                             : null,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment:
+                              MediaQuery.of(context).viewInsets.bottom == 0
+                                  ? MainAxisAlignment.spaceBetween
+                                  : MainAxisAlignment.start,
                           children: [
-                            SizedBox(),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).viewInsets.bottom == 0
+                                      ? 0
+                                      : MediaQuery.of(context).size.height *
+                                          0.07,
+                            ),
                             Card(
                               margin: EdgeInsets.all(AppTheme.paddingHeight12),
                               shape: AppTheme.cardShape,
@@ -226,7 +240,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                           keyboardAppearance:
                                                               Brightness.dark,
                                                           textAlign:
-                                                              TextAlign.start,
+                                                              TextAlign.center,
                                                           autovalidateMode:
                                                               AutovalidateMode
                                                                   .onUserInteraction,
@@ -278,9 +292,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                                   .body_small,
                                                               contentPadding:
                                                                   EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              4),
+                                                                      .zero,
                                                               border: OutlineInputBorder(
                                                                   borderSide:
                                                                       BorderSide
@@ -481,28 +493,31 @@ class _DelegationAmountState extends State<DelegationAmount>
                         ),
                       ),
                     ),
+                    floatingActionButtonAnimator: NoScalingAnimation(),
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
-                    floatingActionButton: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: AppTheme.buttonHeight_44,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: AppTheme.paddingHeight12),
-                      child: TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: AppTheme.orange_500,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      AppTheme.buttonRadius))),
-                          onPressed: () {
-                            _delegate(validator.contractAddress, matic);
-                          },
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.white,
-                          )),
-                    ),
+                    floatingActionButton: showFab
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: AppTheme.buttonHeight_44,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingHeight12),
+                            child: TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor: AppTheme.orange_500,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            AppTheme.buttonRadius))),
+                                onPressed: () {
+                                  _delegate(validator.contractAddress, matic);
+                                },
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                )),
+                          )
+                        : Container(),
                   );
                 } else {
                   return Scaffold(

@@ -229,6 +229,7 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                           child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: ConfirmationSlider(
+                            width: MediaQuery.of(context).size.width * 0.812,
                             backgroundShape: BorderRadius.all(
                                 Radius.circular(AppTheme.cardRadius)),
                             foregroundShape: BorderRadius.all(

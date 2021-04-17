@@ -31,6 +31,7 @@ class _NftBurnState extends State<NftBurn> {
   int index = 0;
   int selectedIndex = 0;
   var tokenListCubit;
+  bool showWarning = true;
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -193,22 +194,56 @@ class _NftBurnState extends State<NftBurn> {
               children: [
                 bridge == 2
                     ? MediaQuery.of(context).viewInsets.bottom == 0
-                        ? ListTile(
-                            leading: ClipOval(
-                              clipBehavior: Clip.antiAlias,
-                              child: Container(
-                                child: Text("!",
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        color: AppTheme.black,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            title: Text("Note"),
-                            subtitle: Text(
-                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                            isThreeLine: true,
-                          )
+                        ? showWarning
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: AppTheme.paddingHeight12 - 3),
+                                child: Card(
+                                  color: AppTheme.warningCardColor,
+                                  shape: AppTheme.cardShape,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: AppTheme.paddingHeight,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Warning',
+                                              style: AppTheme.titleWhite,
+                                            ),
+                                            IconButton(
+                                                icon: Icon(Icons.close),
+                                                color: Colors.white,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    showWarning = false;
+                                                  });
+                                                })
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: AppTheme.paddingHeight,
+                                            bottom: AppTheme.paddingHeight,
+                                            right: 10),
+                                        child: Text(
+                                          "This asset will take upto 7 days for withdrawal.",
+                                          style: AppTheme.body2White,
+                                          maxLines: 100,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container()
                         : Container()
                     : Container(),
                 SafeArea(

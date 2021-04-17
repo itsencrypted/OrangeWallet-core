@@ -24,6 +24,7 @@ class _MaticTransactionListState extends State<MaticTransactionList>
       CovalentApiWrapper.maticTransactionList().then((value) {
         setState(() {
           list = value;
+
           _loading = false;
         });
       });

@@ -39,7 +39,7 @@ class _DepositScreenState extends State<DepositScreen>
   int index = 0;
   bool showAmount;
   TabController _tabController;
-
+  bool showWarning = true;
   var ethCubit;
   @override
   initState() {
@@ -94,9 +94,16 @@ class _DepositScreenState extends State<DepositScreen>
                 height: MediaQuery.of(context).size.height -
                     AppBar().preferredSize.height,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment:
+                      MediaQuery.of(context).viewInsets.bottom == 0
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.start,
                   children: [
-                    SizedBox(),
+                    SizedBox(
+                      height: MediaQuery.of(context).viewInsets.bottom == 0
+                          ? 0
+                          : MediaQuery.of(context).size.height * 0.07,
+                    ),
                     Column(
                       children: [
                         Container(
@@ -146,6 +153,9 @@ class _DepositScreenState extends State<DepositScreen>
                                                 Expanded(
                                                   child: Container(
                                                     child: TextFormField(
+                                                      scrollPadding:
+                                                          EdgeInsets.only(
+                                                              bottom: 40),
                                                       textAlignVertical:
                                                           TextAlignVertical
                                                               .center,
@@ -383,22 +393,58 @@ class _DepositScreenState extends State<DepositScreen>
               children: [
                 args == 2
                     ? MediaQuery.of(context).viewInsets.bottom == 0
-                        ? ListTile(
-                            leading: ClipOval(
-                              clipBehavior: Clip.antiAlias,
-                              child: Container(
-                                child: Text("!",
-                                    style: TextStyle(
-                                        fontSize: 50,
-                                        color: AppTheme.black,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ),
-                            title: Text("Note"),
-                            subtitle: Text(
-                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                            isThreeLine: true,
-                          )
+                        ? showWarning
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: AppTheme.paddingHeight12 - 3),
+                                child: Card(
+                                  color: AppTheme.warningCardColor,
+                                  shape: AppTheme.cardShape,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: AppTheme.paddingHeight,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Warning',
+                                              style: AppTheme.titleWhite,
+                                            ),
+                                            IconButton(
+                                                icon: Icon(Icons.close),
+                                                color: Colors.white,
+                                                onPressed: () {
+                                                  setState(() {
+                                                    showWarning = false;
+                                                  });
+                                                })
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: AppTheme.paddingHeight,
+                                            bottom: AppTheme.paddingHeight,
+                                            right: 10),
+                                        child: Text(
+                                          "Assets deposited via plasma bridge will take upto 7 days for withdrawl.",
+                                          style: AppTheme.body2White,
+                                          maxLines: 100,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: AppTheme.buttonHeight_44,
+                              )
                         : SizedBox(
                             height: AppTheme.buttonHeight_44,
                           )

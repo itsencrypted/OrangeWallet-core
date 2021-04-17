@@ -36,6 +36,7 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
   int selectedIndex = 0;
   int args; // 0 no bridge , 1 = pos , 2 = plasma , 3 both
   int index = 0;
+  bool showWarning = true;
   TabController _controller;
   var ethCubit;
   @override
@@ -166,22 +167,57 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                 children: [
                   bridge == 2
                       ? MediaQuery.of(context).viewInsets.bottom == 0
-                          ? ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            )
+                          ? showWarning
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: AppTheme.paddingHeight12 - 3),
+                                  child: Card(
+                                    color: AppTheme.warningCardColor,
+                                    shape: AppTheme.cardShape,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: AppTheme.paddingHeight,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Warning',
+                                                style: AppTheme.titleWhite,
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  color: Colors.white,
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      showWarning = false;
+                                                    });
+                                                  })
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: AppTheme.paddingHeight,
+                                              bottom: AppTheme.paddingHeight,
+                                              right: 10),
+                                          child: Text(
+                                            "Assets deposited via plasma bridge will take upto 7 days for withdrawl.",
+                                            style: AppTheme.body2White,
+                                            maxLines: 100,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Container
                           : Container()
                       : Container(),
                   SafeArea(

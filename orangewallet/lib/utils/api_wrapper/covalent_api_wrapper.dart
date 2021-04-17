@@ -97,6 +97,8 @@ class CovalentApiWrapper {
         CovalentKey;
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
+    print(url);
+
     ctl = MaticTransactionListModel.fromJson(json);
 
     return ctl;

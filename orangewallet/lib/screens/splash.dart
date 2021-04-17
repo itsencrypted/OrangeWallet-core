@@ -17,7 +17,11 @@ class Splash extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Image.asset(orangeIcon),
+                    child: Image.asset(
+                      orangeIcon,
+                      height: MediaQuery.of(context).size.width / 4,
+                      width: MediaQuery.of(context).size.width / 4,
+                    ),
                   ),
                 ],
               ),

@@ -266,9 +266,20 @@ class _CoinProfileState extends State<CoinProfile> {
                                         ),
                                       ),
                                     )
-                                  : Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("No Transactions"),
+                                  : SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height -
+                                              500,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("No Transactions"),
+                                          ),
+                                        ],
+                                      ),
                                     );
                             } else {
                               return Center(

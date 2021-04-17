@@ -120,7 +120,7 @@ class _HomeTabState extends State<HomeTab>
                           children: [
                             Text(
                               "Pending Actions",
-                              style: AppTheme.body1,
+                              style: AppTheme.label_medium,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -170,7 +170,7 @@ class _HomeTabState extends State<HomeTab>
                           children: [
                             Text(
                               "Transactions List",
-                              style: AppTheme.body1,
+                              style: AppTheme.label_medium,
                             ),
                             Icon(
                               Icons.arrow_forward_ios,

@@ -17,7 +17,7 @@ class CoinListCard extends StatelessWidget {
     ls.add(_divider);
     ls.add(_disclaimer);
     ls.addAll(_tiles());
-    ls.add(_divider);
+    //ls.add(_divider);
     if (total > 5) {
       ls.add(_raisedButton(context));
     }
@@ -25,37 +25,38 @@ class CoinListCard extends StatelessWidget {
       elevation: AppTheme.cardElevations,
       shape: AppTheme.cardShape,
       color: AppTheme.white,
-      child: ExpansionTile(
-        title: Text(
-          "$total Coins",
-          style: AppTheme.label_medium,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          title: Text(
+            "$total Coins",
+            style: AppTheme.label_medium,
+          ),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 15,
+            color: AppTheme.grey,
+          ),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 8.0, left: 0, right: 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: ls,
+              ),
+            )
+          ],
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 15,
-          color: AppTheme.grey,
-        ),
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: 8.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: ls,
-            ),
-          )
-        ],
       ),
     );
   }
 
   Widget _divider = Padding(
     padding: EdgeInsets.symmetric(
-      horizontal: 15,
+      horizontal: 0,
     ),
-    child: Divider(color: AppTheme.lightText),
+    child: Divider(thickness: 1, color: AppTheme.lightDividerColor),
   );
   Widget _disclaimer = Container(
       margin: EdgeInsets.symmetric(
@@ -73,12 +74,15 @@ class CoinListCard extends StatelessWidget {
       if (index == 5) {
         break;
       }
-      if (token.type == null || token.balance != 0) {
+      if (token.type == null ||
+          double.tryParse(token.balance) != null ||
+          double.tryParse(token.balance) != 0.0) {
         index++;
         var tile = CoinListTile(
           tokenData: token,
         );
         tiles.add(tile);
+        tiles.add(_divider);
       }
     }
     return tiles;

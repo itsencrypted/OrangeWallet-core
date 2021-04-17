@@ -34,6 +34,8 @@ class AppTheme {
   static const Color darkText = Color(0xFF253840);
   static const Color darkerText = Color(0xFF17262A);
   static const Color lightText = Color(0xFF4A6572);
+  static const Color lightDividerColor = Color(0xFFF3F2EF);
+
   static const Color deactivatedText = Color(0xFF767676);
   static const Color dismissibleBackground = Color(0xFF364A54);
   static const Color whiteTextColor = Color(0xFFEEF1F3);
@@ -166,6 +168,14 @@ class AppTheme {
     fontFamily: fontName,
     fontWeight: FontWeight.w400,
     fontSize: 14,
+    letterSpacing: 0.2,
+    color: warmgray_600,
+  );
+  static const TextStyle body_medium_grey = TextStyle(
+    // body2 -> body1
+    fontFamily: fontName,
+    fontWeight: FontWeight.w400,
+    fontSize: 16,
     letterSpacing: 0.2,
     color: warmgray_600,
   );

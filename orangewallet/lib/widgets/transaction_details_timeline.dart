@@ -67,7 +67,7 @@ class TransactionDetailsTimeline extends StatelessWidget {
         indicatorBuilder: (_, index) {
           if (index <= doneTillIndex) {
             return DotIndicator(
-              color: AppTheme.orange_500,
+              color: AppTheme.warningCardColor,
               child: Icon(
                 Icons.check,
                 color: Colors.white,
@@ -81,7 +81,7 @@ class TransactionDetailsTimeline extends StatelessWidget {
           }
         },
         connectorBuilder: (_, index, ___) => SolidLineConnector(
-          color: index <= doneTillIndex ? AppTheme.orange_500 : null,
+          color: index <= doneTillIndex ? AppTheme.warningCardColor : null,
         ),
       ),
     );

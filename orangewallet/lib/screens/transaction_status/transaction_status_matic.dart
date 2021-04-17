@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/utils/misc/box.dart';
@@ -115,73 +116,70 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                         getStatusCard(),
                         Card(
                           shape: AppTheme.cardShape,
-                          child: Padding(
-                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        AppTheme.cardRadius),
-                                    color: AppTheme.stackingGrey,
-                                  ),
-                                  margin:
-                                      EdgeInsets.all(AppTheme.paddingHeight),
-                                  height: 110,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      detailsArea(
-                                          title: gas.toString() + " Matic",
-                                          subtitle: 'Transaction Fee',
-                                          topWidget:
-                                              Icon(Icons.flash_on_outlined)),
-                                      detailsArea(
-                                          title: 'Matic Network',
-                                          subtitle: 'Netowrk',
-                                          topWidget: Icon(Icons.settings))
-                                    ],
-                                  ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      AppTheme.cardRadius),
+                                  color: AppTheme.stackingGrey,
                                 ),
-                                getListTile(
-                                    imageUrl: tokenIcon,
-                                    title: "From",
-                                    subtitle: from
-                                    // trailing: IconButton(
-                                    //     icon: Icon(
-                                    //       Icons.file_copy,
-                                    //       color: Colors.black,
-                                    //     ),
-                                    //     onPressed: () {}),
+                                margin: EdgeInsets.all(AppTheme.paddingHeight),
+                                height: 110,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    detailsArea(
+                                        title: gas.toString() + " Matic",
+                                        subtitle: 'Transaction Fee',
+                                        topWidget:
+                                            Icon(Icons.flash_on_outlined)),
+                                    detailsArea(
+                                        title: 'Matic Network',
+                                        subtitle: 'Netowrk',
+                                        topWidget:
+                                            SvgPicture.asset(settingsIconsvg))
+                                  ],
+                                ),
+                              ),
+                              getListTile(
+                                  imageUrl: tokenIcon,
+                                  title: "From",
+                                  subtitle: from
+                                  // trailing: IconButton(
+                                  //     icon: Icon(
+                                  //       Icons.file_copy,
+                                  //       color: Colors.black,
+                                  //     ),
+                                  //     onPressed: () {}),
+                                  ),
+                              getListTile(
+                                imageUrl: tokenIcon,
+                                title: 'To',
+                                subtitle: to,
+                                trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.file_copy,
                                     ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'To',
-                                  subtitle: to,
-                                  trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.file_copy,
-                                      ),
-                                      onPressed: () {
-                                        Clipboard.setData(
-                                            new ClipboardData(text: txHash));
-                                      }),
+                                    onPressed: () {
+                                      Clipboard.setData(
+                                          new ClipboardData(text: txHash));
+                                    }),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              getListTile(
+                                imageUrl: tokenIcon,
+                                title: 'Transaction Hash',
+                                subtitle: txHash,
+                                trailing: IconButton(
+                                  icon: Icon(Icons.open_in_browser),
+                                  onPressed: _launchURL,
                                 ),
-                                Divider(
-                                  color: Colors.grey,
-                                ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'Transaction Hash',
-                                  subtitle: txHash,
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.open_in_browser),
-                                    onPressed: _launchURL,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         )
                       ],
@@ -228,15 +226,15 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
             child: Wrap(
               alignment: WrapAlignment.center,
               children: [
-                value == 0
-                    ? Container()
-                    : Image.network(
-                        maticIconUrl,
-                        height: AppTheme.tokenIconHeight,
-                      ),
-                SizedBox(
-                  width: AppTheme.paddingHeight,
-                ),
+                // value == 0
+                //     ? Container()
+                //     : Image.network(
+                //         maticIconUrl,
+                //         height: AppTheme.tokenIconHeight,
+                //       ),
+                // SizedBox(
+                //   width: AppTheme.paddingHeight,
+                // ),
                 Text(
                   value == 0
                       ? "Contract Interaction"
@@ -267,13 +265,17 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
   Widget getStatusCard() {
     return Card(
       shape: AppTheme.cardShape,
-      child: Padding(
-        padding: EdgeInsets.all(AppTheme.paddingHeight),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: AppTheme.paddingHeight,
+              left: AppTheme.paddingHeight,
+              right: AppTheme.paddingHeight,
+            ),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -322,7 +324,8 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                             ? 'Transaction may take a few moments to complete.'
                                             : "Transaction Finished Successfully",
                                         maxLines: 4,
-                                        style: AppTheme.body2,
+                                        style: AppTheme.body_small.copyWith(
+                                            color: AppTheme.warmgray_500),
                                       ),
                                     ],
                                   ),
@@ -336,7 +339,8 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                     transactionPending
                                         ? "Pending"
                                         : "Sucessful",
-                                    style: AppTheme.body2,
+                                    style: AppTheme.body_small
+                                        .copyWith(color: AppTheme.warmgray_500),
                                   ),
                                   IconButton(
                                       icon: Icon(
@@ -354,15 +358,19 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                 ),
               ],
             ),
-            if (show)
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  TransactionDetailsTimeline(
+          ),
+          if (show)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight),
+                  child: TransactionDetailsTimeline(
                     details: processes,
                     messages: index == 1
                         ? [
@@ -373,11 +381,11 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                         : messages,
                     txHash: txHash,
                     doneTillIndex: index,
-                  )
-                ],
-              )
-          ],
-        ),
+                  ),
+                )
+              ],
+            )
+        ],
       ),
     );
   }

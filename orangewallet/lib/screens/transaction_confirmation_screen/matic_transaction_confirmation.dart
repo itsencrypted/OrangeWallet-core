@@ -115,7 +115,8 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                         ),
                                         Text(
                                           "  ${(args.token.quoteRate * double.parse(args.amount)).toStringAsFixed(3)}  USD",
-                                          style: AppTheme.balanceSub,
+                                          style: AppTheme.body_medium.copyWith(
+                                              color: AppTheme.warmgray_500),
                                         )
                                       ],
                                     ),
@@ -123,7 +124,11 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Divider(color: AppTheme.grey),
+                                        Divider(
+                                          color: AppTheme.stackingGrey,
+                                          height: 1,
+                                          thickness: 1,
+                                        ),
                                         SizedBox(),
                                         Text(network == 0
                                             ? "Matic Testnet"
@@ -143,7 +148,10 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                               ),
                                               Text(
                                                 "${EthConversions.weiToGwei(gasPrice)} Gwei Matic Gas Price",
-                                                style: AppTheme.body2,
+                                                style: AppTheme.body_small
+                                                    .copyWith(
+                                                        color: AppTheme
+                                                            .warmgray_500),
                                               ),
                                             ],
                                           ),

@@ -50,13 +50,13 @@ class _ReceiveState extends State<Receive> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: SizedBox(
-                      height: 470,
-                      child: Card(
-                        shape: AppTheme.cardShape,
-                        elevation: AppTheme.cardElevations + 1,
+                    child: Card(
+                      shape: AppTheme.cardShape,
+                      elevation: AppTheme.cardElevations + 1,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
@@ -93,8 +93,7 @@ class _ReceiveState extends State<Receive> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     height: 44,
@@ -115,6 +114,9 @@ class _ReceiveState extends State<Receive> {
                                           borderRadius:
                                               BorderRadius.circular(100)),
                                     ),
+                                  ),
+                                  SizedBox(
+                                    width: 40,
                                   ),
                                   SizedBox(
                                     height: 44,

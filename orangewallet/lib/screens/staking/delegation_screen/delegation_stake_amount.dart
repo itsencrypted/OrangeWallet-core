@@ -35,7 +35,6 @@ class _DelegationAmountState extends State<DelegationAmount>
   double balance = 0;
   int index = 0;
   bool showAmount;
-  bool show = false;
   ValidatorInfo validator;
   var matic;
   TabController _tabController;
@@ -49,11 +48,6 @@ class _DelegationAmountState extends State<DelegationAmount>
       var validatorListCubit = context.read<ValidatorsdataCubit>();
       var delegatorListCubit = context.read<DelegationsDataCubit>();
       var ethListCubit = context.read<CovalentTokensListEthCubit>();
-      Future.delayed(Duration(seconds: 1), () {
-        setState(() {
-          show = true;
-        });
-      });
       tokenListCubit.getTokensList();
       _refreshLoop(
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
@@ -184,7 +178,8 @@ class _DelegationAmountState extends State<DelegationAmount>
                               margin: EdgeInsets.all(AppTheme.paddingHeight12),
                               shape: AppTheme.cardShape,
                               child: Container(
-                                  padding: EdgeInsets.all(16),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppTheme.paddingHeight),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -231,7 +226,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                           keyboardAppearance:
                                                               Brightness.dark,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                              TextAlign.start,
                                                           autovalidateMode:
                                                               AutovalidateMode
                                                                   .onUserInteraction,
@@ -283,7 +278,9 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                                   .body_small,
                                                               contentPadding:
                                                                   EdgeInsets
-                                                                      .zero,
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              4),
                                                               border: OutlineInputBorder(
                                                                   borderSide:
                                                                       BorderSide
@@ -486,28 +483,26 @@ class _DelegationAmountState extends State<DelegationAmount>
                     ),
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
-                    floatingActionButton: show
-                        ? Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: AppTheme.buttonHeight_44,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingHeight12),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    backgroundColor: AppTheme.orange_500,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppTheme.buttonRadius))),
-                                onPressed: () {
-                                  _delegate(validator.contractAddress, matic);
-                                },
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                )),
-                          )
-                        : Container(),
+                    floatingActionButton: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: AppTheme.buttonHeight_44,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: AppTheme.paddingHeight12),
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: AppTheme.orange_500,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppTheme.buttonRadius))),
+                          onPressed: () {
+                            _delegate(validator.contractAddress, matic);
+                          },
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          )),
+                    ),
                   );
                 } else {
                   return Scaffold(

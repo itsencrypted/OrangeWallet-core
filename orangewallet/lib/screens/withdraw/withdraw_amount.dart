@@ -8,6 +8,7 @@ import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/models/covalent_models/covalent_token_list.dart';
 import 'package:orangewallet/models/transaction_data/transaction_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:orangewallet/screens/staking/ui_elements/warning_card.dart';
 import 'package:orangewallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
@@ -325,29 +326,55 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                                                           style: AppTheme
                                                               .body_small,
                                                         ),
+                                                  // TextButton(
+                                                  //     onPressed: () {
+                                                  //       if (index == 0)
+                                                  //         setState(() {
+                                                  //           index = 1;
+                                                  //           _tabController
+                                                  //               .animateTo(1);
+                                                  //         });
+                                                  //       else
+                                                  //         setState(() {
+                                                  //           index = 0;
+                                                  //           _tabController
+                                                  //               .animateTo(0);
+                                                  //         });
+                                                  //     },
+                                                  //     child: Text(
+                                                  //       (index == 0)
+                                                  //           ? "Enter amount in USD"
+                                                  //           : "Enter amount in MATIC",
+                                                  //       style: TextStyle(
+                                                  //           decoration:
+                                                  //               TextDecoration
+                                                  //                   .underline,
+                                                  //           color: AppTheme
+                                                  //               .orange_500),
+                                                  //     ))
                                                   TextButton(
                                                       onPressed: () {
-                                                        if (index == 0)
+                                                        if (index == 0) {
                                                           setState(() {
-                                                            index = 1;
-                                                            _tabController
-                                                                .animateTo(1);
+                                                            _amount.text =
+                                                                balance
+                                                                    .toString();
                                                           });
-                                                        else
+                                                        } else {
                                                           setState(() {
-                                                            index = 0;
-                                                            _tabController
-                                                                .animateTo(0);
+                                                            _amount
+                                                                .text = FiatCryptoConversions
+                                                                    .cryptoToFiat(
+                                                                        balance,
+                                                                        token
+                                                                            .quoteRate)
+                                                                .toString();
                                                           });
+                                                        }
                                                       },
                                                       child: Text(
-                                                        (index == 0)
-                                                            ? "Enter amount in USD"
-                                                            : "Enter amount in MATIC",
+                                                        "MAX",
                                                         style: TextStyle(
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
                                                             color: AppTheme
                                                                 .orange_500),
                                                       ))
@@ -374,26 +401,15 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   bridge == 2
-                      ? MediaQuery.of(context).viewInsets.bottom == 0
-                          ? ListTile(
-                              leading: ClipOval(
-                                clipBehavior: Clip.antiAlias,
-                                child: Container(
-                                  child: Text("!",
-                                      style: TextStyle(
-                                          fontSize: 50,
-                                          color: AppTheme.black,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                              title: Text("Note"),
-                              subtitle: Text(
-                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                              isThreeLine: true,
-                            )
-                          : SizedBox(
-                              height: AppTheme.buttonHeight_44,
-                            )
+                      ? Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: AppTheme.paddingHeight / 2),
+                          child: WarningCard(
+                            onClose: null,
+                            warningText:
+                                "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl.",
+                          ),
+                        )
                       : SizedBox(
                           height: AppTheme.buttonHeight_44,
                         ),

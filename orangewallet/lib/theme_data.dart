@@ -15,6 +15,7 @@ class AppTheme {
   static const Color warmgray_100 = Color(0xFFE8E6E1);
   static const Color warmgray_200 = Color(0xFFD2CDC5);
   static const Color warmgray_300 = Color(0xFFB6B1A8);
+  static const Color warmgray_500 = Color(0xFF837E72);
   static const Color warmgray_600 = Color(0xFF605D52);
   static const Color warmgray_900 = Color(0xFF26241E);
 
@@ -50,7 +51,7 @@ class AppTheme {
   static const double cardRadiusMedium = 14;
   static const double cardRadiusBig = 16;
   static const double cardRadiusSmall = 10;
-  static const double cardElevations = 0;
+  static const double cardElevations = 1;
   static const String fontName = 'WorkSans';
   static const double tokenIconHeight = 34;
   static const double tokenIconSizeBig = 70;

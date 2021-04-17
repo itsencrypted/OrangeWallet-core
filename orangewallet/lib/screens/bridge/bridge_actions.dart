@@ -26,7 +26,8 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
                       //gradient: LinearGradient(colors: [Colors.blue, Colors.blue]),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(AppTheme.cardRadiusBig / 2),
                       color: AppTheme.white),
                   tabs: [
                     Tab(
@@ -54,10 +55,10 @@ class _BridgeTransfersState extends State<BridgeTransfers> {
               )),
           body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text("All Tokens", style: AppTheme.subtitle),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(10.0),
+              //   child: Text("All Tokens", style: AppTheme.subtitle),
+              // ),
               Expanded(
                 child: Padding(
                   padding:

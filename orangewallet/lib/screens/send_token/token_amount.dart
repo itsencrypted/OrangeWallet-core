@@ -88,7 +88,8 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                           margin: EdgeInsets.all(AppTheme.paddingHeight12),
                           shape: AppTheme.cardShape,
                           child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: AppTheme.paddingHeight),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -198,10 +199,9 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                 ),
                                               ),
                                               TextButton(
-                                                child: Icon(
-                                                  Icons.qr_code,
-                                                  color: Colors.black,
-                                                ),
+                                                child: Image.asset(
+                                                    "assets/icons/qr_icon.png",
+                                                    color: AppTheme.darkerText),
                                                 onPressed: () async {
                                                   var qrResult =
                                                       await BarcodeScanner
@@ -476,32 +476,34 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                         style:
                                                             AppTheme.body_small,
                                                       ),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      if (index == 0)
-                                                        setState(() {
-                                                          index = 1;
-                                                          _tabController
-                                                              .animateTo(1);
-                                                        });
-                                                      else
-                                                        setState(() {
-                                                          index = 0;
-                                                          _tabController
-                                                              .animateTo(0);
-                                                        });
-                                                    },
-                                                    child: Text(
-                                                      (index == 0)
-                                                          ? "Enter amount in USD"
-                                                          : "Enter amount in MATIC",
-                                                      style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          color: AppTheme
-                                                              .orange_500),
-                                                    ))
+
+                                                // Text Button to enter amount in USD and Matic
+                                                // TextButton(
+                                                //     onPressed: () {
+                                                //       if (index == 0)
+                                                //         setState(() {
+                                                //           index = 1;
+                                                //           _tabController
+                                                //               .animateTo(1);
+                                                //         });
+                                                //       else
+                                                //         setState(() {
+                                                //           index = 0;
+                                                //           _tabController
+                                                //               .animateTo(0);
+                                                //         });
+                                                //     },
+                                                //     child: Text(
+                                                //       (index == 0)
+                                                //           ? "Enter amount in USD"
+                                                //           : "Enter amount in MATIC",
+                                                //       style: TextStyle(
+                                                //           decoration:
+                                                //               TextDecoration
+                                                //                   .underline,
+                                                //           color: AppTheme
+                                                //               .orange_500),
+                                                //     ))
                                               ],
                                             ),
                                           ],

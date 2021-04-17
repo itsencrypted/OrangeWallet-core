@@ -123,7 +123,7 @@ class _CoinProfileState extends State<CoinProfile> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.center,
                                         children: [
                                           SizedBox(
                                             width: 101,
@@ -161,6 +161,9 @@ class _CoinProfileState extends State<CoinProfile> {
                                                 style: AppTheme.buttonText,
                                               ))),
                                             ),
+                                          ),
+                                          SizedBox(
+                                            width: 30,
                                           ),
                                           SizedBox(
                                             width: 101,
@@ -232,7 +235,7 @@ class _CoinProfileState extends State<CoinProfile> {
                             } else if (result.connectionState ==
                                 ConnectionState.done) {
                               var tx = result.data.data.transferInfo;
-                              return tx.length != 0
+                              return tx.length == 0
                                   ? Card(
                                       shape: AppTheme.cardShape,
                                       color: AppTheme.white,

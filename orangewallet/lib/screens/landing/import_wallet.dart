@@ -22,71 +22,79 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       ),
       backgroundColor: AppTheme.backgroundWhite,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(),
-                Card(
-                  shape: AppTheme.cardShape,
-                  child: Padding(
-                    padding: EdgeInsets.all(AppTheme.paddingHeight),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Mnemonic',
-                          style: AppTheme.label_medium,
-                        ),
-                        SizedBox(
-                          height: AppTheme.paddingHeight12 / 3,
-                        ),
-                        Text(
-                          "Enter your 12 (or 24) Word recovery phrase to import your existing wallet",
-                          style: AppTheme.body_small,
-                        ),
-                        SizedBox(
-                          height: AppTheme.paddingHeight12,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
+        child: Padding(
+          padding:
+              EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight20 / 2),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(),
+                  Card(
+                    shape: AppTheme.cardShape,
+                    elevation: 4,
+                    child: Padding(
+                      padding: EdgeInsets.all(AppTheme.paddingHeight),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Mnemonic',
+                            style: AppTheme.label_medium,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12 / 3,
+                          ),
+                          Text(
+                            "Enter your 12 (or 24) Word recovery phrase to import your existing wallet",
+                            style: AppTheme.body_small,
+                          ),
+                          SizedBox(
+                            height: AppTheme.paddingHeight12,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(AppTheme.cardRadius),
                               color: AppTheme.warmgray_100,
                               shape: BoxShape.rectangle,
-                              border: Border.all(
-                                  width: 1, color: AppTheme.orange_500)),
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: TextFormField(
-                            maxLines: null,
-                            controller: seed,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (val) =>
-                                val.trim().split(" ").length == 12
-                                    ? null
-                                    : 'Invalid Mnemonic',
-                            decoration: InputDecoration(
-                              fillColor: AppTheme.warmgray_100,
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              labelStyle: AppTheme.label_medium
-                                  .copyWith(color: AppTheme.warmgray_600),
-                              labelText: "Mnemonic",
-                              hintText: "Enter your Mnemonic",
+                              // border: Border.all(
+                              //     width: 1, color: AppTheme.orange_500),
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: TextFormField(
+                              maxLines: null,
+                              controller: seed,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                              validator: (val) =>
+                                  val.trim().split(" ").length == 12
+                                      ? null
+                                      : 'Invalid Mnemonic',
+                              decoration: InputDecoration(
+                                fillColor: AppTheme.warmgray_100,
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                // labelStyle: AppTheme.label_medium
+                                //     .copyWith(color: AppTheme.warmgray_600),
+                                // labelText: "Mnemonic",
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                hintText: "Enter your Mnemonic",
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: AppTheme.buttonHeight_44,
-                )
-              ],
+                  SizedBox(
+                    height: AppTheme.buttonHeight_44,
+                  )
+                ],
+              ),
             ),
           ),
         ),

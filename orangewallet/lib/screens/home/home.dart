@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:orangewallet/screens/home/app_bar.dart';
 import 'package:orangewallet/screens/settings_screen/settings_tab.dart';
 import 'package:orangewallet/screens/staking/staking_tab.dart';
@@ -87,25 +88,34 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       showElevation: true,
                       items: [
                         BottomNavBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/icons/wallet_icon.png"),
+                          icon: SvgPicture.asset(
+                            "assets/icons/wallet_icon.svg",
+                            color: _tabController.index == 0
+                                ? AppTheme.white
+                                : AppTheme.black,
                           ),
-                          title: Text("Wallet"),
+                          title: Text(" Wallet"),
                         ),
                         BottomNavBarItem(
-                            icon: ImageIcon(
-                              AssetImage("assets/icons/staking_icon.png"),
+                            icon: SvgPicture.asset(
+                              "assets/icons/staking_icon.svg",
+                              color: _tabController.index == 1
+                                  ? AppTheme.white
+                                  : AppTheme.black,
                             ),
                             title: Text(
-                              "Staking",
+                              " Staking",
                               softWrap: true,
                             ),
                             textAlign: TextAlign.center),
                         BottomNavBarItem(
-                            icon: ImageIcon(
-                              AssetImage("assets/icons/settings_icon.png"),
+                            icon: SvgPicture.asset(
+                              "assets/icons/settings_icon.svg",
+                              color: _tabController.index == 2
+                                  ? AppTheme.white
+                                  : AppTheme.black,
                             ),
-                            title: Text("Settings",
+                            title: Text(" Settings",
                                 softWrap: true,
                                 overflow: TextOverflow.clip,
                                 textAlign: TextAlign.center),

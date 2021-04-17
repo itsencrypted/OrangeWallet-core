@@ -26,7 +26,10 @@ class CoinListCard extends StatelessWidget {
       shape: AppTheme.cardShape,
       color: AppTheme.white,
       child: ExpansionTile(
-        title: Text("$total Coins"),
+        title: Text(
+          "$total Coins",
+          style: AppTheme.label_medium,
+        ),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 15,

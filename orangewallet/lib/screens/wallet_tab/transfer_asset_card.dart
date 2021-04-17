@@ -7,9 +7,7 @@ class TransferAssetCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.all(Radius.circular(AppTheme.cardRadius))),
+        shape: AppTheme.cardShape,
         borderOnForeground: true,
         elevation: AppTheme.cardElevations,
         color: AppTheme.white,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/utils/misc/credential_manager.dart';

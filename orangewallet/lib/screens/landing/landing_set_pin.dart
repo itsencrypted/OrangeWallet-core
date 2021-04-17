@@ -23,8 +23,8 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
   BoxDecoration get _pinPutDecoration {
     return BoxDecoration(
       color: AppTheme.warmgray_100,
-      border: Border.all(color: failed ? Colors.red : AppTheme.primaryColor),
-      borderRadius: BorderRadius.circular(15.0),
+      //border: Border.all(color: failed ? Colors.red : AppTheme.primaryColor),
+      borderRadius: BorderRadius.circular(12.0),
     );
   }
 
@@ -69,10 +69,11 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
                             SizedBox(
                               width: AppTheme.paddingHeight12 / 2,
                             ),
-                            Text(
-                              '*Must be atleast 4 numbers',
-                              style: AppTheme.body_medium,
-                            )
+                            if (failed)
+                              Text(
+                                '*Must be atleast 4 numbers',
+                                style: AppTheme.body_medium,
+                              )
                           ],
                         ),
                         SizedBox(
@@ -92,27 +93,17 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                width: 200,
+                                width: 150,
                                 child: PinPut(
                                   focusNode: _pinPutFocusNode,
                                   obscureText: "*",
                                   controller: pin,
                                   fieldsCount: 4,
-                                  submittedFieldDecoration:
-                                      _pinPutDecoration.copyWith(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
+                                  eachFieldConstraints: BoxConstraints(
+                                      minHeight: 44.0, minWidth: 30.0),
+                                  submittedFieldDecoration: _pinPutDecoration,
                                   selectedFieldDecoration: _pinPutDecoration,
-                                  followingFieldDecoration:
-                                      _pinPutDecoration.copyWith(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    border: Border.all(
-                                      color: failed
-                                          ? Colors.red
-                                          : AppTheme.primaryColor
-                                              .withOpacity(.5),
-                                    ),
-                                  ),
+                                  followingFieldDecoration: _pinPutDecoration,
                                 ),
                               ),
                             ),
@@ -158,34 +149,35 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: AppTheme.buttonHeight_44,
-                margin:
-                    EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                      backgroundColor: AppTheme.orange_500,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(AppTheme.buttonRadius))),
-                  onPressed: _proceed,
-                  child: Text(
-                    'Continue',
-                    style: AppTheme.label_medium
-                        .copyWith(color: AppTheme.lightgray_700),
-                  ),
-                ),
-              ),
+            SizedBox(
+              height: AppTheme.buttonHeight_44 + 14,
             )
           ],
         ),
       ),
-      //floatingActionButton: ,
-      //floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: AppTheme.buttonHeight_44,
+          margin: EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+          child: TextButton(
+            style: TextButton.styleFrom(
+                backgroundColor: AppTheme.orange_500,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(AppTheme.buttonRadius))),
+            onPressed: _proceed,
+            child: Text(
+              'Continue',
+              style:
+                  AppTheme.label_medium.copyWith(color: AppTheme.lightgray_700),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

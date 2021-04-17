@@ -7,14 +7,20 @@ class AppLandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.white,
       body: Container(
+        color: AppTheme.white,
         child: Padding(
           padding: EdgeInsets.all(AppTheme.paddingHeight12),
           child: SafeArea(
             child: Column(
               children: [
                 Expanded(
-                  child: Image.asset(orangeIcon),
+                  child: Image.asset(
+                    orangeIcon,
+                    height: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 4,
+                  ),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -48,7 +54,7 @@ class AppLandingScreen extends StatelessWidget {
                       horizontal: AppTheme.paddingHeight12),
                   child: TextButton(
                     style: TextButton.styleFrom(
-                        backgroundColor: AppTheme.warmgray_100,
+                        backgroundColor: AppTheme.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius:

@@ -24,7 +24,7 @@ class WarningCard extends StatelessWidget {
                   style: AppTheme.titleWhite,
                 ),
                 IconButton(
-                    icon: Icon(Icons.close),
+                    icon: onClose != null ? Icon(Icons.close) : Container(),
                     color: Colors.white,
                     onPressed: onClose)
               ],

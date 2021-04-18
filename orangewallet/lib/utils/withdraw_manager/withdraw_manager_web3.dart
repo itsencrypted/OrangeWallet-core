@@ -55,11 +55,12 @@ class WithdrawManagerWeb3 {
     return tx;
   }
 
-  static Future<Transaction> exitPos(String burnTxHash) async {
+  static Future<Transaction> exitPos(
+      String burnTxHash, String exitSignature) async {
     String abi = await rootBundle.loadString(rootChainProxyAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String exitPayload =
-        await WithdrawManagerApi.getPayloadForExitPos(burnTxHash);
+        await WithdrawManagerApi.getExitPayload(burnTxHash, exitSignature);
     if (exitPayload == null) {
       Fluttertoast.showToast(msg: "Something went wrong");
       return null;
@@ -79,11 +80,12 @@ class WithdrawManagerWeb3 {
     return tx;
   }
 
-  static Future<Transaction> initiateExitPlasma(String burnTxHash) async {
+  static Future<Transaction> initiateExitPlasma(
+      String burnTxHash, String exitSignature) async {
     String abi = await rootBundle.loadString(erc20PredicateAbi);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
     String exitPayload =
-        await WithdrawManagerApi.getPayloadForExitPlasma(burnTxHash);
+        await WithdrawManagerApi.getExitPayload(burnTxHash, exitSignature);
     if (exitPayload == null) {
       Fluttertoast.showToast(msg: "Something went wrong");
 

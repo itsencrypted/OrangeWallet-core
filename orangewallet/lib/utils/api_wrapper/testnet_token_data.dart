@@ -68,6 +68,7 @@ class TestNetTokenData {
           nftData: [
             NftData(
                 tokenId: id.toString(),
+                supportsErc: ["erc20", "erc721"],
                 externalData: ExternalData(
                     name: "ERC721 Test",
                     description: "ERC721 test token for matic.",
@@ -93,6 +94,7 @@ class TestNetTokenData {
             NftData(
                 tokenId: id.toString(),
                 tokenBalance: balance.toString(),
+                supportsErc: ["erc20", "erc1155"],
                 externalData: ExternalData(
                     name: "ERC1155 Test",
                     description: "ERC1155 test token for matic.",

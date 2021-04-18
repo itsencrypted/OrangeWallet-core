@@ -14,6 +14,7 @@ import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:orangewallet/utils/fiat_crypto_conversions.dart';
 import 'package:orangewallet/utils/web3_utils/eth_conversions.dart';
+import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_api.dart';
 import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:orangewallet/widgets/colored_tabbar.dart';
 import 'package:orangewallet/widgets/loading_indicator.dart';
@@ -481,6 +482,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
+
     var trx = await WithdrawManagerWeb3.burnTx(
         amount, state.data.token.contractAddress);
     var type;
@@ -496,6 +498,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
         amount: amount,
         to: state.data.token.contractAddress,
         trx: trx,
+        exitSignature: WithdrawManagerApi.ERC20_TRANSFER_EVENT_SIG,
         token: state.data.token,
         type: type);
     Navigator.of(context, rootNavigator: true).pop();

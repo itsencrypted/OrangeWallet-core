@@ -44,4 +44,7 @@ class WithdrawDataDb extends HiveObject {
   int notificationId;
   @HiveField(13)
   bool exited;
+
+  @HiveField(14)
+  String exitSignature;
 }

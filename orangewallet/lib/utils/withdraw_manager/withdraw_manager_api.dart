@@ -34,6 +34,20 @@ enum PosState {
 }
 
 class WithdrawManagerApi {
+  static const ERC20_TRANSFER_EVENT_SIG =
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+  static const ERC721_TRANSFER_EVENT_SIG =
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+  static const ERC721_WITHDRAW_BATCH_EVENT_SIG =
+      '0xf871896b17e9cb7a64941c62c188a4f5c621b86800e3d15452ece01ce56073df';
+  static const ERC1155_TRANSFER_SINGLE_EVENT_SIG =
+      '0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62';
+  static const ERC1155_TRANSFER_BATCH_EVENT_SIG =
+      '0x4a39dc06d4c0dbc64b70af90fd698a233a518aa5d07e595d983b8c0526c8f7fb';
+  static const MESSAGE_SENT_EVENT_SIG =
+      '0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036';
+  static const TRANSFER_WITH_METADATA_EVENT_SIG =
+      '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14';
   static String baseUrl = "https://bridge-api.matic.today";
   static Future<PosState> checkPosStatus(String txHash) async {
     String burnUrl = baseUrl + "/v1/pos-burn";
@@ -193,20 +207,7 @@ class WithdrawManagerApi {
 
   static Future<String> getPayloadForExitPos(String burnTxHash) async {
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.exitPayloadPos + burnTxHash;
-    var resp = await http.get(url);
-    var json = jsonDecode(resp.body);
-    var payload = Payload.fromJson(json);
-    if (payload.result != null) {
-      return payload.result;
-    } else {
-      return null;
-    }
-  }
-
-  static Future<String> getPayloadForExitPlasma(String burnTxHash) async {
-    NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    String url = config.exitPayloadPlasma + burnTxHash;
+    String url = config.exitPayload + burnTxHash;
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     var payload = Payload.fromJson(json);
@@ -299,5 +300,23 @@ class WithdrawManagerApi {
       }
     }
     return obj.message.code;
+  }
+
+  static Future<String> getExitPayload(
+      String burnTxHash, String exitSignature) async {
+    NetworkConfigObject config = await NetworkManager.getNetworkObject();
+    String url = config.exitPayload +
+        "/" +
+        burnTxHash +
+        "?eventSignature=" +
+        exitSignature;
+    var resp = await http.get(url);
+    var json = jsonDecode(resp.body);
+    var payload = Payload.fromJson(json);
+    if (payload.result != null) {
+      return payload.result;
+    } else {
+      return null;
+    }
   }
 }

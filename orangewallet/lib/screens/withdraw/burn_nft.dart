@@ -10,8 +10,8 @@ import 'package:orangewallet/models/transaction_data/transaction_data.dart';
 import 'package:orangewallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
-import 'package:orangewallet/utils/fiat_crypto_conversions.dart';
 import 'package:orangewallet/utils/web3_utils/eth_conversions.dart';
+import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_api.dart';
 import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:orangewallet/widgets/loading_indicator.dart';
 import 'package:orangewallet/widgets/nft_tile.dart';
@@ -22,7 +22,6 @@ class NftBurn extends StatefulWidget {
 }
 
 class _NftBurnState extends State<NftBurn> {
-  TextEditingController _amount = TextEditingController();
   WithdrawBurnDataCubit data;
   BuildContext context;
   int bridge = 0;
@@ -35,8 +34,6 @@ class _NftBurnState extends State<NftBurn> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      tokenListCubit.getTokensList();
-
       _refreshLoop(tokenListCubit);
     });
 
@@ -79,87 +76,6 @@ class _NftBurnState extends State<NftBurn> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      args == 3
-                          ? CupertinoSegmentedControl<int>(
-                              pressedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              groupValue: index,
-                              selectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              borderColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.01),
-                              unselectedColor:
-                                  AppTheme.somewhatYellow.withOpacity(0.9),
-                              padding: EdgeInsets.all(10),
-                              children: {
-                                0: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 0 ? 1 : 0,
-                                    color: index == 0
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 10),
-                                      child: Text(
-                                        "POS",
-                                        style: AppTheme.body1,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                1: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 3, horizontal: 5),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(3))),
-                                    elevation: index == 1 ? 1 : 0,
-                                    color: index == 1
-                                        ? AppTheme.backgroundWhite
-                                        : AppTheme.somewhatYellow
-                                            .withOpacity(0.01),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10),
-                                      child: Text(
-                                        "PLASMA",
-                                        style: AppTheme.body1,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              },
-                              onValueChanged: (val) {
-                                setState(() {
-                                  index = val;
-                                  if (val == 0) {
-                                    bridge = 1;
-                                  } else {
-                                    bridge = 2;
-                                  }
-                                });
-                              })
-                          : args == 1
-                              ? Text("POS Bridge", style: AppTheme.headline)
-                              : args == 2
-                                  ? Text(
-                                      "Plasma Bridge",
-                                      style: AppTheme.headline,
-                                    )
-                                  : Container(),
-                    ],
-                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -275,7 +191,18 @@ class _NftBurnState extends State<NftBurn> {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
           );
+        } else if (state is WithdrawBurnDataInitial) {
+          print(tokenState.toString());
+          print(state.toString());
+          return Scaffold(
+              floatingActionButton: Container(),
+              appBar: AppBar(
+                title: Text("Withdraw from Matic"),
+              ),
+              body: Center(child: Text("Please wait..")));
         } else {
+          print(tokenState.toString());
+          print(state.toString());
           return Scaffold(
               appBar: AppBar(
                 title: Text("Withdraw from Matic"),
@@ -291,29 +218,28 @@ class _NftBurnState extends State<NftBurn> {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
-    if (state.data.token.nftData[selectedIndex].tokenBalance == null) {
-      var type;
-      if (bridge == 1) {
-        type = TransactionType.BURNPOS;
-      } else if (bridge == 2) {
-        type = TransactionType.BURNPLASMA;
-      } else {
-        return;
-      }
-      var trx = await WithdrawManagerWeb3.burnErc721(
-          state.data.token.contractAddress,
-          state.data.token.nftData[selectedIndex].tokenId);
-      transactionData = TransactionData(
-          amount: _amount.text,
-          to: state.data.token.contractAddress,
-          trx: trx,
-          token: token,
-          type: type);
-      Navigator.of(context, rootNavigator: true).pop();
-
-      Navigator.pushNamed(context, confirmMaticTransactionRoute,
-          arguments: transactionData);
+    var type;
+    if (bridge == 1) {
+      type = TransactionType.BURNPOS;
+    } else if (bridge == 2) {
+      type = TransactionType.BURNPLASMA;
+    } else {
+      return;
     }
+    var trx = await WithdrawManagerWeb3.burnErc721(
+        state.data.token.contractAddress,
+        state.data.token.nftData[selectedIndex].tokenId);
+    transactionData = TransactionData(
+        amount: "1",
+        to: state.data.token.contractAddress,
+        trx: trx,
+        token: token,
+        exitSignature: WithdrawManagerApi.ERC721_TRANSFER_EVENT_SIG,
+        type: type);
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Navigator.pushNamed(context, confirmMaticTransactionRoute,
+        arguments: transactionData);
   }
 
   _refreshLoop(CovalentTokensListMaticCubit cubit) {

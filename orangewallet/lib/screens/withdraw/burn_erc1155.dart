@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:orangewallet/state_manager/withdraw_burn_state/withdraw_burn_data_cubit.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/utils/web3_utils/eth_conversions.dart';
+import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_api.dart';
 import 'package:orangewallet/utils/withdraw_manager/withdraw_manager_web3.dart';
 import 'package:orangewallet/widgets/loading_indicator.dart';
 import 'package:orangewallet/widgets/nft_tile.dart';
@@ -74,14 +75,6 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    bridge == 1
-                        ? Text(
-                            "POS bridge",
-                            style: AppTheme.title,
-                          )
-                        : bridge == 2
-                            ? Text("Plasma Bridge", style: AppTheme.title)
-                            : SizedBox(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.73,
                       child: ListView.builder(
@@ -228,54 +221,31 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
                         },
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        bridge == 2
-                            ? ListTile(
-                                leading: ClipOval(
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Container(
-                                    child: Text("!",
-                                        style: TextStyle(
-                                            fontSize: 50,
-                                            color: AppTheme.black,
-                                            fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                                title: Text("Note"),
-                                subtitle: Text(
-                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl."),
-                                isThreeLine: true,
-                              )
-                            : Container(),
-                        SafeArea(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: AppTheme.buttonHeight_44,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingHeight12),
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: AppTheme.orange_500,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          AppTheme.buttonRadius))),
-                              onPressed: () {
-                                _burnErc1155(state, token, context);
-                              },
-                              child: Text(
-                                'Withdraw',
-                                style: AppTheme.label_medium
-                                    .copyWith(color: AppTheme.lightgray_700),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: Container(
+                width: MediaQuery.of(context).size.width,
+                height: AppTheme.buttonHeight_44,
+                margin:
+                    EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight12),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppTheme.orange_500,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.buttonRadius))),
+                  onPressed: () {
+                    _burnErc1155(state, token, context);
+                  },
+                  child: Text(
+                    'Withdraw',
+                    style: AppTheme.label_medium
+                        .copyWith(color: AppTheme.lightgray_700),
+                  ),
                 ),
               ),
             );
@@ -322,6 +292,7 @@ class _Erc1155BurnState extends State<Erc1155Burn> {
         to: state.data.token.contractAddress,
         amount: sum.toString(),
         trx: trx,
+        exitSignature: WithdrawManagerApi.ERC1155_TRANSFER_BATCH_EVENT_SIG,
         token: token,
         type: type);
 

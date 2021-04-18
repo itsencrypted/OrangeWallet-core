@@ -30,7 +30,7 @@ class NftListCard extends StatelessWidget {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           title: Text(
-            "$total Coins",
+            "$total Collectible",
             style: AppTheme.label_medium,
           ),
           trailing: Icon(

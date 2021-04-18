@@ -183,8 +183,8 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    Transaction trx =
-        await WithdrawManagerWeb3.initiateExitPlasma(widget.data.burnHash);
+    Transaction trx = await WithdrawManagerWeb3.initiateExitPlasma(
+        widget.data.burnHash, widget.data.exitSignature);
     if (trx == null) {
       Fluttertoast.showToast(msg: "Something Went Wrong");
       Navigator.of(_key.currentContext, rootNavigator: true).pop();

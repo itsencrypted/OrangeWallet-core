@@ -147,20 +147,25 @@ class NftData {
   String tokenId;
   String tokenBalance;
   String tokenUrl;
+  List<String> supportsErc;
+  BigInt tokenPriceWei;
+  double tokenQuoteRateEth;
   ExternalData externalData;
   String owner;
-
   NftData(
       {this.tokenId,
       this.tokenBalance,
       this.tokenUrl,
+      this.supportsErc,
+      this.tokenPriceWei,
+      this.tokenQuoteRateEth,
       this.externalData,
       this.owner});
 
   NftData.fromJson(Map<String, dynamic> json, String name) {
-    tokenId = json['token_id'];
+    tokenId = json['token_id'].toString();
     tokenBalance = json['token_balance'];
-    tokenUrl = json['token_url'];
+    tokenUrl = json['token_url'].toString();
     if (json['external_data'] == null) {
       try {
         _getExternalData(json['token_url'], name).then((data) {
@@ -179,7 +184,11 @@ class NftData {
               description: "");
     }
 
-    owner = json['owner'];
+    owner = json['owner'].toString();
+    supportsErc = json['supports_erc'].cast<String>();
+    tokenPriceWei = BigInt.tryParse(json['token_price_wei'].toString());
+    tokenQuoteRateEth =
+        double.tryParse(json['token_quote_rate_eth'].toString());
   }
 
   Map<String, dynamic> toJson() {

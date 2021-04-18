@@ -122,14 +122,6 @@ class _Erc1155DepositState extends State<Erc1155Deposit>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    bridge == 1
-                        ? Text(
-                            "POS bridge",
-                            style: AppTheme.title,
-                          )
-                        : bridge == 2
-                            ? Text("Plasma Bridge", style: AppTheme.title)
-                            : SizedBox(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.73,
                       child: ListView.builder(

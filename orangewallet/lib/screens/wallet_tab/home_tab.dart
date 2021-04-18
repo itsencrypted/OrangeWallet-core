@@ -198,7 +198,7 @@ class _HomeTabState extends State<HomeTab>
               RaisedButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
-                  color: sendButtonColor.withOpacity(0.6),
+                  color: AppTheme.primaryColor.withOpacity(0.6),
                   child: Text("Refresh"),
                   onPressed: _initializeAgain),
             ],

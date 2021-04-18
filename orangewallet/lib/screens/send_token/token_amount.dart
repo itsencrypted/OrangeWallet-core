@@ -29,8 +29,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
   SendTransactionCubit data;
   int index = 0;
   TextEditingController _amount = TextEditingController();
-  TextEditingController _address =
-      TextEditingController(text: "0x9dba0d4072fa279ceab88ac01f72f1d1d63ddb13");
+  TextEditingController _address = TextEditingController();
   RegExp reg = RegExp(r'^0x[a-fA-F0-9]{40}$');
   bool showAddress;
   bool showAmount;
@@ -185,7 +184,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                   fillColor:
                                                       AppTheme.warmgray_100,
                                                   hintText:
-                                                      "Enter the reciepients address ",
+                                                      "Enter the reciepient's address ",
                                                   filled: true,
                                                   hintStyle:
                                                       AppTheme.body_small,

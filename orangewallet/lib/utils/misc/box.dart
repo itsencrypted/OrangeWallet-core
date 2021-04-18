@@ -305,7 +305,8 @@ class BoxUtils {
       String timestring,
       String fee,
       int notificationId,
-      String imageUrl
+      String imageUrl,
+      String exitSignature
       // String confirmHash = "",
       // String exitHash = "",
       }) async {
@@ -324,6 +325,7 @@ class BoxUtils {
       ..notificationId = notificationId
       ..timeString = timestring
       ..imageUrl = imageUrl
+      ..exitSignature = exitSignature
       ..fee = fee;
     await box.put(burnTxHash, txObj);
     await box.close();

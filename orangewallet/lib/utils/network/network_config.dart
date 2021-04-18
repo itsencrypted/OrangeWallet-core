@@ -24,10 +24,8 @@ class NetworkConfig {
     withdrawManagerProxy: "0x2923C8dD6Cdf6b2507ef91de74F1d5E0F11Eac53",
     plasmaRegistry: "0xeE11713Fe713b2BfF2942452517483654078154D",
     depositManager: "0x7850ec290A2e2F40B82Ed962eaf30591bb5f5C96",
-    exitPayloadPos:
-        "https://apis.matic.network/api/v1/mumbai/pos-exit-payload/",
-    exitPayloadPlasma:
-        "https://apis.matic.network/api/v1/mumbai/plasma-exit-payload/",
+    exitPayload: "https://apis.matic.network/api/v1/mumbai/exit-payload",
+
     stakingEndpoint: "https://staking.api.subgraph.matic.today/api/v2",
     transakLink:
         "https://staging-global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
@@ -57,9 +55,8 @@ class NetworkConfig {
     withdrawManagerProxy: "0x2A88696e0fFA76bAA1338F2C74497cC013495922",
     plasmaRegistry: "0x33a02E6cC863D393d6Bf231B697b82F6e499cA71",
     depositManager: "0x401F6c983eA34274ec46f84D70b31C151321188b",
-    exitPayloadPlasma:
-        "https://apis.matic.network/api/v1/matic/plasma-exit-payload/",
-    exitPayloadPos: "http://apis.matic.network/api/v1/matic/pos-exit-payload/",
+
+    exitPayload: "https://apis.matic.network/api/v1/matic/exit-payload",
     stakingEndpoint: "https://staking.api.matic.network/api/v1",
     transakLink:
         "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
@@ -88,8 +85,7 @@ class NetworkConfigObject {
   final String withdrawManagerProxy;
   final String plasmaRegistry;
   final String depositManager;
-  final String exitPayloadPos;
-  final String exitPayloadPlasma;
+  final String exitPayload;
   final String blockExplorerEth;
   final String stakingEndpoint;
   final String transakLink;
@@ -115,13 +111,12 @@ class NetworkConfigObject {
       this.withdrawManagerProxy,
       this.plasmaRegistry,
       this.depositManager,
-      this.exitPayloadPos,
+      this.exitPayload,
       this.blockExplorerEth,
       this.stakingEndpoint,
       this.transakLink,
       this.maticToken,
       this.stakeManagerProxy,
-      this.exitPayloadPlasma,
       this.erc20PredicatePlasma,
       this.erc721PredicatePlasma,
       this.erc1155PredicatePos});

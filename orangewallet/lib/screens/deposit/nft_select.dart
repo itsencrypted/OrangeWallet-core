@@ -77,10 +77,12 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
             CovalentTokensListEthState>(builder: (context, tokenstate) {
           if (state is DepositDataFinal &&
               tokenstate is CovalentTokensListEthLoaded) {
-            var token = tokenstate.covalentTokenList.data.items
-                .where((element) =>
-                    element.contractAddress == state.data.token.contractAddress)
-                .first;
+            var ls = tokenstate.covalentTokenList.data.items.where((element) =>
+                element.contractAddress == state.data.token.contractAddress);
+            if (ls.isEmpty) {
+              Navigator.pop(context);
+            }
+            var token = ls.first;
             this.token = token;
             this.state = state;
             var balance = EthConversions.weiToEth(
@@ -129,14 +131,6 @@ class _NftSelectDepositState extends State<NftSelectDeposit>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    bridge == 1
-                        ? Text(
-                            "POS bridge",
-                            style: AppTheme.title,
-                          )
-                        : bridge == 2
-                            ? Text("Plasma Bridge", style: AppTheme.title)
-                            : SizedBox(),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.6,
                       child: ListView.builder(

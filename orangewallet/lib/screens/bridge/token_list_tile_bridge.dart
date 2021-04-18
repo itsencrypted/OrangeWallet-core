@@ -72,7 +72,8 @@ class TokenListTileBridge extends StatelessWidget {
                   }
                   Navigator.pushNamed(context, depositAmountRoute,
                       arguments: status);
-                } else if (tokenData.nftData.first.tokenBalance != null) {
+                } else if (tokenData.nftData.first.supportsErc.length == 2 &&
+                    tokenData.nftData.first.supportsErc[1] == "erc1155") {
                   if (int.parse(tokenData.nftData.first.tokenBalance) > 0) {
                     if (status == 3) {
                       Navigator.pushNamed(context, selectBridgeRoute,
@@ -84,7 +85,8 @@ class TokenListTileBridge extends StatelessWidget {
                   } else {
                     Fluttertoast.showToast(msg: "Insufficient amount");
                   }
-                } else {
+                } else if (tokenData.nftData.first.supportsErc.length == 2 &&
+                    tokenData.nftData.first.supportsErc[1] == "erc721") {
                   if (status == 3) {
                     Navigator.pushNamed(context, selectBridgeRoute,
                         arguments: nftDepoitSelectRoute);
@@ -92,6 +94,9 @@ class TokenListTileBridge extends StatelessWidget {
                   }
                   Navigator.pushNamed(context, nftDepoitSelectRoute,
                       arguments: status);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Unsupported type", toastLength: Toast.LENGTH_LONG);
                 }
               } else {
                 GlobalKey<State> _key = GlobalKey<State>();
@@ -126,11 +131,16 @@ class TokenListTileBridge extends StatelessWidget {
                 if (tokenData.nftData == null) {
                   Navigator.pushNamed(context, withdrawAmountRoute,
                       arguments: status);
-                } else if (tokenData.nftData.first.tokenBalance == null) {
+                } else if (tokenData.nftData.first.supportsErc.length == 2 &&
+                    tokenData.nftData.first.supportsErc[1] == "erc721") {
                   Navigator.pushNamed(context, burnNftRoute, arguments: status);
-                } else {
+                } else if (tokenData.nftData.first.supportsErc.length == 2 &&
+                    tokenData.nftData.first.supportsErc[1] == "erc1155") {
                   Navigator.pushNamed(context, erc1155BurnRoute,
                       arguments: status);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Unsupported type", toastLength: Toast.LENGTH_LONG);
                 }
               }
             },

@@ -9,11 +9,11 @@ class NoScalingAnimation extends FloatingActionButtonAnimator {
 
   @override
   Animation<double> getRotationAnimation({Animation<double> parent}) {
-    return Tween<double>(begin: 1.0, end: 1.0).animate(parent);
+    return Tween<double>(begin: 5, end: 5).animate(parent);
   }
 
   @override
   Animation<double> getScaleAnimation({Animation<double> parent}) {
-    return Tween<double>(begin: 1.0, end: 1.0).animate(parent);
+    return Tween<double>(begin: 5, end: 5).animate(parent);
   }
 }

@@ -11,6 +11,7 @@ class TransactionData {
   final Items token;
   final ValidatorInfo validatorData;
   final List<dynamic> extraData;
+  final String exitSignature;
 
   TransactionData(
       {this.trx,
@@ -20,7 +21,8 @@ class TransactionData {
       this.gas,
       this.token,
       this.extraData,
-      this.validatorData});
+      this.validatorData,
+      this.exitSignature});
   static Map txTypeString = {
     0: "Approve",
     1: "Deposit  via POS",

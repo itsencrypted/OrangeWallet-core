@@ -164,6 +164,7 @@ class MaticTransactions {
               imageUrl: data.token.logoUrl,
               notificationId: notifId,
               bridge: bridge,
+              exitSignature: data.exitSignature,
               fee: EthConversions.weiToEthUnTrimmed(
                       (strx.gasPrice.getInWei * BigInt.from(strx.gas)), 18)
                   .toString());

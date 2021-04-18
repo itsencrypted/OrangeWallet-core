@@ -30,13 +30,14 @@ class WithdrawDataDbAdapter extends TypeAdapter<WithdrawDataDb> {
       ..userAddress = fields[10] as String
       ..imageUrl = fields[11] as String
       ..notificationId = fields[12] as int
-      ..exited = fields[13] as bool;
+      ..exited = fields[13] as bool
+      ..exitSignature = fields[14] as String;
   }
 
   @override
   void write(BinaryWriter writer, WithdrawDataDb obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.burnHash)
       ..writeByte(1)
@@ -64,7 +65,9 @@ class WithdrawDataDbAdapter extends TypeAdapter<WithdrawDataDb> {
       ..writeByte(12)
       ..write(obj.notificationId)
       ..writeByte(13)
-      ..write(obj.exited);
+      ..write(obj.exited)
+      ..writeByte(14)
+      ..write(obj.exitSignature);
   }
 
   @override

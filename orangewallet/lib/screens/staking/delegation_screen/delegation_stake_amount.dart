@@ -39,7 +39,6 @@ class _DelegationAmountState extends State<DelegationAmount>
   ValidatorInfo validator;
   var matic;
   TabController _tabController;
-  bool showFab = false;
   TextEditingController _amount = TextEditingController();
 
   @override
@@ -49,16 +48,11 @@ class _DelegationAmountState extends State<DelegationAmount>
       var validatorListCubit = context.read<ValidatorsdataCubit>();
       var delegatorListCubit = context.read<DelegationsDataCubit>();
       var ethListCubit = context.read<CovalentTokensListEthCubit>();
-      tokenListCubit.getTokensList();
       _refreshLoop(
           tokenListCubit, ethListCubit, delegatorListCubit, validatorListCubit);
     });
     showAmount = true;
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() {
-        showFab = true;
-      });
-    });
+
     super.initState();
     _amount.addListener(() {
       setState(() {});
@@ -493,31 +487,30 @@ class _DelegationAmountState extends State<DelegationAmount>
                         ),
                       ),
                     ),
-                    floatingActionButtonAnimator: NoScalingAnimation(),
+//floatingActionButtonAnimator: NoScalingAnimation(),
+
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerFloat,
-                    floatingActionButton: showFab
-                        ? Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: AppTheme.buttonHeight_44,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: AppTheme.paddingHeight12),
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                    backgroundColor: AppTheme.orange_500,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            AppTheme.buttonRadius))),
-                                onPressed: () {
-                                  _delegate(validator.contractAddress, matic);
-                                },
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                )),
-                          )
-                        : Container(),
+                    floatingActionButton: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: AppTheme.buttonHeight_44,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: AppTheme.paddingHeight12),
+                      child: TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: AppTheme.orange_500,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      AppTheme.buttonRadius))),
+                          onPressed: () {
+                            _delegate(validator.contractAddress, matic);
+                          },
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          )),
+                    ),
                   );
                 } else {
                   return Scaffold(

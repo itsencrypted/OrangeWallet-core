@@ -110,7 +110,9 @@ class PosTimeline extends StatelessWidget {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     NetworkConfigObject config = await NetworkManager.getNetworkObject();
-    Transaction trx = await WithdrawManagerWeb3.exitPos(txHash);
+    print(_data.exitSignature);
+    Transaction trx =
+        await WithdrawManagerWeb3.exitPos(txHash, _data.exitSignature);
     if (trx == null) {
       Fluttertoast.showToast(msg: "Something Went Wrong");
       Navigator.of(_key.currentContext, rootNavigator: true).pop();

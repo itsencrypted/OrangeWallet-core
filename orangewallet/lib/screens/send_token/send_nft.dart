@@ -34,8 +34,7 @@ class _SendNftState extends State<SendNft> {
   String args; //tokenId
   int index = 0;
   String tokenBalance;
-  TextEditingController _address =
-      TextEditingController(text: "0x2Ee331840018465bD7Fe74aA4E442b9EA407fBBE");
+  TextEditingController _address = TextEditingController();
   RegExp reg = RegExp(r'^0x[a-fA-F0-9]{40}$');
 
   @override
@@ -60,6 +59,9 @@ class _SendNftState extends State<SendNft> {
                 .first;
             tokenBalance = token.tokenBalance;
             this.balance = balance;
+            bool isERC1155 =
+                state.data.token.nftData.first.supportsErc.length == 2 &&
+                    state.data.token.nftData.first.supportsErc[1] == "erc1155";
             return Scaffold(
               appBar: AppBar(title: Text("Send NFT")),
               body: SingleChildScrollView(
@@ -86,64 +88,75 @@ class _SendNftState extends State<SendNft> {
                                       data: token,
                                     ),
                                   )),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 30,
-                                    child: FlatButton(
-                                      padding: EdgeInsets.all(0),
-                                      onPressed: () {
-                                        if (tokenCountToSend > 1) {
-                                          setState(() {
-                                            tokenCountToSend--;
-                                          });
-                                        }
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      child: ClipOval(
-                                          child: Material(
-                                        color: AppTheme.white,
-                                        child: SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: Center(child: Text("-"))),
-                                      )),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12),
-                                    child: Text(tokenCountToSend.toString()),
-                                  ),
-                                  SizedBox(
-                                    width: 30,
-                                    child: FlatButton(
-                                      padding: EdgeInsets.all(0),
-                                      onPressed: () {
-                                        if (tokenCountToSend <
-                                            int.parse(state.data.token
-                                                .nftData[index].tokenBalance)) {
-                                          setState(() {
-                                            tokenCountToSend++;
-                                          });
-                                        }
-                                      },
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      child: ClipOval(
-                                          child: Material(
-                                        color: AppTheme.white,
-                                        child: SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: Center(child: Text("+"))),
-                                      )),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              isERC1155
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (tokenCountToSend > 1) {
+                                                setState(() {
+                                                  tokenCountToSend--;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("-"))),
+                                            )),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          child:
+                                              Text(tokenCountToSend.toString()),
+                                        ),
+                                        SizedBox(
+                                          width: 30,
+                                          child: FlatButton(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: () {
+                                              if (tokenCountToSend <
+                                                  int.parse(state
+                                                      .data
+                                                      .token
+                                                      .nftData[index]
+                                                      .tokenBalance)) {
+                                                setState(() {
+                                                  tokenCountToSend++;
+                                                });
+                                              }
+                                            },
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            child: ClipOval(
+                                                child: Material(
+                                              color: AppTheme.white,
+                                              child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      Center(child: Text("+"))),
+                                            )),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
                             ],
                           ),
                         ),
@@ -237,7 +250,7 @@ class _SendNftState extends State<SendNft> {
                                                         fillColor: AppTheme
                                                             .warmgray_100,
                                                         hintText:
-                                                            "Enter the reciepients address ",
+                                                            "Enter the reciepient's address ",
                                                         filled: true,
                                                         hintStyle:
                                                             AppTheme.body_small,
@@ -337,20 +350,30 @@ class _SendNftState extends State<SendNft> {
                               borderRadius: BorderRadius.circular(
                                   AppTheme.buttonRadius))),
                       onPressed: () {
-                        if (state.data.token.nftData.first.tokenBalance ==
-                            null) {
+                        if (state.data.token.nftData.first.supportsErc.length ==
+                                2 &&
+                            state.data.token.nftData.first.supportsErc[1] ==
+                                "erc721") {
                           _sendERC721(
                               BigInt.parse(args),
                               state.data.token.contractAddress,
                               state.data.token,
                               context);
-                        } else {
+                        } else if (state.data.token.nftData.first.supportsErc
+                                    .length ==
+                                2 &&
+                            state.data.token.nftData.first.supportsErc[1] ==
+                                "erc1155") {
                           _sendErc1155(
                               BigInt.parse(args),
                               BigInt.from(tokenCountToSend),
                               state.data.token.contractAddress,
                               state.data.token,
                               context);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Unsupported NFT",
+                              toastLength: Toast.LENGTH_LONG);
                         }
                       },
                       child: Text(

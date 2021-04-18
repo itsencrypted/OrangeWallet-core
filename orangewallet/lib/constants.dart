@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:orangewallet/theme_data.dart';
+
 const String _baseIcon = "assets/icons";
 
 const String balanceString = "Matic Wallet Balance";
-const sendButtonColor = Color(0xff8248E5);
+const sendButtonColor = AppTheme.primaryColor;
 const receiveButtonColor = Color(0xffEABC78);
 const String tokenIcon = "$_baseIcon/icon_default.png";
 const String profitIcon = "$_baseIcon/profit.png";
@@ -126,7 +128,7 @@ const pendingTxBox = "pendingTxBox";
 const plasmaRegistry = "plasmaRegistry";
 const depositManager = "depositManager";
 const stakingEndpoint = "stakingEndpoint";
-const exitPayloadPos = "exitPayLoadPos";
+const exitPayload = "exitPayLoadPos";
 const exitPayloadPlasma = "exitPayloadPlasma";
 const transakLink = "transakLink";
 const maticToken = "maticToken";

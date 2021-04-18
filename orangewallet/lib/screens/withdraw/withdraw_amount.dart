@@ -409,65 +409,19 @@ class _WithdrawScreenState extends State<WithdrawScreen>
                 children: [
                   bridge == 2
                       ? MediaQuery.of(context).viewInsets.bottom == 0
-                          ? showWarning
-                              ? Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: AppTheme.paddingHeight12 - 3),
-                                  child: Card(
-                                    color: AppTheme.warningCardColor,
-                                    shape: AppTheme.cardShape,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: AppTheme.paddingHeight,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Warning',
-                                                style: AppTheme.titleWhite,
-                                              ),
-                                              IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  color: Colors.white,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      showWarning = false;
-                                                    });
-                                                  })
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: AppTheme.paddingHeight,
-                                              bottom: AppTheme.paddingHeight,
-                                              right: 10),
-                                          child: Text(
-                                            "This asset will take upto 7 days for withdrawal.",
-                                            style: AppTheme.body2White,
-                                            maxLines: 100,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: AppTheme.buttonHeight_44,
-                                )
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: AppTheme.paddingHeight / 2),
+                              child: WarningCard(
+                                onClose: null,
+                                warningText:
+                                    "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl.",
+                              ),
+                            )
                           : SizedBox(
                               height: AppTheme.buttonHeight_44,
                             )
-                      : SizedBox(
-                          height: AppTheme.buttonHeight_44,
-                        ),
+                      : Container(),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: AppTheme.buttonHeight_44,

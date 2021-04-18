@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/models/bridge_api_models/bridge_api_data.dart';
 import 'package:orangewallet/models/deposit_models/deposit_transaction_db.dart';
@@ -45,70 +46,80 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               getStatusCard(),
               Card(
                 shape: AppTheme.cardShape,
-                child: Padding(
-                  padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppTheme.cardRadius),
-                          color: AppTheme.stackingGrey,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(AppTheme.cardRadius),
+                        color: AppTheme.stackingGrey,
+                      ),
+                      margin: EdgeInsets.all(AppTheme.paddingHeight),
+                      height: 110,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          detailsArea(
+                            title: '0.0001ETH',
+                            subtitle: 'Transaction Fee',
+                            topWidget: SvgPicture.asset(transactionFeesvg),
+                          ),
+                          detailsArea(
+                              title: 'Matic Network',
+                              subtitle: 'Netowrk',
+                              topWidget: SvgPicture.asset(settingsIconsvg))
+                        ],
+                      ),
+                    ),
+                    getListTile(
+                      image: Image.asset(
+                        tokenIcon,
+                        height: AppTheme.tokenIconHeight,
+                      ),
+                      title: 'from',
+                      subtitle: "afsassssss",
+                      // trailing: IconButton(
+                      //     icon: Icon(
+                      //       Icons.file_copy,
+                      //       color: Colors.black,
+                      //     ),
+                      //     onPressed: () {}),
+                    ),
+                    getListTile(
+                      image: Image.asset(
+                        tokenIcon,
+                        height: AppTheme.tokenIconHeight,
+                      ),
+                      title: 'to',
+                      subtitle: "Matic Network",
+                      trailing: IconButton(
+                          icon: Icon(
+                            Icons.file_copy,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {}),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    getListTile(
+                      image: CircleAvatar(
+                        backgroundColor: AppTheme.warmgray_800,
+                        child: SvgPicture.asset(
+                          locksvg,
                         ),
-                        margin: EdgeInsets.all(AppTheme.paddingHeight),
-                        height: 110,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            detailsArea(
-                                title: '0.0001ETH',
-                                subtitle: 'Transaction Fee',
-                                topWidget: Icon(Icons.flash_on_outlined)),
-                            detailsArea(
-                                title: 'Matic Network',
-                                subtitle: 'Netowrk',
-                                topWidget: Icon(Icons.settings))
-                          ],
-                        ),
+                        radius: AppTheme.tokenIconHeight / 2,
                       ),
-                      getListTile(
-                        imageUrl: tokenIcon,
-                        title: 'from',
-                        subtitle: "afsassssss",
-                        // trailing: IconButton(
-                        //     icon: Icon(
-                        //       Icons.file_copy,
-                        //       color: Colors.black,
-                        //     ),
-                        //     onPressed: () {}),
-                      ),
-                      getListTile(
-                        imageUrl: tokenIcon,
-                        title: 'to',
-                        subtitle: "Matic Network",
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.file_copy,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {}),
-                      ),
-                      Divider(
-                        color: Colors.grey,
-                      ),
-                      getListTile(
-                        imageUrl: tokenIcon,
-                        title: 'Transaction Hash',
-                        subtitle: 'afsassssss',
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.file_copy,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {}),
-                      )
-                    ],
-                  ),
+                      title: 'Transaction Hash',
+                      subtitle: 'afsassssss',
+                      trailing: IconButton(
+                          icon: Icon(
+                            Icons.file_copy,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {}),
+                    )
+                  ],
                 ),
               )
             ],
@@ -170,13 +181,17 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Widget getStatusCard() {
     return Card(
       shape: AppTheme.cardShape,
-      child: Padding(
-        padding: EdgeInsets.all(AppTheme.paddingHeight),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: AppTheme.paddingHeight,
+              left: AppTheme.paddingHeight,
+              right: AppTheme.paddingHeight,
+            ),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -230,33 +245,34 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 ),
               ],
             ),
-            if (show)
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  TransactionDetailsTimeline(
+          ),
+          if (show)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight),
+                  child: TransactionDetailsTimeline(
                     details: processes,
                     doneTillIndex: 1,
-                  )
-                ],
-              )
-          ],
-        ),
+                  ),
+                )
+              ],
+            )
+        ],
       ),
     );
   }
 
   Widget getListTile(
-      {String imageUrl, String title, String subtitle, Widget trailing}) {
+      {Widget image, String title, String subtitle, Widget trailing}) {
     return ListTile(
-        leading: Image.asset(
-          imageUrl,
-          height: AppTheme.tokenIconHeight,
-        ),
+        leading: image,
         title: Text(
           title,
           style: AppTheme.subtitle,

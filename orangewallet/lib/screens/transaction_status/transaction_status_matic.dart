@@ -149,10 +149,11 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         detailsArea(
-                                            title: gas.toString() + " Matic",
-                                            subtitle: 'Transaction Fee',
-                                            topWidget:
-                                                Icon(Icons.flash_on_outlined)),
+                                          title: gas.toString() + " Matic",
+                                          subtitle: 'Transaction Fee',
+                                          topWidget: SvgPicture.asset(
+                                              transactionFeesvg),
+                                        ),
                                         detailsArea(
                                             title: 'Matic Network',
                                             subtitle: 'Netowrk',
@@ -162,7 +163,10 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                     ),
                                   ),
                                   getListTile(
-                                      imageUrl: tokenIcon,
+                                      image: Image.asset(
+                                        tokenIcon,
+                                        height: AppTheme.tokenIconHeight,
+                                      ),
                                       title: "From",
                                       subtitle: from
                                       // trailing: IconButton(
@@ -173,7 +177,10 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                       //     onPressed: () {}),
                                       ),
                                   getListTile(
-                                    imageUrl: tokenIcon,
+                                    image: Image.asset(
+                                      tokenIcon,
+                                      height: AppTheme.tokenIconHeight,
+                                    ),
                                     title: 'To',
                                     subtitle: to,
                                     trailing: IconButton(
@@ -189,7 +196,13 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                     color: Colors.grey,
                                   ),
                                   getListTile(
-                                    imageUrl: tokenIcon,
+                                    image: CircleAvatar(
+                                      backgroundColor: AppTheme.warmgray_800,
+                                      child: SvgPicture.asset(
+                                        locksvg,
+                                      ),
+                                      radius: AppTheme.tokenIconHeight / 2,
+                                    ),
                                     title: 'Transaction Hash',
                                     subtitle: txHash,
                                     trailing: IconButton(
@@ -424,12 +437,9 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
   }
 
   Widget getListTile(
-      {String imageUrl, String title, String subtitle, Widget trailing}) {
+      {Widget image, String title, String subtitle, Widget trailing}) {
     return ListTile(
-        leading: Image.asset(
-          imageUrl,
-          height: AppTheme.tokenIconHeight,
-        ),
+        leading: image,
         title: Text(
           title,
           style: AppTheme.subtitle,

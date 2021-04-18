@@ -17,6 +17,7 @@ class AppTheme {
   static const Color warmgray_300 = Color(0xFFB6B1A8);
   static const Color warmgray_500 = Color(0xFF837E72);
   static const Color warmgray_600 = Color(0xFF605D52);
+  static const Color warmgray_800 = Color(0xFF403D34);
   static const Color warmgray_900 = Color(0xFF26241E);
 
   static const Color orange_500 = Color(0xFFEB5B56);

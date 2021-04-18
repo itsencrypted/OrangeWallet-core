@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/models/withdraw_models/withdraw_data_db.dart';
 import 'package:orangewallet/screens/transaction_status/ui_elements/pos_timeline.dart';
@@ -152,73 +153,83 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
                         getStatusCard(),
                         Card(
                           shape: AppTheme.cardShape,
-                          child: Padding(
-                            padding: EdgeInsets.all(AppTheme.paddingHeight / 2),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                        AppTheme.cardRadius),
-                                    color: AppTheme.stackingGrey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      AppTheme.cardRadius),
+                                  color: AppTheme.stackingGrey,
+                                ),
+                                margin: EdgeInsets.all(AppTheme.paddingHeight),
+                                height: 110,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    detailsArea(
+                                      title: data.fee == null
+                                          ? ""
+                                          : data.fee + " ETH",
+                                      subtitle: 'Transaction Fee',
+                                      topWidget:
+                                          SvgPicture.asset(transactionFeesvg),
+                                    ),
+                                    detailsArea(
+                                        title: 'Ethereum Network',
+                                        subtitle: 'Netowrk',
+                                        topWidget:
+                                            SvgPicture.asset(settingsIconsvg))
+                                  ],
+                                ),
+                              ),
+                              getListTile(
+                                image: Image.asset(
+                                  tokenIcon,
+                                  height: AppTheme.tokenIconHeight,
+                                ),
+                                title: 'from',
+                                subtitle: fromAddress,
+                                // trailing: IconButton(
+                                //     icon: Icon(
+                                //       Icons.file_copy,
+                                //       color: Colors.black,
+                                //     ),
+                                //     onPressed: () {}),
+                              ),
+                              getListTile(
+                                image: Image.asset(
+                                  tokenIcon,
+                                  height: AppTheme.tokenIconHeight,
+                                ),
+                                title: 'to',
+                                subtitle: "Matic Network",
+                                // trailing: IconButton(
+                                //     icon: Icon(
+                                //       Icons.file_copy,
+                                //       color: Colors.black,
+                                //     ),
+                                //     onPressed: () {}),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                              ),
+                              getListTile(
+                                image: CircleAvatar(
+                                  backgroundColor: AppTheme.warmgray_800,
+                                  child: SvgPicture.asset(
+                                    locksvg,
                                   ),
-                                  margin:
-                                      EdgeInsets.all(AppTheme.paddingHeight),
-                                  height: 110,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      detailsArea(
-                                          title: data.fee == null
-                                              ? ""
-                                              : data.fee + " ETH",
-                                          subtitle: 'Transaction Fee',
-                                          topWidget:
-                                              Icon(Icons.flash_on_outlined)),
-                                      detailsArea(
-                                          title: 'Ethereum Network',
-                                          subtitle: 'Netowrk',
-                                          topWidget: Icon(Icons.settings))
-                                    ],
-                                  ),
+                                  radius: AppTheme.tokenIconHeight / 2,
                                 ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'from',
-                                  subtitle: fromAddress,
-                                  // trailing: IconButton(
-                                  //     icon: Icon(
-                                  //       Icons.file_copy,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //     onPressed: () {}),
+                                title: 'Transaction Hash',
+                                subtitle: data.burnHash,
+                                trailing: IconButton(
+                                  icon: Icon(Icons.open_in_browser),
+                                  onPressed: _launchURL,
                                 ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'to',
-                                  subtitle: "Matic Network",
-                                  // trailing: IconButton(
-                                  //     icon: Icon(
-                                  //       Icons.file_copy,
-                                  //       color: Colors.black,
-                                  //     ),
-                                  //     onPressed: () {}),
-                                ),
-                                Divider(
-                                  color: Colors.grey,
-                                ),
-                                getListTile(
-                                  imageUrl: tokenIcon,
-                                  title: 'Transaction Hash',
-                                  subtitle: data.burnHash,
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.open_in_browser),
-                                    onPressed: _launchURL,
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
                         )
                       ],
@@ -294,13 +305,17 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
   Widget getStatusCard() {
     return Card(
       shape: AppTheme.cardShape,
-      child: Padding(
-        padding: EdgeInsets.all(AppTheme.paddingHeight),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: AppTheme.paddingHeight,
+              left: AppTheme.paddingHeight,
+              right: AppTheme.paddingHeight,
+            ),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -374,35 +389,36 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
                 ),
               ],
             ),
-            if (show)
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(
-                    color: Colors.grey,
-                  ),
-                  PosTimeline(
+          ),
+          if (show)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: AppTheme.paddingHeight),
+                  child: PosTimeline(
                     details: processes,
                     doneTillIndex: index,
                     messages: messages,
                     data: data,
-                  )
-                ],
-              )
-          ],
-        ),
+                  ),
+                )
+              ],
+            )
+        ],
       ),
     );
   }
 
   Widget getListTile(
-      {String imageUrl, String title, String subtitle, Widget trailing}) {
+      {Widget image, String title, String subtitle, Widget trailing}) {
     return ListTile(
-        leading: Image.asset(
-          imageUrl,
-          height: AppTheme.tokenIconHeight,
-        ),
+        leading: image,
         title: Text(
           title,
           style: AppTheme.subtitle,

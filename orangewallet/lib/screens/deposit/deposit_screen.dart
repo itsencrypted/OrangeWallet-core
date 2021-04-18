@@ -8,6 +8,7 @@ import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/models/covalent_models/covalent_token_list.dart';
 import 'package:orangewallet/models/deposit_models/deposit_model.dart';
 import 'package:orangewallet/models/transaction_data/transaction_data.dart';
+import 'package:orangewallet/screens/staking/ui_elements/warning_card.dart';
 import 'package:orangewallet/state_manager/covalent_states/covalent_token_list_cubit_ethereum.dart';
 import 'package:orangewallet/state_manager/deposit_data_state/deposit_data_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -345,27 +346,26 @@ class _DepositScreenState extends State<DepositScreen>
                                                       ),
                                                 TextButton(
                                                     onPressed: () {
-                                                      if (index == 0)
+                                                      if (index == 0) {
                                                         setState(() {
-                                                          index = 1;
-                                                          _tabController
-                                                              .animateTo(1);
+                                                          _amount.text = balance
+                                                              .toString();
                                                         });
-                                                      else
+                                                      } else {
                                                         setState(() {
-                                                          index = 0;
-                                                          _tabController
-                                                              .animateTo(0);
+                                                          _amount
+                                                              .text = FiatCryptoConversions
+                                                                  .cryptoToFiat(
+                                                                      balance,
+                                                                      token
+                                                                          .quoteRate)
+                                                              .toString();
                                                         });
+                                                      }
                                                     },
                                                     child: Text(
-                                                      (index == 0)
-                                                          ? "Enter amount in USD"
-                                                          : "Enter amount in MATIC",
+                                                      "MAX",
                                                       style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
                                                           color: AppTheme
                                                               .orange_500),
                                                     ))
@@ -393,58 +393,15 @@ class _DepositScreenState extends State<DepositScreen>
               children: [
                 args == 2
                     ? MediaQuery.of(context).viewInsets.bottom == 0
-                        ? showWarning
-                            ? Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: AppTheme.paddingHeight12 - 3),
-                                child: Card(
-                                  color: AppTheme.warningCardColor,
-                                  shape: AppTheme.cardShape,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                          left: AppTheme.paddingHeight,
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Warning',
-                                              style: AppTheme.titleWhite,
-                                            ),
-                                            IconButton(
-                                                icon: Icon(Icons.close),
-                                                color: Colors.white,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    showWarning = false;
-                                                  });
-                                                })
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: AppTheme.paddingHeight,
-                                            bottom: AppTheme.paddingHeight,
-                                            right: 10),
-                                        child: Text(
-                                          "Assets deposited via plasma bridge will take upto 7 days for withdrawl.",
-                                          style: AppTheme.body2White,
-                                          maxLines: 100,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : SizedBox(
-                                height: AppTheme.buttonHeight_44,
-                              )
+                        ? Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppTheme.paddingHeight / 2),
+                            child: WarningCard(
+                              onClose: null,
+                              warningText:
+                                  "Assets deposited from Plasma Bridge takes upto 7 days for withdrawl.",
+                            ),
+                          )
                         : SizedBox(
                             height: AppTheme.buttonHeight_44,
                           )

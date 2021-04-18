@@ -22,7 +22,7 @@ class TokenListTileBridge extends StatelessWidget {
   Widget build(BuildContext context) {
     var amount = EthConversions.weiToEth(
             BigInt.parse(tokenData.balance), tokenData.contractDecimals)
-        .toString();
+        .toStringAsFixed(3);
     DepositDataCubit depositData = context.read<DepositDataCubit>();
     WithdrawBurnDataCubit withdrawBurnData =
         context.read<WithdrawBurnDataCubit>();
@@ -151,7 +151,7 @@ class TokenListTileBridge extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "\$${tokenData.quote}",
+                      "\$${tokenData.quote.toStringAsFixed(3)}",
                       style: AppTheme.balanceMain,
                     ),
                     Text(

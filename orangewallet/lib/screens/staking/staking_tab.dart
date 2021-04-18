@@ -246,9 +246,11 @@ class _StakingTabState extends State<StakingTab>
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      IconButton(
-                          icon: Icon(Icons.refresh),
-                          color: AppTheme.grey,
+                      RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          color: AppTheme.primaryColor.withOpacity(0.6),
+                          child: Text("Refresh"),
                           onPressed: () {
                             context.read<DelegationsDataCubit>().setData();
                           }),

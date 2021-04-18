@@ -59,7 +59,6 @@ class CovalentApiWrapper {
     var resp = await http.get(url);
     var json = jsonDecode(resp.body);
     ctl = TokenHistory.fromJson(json);
-
     return ctl;
   }
 

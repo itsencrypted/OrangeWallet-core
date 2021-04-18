@@ -235,34 +235,41 @@ class _CoinProfileState extends State<CoinProfile> {
                             } else if (result.connectionState ==
                                 ConnectionState.done) {
                               var tx = result.data.data.transferInfo;
-                              return tx.length == 0
-                                  ? Card(
-                                      shape: AppTheme.cardShape,
-                                      color: AppTheme.white,
-                                      elevation: AppTheme.cardElevations,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        child: ExpansionTile(
-                                          title: Text("Transaction History"),
-                                          children: [
-                                            Text("All transactions",
-                                                style: AppTheme.subtitle),
-                                            ListView.builder(
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: result.data.data
-                                                  .transferInfo.length,
-                                              itemBuilder: (context, index) {
-                                                return TransactionTile(
-                                                  data: tx[index],
-                                                  address:
-                                                      result.data.data.address,
-                                                );
-                                              },
+                              return tx.length != 0
+                                  ? Theme(
+                                      data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent),
+                                      child: Card(
+                                        shape: AppTheme.cardShape,
+                                        color: AppTheme.white,
+                                        elevation: AppTheme.cardElevations,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: ExpansionTile(
+                                            title: Text(
+                                              "Transaction History",
+                                              style: AppTheme.label_medium,
                                             ),
-                                          ],
+                                            children: [
+                                              Text("All transactions",
+                                                  style: AppTheme.subtitle),
+                                              ListView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: result.data.data
+                                                    .transferInfo.length,
+                                                itemBuilder: (context, index) {
+                                                  return TransactionTile(
+                                                    data: tx[index],
+                                                    address: result
+                                                        .data.data.address,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     )

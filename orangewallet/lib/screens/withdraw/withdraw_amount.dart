@@ -485,10 +485,13 @@ class _WithdrawScreenState extends State<WithdrawScreen>
 
     var trx = await WithdrawManagerWeb3.burnTx(
         amount, state.data.token.contractAddress);
+    var exitSignature = "";
     var type;
     if (bridge == 1) {
+      exitSignature = WithdrawManagerApi.ERC20_TRANSFER_EVENT_SIG;
       type = TransactionType.BURNPOS;
     } else if (bridge == 2) {
+      exitSignature = WithdrawManagerApi.ERC20_WITHDRAW_EVENT_SIG_PLASMA;
       type = TransactionType.BURNPLASMA;
     } else {
       return;
@@ -498,7 +501,7 @@ class _WithdrawScreenState extends State<WithdrawScreen>
         amount: amount,
         to: state.data.token.contractAddress,
         trx: trx,
-        exitSignature: WithdrawManagerApi.ERC20_TRANSFER_EVENT_SIG,
+        exitSignature: exitSignature,
         token: state.data.token,
         type: type);
     Navigator.of(context, rootNavigator: true).pop();

@@ -64,7 +64,9 @@ class _WithdrawListState extends State<WithdrawList>
               .compareTo(DateTime.fromMillisecondsSinceEpoch(
                   int.parse(a.timeString) * 1000));
         });
-        this.box = box;
+        setState(() {
+          this.box = box;
+        });
       });
     });
   }

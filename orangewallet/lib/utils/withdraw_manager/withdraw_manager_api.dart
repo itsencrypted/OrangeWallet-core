@@ -48,6 +48,10 @@ class WithdrawManagerApi {
       '0x8c5261668696ce22758910d05bab8f186d6eb247ceac2af2e82c7dc17669b036';
   static const TRANSFER_WITH_METADATA_EVENT_SIG =
       '0xf94915c6d1fd521cee85359239227480c7e8776d7caf1fc3bacad5c269b66a14';
+  static const ERC721_WITHDRAW_EVENT_SIG_PLASMA =
+      '0x9b1bfa7fa9ee420a16e124f794c35ac9f90472acc99140eb2f6447c714cad8eb';
+  static const ERC20_WITHDRAW_EVENT_SIG_PLASMA =
+      '0xebff2602b3f468259e1e99f613fed6691f3a6526effe6ef3e768ba7ae7a36c4f';
   static String baseUrl = "https://bridge-api.matic.today";
   static Future<PosState> checkPosStatus(String txHash) async {
     String burnUrl = baseUrl + "/v1/pos-burn";

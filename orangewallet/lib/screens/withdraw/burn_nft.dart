@@ -218,10 +218,13 @@ class _NftBurnState extends State<NftBurn> {
     GlobalKey<State> _key = GlobalKey<State>();
     Dialogs.showLoadingDialog(context, _key);
     TransactionData transactionData;
+    var exitSignature;
     var type;
     if (bridge == 1) {
+      exitSignature = WithdrawManagerApi.ERC721_TRANSFER_EVENT_SIG;
       type = TransactionType.BURNPOS;
     } else if (bridge == 2) {
+      exitSignature = WithdrawManagerApi.ERC721_WITHDRAW_EVENT_SIG_PLASMA;
       type = TransactionType.BURNPLASMA;
     } else {
       return;
@@ -234,7 +237,7 @@ class _NftBurnState extends State<NftBurn> {
         to: state.data.token.contractAddress,
         trx: trx,
         token: token,
-        exitSignature: WithdrawManagerApi.ERC721_TRANSFER_EVENT_SIG,
+        exitSignature: exitSignature,
         type: type);
     Navigator.of(context, rootNavigator: true).pop();
 

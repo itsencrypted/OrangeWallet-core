@@ -84,7 +84,7 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
                   Icon(
                     loading
                         ? Icons.timer
-                        : status == -4
+                        : status == -4 || status == -9
                             ? Icons.pending_actions_outlined
                             : status == -10 || status == -5
                                 ? Icons.check_outlined
@@ -157,7 +157,6 @@ class _WithdrawNotificationTileState extends State<WithdrawNotificationTile> {
   _refreshLoop() {
     new Timer.periodic(Duration(seconds: 15), (Timer t) {
       if (mounted &&
-          status != -4 &&
           status != -10 &&
           status != -2 &&
           status != -11 &&

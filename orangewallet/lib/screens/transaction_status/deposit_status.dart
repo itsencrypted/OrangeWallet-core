@@ -165,7 +165,7 @@ class _DepositStatusState extends State<DepositStatus> {
                                   tokenIcon,
                                   height: AppTheme.tokenIconHeight,
                                 ),
-                                title: 'from',
+                                title: 'From',
                                 subtitle: fromAddress,
                                 // trailing: IconButton(
                                 //     icon: Icon(
@@ -179,7 +179,7 @@ class _DepositStatusState extends State<DepositStatus> {
                                   tokenIcon,
                                   height: AppTheme.tokenIconHeight,
                                 ),
-                                title: 'to',
+                                title: 'To',
                                 subtitle: "Matic Network",
                                 // trailing: IconButton(
                                 //     icon: Icon(
@@ -192,14 +192,20 @@ class _DepositStatusState extends State<DepositStatus> {
                                 color: Colors.grey,
                               ),
                               getListTile(
-                                image: Image.asset(
-                                  tokenIcon,
-                                  height: AppTheme.tokenIconHeight,
+                                image: CircleAvatar(
+                                  backgroundColor: AppTheme.warmgray_800,
+                                  child: SvgPicture.asset(
+                                    locksvg,
+                                  ),
+                                  radius: AppTheme.tokenIconHeight / 2,
                                 ),
                                 title: 'Transaction Hash',
                                 subtitle: data.txHash,
                                 trailing: IconButton(
-                                  icon: Icon(Icons.open_in_browser),
+                                  icon: Icon(
+                                    Icons.open_in_browser,
+                                    color: Colors.black,
+                                  ),
                                   onPressed: _launchURL,
                                 ),
                               )
@@ -396,7 +402,7 @@ class _DepositStatusState extends State<DepositStatus> {
           style: AppTheme.label_medium,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
-          maxLines: 2,
+          maxLines: 1,
         ),
         trailing: trailing);
   }

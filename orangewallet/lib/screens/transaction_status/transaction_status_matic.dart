@@ -184,8 +184,9 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                     title: 'To',
                                     subtitle: to,
                                     trailing: IconButton(
-                                        icon: Icon(
-                                          Icons.file_copy,
+                                        icon: SvgPicture.asset(
+                                          copyIcon,
+                                          color: Colors.black,
                                         ),
                                         onPressed: () {
                                           Clipboard.setData(
@@ -206,7 +207,10 @@ class _TransactionStatusMaticState extends State<TransactionStatusMatic> {
                                     title: 'Transaction Hash',
                                     subtitle: txHash,
                                     trailing: IconButton(
-                                      icon: Icon(Icons.open_in_browser),
+                                      icon: Icon(
+                                        Icons.open_in_browser,
+                                        color: Colors.black,
+                                      ),
                                       onPressed: _launchURL,
                                     ),
                                   )

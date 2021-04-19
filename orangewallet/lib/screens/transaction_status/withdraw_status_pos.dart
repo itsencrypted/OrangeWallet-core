@@ -188,7 +188,7 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
                                   tokenIcon,
                                   height: AppTheme.tokenIconHeight,
                                 ),
-                                title: 'from',
+                                title: 'From',
                                 subtitle: fromAddress,
                                 // trailing: IconButton(
                                 //     icon: Icon(
@@ -202,8 +202,8 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
                                   tokenIcon,
                                   height: AppTheme.tokenIconHeight,
                                 ),
-                                title: 'to',
-                                subtitle: "Matic Network",
+                                title: 'To',
+                                subtitle: "Ethereum Network",
                                 // trailing: IconButton(
                                 //     icon: Icon(
                                 //       Icons.file_copy,
@@ -225,7 +225,10 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
                                 title: 'Transaction Hash',
                                 subtitle: data.burnHash,
                                 trailing: IconButton(
-                                  icon: Icon(Icons.open_in_browser),
+                                  icon: Icon(
+                                    Icons.open_in_browser,
+                                    color: Colors.black,
+                                  ),
                                   onPressed: _launchURL,
                                 ),
                               )
@@ -428,7 +431,7 @@ class _WithdrawStatusPosState extends State<WithdrawStatusPos> {
           style: AppTheme.label_medium,
           softWrap: true,
           overflow: TextOverflow.ellipsis,
-          maxLines: 2,
+          maxLines: 1,
         ),
         trailing: trailing);
   }

@@ -31,6 +31,7 @@ const String orangeIcon = "$_baseIcon/orangeicon.png";
 const String settingsIconsvg = "$_baseIcon/settings_icon.svg";
 const String transactionFeesvg = "$_baseIcon/transaction_fee.svg";
 const String locksvg = "$_baseIcon/lock.svg";
+const String copyIcon = "$_baseIcon/copy_icon.svg";
 
 //ABIs
 const childERC20Abi = "assets/abi/childERC20.json";

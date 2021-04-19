@@ -186,9 +186,9 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
                                     title: 'To',
                                     subtitle: to,
                                     trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.file_copy,
-                                        // color: Colors.black,
+                                      icon: SvgPicture.asset(
+                                        copyIcon,
+                                        color: Colors.black,
                                       ),
                                       onPressed: () {
                                         Clipboard.setData(
@@ -210,7 +210,10 @@ class _TransactionStatusEthereumState extends State<TransactionStatusEthereum> {
                                     title: 'Transaction Hash',
                                     subtitle: txHash,
                                     trailing: IconButton(
-                                      icon: Icon(Icons.open_in_browser),
+                                      icon: Icon(
+                                        Icons.open_in_browser,
+                                        color: Colors.black,
+                                      ),
                                       onPressed: _launchURL,
                                     ),
                                   )

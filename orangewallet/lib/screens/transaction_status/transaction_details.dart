@@ -279,6 +279,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         ),
         subtitle: Text(
           subtitle,
+          maxLines: 1,
           style: AppTheme.label_medium,
         ),
         trailing: trailing);

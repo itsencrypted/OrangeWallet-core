@@ -98,8 +98,9 @@ class CoinListCard extends StatelessWidget {
           },
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Text("View All Tokens", style: AppTheme.body2White),
-          color: AppTheme.secondaryColor,
+          child: Text("View All Tokens",
+              style: TextStyle(color: AppTheme.warmGrey_900)),
+          color: AppTheme.warmgray_100,
         )
       ],
     );

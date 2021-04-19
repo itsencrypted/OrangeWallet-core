@@ -61,13 +61,13 @@ class PosTimeline extends StatelessWidget {
                             child: RaisedButton(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16)),
-                                color: AppTheme.primaryColor.withOpacity(1),
+                                color: AppTheme.warmgray_100,
                                 child: SizedBox(
                                     width: 100,
                                     child: Center(
                                       child: Text(
                                         "Exit POS",
-                                        style: AppTheme.body2White,
+                                        style: TextStyle(color: AppTheme.black),
                                       ),
                                     )),
                                 onPressed: () {

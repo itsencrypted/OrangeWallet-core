@@ -115,7 +115,7 @@ class _DepositScreenState extends State<DepositScreen>
                           margin: EdgeInsets.all(AppTheme.paddingHeight12),
                           shape: AppTheme.cardShape,
                           child: Container(
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.symmetric(horizontal: 16),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -164,7 +164,7 @@ class _DepositScreenState extends State<DepositScreen>
                                                       keyboardAppearance:
                                                           Brightness.dark,
                                                       textAlign:
-                                                          TextAlign.center,
+                                                          TextAlign.start,
                                                       autovalidateMode:
                                                           AutovalidateMode
                                                               .onUserInteraction,
@@ -219,7 +219,10 @@ class _DepositScreenState extends State<DepositScreen>
                                                           hintStyle: AppTheme
                                                               .body_small,
                                                           contentPadding:
-                                                              EdgeInsets.zero,
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          8),
                                                           border: OutlineInputBorder(
                                                               borderSide:
                                                                   BorderSide
@@ -306,6 +309,11 @@ class _DepositScreenState extends State<DepositScreen>
                                             ),
                                             SizedBox(
                                               height: AppTheme.paddingHeight,
+                                            ),
+                                            Divider(
+                                              thickness: 1,
+                                              height: 1,
+                                              color: AppTheme.warmgray_100,
                                             ),
                                             Row(
                                               mainAxisAlignment:

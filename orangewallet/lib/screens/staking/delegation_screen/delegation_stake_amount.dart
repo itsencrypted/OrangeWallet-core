@@ -234,7 +234,7 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                           keyboardAppearance:
                                                               Brightness.dark,
                                                           textAlign:
-                                                              TextAlign.center,
+                                                              TextAlign.start,
                                                           autovalidateMode:
                                                               AutovalidateMode
                                                                   .onUserInteraction,
@@ -286,7 +286,9 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                                   .body_small,
                                                               contentPadding:
                                                                   EdgeInsets
-                                                                      .zero,
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              8),
                                                               border: OutlineInputBorder(
                                                                   borderSide:
                                                                       BorderSide

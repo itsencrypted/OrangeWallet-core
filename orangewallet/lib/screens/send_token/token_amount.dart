@@ -302,7 +302,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                     controller: _amount,
                                                     keyboardAppearance:
                                                         Brightness.dark,
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.start,
                                                     autovalidateMode:
                                                         AutovalidateMode
                                                             .onUserInteraction,
@@ -355,7 +355,10 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                                         hintStyle:
                                                             AppTheme.body_small,
                                                         contentPadding:
-                                                            EdgeInsets.zero,
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        8),
                                                         border: OutlineInputBorder(
                                                             borderSide:
                                                                 BorderSide.none,

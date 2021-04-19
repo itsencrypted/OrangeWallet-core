@@ -49,8 +49,11 @@ class TransactionDetailsTimeline extends StatelessWidget {
                         ? RaisedButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16)),
-                            color: sendButtonColor.withOpacity(0.6),
-                            child: Text("Speedup Transaction"),
+                            color: AppTheme.warmgray_100,
+                            child: Text(
+                              "Speedup Transaction",
+                              style: TextStyle(color: AppTheme.black),
+                            ),
                             onPressed: () {
                               _speedUp(context, txHash);
                             })

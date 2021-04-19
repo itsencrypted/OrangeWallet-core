@@ -80,11 +80,15 @@ class _PlasmaTimelineState extends State<PlasmaTimeline> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(16)),
-                                    color: sendButtonColor.withOpacity(0.6),
+                                    color: AppTheme.warmgray_100,
                                     child: SizedBox(
                                         width: 100,
                                         child: Center(
-                                            child: Text("Confirm Exit"))),
+                                            child: Text(
+                                          "Confirm Exit",
+                                          style:
+                                              TextStyle(color: AppTheme.black),
+                                        ))),
                                     onPressed: () {
                                       _confirm();
                                     }),

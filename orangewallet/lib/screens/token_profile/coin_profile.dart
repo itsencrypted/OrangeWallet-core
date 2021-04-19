@@ -5,8 +5,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:orangewallet/constants.dart';
+import 'package:orangewallet/models/covalent_models/matic_transactions_list.dart';
 import 'package:orangewallet/models/covalent_models/token_history.dart';
 import 'package:orangewallet/screens/token_profile/transaction_tile.dart';
+import 'package:orangewallet/screens/token_profile/transaction_tile_matic.dart';
+import 'package:orangewallet/screens/transaction_confirmation_screen/matic_transaction_confirmation.dart';
 import 'package:orangewallet/state_manager/covalent_states/covalent_token_list_cubit_matic.dart';
 import 'package:orangewallet/state_manager/send_token_state/send_token_cubit.dart';
 import 'package:orangewallet/theme_data.dart';
@@ -24,6 +27,7 @@ class _CoinProfileState extends State<CoinProfile> {
   List<TransferInfo> txList;
   var future;
   var futureSet = false;
+  bool matic = false;
   @override
   void initState() {
     CredentialManager.getAddress().then((val) => address = val);
@@ -53,9 +57,15 @@ class _CoinProfileState extends State<CoinProfile> {
                       element.contractAddress)
                   .first;
               if (!futureSet) {
-                future = CovalentApiWrapper.maticTokenTransfers(
-                    token.contractAddress);
-                futureSet = true;
+                if (token.contractTickerSymbol.toLowerCase() == "matic") {
+                  future = CovalentApiWrapper.maticTransactionList();
+                  futureSet = true;
+                  matic = true;
+                } else {
+                  future = CovalentApiWrapper.maticTokenTransfers(
+                      token.contractAddress);
+                  futureSet = true;
+                }
               }
 
               var balance = EthConversions.weiToEth(
@@ -234,7 +244,19 @@ class _CoinProfileState extends State<CoinProfile> {
                               );
                             } else if (result.connectionState ==
                                 ConnectionState.done) {
-                              var tx = result.data.data.transferInfo;
+                              var tx;
+                              var address;
+                              if (matic == true) {
+                                var data =
+                                    result.data as MaticTransactionListModel;
+                                address = data.data.address;
+                                tx = data.data.items;
+                              } else {
+                                var data = result.data as TokenHistory;
+                                address = data.data.address;
+                                tx = data.data.transferInfo;
+                              }
+
                               return tx.length != 0
                                   ? Theme(
                                       data: Theme.of(context).copyWith(
@@ -258,14 +280,19 @@ class _CoinProfileState extends State<CoinProfile> {
                                                 physics:
                                                     NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
-                                                itemCount: result.data.data
-                                                    .transferInfo.length,
+                                                itemCount: tx.length,
                                                 itemBuilder: (context, index) {
-                                                  return TransactionTile(
-                                                    data: tx[index],
-                                                    address: result
-                                                        .data.data.address,
-                                                  );
+                                                  if (matic) {
+                                                    return TransactionTileMatic(
+                                                      data: tx[index],
+                                                      address: address,
+                                                    );
+                                                  } else {
+                                                    return TransactionTile(
+                                                      data: tx[index],
+                                                      address: address,
+                                                    );
+                                                  }
                                                 },
                                               ),
                                             ],

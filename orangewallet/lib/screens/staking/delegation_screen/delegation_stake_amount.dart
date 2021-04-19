@@ -415,32 +415,6 @@ class _DelegationAmountState extends State<DelegationAmount>
                                                             style: AppTheme
                                                                 .body_small,
                                                           ),
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          if (index == 0)
-                                                            setState(() {
-                                                              index = 1;
-                                                              _tabController
-                                                                  .animateTo(1);
-                                                            });
-                                                          else
-                                                            setState(() {
-                                                              index = 0;
-                                                              _tabController
-                                                                  .animateTo(0);
-                                                            });
-                                                        },
-                                                        child: Text(
-                                                          (index == 0)
-                                                              ? "Enter amount in USD"
-                                                              : "Enter amount in MATIC",
-                                                          style: TextStyle(
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .underline,
-                                                              color: AppTheme
-                                                                  .orange_500),
-                                                        ))
                                                   ],
                                                 ),
                                               ],

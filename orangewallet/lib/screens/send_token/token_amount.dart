@@ -436,7 +436,7 @@ class _SendTokenAmountState extends State<SendTokenAmount>
                                             ],
                                           ),
                                           SizedBox(
-                                            height: AppTheme.paddingHeight / 2,
+                                            height: AppTheme.paddingHeight,
                                           ),
                                           Row(
                                             mainAxisAlignment:

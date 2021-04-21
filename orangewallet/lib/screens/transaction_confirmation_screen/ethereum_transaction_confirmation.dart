@@ -150,10 +150,8 @@ class _EthTransactionConfirmationState
                                         children: [
                                           args.type == TransactionType.APPROVE
                                               ? Text(
-                                                  " ${args.token.contractTickerSymbol}",
-                                                  style: AppTheme
-                                                      .boldThemeColoredText,
-                                                  textAlign: TextAlign.center,
+                                                  "You are approving a contract to use",
+                                                  style: AppTheme.balanceSub,
                                                 )
                                               : Text(
                                                   double.tryParse(args.amount)
@@ -165,8 +163,10 @@ class _EthTransactionConfirmationState
                                                 ),
                                           args.type == TransactionType.APPROVE
                                               ? Text(
-                                                  "Approve",
-                                                  style: AppTheme.balanceSub,
+                                                  " ${args.token.contractTickerSymbol}",
+                                                  style: AppTheme
+                                                      .boldThemeColoredText,
+                                                  textAlign: TextAlign.center,
                                                 )
                                               : args.token != null &&
                                                       args.token.quoteRate !=

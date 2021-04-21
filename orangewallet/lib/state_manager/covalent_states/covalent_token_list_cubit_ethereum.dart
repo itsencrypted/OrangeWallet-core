@@ -26,7 +26,7 @@ class CovalentTokensListEthCubit extends Cubit<CovalentTokensListEthState> {
 
       emit(CovalentTokensListEthLoaded(list));
     } on Exception {
-      emit(CovalentTokensListEthError("Something Went wrong"));
+      // emit(CovalentTokensListEthError("Something Went wrong"));
     }
   }
 }

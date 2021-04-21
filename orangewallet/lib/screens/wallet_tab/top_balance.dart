@@ -33,7 +33,7 @@ class TopBalance extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.7,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

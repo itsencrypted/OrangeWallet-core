@@ -31,7 +31,7 @@ class CovalentTokensListMaticCubit extends Cubit<CovalentTokensListMaticState> {
     } catch (e) {
       print(e.toString());
 
-      emit(CovalentTokensListMaticError("Something Went wrong"));
+      //emit(CovalentTokensListMaticError("Something Went wrong"));
     }
   }
 }

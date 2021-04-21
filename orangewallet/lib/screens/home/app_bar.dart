@@ -176,6 +176,7 @@ class _HomeAppBar extends State<HomeAppBar> {
         var start = value.substring(0, 4);
         var end = value.substring(value.length - 3);
         setState(() {
+          fullAddress = value;
           address = start + ".." + end;
         });
       });

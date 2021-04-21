@@ -101,7 +101,7 @@ class _NetworkSettingState extends State<NetworkSetting> {
                         height: AppTheme.paddingHeight,
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
                           body1 ?? 'Ethereum network',
                           style: AppTheme.body_small,
@@ -112,7 +112,7 @@ class _NetworkSettingState extends State<NetworkSetting> {
                         height: AppTheme.paddingHeight,
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
                           body2 ?? 'Matic network',
                           style: AppTheme.body_small,

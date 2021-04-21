@@ -108,7 +108,7 @@ class _StakingNotificationTileState extends State<StakingNotificationTile> {
                     : unlockable
                         ? Text("Tap to claim stake")
                         : Text(
-                            "Can be claimed at ${date.day} - ${date.month} - ${date.year}  ${date.hour}:${date.minute}"),
+                            "Can be claimed at ${date.day}-${date.month}-${date.year}  ${date.hour}:${date.minute}"),
           ),
           onTap: () {
             if (unlockable) {

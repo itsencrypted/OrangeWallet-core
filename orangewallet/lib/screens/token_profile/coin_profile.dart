@@ -246,61 +246,21 @@ class _CoinProfileState extends State<CoinProfile> {
                                 ConnectionState.done) {
                               var tx;
                               var address;
-                              if (matic == true) {
-                                var data =
-                                    result.data as MaticTransactionListModel;
-                                address = data.data.address;
-                                tx = data.data.items;
-                              } else {
-                                var data = result.data as TokenHistory;
-                                address = data.data.address;
-                                tx = data.data.transferInfo;
-                              }
+                              try {
+                                if (matic == true) {
+                                  var data =
+                                      result.data as MaticTransactionListModel;
+                                  address = data.data.address;
+                                  tx = data.data.items;
+                                } else {
+                                  var data = result.data as TokenHistory;
+                                  address = data.data.address;
+                                  tx = data.data.transferInfo;
+                                }
+                              } catch (e) {}
 
-                              return tx.length != 0
-                                  ? Theme(
-                                      data: Theme.of(context).copyWith(
-                                          dividerColor: Colors.transparent),
-                                      child: Card(
-                                        shape: AppTheme.cardShape,
-                                        color: AppTheme.white,
-                                        elevation: AppTheme.cardElevations,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: ExpansionTile(
-                                            title: Text(
-                                              "Transaction History",
-                                              style: AppTheme.label_medium,
-                                            ),
-                                            children: [
-                                              Text("All transactions",
-                                                  style: AppTheme.subtitle),
-                                              ListView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemCount: tx.length,
-                                                itemBuilder: (context, index) {
-                                                  if (matic) {
-                                                    return TransactionTileMatic(
-                                                      data: tx[index],
-                                                      address: address,
-                                                    );
-                                                  } else {
-                                                    return TransactionTile(
-                                                      data: tx[index],
-                                                      address: address,
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox(
+                              return tx == null
+                                  ? SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height -
                                               500,
@@ -310,11 +270,76 @@ class _CoinProfileState extends State<CoinProfile> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("No Transactions"),
+                                            child: Text(
+                                              "Something went wrong while fetching transactions list.",
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    );
+                                    )
+                                  : tx.length != 0
+                                      ? Theme(
+                                          data: Theme.of(context).copyWith(
+                                              dividerColor: Colors.transparent),
+                                          child: Card(
+                                            shape: AppTheme.cardShape,
+                                            color: AppTheme.white,
+                                            elevation: AppTheme.cardElevations,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: ExpansionTile(
+                                                title: Text(
+                                                  "Transaction History",
+                                                  style: AppTheme.label_medium,
+                                                ),
+                                                children: [
+                                                  Text("All transactions",
+                                                      style: AppTheme.subtitle),
+                                                  ListView.builder(
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount: tx.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      if (matic) {
+                                                        return TransactionTileMatic(
+                                                          data: tx[index],
+                                                          address: address,
+                                                        );
+                                                      } else {
+                                                        return TransactionTile(
+                                                          data: tx[index],
+                                                          address: address,
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height -
+                                              500,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text("No Transactions"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
                             } else {
                               return Center(
                                 child: Text("Something went wrong"),

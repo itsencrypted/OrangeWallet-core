@@ -50,8 +50,6 @@ class _DelegationScreenState extends State<DelegationScreen> {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       var validatorListCubit = context.read<ValidatorsdataCubit>();
       var delegatorListCubit = context.read<DelegationsDataCubit>();
-
-      tokenListCubit.getTokensList();
       _refreshLoop(tokenListCubit, delegatorListCubit, validatorListCubit);
     });
     super.initState();

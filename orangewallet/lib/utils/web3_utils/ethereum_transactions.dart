@@ -405,10 +405,10 @@ class EthereumTransactions {
           var notifId = rng.nextInt(1000);
           if (networkId == 1) {
             NotificationHelper.timedNotification(notifId, "Claim Stake",
-                "Your Stake is ready to be claimed.", 150, context);
+                "Your Stake is ready to be claimed.", 250, context);
           } else {
             NotificationHelper.timedNotification(notifId, "Claim Stake",
-                "Your Stake is ready to be claimed.", 150, context);
+                "Your Stake is ready to be claimed.", 250, context);
           }
 
           BoxUtils.addUnbondTxData(

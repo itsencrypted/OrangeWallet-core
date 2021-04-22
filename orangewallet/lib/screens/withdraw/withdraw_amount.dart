@@ -41,7 +41,6 @@ class _WithdrawScreenState extends State<WithdrawScreen>
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
-      tokenListCubit.getTokensList();
 
       _refreshLoop(tokenListCubit);
     });

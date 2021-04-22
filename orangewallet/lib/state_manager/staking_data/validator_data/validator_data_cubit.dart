@@ -45,7 +45,7 @@ class ValidatorsdataCubit extends Cubit<ValidatorsDataState> {
       emit(ValidatorsDataStateFinal(data: info, rewards: rewards));
     } catch (e) {
       print(e.toString());
-      emit(ValidatorsDataStateError(e.toString()));
+      //emit(ValidatorsDataStateError(e.toString()));
     }
   }
 }

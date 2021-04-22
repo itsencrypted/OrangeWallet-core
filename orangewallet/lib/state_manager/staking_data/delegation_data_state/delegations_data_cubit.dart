@@ -28,7 +28,7 @@ class DelegationsDataCubit extends Cubit<DelegationsDataState> {
           info, totalShares, totalStake, claimedRewards));
     } catch (e) {
       print(e.toString());
-      emit(DelegationsDataStateError(e.toString()));
+      //emit(DelegationsDataStateError(e.toString()));
     }
   }
 

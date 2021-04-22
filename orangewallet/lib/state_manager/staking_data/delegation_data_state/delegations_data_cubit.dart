@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:orangewallet/models/staking_models/delegator_details.dart';
-import 'package:orangewallet/screens/transaction_list/ethereum_transaction_list.dart';
 import 'package:orangewallet/utils/api_wrapper/staking_api.dart';
 import 'package:orangewallet/utils/misc/credential_manager.dart';
-import 'package:orangewallet/utils/web3_utils/ethereum_transactions.dart';
 
 part 'delegations_data_state.dart';
 

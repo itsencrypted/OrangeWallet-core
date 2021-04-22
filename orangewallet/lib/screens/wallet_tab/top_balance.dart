@@ -37,6 +37,7 @@ class TopBalance extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        Container(),
                         SizedBox(
                           width: 98,
                           height: 44,
@@ -99,6 +100,7 @@ class TopBalance extends StatelessWidget {
                                 ))),
                           ),
                         ),
+                        Container(),
                       ],
                     ),
                   ),

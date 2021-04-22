@@ -23,6 +23,9 @@ class _DelegationScreenState extends State<DelegationScreen> {
   SearchBar searchBar;
   String searchStr = "";
   bool showSearch = false;
+  var dCubit;
+  var vCubit;
+  var tCubit;
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
         title: new Text('All Delegations'),
@@ -50,6 +53,9 @@ class _DelegationScreenState extends State<DelegationScreen> {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       var validatorListCubit = context.read<ValidatorsdataCubit>();
       var delegatorListCubit = context.read<DelegationsDataCubit>();
+      this.tCubit = tokenListCubit;
+      this.vCubit = validatorListCubit;
+      this.dCubit = delegatorListCubit;
       _refreshLoop(tokenListCubit, delegatorListCubit, validatorListCubit);
     });
     super.initState();
@@ -92,55 +98,60 @@ class _DelegationScreenState extends State<DelegationScreen> {
                     validatorState is ValidatorsDataStateFinal &&
                     tokenState is CovalentTokensListMaticLoaded) {
                   return Container(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        ValidatorInfo validator = validatorState.data.result
-                            .where((element) =>
-                                element.id.toString() ==
-                                delegationState
-                                    .data.result[index].bondedValidator)
-                            .toList()
-                            .first;
-                        double qoute = tokenState.covalentTokenList.data.items
-                            .where((element) =>
-                                element.contractTickerSymbol.toLowerCase() ==
-                                "matic")
-                            .toList()
-                            .first
-                            .quoteRate;
-                        BigInt reward = validator.reward;
-                        if (!_searchCond(validator)) {
-                          return Container();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: DelegationCard(
-                              id: validator.id,
-                              title: validator.name,
-                              subtitle:
-                                  '${validator.uptimePercent.toString()}% Checkpoints Signed',
-                              commission:
-                                  validator.commissionPercent.toString(),
-                              iconURL:
-                                  'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
-                              maticStake: EthConversions.weiToEth(
-                                      delegationState.data.result[index].stake,
-                                      18)
-                                  .toStringAsFixed(3),
-                              stakeInUsd: (qoute *
-                                      EthConversions.weiToEth(
-                                          delegationState
-                                              .data.result[index].stake,
-                                          18))
-                                  .toStringAsFixed(3),
-                              maticRewards: EthConversions.weiToEth(reward, 18)
-                                  .toString(),
-                              rewardInUsd:
-                                  (qoute * EthConversions.weiToEth(reward, 18))
-                                      .toStringAsFixed(3)),
-                        );
-                      },
-                      itemCount: delegationState.data.result.length,
+                    child: RefreshIndicator(
+                      onRefresh: _refresh,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          ValidatorInfo validator = validatorState.data.result
+                              .where((element) =>
+                                  element.id.toString() ==
+                                  delegationState
+                                      .data.result[index].bondedValidator)
+                              .toList()
+                              .first;
+                          double qoute = tokenState.covalentTokenList.data.items
+                              .where((element) =>
+                                  element.contractTickerSymbol.toLowerCase() ==
+                                  "matic")
+                              .toList()
+                              .first
+                              .quoteRate;
+                          BigInt reward = validator.reward;
+                          if (!_searchCond(validator)) {
+                            return Container();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: DelegationCard(
+                                id: validator.id,
+                                title: validator.name,
+                                subtitle:
+                                    '${validator.uptimePercent.toString()}% Checkpoints Signed',
+                                commission:
+                                    validator.commissionPercent.toString(),
+                                iconURL:
+                                    'https://cdn3.iconfinder.com/data/icons/unicons-vector-icons-pack/32/external-256.png',
+                                maticStake: EthConversions.weiToEth(
+                                        delegationState
+                                            .data.result[index].stake,
+                                        18)
+                                    .toStringAsFixed(3),
+                                stakeInUsd: (qoute *
+                                        EthConversions.weiToEth(
+                                            delegationState
+                                                .data.result[index].stake,
+                                            18))
+                                    .toStringAsFixed(3),
+                                maticRewards:
+                                    EthConversions.weiToEth(reward, 18)
+                                        .toString(),
+                                rewardInUsd: (qoute *
+                                        EthConversions.weiToEth(reward, 18))
+                                    .toStringAsFixed(3)),
+                          );
+                        },
+                        itemCount: delegationState.data.result.length,
+                      ),
                     ),
                   );
                 } else {
@@ -208,5 +219,14 @@ class _DelegationScreenState extends State<DelegationScreen> {
         vCubit.refresh();
       }
     });
+  }
+
+  Future<void> _refresh() async {
+    var future1 = tCubit.refresh();
+    var future2 = dCubit.refresh();
+    var future3 = vCubit.refresh();
+    await future3;
+    await future2;
+    await future1;
   }
 }

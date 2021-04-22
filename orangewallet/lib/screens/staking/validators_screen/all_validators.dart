@@ -23,6 +23,7 @@ class _AllValidatorsState extends State<AllValidators> {
   SearchBar searchBar;
   String searchStr = "";
   bool showSearch = false;
+  var cubit;
   AppBar buildAppBar(BuildContext context) {
     return new AppBar(
       title: new Text('All Validators'),
@@ -91,6 +92,7 @@ class _AllValidatorsState extends State<AllValidators> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var vCubit = context.read<ValidatorsdataCubit>();
+      this.cubit = vCubit;
       _refreshLoop(vCubit);
     });
     super.initState();
@@ -148,95 +150,104 @@ class _AllValidatorsState extends State<AllValidators> {
             backgroundColor: AppTheme.backgroundWhite,
             appBar: searchBar.build(context),
             body: TabBarView(children: [
-              ListView.builder(
-                itemBuilder: (context, index) {
-                  var stake = EthConversions.weiToEth(
-                      stakedAmount[index].delegatedStake, 18);
-                  var name;
-                  if (stakedAmount[index].name != null) {
-                    name = stakedAmount[index].name;
-                  } else {
-                    name = "Validator " + stakedAmount[index].id.toString();
-                  }
-                  if (!_searchCond(stakedAmount[index])) {
-                    return Container();
-                  }
-                  return FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, validatorAndDelegationProfileRoute,
-                          arguments: stakedAmount[index].id);
-                    },
-                    child: ValidatorsStakedCard(
-                      commission: stakedAmount[index].commissionPercent,
-                      name: name,
-                      performance: stakedAmount[index].uptimePercent,
-                      stakedMatic: stake.toString(),
-                    ),
-                  );
-                },
-                itemCount: stakedAmount.length,
+              RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    var stake = EthConversions.weiToEth(
+                        stakedAmount[index].delegatedStake, 18);
+                    var name;
+                    if (stakedAmount[index].name != null) {
+                      name = stakedAmount[index].name;
+                    } else {
+                      name = "Validator " + stakedAmount[index].id.toString();
+                    }
+                    if (!_searchCond(stakedAmount[index])) {
+                      return Container();
+                    }
+                    return FlatButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, validatorAndDelegationProfileRoute,
+                            arguments: stakedAmount[index].id);
+                      },
+                      child: ValidatorsStakedCard(
+                        commission: stakedAmount[index].commissionPercent,
+                        name: name,
+                        performance: stakedAmount[index].uptimePercent,
+                        stakedMatic: stake.toString(),
+                      ),
+                    );
+                  },
+                  itemCount: stakedAmount.length,
+                ),
               ),
-              ListView.builder(
-                itemBuilder: (context, index) {
-                  var stake =
-                      EthConversions.weiToEth(sorted[index].delegatedStake, 18);
-                  var name;
-                  if (sorted[index].name != null) {
-                    name = sorted[index].name;
-                  } else {
-                    name = "Validator " + sorted[index].id.toString();
-                  }
-                  if (!_searchCond(sorted[index])) {
-                    return Container();
-                  }
-                  return FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, validatorAndDelegationProfileRoute,
-                          arguments: sorted[index].id);
-                    },
-                    child: ValidatorsStakedCard(
-                      commission: sorted[index].commissionPercent,
-                      name: name,
-                      performance: sorted[index].uptimePercent,
-                      stakedMatic: stake.toString(),
-                    ),
-                  );
-                },
-                itemCount: sorted.length,
+              RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    var stake = EthConversions.weiToEth(
+                        sorted[index].delegatedStake, 18);
+                    var name;
+                    if (sorted[index].name != null) {
+                      name = sorted[index].name;
+                    } else {
+                      name = "Validator " + sorted[index].id.toString();
+                    }
+                    if (!_searchCond(sorted[index])) {
+                      return Container();
+                    }
+                    return FlatButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, validatorAndDelegationProfileRoute,
+                            arguments: sorted[index].id);
+                      },
+                      child: ValidatorsStakedCard(
+                        commission: sorted[index].commissionPercent,
+                        name: name,
+                        performance: sorted[index].uptimePercent,
+                        stakedMatic: stake.toString(),
+                      ),
+                    );
+                  },
+                  itemCount: sorted.length,
+                ),
               ),
-              ListView.builder(
-                itemBuilder: (context, index) {
-                  var stake =
-                      EthConversions.weiToEth(sorted[index].delegatedStake, 18);
-                  var name;
-                  if (commission[index].name != null) {
-                    name = commission[index].name;
-                  } else {
-                    name = "Validator " + commission[index].id.toString();
-                  }
-                  if (!_searchCond(commission[index])) {
-                    return Container();
-                  }
-                  return FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, validatorAndDelegationProfileRoute,
-                          arguments: commission[index].id);
-                    },
-                    child: ValidatorsStakedCard(
-                      commission: commission[index].commissionPercent,
-                      name: name,
-                      performance: commission[index].uptimePercent,
-                      stakedMatic: stake.toString(),
-                    ),
-                  );
-                },
-                itemCount: commission.length,
+              RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    var stake = EthConversions.weiToEth(
+                        sorted[index].delegatedStake, 18);
+                    var name;
+                    if (commission[index].name != null) {
+                      name = commission[index].name;
+                    } else {
+                      name = "Validator " + commission[index].id.toString();
+                    }
+                    if (!_searchCond(commission[index])) {
+                      return Container();
+                    }
+                    return FlatButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, validatorAndDelegationProfileRoute,
+                            arguments: commission[index].id);
+                      },
+                      child: ValidatorsStakedCard(
+                        commission: commission[index].commissionPercent,
+                        name: name,
+                        performance: commission[index].uptimePercent,
+                        stakedMatic: stake.toString(),
+                      ),
+                    );
+                  },
+                  itemCount: commission.length,
+                ),
               ),
             ]),
           ),
@@ -304,5 +315,9 @@ class _AllValidatorsState extends State<AllValidators> {
         cubit.refresh();
       }
     });
+  }
+
+  Future<void> _refresh() async {
+    await cubit.refresh();
   }
 }

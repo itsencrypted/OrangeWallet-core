@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:orangewallet/models/staking_models/validators.dart';
 import 'package:orangewallet/utils/api_wrapper/staking_api.dart';
-import 'package:orangewallet/utils/web3_utils/ethereum_transactions.dart';
 import 'package:orangewallet/utils/web3_utils/staking_transactions.dart';
 
 part 'validator_data_state.dart';

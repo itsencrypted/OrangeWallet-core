@@ -37,7 +37,9 @@ class _ValidatorAndDelegationProfileState
   BigInt nonce = BigInt.zero;
   bool legacyWithdraw = true;
   bool unlockable = false;
-
+  var tokenListCubit;
+  var dCubit;
+  var vCubit;
   var delegatedStake;
   @override
   void initState() {
@@ -45,7 +47,9 @@ class _ValidatorAndDelegationProfileState
       final tokenListCubit = context.read<CovalentTokensListMaticCubit>();
       final dCubit = context.read<DelegationsDataCubit>();
       final vCubit = context.read<ValidatorsdataCubit>();
-
+      this.dCubit = dCubit;
+      this.vCubit = vCubit;
+      this.tokenListCubit = tokenListCubit;
       _refreshLoop(tokenListCubit, vCubit, dCubit);
     });
     super.initState();
@@ -137,196 +141,206 @@ class _ValidatorAndDelegationProfileState
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: ListView(
-                            shrinkWrap: false,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  unlockable
-                                      ? _withdrawCard(validator, matic)
-                                      : Container(),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.primaryColor
-                                          .withOpacity(0.3),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        validator.name.substring(0, 1),
-                                        style: TextStyle(
-                                            fontSize: 50,
-                                            fontWeight: FontWeight.bold),
+                          child: RefreshIndicator(
+                            onRefresh: _refresh,
+                            child: ListView(
+                              shrinkWrap: false,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    unlockable
+                                        ? _withdrawCard(validator, matic)
+                                        : Container(),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.3,
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.primaryColor
+                                            .withOpacity(0.3),
+                                        shape: BoxShape.circle,
                                       ),
-                                    ),
-                                  ),
-                                  Text(
-                                    validator.name,
-                                    style: AppTheme.title,
-                                  ),
-                                  Text(
-                                    validator.contractAddress,
-                                    style: AppTheme.subtitle,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15, horizontal: 8),
-                                    child: Card(
-                                      shape: AppTheme.cardShape,
-                                      elevation: AppTheme.cardElevations,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                    validator.uptimePercent
-                                                            .toString() +
-                                                        " %",
-                                                    style: AppTheme.title),
-                                                Text(
-                                                  "Performance",
-                                                  style: AppTheme.subtitle,
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                    validator
-                                                            .commissionPercent +
-                                                        " %",
-                                                    style: AppTheme.title),
-                                                Text(
-                                                  "Commission",
-                                                  style: AppTheme.subtitle,
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                      child: Center(
+                                        child: Text(
+                                          validator.name.substring(0, 1),
+                                          style: TextStyle(
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 19),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Total Stake",
-                                            style: AppTheme.body2),
-                                        Text(stake.toString() + " Matic",
-                                            style: AppTheme.body1)
-                                      ],
+                                    Text(
+                                      validator.name,
+                                      style: AppTheme.title,
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 19),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Self Stake",
-                                            style: AppTheme.body2),
-                                        Text(
-                                            EthConversions.weiToEth(
-                                                        validator.selfStake, 18)
-                                                    .toString() +
-                                                " Matic",
-                                            style: AppTheme.body1)
-                                      ],
+                                    Text(
+                                      validator.contractAddress,
+                                      style: AppTheme.subtitle,
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12.0, horizontal: 19),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Total Rewards",
-                                            style: AppTheme.body2),
-                                        Text(
-                                            EthConversions.weiToEth(
-                                                        validator.totalReward,
-                                                        18)
-                                                    .toString() +
-                                                " Matic",
-                                            style: AppTheme.body1)
-                                      ],
-                                    ),
-                                  ),
-                                  delegatorInfo != null
-                                      ? Padding(
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15, horizontal: 8),
+                                      child: Card(
+                                        shape: AppTheme.cardShape,
+                                        elevation: AppTheme.cardElevations,
+                                        child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 12.0, horizontal: 19),
+                                              vertical: 20),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Text("Your  Stake",
-                                                  style: AppTheme.body2),
-                                              Text(
-                                                  EthConversions.weiToEth(
-                                                              delegatorInfo
-                                                                  .stake,
-                                                              18)
-                                                          .toString() +
-                                                      " Matic",
-                                                  style: AppTheme.body1)
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                      validator.uptimePercent
+                                                              .toString() +
+                                                          " %",
+                                                      style: AppTheme.title),
+                                                  Text(
+                                                    "Performance",
+                                                    style: AppTheme.subtitle,
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                      validator
+                                                              .commissionPercent +
+                                                          " %",
+                                                      style: AppTheme.title),
+                                                  Text(
+                                                    "Commission",
+                                                    style: AppTheme.subtitle,
+                                                  ),
+                                                ],
+                                              )
                                             ],
                                           ),
-                                        )
-                                      : Container(),
-                                  delegatorInfo != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 12.0, horizontal: 19),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Your Rewards",
-                                                  style: AppTheme.body2),
-                                              Text(
-                                                  EthConversions.weiToEth(
-                                                              validator.reward,
-                                                              18)
-                                                          .toString() +
-                                                      " Matic",
-                                                  style: AppTheme.body1)
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: 100,
-                                  )
-                                ],
-                              )
-                            ],
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12.0, horizontal: 19),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Stake",
+                                              style: AppTheme.body2),
+                                          Text(stake.toString() + " Matic",
+                                              style: AppTheme.body1)
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12.0, horizontal: 19),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Self Stake",
+                                              style: AppTheme.body2),
+                                          Text(
+                                              EthConversions.weiToEth(
+                                                          validator.selfStake,
+                                                          18)
+                                                      .toString() +
+                                                  " Matic",
+                                              style: AppTheme.body1)
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12.0, horizontal: 19),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Total Rewards",
+                                              style: AppTheme.body2),
+                                          Text(
+                                              EthConversions.weiToEth(
+                                                          validator.totalReward,
+                                                          18)
+                                                      .toString() +
+                                                  " Matic",
+                                              style: AppTheme.body1)
+                                        ],
+                                      ),
+                                    ),
+                                    delegatorInfo != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0, horizontal: 19),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("Your  Stake",
+                                                    style: AppTheme.body2),
+                                                Text(
+                                                    EthConversions.weiToEth(
+                                                                delegatorInfo
+                                                                    .stake,
+                                                                18)
+                                                            .toString() +
+                                                        " Matic",
+                                                    style: AppTheme.body1)
+                                              ],
+                                            ),
+                                          )
+                                        : Container(),
+                                    delegatorInfo != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12.0, horizontal: 19),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("Your Rewards",
+                                                    style: AppTheme.body2),
+                                                Text(
+                                                    EthConversions.weiToEth(
+                                                                validator
+                                                                    .reward,
+                                                                18)
+                                                            .toString() +
+                                                        " Matic",
+                                                    style: AppTheme.body1)
+                                              ],
+                                            ),
+                                          )
+                                        : Container(),
+                                    SizedBox(
+                                      height: 100,
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -649,6 +663,18 @@ class _ValidatorAndDelegationProfileState
         }
       }
     });
+  }
+
+  Future<void> _refresh() async {
+    var future1 = tokenListCubit.refresh();
+    var future2 = dCubit.refresh();
+    var future3 = vCubit.refresh();
+    await future3;
+    await future2;
+    await future1;
+    if (!unlockable) {
+      unlockable = StakingUtils.checkEpoch(withdrawEpoch.toInt());
+    }
   }
 
   _loadWithdrawStatus(String validatorAddress) async {

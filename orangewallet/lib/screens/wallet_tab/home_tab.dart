@@ -42,9 +42,6 @@ class _HomeTabState extends State<HomeTab>
     });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       var tokenListCubit = context.read<CovalentTokensListMaticCubit>();
-      tokenListCubit.getTokensList();
-      final ethCubit = context.read<CovalentTokensListEthCubit>();
-      ethCubit.getTokensList();
       NotificationHelper.checkForActionsCount().then((value) {
         setState(() {
           counter = value;

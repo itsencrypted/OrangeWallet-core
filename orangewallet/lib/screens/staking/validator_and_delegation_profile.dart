@@ -350,26 +350,32 @@ class _ValidatorAndDelegationProfileState
                           child: Center(
                             child: validator.delegationEnabled
                                 ? (delegatorInfo == null
-                                    ? RaisedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, delegationAmountRoute,
-                                              arguments: id);
-                                        },
-                                        color: AppTheme.secondaryColor,
-                                        child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.85,
+                                    ? Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: AppTheme.buttonHeight_44,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                AppTheme.paddingHeight12),
+                                        child: TextButton(
+                                            style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    AppTheme.orange_500,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius
+                                                        .circular(AppTheme
+                                                            .buttonRadius))),
+                                            onPressed: () {
+                                              Navigator.pushNamed(context,
+                                                  delegationAmountRoute,
+                                                  arguments: id);
+                                            },
                                             child: Center(
                                                 child: Text(
                                               "Delegate Now",
                                               style: AppTheme.body2White,
                                             ))),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(50))),
                                       )
                                     : Container(
                                         decoration: BoxDecoration(

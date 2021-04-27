@@ -129,7 +129,9 @@ class _MaticTransactionConfirmState extends State<MaticTransactionConfirm> {
                                           height: 1,
                                           thickness: 1,
                                         ),
-                                        SizedBox(),
+                                        SizedBox(
+                                          height: 14,
+                                        ),
                                         Text(network == 0
                                             ? "Matic Testnet"
                                             : "Matic Mainnet"),

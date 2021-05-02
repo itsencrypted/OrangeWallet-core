@@ -35,6 +35,7 @@ class NetworkConfig {
     erc721PredicatePlasma: "0xDbBffd69Ef9F34bA8Fb8722157A51a4733992B35",
     erc1155PredicatePos: "0xB19a86ba1b50f0A395BfdC3557608789ee184dC8"
   };
+  //apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&
   static const MainnetConfig = {
     endpoint: "https://rpc-mainnet.matic.network",
     blockExplorerMatic: "https://explorer-mainnet.maticvigil.com/",
@@ -59,7 +60,7 @@ class NetworkConfig {
     exitPayload: "https://apis.matic.network/api/v1/matic/exit-payload",
     stakingEndpoint: "https://staking.api.matic.network/api/v1",
     transakLink:
-        "https://global.transak.com?apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
+        "https://global.transak.com?apiKey=176a6690-e87c-4c10-ad40-cfc5e1a70599&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
     maticToken: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
     stakeManagerProxy: "0x5e3Ef299fDDf15eAa0432E6e66473ace8c13D908",
     erc20PredicatePlasma: "0x886e02327cAd4E1E29688C7Db0c9d28879ac44Da",
@@ -68,6 +69,7 @@ class NetworkConfig {
   };
 }
 
+//apiKey=94a9ecae-8bbf-4c76-986b-b568df3548dc&
 class NetworkConfigObject {
   final String endpoint;
   final String blockExplorerMatic;

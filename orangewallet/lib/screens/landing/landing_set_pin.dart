@@ -206,7 +206,7 @@ class LandingSetPinScreenState extends State<LandingSetPinScreen> {
           await Encryptions.encrypt(seed.trim(), pkAddr[0], pin.text);
       BoxUtils.setFirstAccount(
           encrypted[0], encrypted[1], pkAddr[1], encrypted[2]);
-      BoxUtils.setNetworkConfig(0);
+      BoxUtils.setNetworkConfig(1);
     });
     BoxUtils.setNewMnemonicBox(!newMnemonic);
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();

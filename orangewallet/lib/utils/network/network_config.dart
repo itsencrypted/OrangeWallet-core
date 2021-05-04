@@ -60,7 +60,7 @@ class NetworkConfig {
     exitPayload: "https://apis.matic.network/api/v1/matic/exit-payload",
     stakingEndpoint: "https://sentinel.matic.network/api/v2",
     transakLink:
-        "https://global.transak.com?apiKey={Transak Key}&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
+        "https://global.transak.com?apiKey={Your Transak keys}&networks=matic&defaultNetwork=matic&defaultCryptoCurrency=matic&hideMenu=true&walletAddress=",
     maticToken: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
     stakeManagerProxy: "0x5e3Ef299fDDf15eAa0432E6e66473ace8c13D908",
     erc20PredicatePlasma: "0x886e02327cAd4E1E29688C7Db0c9d28879ac44Da",

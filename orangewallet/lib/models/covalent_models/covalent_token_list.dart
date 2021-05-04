@@ -177,11 +177,7 @@ class NftData {
     } else {
       externalData = json['external_data'] != null
           ? new ExternalData.fromJson(json['external_data'])
-          : ExternalData(
-              name: name,
-              image:
-                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-              description: "");
+          : ExternalData(name: name, image: imageNotFound, description: "");
     }
 
     owner = json['owner'].toString();
@@ -205,10 +201,7 @@ class NftData {
 
   Future<ExternalData> _getExternalData(String url, String name) async {
     if (url == null || url == "") {
-      return ExternalData(
-          name: name,
-          image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-          description: "");
+      return ExternalData(name: name, image: imageNotFound, description: "");
     }
     try {
       var resp = await http.get(url);
@@ -243,29 +236,18 @@ class NftData {
       } else {
         if (name == null) {
           return ExternalData(
-              name: "Name Missing",
-              image:
-                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-              description: "");
+              name: "Name Missing", image: imageNotFound, description: "");
         } else {
           return ExternalData(
-              name: name,
-              image:
-                  "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-              description: "");
+              name: name, image: imageNotFound, description: "");
         }
       }
     } catch (e) {
       if (name == null) {
         return ExternalData(
-            name: "Name Missing",
-            image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-            description: "");
+            name: "Name Missing", image: imageNotFound, description: "");
       } else {
-        return ExternalData(
-            name: name,
-            image: "https://media.giphy.com/media/3o6ZtrFrmbFtt0Jvs4/giphy.gif",
-            description: "");
+        return ExternalData(name: name, image: imageNotFound, description: "");
       }
     }
   }

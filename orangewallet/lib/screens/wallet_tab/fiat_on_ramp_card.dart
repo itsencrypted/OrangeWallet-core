@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:orangewallet/constants.dart';
 import 'package:orangewallet/theme_data.dart';
 import 'package:orangewallet/utils/misc/credential_manager.dart';
 import 'package:orangewallet/utils/network/network_config.dart';
 import 'package:orangewallet/utils/network/network_manager.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 class FiatOnRampCard extends StatelessWidget {
   @override
@@ -31,6 +35,35 @@ class FiatOnRampCard extends StatelessWidget {
               child: FlatButton(
                 padding: EdgeInsets.all(0),
                 onPressed: () async {
+                  if (Platform.isIOS) {
+                    try {
+                      // If the system can show an authorization request dialog
+                      if (await AppTrackingTransparency
+                              .trackingAuthorizationStatus ==
+                          TrackingStatus.notDetermined) {
+                        // Show a custom explainer dialog before the system dialog
+                        await AppTrackingTransparency
+                            .requestTrackingAuthorization();
+                        if (await AppTrackingTransparency
+                                .trackingAuthorizationStatus ==
+                            TrackingStatus.denied) {
+                          return;
+                        }
+                      } else if (await AppTrackingTransparency
+                              .trackingAuthorizationStatus ==
+                          TrackingStatus.denied) {
+                        Fluttertoast.showToast(
+                            msg:
+                                "You can not use tranak without allowing it to track you. Go to Settings > Orange Wallet > Allow Tracking  ",
+                            toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                    } on PlatformException {
+                      Fluttertoast.showToast(msg: "Something went wrong");
+                      return;
+                      // Unexpected exception was thrown
+                    }
+                  }
                   var address = await CredentialManager.getAddress();
                   NetworkConfigObject config =
                       await NetworkManager.getNetworkObject();

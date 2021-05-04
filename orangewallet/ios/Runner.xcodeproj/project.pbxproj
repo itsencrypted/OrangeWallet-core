@@ -10,10 +10,10 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4F0510E225EFEEEC00B85E6A /* WalletConnectPlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0510E125EFEEEC00B85E6A /* WalletConnectPlatformView.swift */; };
-		4F0510F225F0104F00B85E6A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F125F0104F00B85E6A /* SwiftPackageProductDependency */; };
-		4F0510F525F0170E00B85E6A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F425F0170E00B85E6A /* SwiftPackageProductDependency */; };
-		4F0510F725F0170E00B85E6A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F625F0170E00B85E6A /* SwiftPackageProductDependency */; };
-		4F0510F925F0170E00B85E6A /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F825F0170E00B85E6A /* SwiftPackageProductDependency */; };
+		4F0510F225F0104F00B85E6A /* WalletConnectSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F125F0104F00B85E6A /* WalletConnectSwift */; };
+		4F0510F525F0170E00B85E6A /* Web3PromiseKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F425F0170E00B85E6A /* Web3PromiseKit */; };
+		4F0510F725F0170E00B85E6A /* Web3ContractABI in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F625F0170E00B85E6A /* Web3ContractABI */; };
+		4F0510F925F0170E00B85E6A /* Web3 in Frameworks */ = {isa = PBXBuildFile; productRef = 4F0510F825F0170E00B85E6A /* Web3 */; };
 		4F7CF5A025F2238100610162 /* UiAlertWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7CF59F25F2238100610162 /* UiAlertWalletConnect.swift */; };
 		4F7CF5A225F223B400610162 /* UiScreenWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7CF5A125F223B400610162 /* UiScreenWalletConnect.swift */; };
 		4FE54CE625F0D9E500CA3506 /* WalletConnectUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE54CE525F0D9E500CA3506 /* WalletConnectUtils.swift */; };
@@ -67,10 +67,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F0510F225F0104F00B85E6A /* BuildFile in Frameworks */,
-				4F0510F525F0170E00B85E6A /* BuildFile in Frameworks */,
-				4F0510F725F0170E00B85E6A /* BuildFile in Frameworks */,
-				4F0510F925F0170E00B85E6A /* BuildFile in Frameworks */,
+				4F0510F225F0104F00B85E6A /* WalletConnectSwift in Frameworks */,
+				4F0510F525F0170E00B85E6A /* Web3PromiseKit in Frameworks */,
+				4F0510F725F0170E00B85E6A /* Web3ContractABI in Frameworks */,
+				4F0510F925F0170E00B85E6A /* Web3 in Frameworks */,
 				B9E27575A465219CFB158FD4 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,10 +168,10 @@
 			);
 			name = Runner;
 			packageProductDependencies = (
-				4F0510F125F0104F00B85E6A /* SwiftPackageProductDependency */,
-				4F0510F425F0170E00B85E6A /* SwiftPackageProductDependency */,
-				4F0510F625F0170E00B85E6A /* SwiftPackageProductDependency */,
-				4F0510F825F0170E00B85E6A /* SwiftPackageProductDependency */,
+				4F0510F125F0104F00B85E6A /* WalletConnectSwift */,
+				4F0510F425F0170E00B85E6A /* Web3PromiseKit */,
+				4F0510F625F0170E00B85E6A /* Web3ContractABI */,
+				4F0510F825F0170E00B85E6A /* Web3 */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -202,8 +202,8 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				4F0510F025F0104F00B85E6A /* RemoteSwiftPackageReference */,
-				4F0510F325F0170E00B85E6A /* RemoteSwiftPackageReference */,
+				4F0510F025F0104F00B85E6A /* XCRemoteSwiftPackageReference "WalletConnectSwift" */,
+				4F0510F325F0170E00B85E6A /* XCRemoteSwiftPackageReference "Web3.swift" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -396,7 +396,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = MCAX63GT9P;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -412,7 +412,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.orangewallet.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -547,7 +547,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = MCAX63GT9P;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -563,7 +563,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.orangewallet.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -584,7 +584,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = MCAX63GT9P;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -600,7 +600,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 1.1.4;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.orangewallet.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -638,7 +638,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		4F0510F025F0104F00B85E6A /* RemoteSwiftPackageReference */ = {
+		4F0510F025F0104F00B85E6A /* XCRemoteSwiftPackageReference "WalletConnectSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwift.git";
 			requirement = {
@@ -646,7 +646,7 @@
 				minimumVersion = 1.3.1;
 			};
 		};
-		4F0510F325F0170E00B85E6A /* RemoteSwiftPackageReference */ = {
+		4F0510F325F0170E00B85E6A /* XCRemoteSwiftPackageReference "Web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Boilertalk/Web3.swift.git";
 			requirement = {
@@ -657,24 +657,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4F0510F125F0104F00B85E6A /* SwiftPackageProductDependency */ = {
+		4F0510F125F0104F00B85E6A /* WalletConnectSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4F0510F025F0104F00B85E6A /* RemoteSwiftPackageReference */;
+			package = 4F0510F025F0104F00B85E6A /* XCRemoteSwiftPackageReference "WalletConnectSwift" */;
 			productName = WalletConnectSwift;
 		};
-		4F0510F425F0170E00B85E6A /* SwiftPackageProductDependency */ = {
+		4F0510F425F0170E00B85E6A /* Web3PromiseKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4F0510F325F0170E00B85E6A /* RemoteSwiftPackageReference */;
+			package = 4F0510F325F0170E00B85E6A /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3PromiseKit;
 		};
-		4F0510F625F0170E00B85E6A /* SwiftPackageProductDependency */ = {
+		4F0510F625F0170E00B85E6A /* Web3ContractABI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4F0510F325F0170E00B85E6A /* RemoteSwiftPackageReference */;
+			package = 4F0510F325F0170E00B85E6A /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3ContractABI;
 		};
-		4F0510F825F0170E00B85E6A /* SwiftPackageProductDependency */ = {
+		4F0510F825F0170E00B85E6A /* Web3 */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4F0510F325F0170E00B85E6A /* RemoteSwiftPackageReference */;
+			package = 4F0510F325F0170E00B85E6A /* XCRemoteSwiftPackageReference "Web3.swift" */;
 			productName = Web3;
 		};
 /* End XCSwiftPackageProductDependency section */
